@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../../content/concepts/dolt/rdbms/replication.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Replication">
+  <Content />
+</DocsLayout>

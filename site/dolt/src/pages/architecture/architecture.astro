@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../layouts/DocsLayout.astro";
+
+const post = await import("../../content/architecture/architecture.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Architecture">
+  <Content />
+</DocsLayout>

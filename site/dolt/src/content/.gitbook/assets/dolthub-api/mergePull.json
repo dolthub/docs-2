@@ -1,0 +1,141 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Merge a pull request",
+    "version": "1.0.0",
+    "description": "Merge a pull request on Dolthub"
+  },
+  "servers": [
+    {
+      "url": "https://www.dolthub.com/api/v1alpha1"
+    }
+  ],
+  
+    "paths": {
+      "/{owner}/{database}/pulls/{pull_id}/merge": {
+        "post": {
+          "summary": "Merge a pull request",
+          "description": "This endpoint merges a pull request into the destination branch.",
+          "parameters": [
+            {
+              "name": "owner",
+              "in": "path",
+              "description": "The name of the database owner.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example":"dolthub"
+              }
+            },
+            {
+              "name": "database",
+              "in": "path",
+              "description": "The name of the database.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example":"museum-collections"
+              }
+            },
+            {
+              "name": "pull_id",
+              "in": "path",
+              "description": "The ID of the pull request to merge.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example":"66"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The pull request was merged successfully.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "example": "Success"
+                      },
+                      "database_owner": {
+                        "type": "string",
+                        "example": "dolthub"
+                      },
+                      "database_name": {
+                        "type": "string",
+                        "example": "museum-collections"
+                      },
+                      "pull_id": {
+                        "type": "string",
+                        "example": "66"
+                      },
+                      "operation_name": {
+                        "type": "string",
+                        "description": "The job id that is performing the merge.",
+                        "example": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+                      },
+                      "user_operation_name":{
+                        "type":"string",
+                        "description":"The operation id that is associated to the merge job. It corresponds to the 'operation_name' field returned in the response of the list operations API.",
+                        "example":"users/liuliu/userOperations/5e4834c9-375d-4bbd-bdaf-09eb0734127c"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request. The request was invalid or could not be processed.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "example": "Error"
+                      },
+                      "message":{
+                        "type":"string",
+                        "example":"Error merging a pull request."
+                      },
+                      "database_owner": {
+                        "type": "string",
+                        "example": "dolthub"
+                      },
+                      "database_name": {
+                        "type": "string",
+                        "example": "museum-collections"
+                      },
+                      "pull_id": {
+                        "type": "string",
+                        "example": "66"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "APIKeyHeader": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "APIKeyHeader": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "authorization"
+        }
+      }
+    }
+  }
+  

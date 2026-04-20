@@ -1,0 +1,154 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Check Import Operation Status API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://www.dolthub.com/api/v1alpha1",
+      "description": "DoltHub API v1alpha1"
+    }
+  ],
+  "paths": {
+    "/{owner}/{database}/upload": {
+      "get": {
+        "summary": "Check import operation status",
+        "description": "Poll the operation to check if the file import operation is done",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "The owner of the database",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"dolthub"
+            }
+          },
+          {
+            "name": "database",
+            "in": "path",
+            "description": "The database name",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"museum-collections"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "query",
+            "description": "The name of the branch to upload the file to.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"main"
+            }
+          },
+          {
+            "name":"operationName",
+            "in":"query",
+            "description":"The operation name to check",
+            "required":true,
+            "schema":{
+              "type": "string",
+              "description": "The operation name to check",
+              "example": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The status of the file import operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "The status of the operation, Success if the file import was successful",
+                      "example":"Success"
+                    },
+                    "operation_name": {
+                      "type": "string",
+                      "description": "The operation name",
+                      "example": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+                    },
+                    "job_created": {
+                      "type": "boolean",
+                      "description": "True if the import job is created, False otherwise",
+                      "example":true
+                    },
+                    "database_owner": {
+                      "type": "string",
+                      "description": "The owner of the database",
+                      "example":"dolthub"
+                    },
+                    "database_name": {
+                      "type": "string",
+                      "description": "The name of the database",
+                      "example":"museum-collections"
+                    },
+                    "pull_id": {
+                      "type": "string",
+                      "description": "The ID of the pull request that the import job created. This is only present if the import job is completed",
+                      "example":"66"
+                    },
+                    "job_status":{
+                      "type":"string",
+                      "description":"The status of the job, In Progress if the job is still running, Completed if the job is done, Pending if the job is waiting to be run",
+                      "example":"Completed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. The request was invalid or could not be processed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message":{
+                      "type":"string",
+                      "example":"Error polling an operation status."
+                    },
+                    "operation_name": {
+                      "type": "string",
+                      "example": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    }
+  }
+}
+
+

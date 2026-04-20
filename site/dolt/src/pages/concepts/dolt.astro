@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../layouts/DocsLayout.astro";
+
+const post = await import("../../content/concepts/dolt.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Why Dolt?">
+  <Content />
+</DocsLayout>

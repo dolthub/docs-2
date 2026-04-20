@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/reference/sql/version-control/dolt-sql-procedures.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Dolt SQL Procedures">
+  <Content />
+</DocsLayout>

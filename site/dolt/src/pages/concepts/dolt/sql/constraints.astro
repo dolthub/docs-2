@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../../content/concepts/dolt/sql/constraints.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Constraints">
+  <Content />
+</DocsLayout>

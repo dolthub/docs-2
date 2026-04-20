@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../layouts/DocsLayout.astro";
+
+const post = await import("../../content/reference/sql/server/README.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Running the Dolt SQL Server">
+  <Content />
+</DocsLayout>

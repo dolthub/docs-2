@@ -1,0 +1,160 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DoltHub API - List forks",
+    "description": "API to list forks of a database",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://www.dolthub.com/api/v1alpha1"
+    }
+  ],
+  "paths": {
+    "/{owner}/{database}/forks": {
+      "get": {
+        "summary": "List Forks",
+        "description": "This API endpoint allows you to list all forks within the fork network of a database.",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "The name of the owner of the database.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "dolthub"
+            }
+          },
+          {
+            "name": "database",
+            "in": "path",
+            "description": "The name of the database.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "museum-collections"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "Status of the request.",
+                      "example": "Success"
+                    },
+                    "database_owner": {
+                      "type": "string",
+                      "description": "Owner of the database.",
+                      "example": "dolthub"
+                    },
+                    "database_name": {
+                      "type": "string",
+                      "description": "Name of the database.",
+                      "example": "museum-collections"
+                    },
+                    "forks": {
+                      "type": "array",
+                      "description": "List of forks within the fork network of this database.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "database_owner": {
+                            "type": "string",
+                            "description": "Owner of the forked database.",
+                            "example": "anotherOrg"
+                          },
+                          "database_name": {
+                            "type": "string",
+                            "description": "Name of the forked database.",
+                            "example": "museum-collections"
+                          }
+                        }
+                      }
+                    },
+                    "parent_owner": {
+                      "type": "string",
+                      "description": "Owner of the parent database, empty if this is the root.",
+                      "example": ""
+                    },
+                    "parent_database_name": {
+                      "type": "string",
+                      "description": "Name of the parent database, empty if this is the root.",
+                      "example": ""
+                    },
+                    "network_root_owner": {
+                      "type": "string",
+                      "description": "Owner of the root database in the fork network.",
+                      "example": "dolthub"
+                    },
+                    "network_root_database_name": {
+                      "type": "string",
+                      "description": "Name of the root database in the fork network.",
+                      "example": "museum-collections"
+                    },
+                    "fork_network_count": {
+                      "type": "integer",
+                      "description": "Number of forks in the fork network (excluding the root).",
+                      "example": 3
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. The request was invalid or could not be processed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error getting the forks list."
+                    },
+                    "database_owner": {
+                      "type": "string",
+                      "description": "Owner of the database.",
+                      "example": "dolthub"
+                    },
+                    "database_name": {
+                      "type": "string",
+                      "description": "Name of the database.",
+                      "example": "with-archives"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    }
+  }
+}

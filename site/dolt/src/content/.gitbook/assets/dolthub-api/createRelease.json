@@ -1,0 +1,207 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Create a release",
+    "description": "API to create a new release",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://www.dolthub.com/api/v1alpha1"
+    }
+  ],
+  "paths": {
+    "/{owner}/{database}/releases": {
+      "post": {
+        "summary": "Create Release",
+        "description": "This API endpoint allows you to create a new release in your database.",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "The name of the owner of the database.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"dolthub"
+            }
+          },
+          {
+            "name": "database",
+            "in": "path",
+            "description": "The name of the database.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"museum-collections"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The release information.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The title of the release.",
+                    "example":"my-release-v1"
+                  },
+                  "commitSha": {
+                    "type": "string",
+                    "description": "The commit SHA or branch name of the release.",
+                    "example":"1234567890"
+                  },
+                  "tag": {
+                    "type": "string",
+                    "description": "The name of the tag.",
+                    "example":"v1"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the tag.",
+                    "example":"First version of the database"
+                  },
+                  "createTagIfNotExists": {
+                    "type": "boolean",
+                    "description": "Whether to create a tag if it doesn't exist.",
+                    "example":true
+                  }             
+              },
+              "required": [
+                "title","tag","commitSha"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "description": "Status of the create branch operation",
+                    "example":"Success"
+                  },
+                  "database_owner": {
+                    "type": "string",
+                    "description": "Owner of the database",
+                    "example":"dolthub"
+                  },
+                  "database_name": {
+                    "type": "string",
+                    "description": "Database name",
+                    "example":"museum-collections"
+                  },
+                  "release_tag": {
+                    "type": "string",
+                    "description": "Name of the tag",
+                    "example":"v1"
+                  },
+                  "release_description":{
+                    "type":"string",
+                    "description": "Description of the release",
+                    "example":"First version of the database"
+                  },
+                  "release_commit_sha": {
+                    "type": "string",
+                    "description": "Commit SHA of the release",
+                    "example":"1234567890"
+                  },
+                  "release_title": {
+                    "type": "string",
+                    "description": "Title of the release",
+                    "example":"my-release-v1"
+                  },
+                  "release_created_at": {
+                    "type": "string",
+                    "description": "Created at of the release",
+                    "example":"2021-01-01T00:00:00Z"
+                  },
+                  "release_updated_at": {
+                    "type": "string",
+                    "description": "Updated at of the release",
+                    "example":"2021-01-01T00:00:00Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request. The request was invalid or could not be processed.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "Error"
+                  },
+                  "message":{
+                    "type":"string",
+                    "example":"Error creating a release."
+                  },
+                  "database_owner": {
+                    "type": "string",
+                    "description": "Owner of the database",
+                    "example":"dolthub"
+                  },
+                  "database_name": {
+                    "type": "string",
+                    "description": "Database name",
+                    "example":"museum-collections"
+                  },
+                  "release_tag": {
+                    "type": "string",
+                    "description": "Name of the tag",
+                    "example":"v1"
+                  },
+                  "release_description":{
+                    "type":"string",
+                    "description": "Description of the release",
+                    "example":"First version of the database"
+                  },
+                  "release_commit_sha": {
+                    "type": "string",
+                    "description": "Commit SHA of the release",
+                    "example":"1234567890"
+                  },
+                  "release_title": {
+                    "type": "string",
+                    "description": "Title of the release",
+                    "example":"my-release-v1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "security": [
+        {
+          "APIKeyHeader": []
+        }
+      ]
+    }
+  }
+},
+  "components": {
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    }
+  }
+}

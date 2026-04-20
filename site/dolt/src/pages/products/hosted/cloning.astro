@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/products/hosted/cloning.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Hosted Dolt: Cloning a Hosted Database">
+  <Content />
+</DocsLayout>

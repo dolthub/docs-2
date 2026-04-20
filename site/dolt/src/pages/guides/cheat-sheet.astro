@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../layouts/DocsLayout.astro";
+
+const post = await import("../../content/guides/cheat-sheet.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Dolt Cheat Sheet">
+  <Content />
+</DocsLayout>

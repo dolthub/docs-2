@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/introduction/use-cases/manual-data-curation.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Manual Data Curation">
+  <Content />
+</DocsLayout>

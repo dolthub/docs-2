@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/introduction/use-cases/vc-your-app.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Version Control Your Application">
+  <Content />
+</DocsLayout>
