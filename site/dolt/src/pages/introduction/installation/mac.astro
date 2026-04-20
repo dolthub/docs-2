@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/introduction/installation/mac.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Mac ">
+  <Content />
+</DocsLayout>

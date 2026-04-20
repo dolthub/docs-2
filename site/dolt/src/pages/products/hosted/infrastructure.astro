@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/products/hosted/infrastructure.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Hosted Dolt: Infrastructure">
+  <Content />
+</DocsLayout>

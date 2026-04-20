@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../../content/concepts/dolt/sql/system-variables.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="System Variables">
+  <Content />
+</DocsLayout>

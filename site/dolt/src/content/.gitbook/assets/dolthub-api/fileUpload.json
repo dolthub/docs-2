@@ -1,0 +1,194 @@
+{
+  "openapi": "3.0.0",
+  "info":{
+    "title": "File Upload",
+    "description": "API for uploading files to DoltHub",
+    "version": "1.0.0"
+  },
+  "servers":[
+    { 
+      "url": "https://www.dolthub.com/api/v1alpha1"
+      }
+    ],
+  "paths":{
+    "/{owner}/{database}/upload":{
+      "post":{
+        "summary": "Upload a file to a DoltHub database",
+        "description": "This endpoint allows you to upload a file to DoltHub to create, update, overwrite, or replace a table.",
+        "parameters":[
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "The name of the database owner.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"dolthub"
+            }
+          },
+          {
+            "name": "database",
+            "in": "path",
+            "description": "The name of the database.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"museum-collections"
+            }
+          }],
+          "requestBody": {
+            "description": "The file upload information.",
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "format": "binary",
+                      "description": "The file to be uploaded."
+                    },
+                    "params": {
+                      "type": "object",
+                      "properties": {
+                        "tableName": {
+                          "type": "string",
+                          "description": "The name of the table to create, update, overwrite, or replace a table. It is required if the upload is fileType csv, psv, or xlsx. sql and any types don't need a tableName",
+                          "example": "lacma"
+                        },
+                        "fileName": {
+                          "type": "string",
+                          "description": "The name of the file being uploaded.",
+                          "example": "lacma.csv"
+                        },
+                        "branchName": {
+                          "type": "string",
+                          "description": "The branch name of the file being uploaded to. If the database is empty (no branch exist), leave it as an empty string",
+                          "example": "main"
+                        },
+                        "fileType": {
+                          "type": "string",
+                          "description": "The type of file being uploaded. Supported types are Csv, Psv, Json, Xlsx, and Sql.",
+                          "example": "Csv"
+                        },
+                        "importOp": {
+                          "type": "string",
+                          "description": "The import operation to perform on the file. Supported operations are Create, Update, Overwrite, and Replace.",
+                          "example": "Create"
+                        },
+                        "primaryKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "The primary keys of the table, if any.",
+                          "example": ["id"]
+                        }
+                      },
+                      "required": ["branchName","fileName", "fileType", "importOp"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Pull request created successfully.",
+              "content": {
+                "application/json": {
+                "schema":{
+                  "type": "object",
+                "properties": {
+                  "status":{
+                    "type":"string",
+                    "example":"Success"
+                  },
+                  "database_owner":{
+                    "type":"string",
+                    "example":"dolthub"
+                  },
+                  "database_name":{
+                    "type":"string",
+                    "example":"museum-collections"
+                  },
+                  "branch_name":{
+                    "type":"string",
+                    "example":"main"
+                  },
+                  "table_name":{
+                    "type":"string",
+                    "example":"lacma"
+                  },
+                  "operation_name":{
+                    "type":"string",
+                    "description": "The job id that is performing the upload.",
+                    "example":"repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+                  },
+                  "user_operation_name":{
+                    "type":"string",
+                    "description": "The operation id that is associated to the upload job. It corresponds to the 'operation_name' field returned in the response of the list operations API.",
+                    "example":"users/liuliu/userOperations/5e4834c9-375d-4bbd-bdaf-09eb0734127c"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400":{
+          "description": "Bad request. The request was invalid or could not be processed.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "Error"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid request body"
+                        },
+                        "database_owner":{
+                          "type":"string",
+                          "example":"dolthub"
+                        },
+                        "database_name":{
+                          "type":"string",
+                          "example":"museum-collections"
+                        },
+                        "branch_name":{
+                          "type":"string",
+                          "example":"main"
+                        },
+                        "table_name":{
+                          "type":"string",
+                          "example":"lacma"
+                        }
+                      }
+                    }
+                  }
+                }
+
+        }
+      },
+      "security": [
+        {
+          "APIKeyHeader": []
+        }
+      ]
+    }
+  }
+  },
+  "components": {
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../../content/products/dolthub/api/csv.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="CSV">
+  <Content />
+</DocsLayout>

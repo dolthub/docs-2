@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/concepts/dolt/rdbms/README.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Relational Database Management System">
+  <Content />
+</DocsLayout>

@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../layouts/DocsLayout.astro";
+
+const post = await import("../../content/other/versioning.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Versioning">
+  <Content />
+</DocsLayout>

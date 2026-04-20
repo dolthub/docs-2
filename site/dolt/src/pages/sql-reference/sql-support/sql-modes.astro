@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/reference/sql/sql-support/sql-modes.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="SQL Modes">
+  <Content />
+</DocsLayout>

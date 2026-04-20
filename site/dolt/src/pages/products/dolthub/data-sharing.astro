@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/products/dolthub/data-sharing.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Data Sharing on DoltHub">
+  <Content />
+</DocsLayout>

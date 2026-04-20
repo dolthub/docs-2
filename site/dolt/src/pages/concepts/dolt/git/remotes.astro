@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../../content/concepts/dolt/git/remotes.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Remotes">
+  <Content />
+</DocsLayout>

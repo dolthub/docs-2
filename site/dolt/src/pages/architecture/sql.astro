@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../layouts/DocsLayout.astro";
+
+const post = await import("../../content/architecture/sql.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="SQL Architecture">
+  <Content />
+</DocsLayout>

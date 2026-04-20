@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/architecture/storage-engine/prolly-tree.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Prolly Tree">
+  <Content />
+</DocsLayout>

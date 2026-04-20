@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/reference/sql/version-control/remotes.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Using remotes">
+  <Content />
+</DocsLayout>

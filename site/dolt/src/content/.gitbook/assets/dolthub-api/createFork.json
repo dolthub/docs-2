@@ -1,0 +1,214 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fork a Dolt Database",
+    "description": "API to fork an existing Dolt database",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://www.dolthub.com/api/v1alpha1"
+    }
+  ],
+  "paths": {
+    "/fork": {
+      "post": {
+        "summary": "Fork an existing Dolt database",
+        "description": "This API allows you to fork an existing Dolt database.",
+        "requestBody": {
+          "description": "The database information.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parentOwnerName": {
+                    "type": "string",
+                    "example": "dolthub",
+                    "description": "The name of the owner of the parent database."
+                  },
+                  "parentDatabaseName": {
+                    "type": "string",
+                    "example": "museum-collections",
+                    "description": "The name of the parent database."
+                  },
+                  "ownerName": {
+                    "type": "string",
+                    "example": "myusername",
+                    "description": "The name of the owner to fork to."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "parent_owner": {
+                      "type": "string",
+                      "example": "dolthub"
+                    },
+                    "parent_database": {
+                      "type": "string",
+                      "example": "museum-collections"
+                    },
+                    "forked_owner": {
+                      "type": "string",
+                      "example": "myusername"
+                    },
+                    "operation_name": {
+                      "type": "string",
+                      "example": "operations/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. The request was invalid or could not be processed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error creating a database."
+                    },
+                    "parent_owner": {
+                      "type": "string",
+                      "example": "dolthub"
+                    },
+                    "parent_database": {
+                      "type": "string",
+                      "example": "museum-collections"
+                    },
+                    "forked_owner": {
+                      "type": "string",
+                      "example": "myusername"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Check fork operation status",
+        "description": "Poll the operation to check if the fork operation is done",
+        "parameters": [
+          {
+            "name": "operationName",
+            "in": "query",
+            "description": "The operation name to check",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The operation name to check",
+              "example": "operations/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The status of the fork operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "The status of the operation, Success if the fork creation was successful",
+                      "example": "Success"
+                    },
+                    "done": {
+                      "type": "boolean",
+                      "description": "True if the fork operation is done, false otherwise",
+                      "example": true
+                    },
+                    "operation_name": {
+                      "type": "string",
+                      "description": "The operation name",
+                      "example": "operations/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+                    },
+                    "database_owner": {
+                      "type": "string",
+                      "description": "The owner of the newly forked database",
+                      "example": "myusername"
+                    },
+                    "database_name": {
+                      "type": "string",
+                      "description": "The name of the newly forked database",
+                      "example": "museum-collections"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. The request was invalid or could not be processed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error polling an operation status."
+                    },
+                    "operation_name": {
+                      "type": "string",
+                      "example": "operations/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    }
+  }
+}

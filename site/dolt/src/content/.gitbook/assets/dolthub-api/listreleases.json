@@ -1,0 +1,170 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DoltHub API - List releases",
+    "description": "API to get release list on a database.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://www.dolthub.com/api/v1alpha1"
+    }
+  ],
+  "paths": {
+    "/{owner}/{database}/releases": {
+      "get": {
+        "summary": "List Releases",
+        "description": "This API endpoint allows you to list all releases in your database.",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "The name of the owner of the database.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"dolthub"
+            }
+          },
+          {
+            "name": "database",
+            "in": "path",
+            "description": "The name of the database.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example":"museum-collections"
+            }
+          },
+          {
+            "name": "next_page_token",
+            "in": "query",
+            "description": "The next page token.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example":"1234567890"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "description": "Status of the request",
+                    "example":"Success"
+                  },
+                  "database_owner": {
+                    "type": "string",
+                    "description": "Owner of the database",
+                    "example":"dolthub"
+                  },
+                  "database_name": {
+                    "type": "string",
+                    "description": "Database name",
+                    "example":"museum-collections"
+                  },
+                  "next_page_token":{
+                    "type":"string",
+                    "description":"Next page token",
+                    "example":"1234567890"
+                  },
+                  "releases":{
+                    "type":"array",
+                    "description":"List of releases",
+                    "items":{
+                      "type":"object",
+                      "properties":{
+                        "release_title": {
+                          "type": "string",
+                          "description": "Title of the release",
+                          "example":"my-release-v1"
+                        },
+                        "release_tag": {
+                          "type": "string",
+                          "description": "Name of the tag",
+                          "example":"v1"
+                        },
+                        "release_commit_sha": {
+                          "type": "string",
+                          "description": "Commit SHA of the release",
+                          "example":"1234567890"
+                        },
+                        "release_description":{
+                          "type":"string",
+                          "description": "Description of the release",
+                          "example":"First version of the database"
+                        },
+                        "release_created_at":{
+                          "type":"string",
+                          "description": "Date of the release",
+                          "example":"2023-03-31T18:00:00Z"
+                        },
+                        "release_updated_at":{
+                          "type":"string",
+                          "description": "Updated at of the release",
+                          "example":"2023-03-31T18:00:00Z"
+                        }
+                      }
+                    }
+                 }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request. The request was invalid or could not be processed.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "Error"
+                  },
+                  "message":{
+                    "type":"string",
+                    "example":"Error creating a release."
+                  },
+                  "database_owner": {
+                    "type": "string",
+                    "description": "Owner of the database",
+                    "example":"dolthub"
+                  },
+                  "database_name": {
+                    "type": "string",
+                    "description": "Database name",
+                    "example":"museum-collections"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "security": [
+        {
+          "APIKeyHeader": []
+        }
+      ]
+    }
+  }
+},
+  "components": {
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      }
+    }
+  }
+}

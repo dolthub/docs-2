@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/products/hosted/dolthub-as-remote.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Hosted Dolt: Using DoltHub as a Remote">
+  <Content />
+</DocsLayout>

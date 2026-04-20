@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/introduction/use-cases/data-sharing.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Data Sharing">
+  <Content />
+</DocsLayout>

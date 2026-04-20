@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/reference/sql/server/metrics.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Metrics">
+  <Content />
+</DocsLayout>
