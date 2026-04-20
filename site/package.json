@@ -1,0 +1,15 @@
+{
+  "name": "@dolthub/docs-sites",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Docs sites for Dolt, DoltLab, and Doltgres",
+  "scripts": {
+    "dev:dolt": "cd dolt && npm run dev",
+    "dev:doltlab": "cd doltlab && npm run dev",
+    "dev:doltgres": "cd doltgres && npm run dev",
+    "build:dolt": "cd dolt && npm run build",
+    "build:doltlab": "cd doltlab && npm run build",
+    "build:doltgres": "cd doltgres && npm run build",
+    "build": "npm run build:dolt && npm run build:doltlab && npm run build:doltgres"
+  }
+}

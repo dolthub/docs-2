@@ -1,0 +1,7 @@
+{
+  "name": "@dolthub/docs-shared",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Shared components and config for all three docs sites",
+  "type": "module"
+}

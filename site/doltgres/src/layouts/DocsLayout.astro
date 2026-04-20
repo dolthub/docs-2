@@ -1,0 +1,119 @@
+---
+import { Navbar, Footer } from "../../../shared/components";
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Doltgres Docs</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    />
+  </head>
+  <body>
+    <div>
+      <Navbar client:only="react" />
+
+      <main class="docs-main">
+        <article class="docs-article">
+          <slot />
+        </article>
+      </main>
+
+      <div class="bottomOuter">
+        <div class="bottom">
+          <Footer client:only="react" />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  .docs-main {
+    @apply w-11/12 xl:w-3/4 max-w-5xl mx-auto pt-8 pb-16 min-h-[70vh];
+  }
+
+  .docs-main :global(p) {
+    @apply leading-relaxed break-words mb-4;
+  }
+
+  .docs-main :global(a) {
+    @apply text-sky-500 hover:text-sky-700 underline;
+  }
+
+  .docs-main :global(h1) {
+    @apply text-4xl font-bold mb-6 mt-8;
+  }
+
+  .docs-main :global(h2) {
+    @apply text-2xl font-bold mb-4 mt-8;
+  }
+
+  .docs-main :global(h3) {
+    @apply text-xl font-bold mb-3 mt-6;
+  }
+
+  .docs-main :global(ul) {
+    @apply list-disc pl-6 mb-4;
+  }
+
+  .docs-main :global(ol) {
+    @apply list-decimal pl-6 mb-4;
+  }
+
+  .docs-main :global(li) {
+    @apply mb-1;
+  }
+
+  .docs-main :global(code) {
+    @apply bg-stone-100 rounded px-1.5 py-0.5 text-sm font-mono;
+  }
+
+  .docs-main :global(pre) {
+    @apply rounded-lg p-4 mb-4 overflow-x-auto;
+  }
+
+  .docs-main :global(pre code) {
+    @apply bg-transparent p-0;
+  }
+
+  .docs-main :global(img) {
+    @apply max-w-full rounded-lg my-4;
+  }
+
+  .docs-main :global(blockquote) {
+    @apply border-l-4 border-sky-300 pl-4 italic my-4;
+  }
+
+  .bottomOuter {
+    @apply w-full mt-20 overflow-hidden bg-space-500;
+  }
+
+  .bottom {
+    @apply z-10 relative mx-auto overflow-hidden w-11/12 xl:w-3/4;
+  }
+</style>
+
+<style is:global>
+  .anchor-link {
+    @apply hidden;
+  }
+
+  .docs-main h1:hover .anchor-link,
+  .docs-main h2:hover .anchor-link,
+  .docs-main h3:hover .anchor-link,
+  .docs-main h4:hover .anchor-link {
+    @apply inline-block ml-3;
+  }
+</style>
