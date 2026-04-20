@@ -1,11 +1,13 @@
-import { defineConfig } from "astro/config";
+// Shared Astro configuration that each site extends.
+// Usage: import { baseAstroConfig } from "../shared/config/astro.mjs";
+//        export default defineConfig({ ...baseAstroConfig, site: "https://docs.dolthub.com" });
+
 import tailwind from "@astrojs/tailwind";
 import react from "@astrojs/react";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
-export default defineConfig({
-  site: "https://docs.dolthub.com",
+export const baseAstroConfig = {
   integrations: [tailwind(), react()],
   markdown: {
     shikiConfig: {
@@ -35,4 +37,4 @@ export default defineConfig({
       dedupe: ["react", "react-dom"],
     },
   },
-});
+};
