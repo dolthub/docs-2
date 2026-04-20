@@ -1,0 +1,29 @@
+name: Site build
+
+on:
+  pull_request:
+    paths:
+      - "site/**"
+  workflow_dispatch:
+
+concurrency:
+  group: site-build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build (${{ matrix.site }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        site: [dolt, doltlab, doltgres]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: cd site/${{ matrix.site }} && npm install --legacy-peer-deps
+      - name: Build
+        run: cd site/${{ matrix.site }} && npm run build
