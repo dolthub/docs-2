@@ -33,9 +33,9 @@ performance and usage in real time.
 
 ## Custom Configuration
 
-Dolt has a myriad of [configuration options](../../reference/sql/server/configuration.md).
+Dolt has a myriad of [configuration options]../../sql-reference/server/configuration).
 Most of these can be changed on the running server by setting the appropriate [system
-variable](../../reference/sql/version-control/dolt-sysvars.md). However, Hosted Dolt
+variable]../../sql-reference/version-control/dolt-sysvars). However, Hosted Dolt
 provides a simple UI for viewing and changing your deployment's custom configuration.
 
 ![](../../.gitbook/assets/hosted-custom-config.png)
@@ -70,7 +70,7 @@ Learn more about backups [here](https://www.dolthub.com/blog/2022-08-31-hosted-b
 Want to use Hosted Dolt, but don't want your database to be reachable through the public internet.
 We support both AWS and GCP private networking.
 
-[Private networking setup instructions](./private-networking.md)
+[Private networking setup instructions](./private-networking)
 
 ## Dolt Upgrades
 
@@ -99,7 +99,7 @@ Learn more about our support ticket system
 ## Access Management
 
 Easily manage access to your deployment using the same permissions model as
-[DoltHub](../../concepts/dolthub/permissions.md) and
+[DoltHub](../../concepts/dolthub/permissions) and
 [GitHub](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/managing-teams-and-people-with-access-to-your-repository).
 
 Create a deployment under an organization. All organization members have read access to
@@ -143,7 +143,7 @@ favorite DoltHub features, including [pull requests](#pull-requests), [diffs](#d
 
 ![SQL workbench](../../.gitbook/assets/hosted-support.png)
 
-Learn more about the SQL workbench [here](./sql-workbench.md).
+Learn more about the SQL workbench [here](./sql-workbench).
 
 ## Pull Requests
 
@@ -186,18 +186,18 @@ Learn more in [our blog](https://www.dolthub.com/blog/2023-06-30-hosted-workbenc
 ## Clone a Hosted Instance
 
 In some cases you might want to clone your database from Hosted Dolt so that you can
-access Dolt's [command line interface](../../reference/cli/cli.md). Hosted provides an option
+access Dolt's [command line interface]../../cli-reference/cli). Hosted provides an option
 to expose your instance's remotesapi endpoint to allow clone, fetch, and pull from your
 Hosted.
 
 ![](../../.gitbook/assets/hosted-clone-commands.png)
 
-Learn more in our [cloning guide](./cloning.md).
+Learn more in our [cloning guide](./cloning).
 
 ## Use DoltHub as a Remote
 
 To interact with DoltHub from your Hosted instance, you can use DoltHub as a
-[remote](../../concepts/dolt/git/remotes.md). We have [SQL
+[remote](../../concepts/dolt/git/remotes). We have [SQL
 remote](https://www.dolthub.com/blog/2021-09-22-sql-remotes) operations such as
 `dolt_clone`, `dolt_pull`, and `dolt_push` that let you interact with remotes using SQL.
 You can add Dolt credentials to your Hosted instance to authenticate certain operations,
@@ -224,4 +224,4 @@ mysql> show databases;
 3 rows in set (0.05 sec)
 ```
 
-Learn more in our [DoltHub as a remote guide](./dolthub-as-remote.md).
+Learn more in our [DoltHub as a remote guide](./dolthub-as-remote).

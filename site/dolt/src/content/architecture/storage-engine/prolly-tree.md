@@ -2,7 +2,7 @@
 title: Prolly Tree
 ---
 
-"Prolly Tree" is short for ["Probabilistic B-tree"](https://github.com/attic-labs/noms/blob/master/doc/intro.md#prolly-trees-probabilistic-b-trees). "Prolly Tree" was coined by the good folks who built [Noms](https://github.com/attic-labs/noms), who as far as we can tell invented the data structure. We here at [DoltHub](https://www.dolthub.com) have immense respect for their pioneering work, without which [Dolt](https://www.doltdb.com) would not exist.
+"Prolly Tree" is short for ["Probabilistic B-tree"](https://github.com/attic-labs/noms/blob/master/doc/intro#prolly-trees-probabilistic-b-trees). "Prolly Tree" was coined by the good folks who built [Noms](https://github.com/attic-labs/noms), who as far as we can tell invented the data structure. We here at [DoltHub](https://www.dolthub.com) have immense respect for their pioneering work, without which [Dolt](https://www.doltdb.com) would not exist.
 
 ![Prolly Tree](../../.gitbook/assets/tim-prolly-tree-example.png)
 
@@ -60,7 +60,7 @@ The easiest way to understand Prolly trees is to walk through, step-by-step, how
 
 ![Building a Prolly-tree, Step 2](../../.gitbook/assets/tim-prolly-tree-step-2.png)
 
-3. **Hash each Chunk**: You now have the leaf nodes of the Prolly Tree. Compute the content address of each block by applying a strong hash function to its contents. You store the contents in [a content addressed block store](./block-store.md). Here our blocks have been addressed and stored in the block store:
+3. **Hash each Chunk**: You now have the leaf nodes of the Prolly Tree. Compute the content address of each block by applying a strong hash function to its contents. You store the contents in [a content addressed block store](./block-store). Here our blocks have been addressed and stored in the block store:
 
 ![Building a Prolly-tree, Step 3](../../.gitbook/assets/tim-prolly-tree-step-3.png)
 
@@ -200,9 +200,9 @@ One subtlety of this change is that Dolt now chunks to an average number of key,
 
 ## Less Flexible Block Store
 
-Prolly Trees themselves are [block store](./block-store.md) agnostic. So if you only care about the Prolly Tree data structure, you can skip this section.
+Prolly Trees themselves are [block store](./block-store) agnostic. So if you only care about the Prolly Tree data structure, you can skip this section.
 
-Noms block store encoded the types of the data in the store. [Dolt's block store](./block-store.md) is built for a SQL database with fixed schema. Thus, type information is stored out of band of the block store and a [more specific, less flexible layout of data on disk is used](https://www.dolthub.com/blog/2022-05-20-new-format-alpha/). This new, type-less layout improves Dolt read and write performance.
+Noms block store encoded the types of the data in the store. [Dolt's block store](./block-store) is built for a SQL database with fixed schema. Thus, type information is stored out of band of the block store and a [more specific, less flexible layout of data on disk is used](https://www.dolthub.com/blog/2022-05-20-new-format-alpha/). This new, type-less layout improves Dolt read and write performance.
 
 # Explaining Algorithmic Performance
 

@@ -2,11 +2,11 @@
 title: Block Store
 ---
 
-Storage of information is the bedrock of every Database in existence. The logical application concepts by which you store that information is where a lot of Database discussion occurs. In Dolt's case, [Prolly Trees](./prolly-tree.md) allow for some of its key properties like structural sharing and fast diffs. For many databases, Dolt included, the abstraction of how those data structures are written to disk is somewhat secondary. Dolt uses a custom content-addressed block store to store data on disk.
+Storage of information is the bedrock of every Database in existence. The logical application concepts by which you store that information is where a lot of Database discussion occurs. In Dolt's case, [Prolly Trees](./prolly-tree) allow for some of its key properties like structural sharing and fast diffs. For many databases, Dolt included, the abstraction of how those data structures are written to disk is somewhat secondary. Dolt uses a custom content-addressed block store to store data on disk.
 
 # Core Access Patterns
 
-In our [Prolly Tree documentation](./prolly-tree.md), you'll find a lot of pictures that look like this.
+In our [Prolly Tree documentation](./prolly-tree), you'll find a lot of pictures that look like this.
 
 ![Prolly Tree](../../.gitbook/assets/tim-prolly-tree-example.png)
 

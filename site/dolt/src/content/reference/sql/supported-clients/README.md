@@ -9,6 +9,6 @@ issue](https://github.com/dolthub/dolt/issues/new) and let us know.
 
 We have actively tested the following clients, separated by type.
 
-* [Programmatic Clients](clients.md)
-* [SQL Editors](sql-editors.md)
+* [Programmatic Clients](clients)
+* [SQL Editors](sql-editors)
 

@@ -8,14 +8,14 @@ title: "Overview"
 
 Learn more about Hosted Dolt's features and get started with our guides:
 
-- [Getting Started](./getting-started.md)
-- [Notable Features](./notable-features.md)
-- [Built-in SQL Workbench](./sql-workbench.md)
-- [Cloning a Hosted database](./cloning.md)
-- [Using DoltHub as a remote](./dolthub-as-remote.md)
-- [Infrastructure](./infrastructure.md)
-- [Private Networking](./private-networking.md)
-- [Single Sign-On](./sso.md)
+- [Getting Started](./getting-started)
+- [Notable Features](./notable-features)
+- [Built-in SQL Workbench](./sql-workbench)
+- [Cloning a Hosted database](./cloning)
+- [Using DoltHub as a remote](./dolthub-as-remote)
+- [Infrastructure](./infrastructure)
+- [Private Networking](./private-networking)
+- [Single Sign-On](./sso)
 
 You can also check out these blogs for more details:
 

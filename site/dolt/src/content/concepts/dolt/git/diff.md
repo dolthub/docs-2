@@ -18,17 +18,17 @@ If no primary key exists, all changes look like inserts and deletes. Effectively
 
 Dolt can produce diffs on the command line, as tables, or as a SQL patch.
 
-Dolt can produce diffs at scale because the Dolt storage engine breaks the rows in the database down into chunks. Each chunk is content-addressed and stored in a tree called [a Prolly Tree](../../../architecture/storage-engine/prolly-tree.md). Thus, to calculate data diffs, Dolt walks the trees at both commits, exposing the chunks that are different. For instance, if nothing has changed, the content address of the root of the table is unchanged. 
+Dolt can produce diffs at scale because the Dolt storage engine breaks the rows in the database down into chunks. Each chunk is content-addressed and stored in a tree called [a Prolly Tree](../../../architecture/storage-engine/prolly-tree). Thus, to calculate data diffs, Dolt walks the trees at both commits, exposing the chunks that are different. For instance, if nothing has changed, the content address of the root of the table is unchanged. 
 
 ## How to use diffs
 
 Diffs are an invaluable tool for data debugging. 
 
-In human readable form, seeing what cells in your database changed can help you instantly spot problems in the data that may have gone overlooked. You can see diffs in human readable form via the [Dolt CLI](../../../reference/cli/cli.md) or through a SQL query of the [`dolt_diff_<tablename>` system table](../../../reference/sql/version-control/dolt-system-tables.md). 
+In human readable form, seeing what cells in your database changed can help you instantly spot problems in the data that may have gone overlooked. You can see diffs in human readable form via the [Dolt CLI]../../../cli-reference/cli) or through a SQL query of the [`dolt_diff_<tablename>` system table]../../../sql-reference/version-control/dolt-system-tables). 
 
 For instance, are you expecting no `NULL` cells but have some? This indicates a bug in your data creation process. Simply looking at a summary of how many rows were added, modified, and deleted in a specific change can be fruitful. Expecting only row additions in a change but got some modifications? A deeper dive into that import job may be required.
 
-Programmatically, you can use SQL to explore very large diffs using the [`dolt_diff_<tablename>` system tables](../../../reference/sql/version-control/dolt-system-tables.md).
+Programmatically, you can use SQL to explore very large diffs using the [`dolt_diff_<tablename>` system tables]../../../sql-reference/version-control/dolt-system-tables).
 
 ## Filtering Diffs by Change Type
 
@@ -44,7 +44,7 @@ When reviewing large diffs, you may want to focus on specific types of changes. 
 dolt diff HEAD~1 --filter=added -r sql
 ```
 
-For SQL-based filtering, see the [`dolt_diff_<tablename>` system tables documentation](../../../reference/sql/version-control/dolt-system-tables.md#database-diffs), which supports filtering via `WHERE diff_type = 'added'` (or `'modified'`, `'removed'`).
+For SQL-based filtering, see the [`dolt_diff_<tablename>` system tables documentation]../../../sql-reference/version-control/dolt-system-tables#database-diffs), which supports filtering via `WHERE diff_type = 'added'` (or `'modified'`, `'removed'`).
 
 ## Difference between Git diffs and Dolt diffs
 

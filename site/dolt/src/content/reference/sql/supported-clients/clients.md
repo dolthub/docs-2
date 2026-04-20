@@ -4,7 +4,7 @@ title: SQL Clients
 
 # SQL Clients
 
-Dolt ships with a built in MySQL compatible server. To start the server for your Dolt database, you run `dolt sql-server` in the repository directory. The `dolt sql-server` command starts a MySQL compatible server for the Dolt database on port 3306 with no authentication. The database name is the name of the repository directory but with dashes \(`-`\) replaced with underscores \(`_`\). So `dolt-test` repository name would become `dolt_test` database name. See [this documentation for more configuration details](../../cli/cli.md#dolt-sql-server).
+Dolt ships with a built in MySQL compatible server. To start the server for your Dolt database, you run `dolt sql-server` in the repository directory. The `dolt sql-server` command starts a MySQL compatible server for the Dolt database on port 3306 with no authentication. The database name is the name of the repository directory but with dashes \(`-`\) replaced with underscores \(`_`\). So `dolt-test` repository name would become `dolt_test` database name. See [this documentation for more configuration details](../../cli/cli#dolt-sql-server).
 
 Once a server is running, any MySQL client should be able to connect to Dolt SQL Server in the exact same way it connects to a standard MySQL database. For instance, if you are running a Dolt sql-server locally, you can connect to it with the MySQL client `mysql` like so:
 
@@ -212,7 +212,7 @@ We support the legacy [RMySQL](https://github.com/r-dbi/RMySQL) and newer [RMari
 
 There is also an open-source, third-party wrapper for working with Dolt, called [DoltR](https://github.com/noamross/doltr). This tool is well-maintained by [EcoHealth Alliance](https://www.ecohealthalliance.org/) and provides an easy way to work with local or remote Dolt databases from within R Studio.
 
-- [Getting Started with DoltR](https://rdrr.io/github/ecohealthalliance/doltr/f/README.md)
+- [Getting Started with DoltR](https://rdrr.io/github/ecohealthalliance/doltr/f/)
 - [DoltR on GitHub](https://github.com/ecohealthalliance/doltr)
 
 ## Rust

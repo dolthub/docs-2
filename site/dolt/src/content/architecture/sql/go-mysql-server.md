@@ -17,8 +17,8 @@ are only two notable backend implementations so far:
   that want a fast, local MySQL database.
 - Dolt. In addition to the novel git-like storage engine, Dolt also
   adds a number of [system
-  tables](../../reference/sql/version-control/dolt-system-tables.md), [custom
-  functions](../../reference/sql/version-control/dolt-sql-functions.md),
+  tables]../../sql-reference/version-control/dolt-system-tables), [custom
+  functions]../../sql-reference/version-control/dolt-sql-functions),
   and new connection semantics.
 
 # Project architecture
@@ -33,7 +33,7 @@ project docs](https://github.com/dolthub/go-mysql-server#custom-data-source-impl
 Broadly, the system has three main components:
 
 1. **The parser and server**, which are mostly provided by
-   [Vitess](vitess.md). This component receives queries on the wire and
+   [Vitess](vitess). This component receives queries on the wire and
    parses them into an AST.
 
 2. **The query analyzer**, which repeatedly transforms the AST to

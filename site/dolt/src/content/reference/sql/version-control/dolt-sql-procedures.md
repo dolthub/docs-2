@@ -57,7 +57,7 @@ CALL DOLT_CHECKOUT('-b', 'feature-branch');
 SQL procedures are provided for all imperative CLI commands. For
 commands that inspect the state of the database and print some
 information, (`dolt diff`, `dolt log`, etc.) [system
-tables](dolt-system-tables.md) are provided instead.
+tables](dolt-system-tables) are provided instead.
 
 One important note: all procedures modify state only for the current
 session, not for all clients. So for example, whereas running `dolt checkout feature-branch` will change the working HEAD for anyone who
@@ -178,9 +178,9 @@ CALL dolt_backup('restore', 'https://dolthub.com/some_organization/some_dolthub_
 
 Create, delete, and rename branches.
 
-To list branches, use the [`DOLT_BRANCHES` system table](dolt-system-tables.md#dolt_branches), instead of the `DOLT_BRANCH()` stored procedure.
+To list branches, use the [`DOLT_BRANCHES` system table](dolt-system-tables#dolt_branches), instead of the `DOLT_BRANCH()` stored procedure.
 
-To look up the current branch, use the [`@@<dbname>_head_ref` system variable](dolt-sysvars.md#dbname_head_ref), or the `active_branch()` SQL function, as shown in the examples section below.
+To look up the current branch, use the [`@@<dbname>_head_ref` system variable](dolt-sysvars#dbname_head_ref), or the `active_branch()` SQL function, as shown in the examples section below.
 
 WARNING: In a multi-session server environment, Dolt will prevent you from deleting or renaming a branch in use in another session. You can force renaming or deletion by passing the `--force` option, but be aware that active clients on other sessions will no longer be able to execute statements after their active branch is removed and will need to end their session and reconnect.
 
@@ -317,7 +317,7 @@ CALL DOLT_CHECKOUT('my-table');
    resolve to the branch checked out.
 
 See the comments after the statements below for an example of this behavior, and also read [Using
-Branches](./branches.md)
+Branches](./branches)
 
 
 
@@ -377,7 +377,7 @@ Apply the changes introduced by an existing commit.
 
 Apply changes from existing commit and creates a new commit from the current HEAD.
 
-Works exactly like [`dolt cherry-pick` command](../../cli/cli.md#dolt-cherry-pick) on the CLI,
+Works exactly like [`dolt cherry-pick` command](../../cli/cli#dolt-cherry-pick) on the CLI,
 and has the same notes and limitations.
 
 ```sql
@@ -393,7 +393,7 @@ Abort the current conflict resolution process, and revert all changes from the i
 `--allow-empty`:
 Allow empty commits to be cherry-picked. Note that use of this option only keeps commits that were initially empty. Commits which become empty, due to a previous commit, will cause cherry-pick to fail.
 
-`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](dolt-sysvars.md#dolt_commit_verification_groups) system variable.
+`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](dolt-sysvars#dolt_commit_verification_groups) system variable.
 
 
 ### Output Schema
@@ -679,7 +679,7 @@ default. This option bypasses that safety.
 
 `--author`: Specify an explicit author using the standard "A U Thor author@example.com" format. Note that unlike `dolt commit` on the CLI, when invoking the `dolt_commit()` stored procedure, the default commit author is the authenticated SQL user (e.g. `root@localhost`).
 
-`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](dolt-sysvars.md#dolt_commit_verification_groups) system variable.
+`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](dolt-sysvars#dolt_commit_verification_groups) system variable.
 
 ### Output Schema
 
@@ -884,7 +884,7 @@ reconstruct the pre-merge state.
 `--author`: Specify an explicit author using the standard `A U Thor
 <author@example.com>` format.
 
-`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](dolt-sysvars.md#dolt_commit_verification_groups) system variable.
+`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](dolt-sysvars#dolt_commit_verification_groups) system variable.
 
 When merging a branch, your session state must be clean. `COMMIT`
 or`ROLLBACK` any changes, then `DOLT_COMMIT()` to create a new dolt
@@ -893,7 +893,7 @@ commit on the target branch.
 If the merge causes conflicts or constraint violations, you must
 resolve them using the `dolt_conflicts` system tables before the
 transaction can be committed. See [Dolt system
-tables](dolt-system-tables.md##dolt_conflicts_usdtablename) for
+tables](dolt-system-tables##dolt_conflicts_usdtablename) for
 details.
 
 ### Output Schema
@@ -964,7 +964,7 @@ commit on the target branch.
 If the merge causes conflicts or constraint violations, you must
 resolve them using the `dolt_conflicts` system tables before the
 transaction can be committed. See [Dolt system
-tables](dolt-system-tables.md##dolt_conflicts_usdtablename) for
+tables](dolt-system-tables##dolt_conflicts_usdtablename) for
 details.
 
 ### Output Schema
@@ -1105,7 +1105,7 @@ Currently only interactive rebases are supported. Conflict resolution for data c
 `--empty`:
 How to handle commits that are not empty to start, but which become empty after rebasing. Valid values are: drop (default) or keep. This option may only be specified when starting a rebase, and is not valid when continuing a rebase.
 
-`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](dolt-sysvars.md#dolt_commit_verification_groups) system variable.
+`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](dolt-sysvars#dolt_commit_verification_groups) system variable.
 
 
 ### Output Schema
@@ -1191,9 +1191,9 @@ select commit_hash, message from dolt_log;
 ## `DOLT_REMOTE()`
 
 Adds a remote for a database at given url, or removes an existing remote with its remote-tracking branches
-and configuration settings. Similar to [`dolt remote` command](../../cli/cli.md#dolt-remote) on the CLI, with the
+and configuration settings. Similar to [`dolt remote` command](../../cli/cli#dolt-remote) on the CLI, with the
 exception of cloud provider flags. To list existing remotes, use the
-[`dolt_remotes` system table](./dolt-system-tables.md#dolt_remotes).
+[`dolt_remotes` system table](./dolt-system-tables#dolt_remotes).
 
 ```sql
 CALL DOLT_REMOTE('add','remote_name','remote_url');
@@ -1437,9 +1437,9 @@ Empty set (0.00 sec)
 ## `DOLT_STASH()`
 
 Manage temporary saves of uncommitted changes. Changes can be saved, restored, or removed without affecting the commit history. 
-Similar to the [`dolt stash` command](../../cli/cli.md#dolt-stash) on the cli. An important exception is that the procedure requires a _push_ subcommand, 
+Similar to the [`dolt stash` command](../../cli/cli#dolt-stash) on the cli. An important exception is that the procedure requires a _push_ subcommand, 
 and cannot be called without arguments to stash away changes.
-To list existing stashes, use the [`dolt_stashes` system table](./dolt-system-tables.md#dolt_stashes).
+To list existing stashes, use the [`dolt_stashes` system table](./dolt-system-tables#dolt_stashes).
 
 ### Subcommands
 
@@ -1517,8 +1517,8 @@ SELECT * FROM employees;
 ## `DOLT_TAG()`
 
 Creates a new tag that points at specified commit ref, or deletes an existing tag. Works exactly like
-[`dolt tag` command](../../cli/cli.md#dolt-tag) on the CLI, and takes the same arguments except for listing tags.
-To list existing tags, use [`dolt_tags` system table](./dolt-system-tables.md#dolt_tags).
+[`dolt tag` command](../../cli/cli#dolt-tag) on the CLI, and takes the same arguments except for listing tags.
+To list existing tags, use [`dolt_tags` system table](./dolt-system-tables#dolt_tags).
 
 ```sql
 CALL DOLT_TAG('tag_name', 'commit_ref');
@@ -1636,7 +1636,7 @@ CALL dolt_commit('-am', 'updating myTable.col1 tag');
 
 Verifies that working set changes (inserts, updates, and/or deletes) satisfy the
 defined table constraints. If any constraints are violated they are written to the
-[DOLT_CONSTRAINT_VIOLATIONS](./dolt-system-tables.md#doltconstraintviolations) table.
+[DOLT_CONSTRAINT_VIOLATIONS](./dolt-system-tables#doltconstraintviolations) table.
 
 `DOLT_VERIFY_CONSTRAINTS` by default does not detect constraints for row changes
 that have been previously committed. The `--all` option can be specified if you
@@ -1653,7 +1653,7 @@ Verifies constraints against every row.
 
 `-o`, `--output-only`:
 Disables writing results to the
-[DOLT_CONSTRAINT_VIOLATIONS](./dolt-system-tables.md#doltconstraintviolations)
+[DOLT_CONSTRAINT_VIOLATIONS](./dolt-system-tables#doltconstraintviolations)
 system table.
 
 ### Output Schema
@@ -1809,7 +1809,7 @@ SELECT * from dolt_constraint_violations_child;
 # Statistics Updates
 
 Control functions are used to start and stop background thread activity related to statistics updates.
-See [stats documentation](../sql-support/miscellaneous.md#stats-controller-functions) for more information.
+See [stats documentation](../sql-support/miscellaneous#stats-controller-functions) for more information.
 
 ## `dolt_stats_restart()`
 

@@ -99,7 +99,7 @@ title: Supported Statements
 Dolt supports atomic transactions like other SQL databases. It's also
 possible for clients to connect to different heads, which means they
 will never see each other's edits until a merge between heads is
-performed. See [Using Branches](../version-control/branches.md) for more detail.
+performed. See [Using Branches](../version-control/branches) for more detail.
 
 Dolt has two levels of persistence:
 
@@ -114,7 +114,7 @@ Dolt has two levels of persistence:
 |:------------------------|:----------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `BEGIN`                 | ✅         | Synonym for `START TRANSACTION`                                                                                                                                                 |
 | `COMMIT`                | ✅         |                                                                                                                                                                                 |
-| `CALL DOLT_COMMIT()`    | ✅         | `DOLT_COMMIT()` creates a new Dolt commit using the content of the STAGED HEAD. [See docs on DOLT_COMMIT() for details.](../version-control/dolt-sql-procedures.md#dolt_commit) |
+| `CALL DOLT_COMMIT()`    | ✅         | `DOLT_COMMIT()` creates a new Dolt commit using the content of the STAGED HEAD. [See docs on DOLT_COMMIT() for details.](../version-control/dolt-sql-procedures#dolt_commit) |
 | `LOCK TABLES`           | ❌         | `LOCK TABLES` parses correctly but does not prevent access to those tables from other sessions.                                                                                 |
 | `ROLLBACK`              | ✅         |                                                                                                                                                                                 |
 | `SAVEPOINT`             | ✅         |                                                                                                                                                                                 |
@@ -134,7 +134,7 @@ Dolt has two levels of persistence:
 
 ## Access management statements
 
-More information on how Dolt handles access management may be found in the [access management page](../server/access-management.md).
+More information on how Dolt handles access management may be found in the [access management page](../server/access-management).
 
 | Statement          | Supported | Notes and limitations                                       |
 |:-------------------|:----------|:------------------------------------------------------------|

@@ -21,7 +21,7 @@ By default, privileges will be stored in `.doltcfg/privileges.db` file, but you 
 
 ### YAML Configuration Option
 
-By default, privileges will be stored in `.doltcfg/privileges.db` file, you may add the `privilege_file: PATH` line to your [YAML config](configuration.md).
+By default, privileges will be stored in `.doltcfg/privileges.db` file, you may add the `privilege_file: PATH` line to your [YAML config](configuration).
 `"PATH"` represents the path to the privileges file, generally named `privileges.db`.
 
 ### `root@localhost` Superuser
@@ -32,7 +32,7 @@ user account, just like any other user account.
 
 ## Editing Users
 
-Dolt comes with a built-in client - the [`dolt sql`](../../cli/cli.md#dolt-sql) command. From within a Dolt database 
+Dolt comes with a built-in client - the [`dolt sql`](../../cli/cli#dolt-sql) command. From within a Dolt database 
 directory, you can always access the database as a superuser by using `dolt sql`, even if you have lost the superuser password. 
 
 From any SQL shell where you are logged in with superuser access, you can use the standard SQL statements to create users

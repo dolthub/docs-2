@@ -72,7 +72,7 @@ title: Data Description
 
 | Component                | Supported | Notes and limitations                                                          |
 | :----------------------- | :-------- | :----------------------------------------------------------------------------- |
-| `ALTER TABLE` statements | 🟠        | Some limitations. See the [supported statements doc](supported-statements.md). |
+| `ALTER TABLE` statements | 🟠        | Some limitations. See the [supported statements doc](supported-statements). |
 | Database renames         | ❌        | Database names are read-only, and configured by the server at startup.         |
 | Adding tables            | ✅        |                                                                                |
 | Dropping tables          | ✅        |                                                                                |

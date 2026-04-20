@@ -4,29 +4,29 @@ title: Replication
 
 # Replication
 
-Dolt can [replicate data](../../../concepts/dolt/rdbms/replication.md) between two or more Dolt servers, or between Dolt and a MySQL server. This page describes the two supported replication modes between a Dolt primary server and Dolt replica servers. See the [MySQL to Dolt Replication guide](../../../guides/binlog-replication.md) for more information on setting up a Dolt server as a read-replica for a MySQL server, and [our blog post on Dolt-to-MySQL replication](https://www.dolthub.com/blog/2023-02-17-binlog-replication-preview/) for instructions on running a MySQL server as a replica of a Dolt primary.
+Dolt can [replicate data](../../../concepts/dolt/rdbms/replication) between two or more Dolt servers, or between Dolt and a MySQL server. This page describes the two supported replication modes between a Dolt primary server and Dolt replica servers. See the [MySQL to Dolt Replication guide](../../../guides/binlog-replication) for more information on setting up a Dolt server as a read-replica for a MySQL server, and [our blog post on Dolt-to-MySQL replication](https://www.dolthub.com/blog/2023-02-17-binlog-replication-preview/) for instructions on running a MySQL server as a replica of a Dolt primary.
 
 In **Remote-Based Replication**, Dolt uses a remote as a middleman to facilitate replication between the
 primary and read replicas. In this mode, Dolt replication triggers on a [Dolt
-commit](../../../concepts/dolt/git/commits.md).
+commit](../../../concepts/dolt/git/commits).
 
 ![Read replication](../../../.gitbook/assets/dolt-read-replication.png)
 
 This is the simplest form of replication to configure and administer. Use this form of replication
 when you do **not** need the hot-standby support of Direct-to-Standby Replication. See
-[Direct vs Remote Replication](replication.md#direct-vs.-remote-replication) for more
+[Direct vs Remote Replication](replication#direct-vs.-remote-replication) for more
 details on the differences between Remote-Based Replication and Hot Standby Replication.
 
 In **Direct-to-Standby Replication**, the primary dolt sql-server instance replicates all writes to a
 set of configured standby servers. In this mode, there is no intermediate
-[remote](../../../concepts/dolt/git/remotes.md) and all SQL transaction commits
+[remote](../../../concepts/dolt/git/remotes) and all SQL transaction commits
 are replicated, not just Dolt commits.
 
 ![Standby replication](../../../.gitbook/assets/dolt-standby-replication.png)
 
 Use this form of replication when you have high-availability requirements, and need a hot standby
 server ready to swap in for the primary. See
-[Direct vs Remote Replication](replication.md#direct-vs.-remote-replication) for more
+[Direct vs Remote Replication](replication#direct-vs.-remote-replication) for more
 details on the differences between Remote-Based Replication and Hot Standby Replication.
 
 The rest of this page describes configuration and considerations for both types of
@@ -36,45 +36,45 @@ replication, starting with replication through a remote.
 
 ## Configuration
 
-Dolt relies on [system variables](../../../concepts/dolt/sql/system-variables.md) to configure
+Dolt relies on [system variables](../../../concepts/dolt/sql/system-variables) to configure
 replication. The following system variables affect replication:
 
-1. [`@@dolt_replicate_to_remote`](../version-control/dolt-sysvars.md#doltreplicatetoremote).
+1. [`@@dolt_replicate_to_remote`](../version-control/dolt-sysvars#doltreplicatetoremote).
    **Required for a primary.** The primary will push to the remote named on any branch or tag
    update. If more than one database is being served, each must have a remote with the given name.
-1. [`@@dolt_read_replica_remote`](../version-control/dolt-sysvars.md#doltreadreplicaremote).
+1. [`@@dolt_read_replica_remote`](../version-control/dolt-sysvars#doltreadreplicaremote).
    **Required for a replica.** The replica will pull from the remote named at transaction start.
-1. [`@@dolt_replicate_heads`](../version-control/dolt-sysvars.md#doltreplicateheads). **Either this
+1. [`@@dolt_replicate_heads`](../version-control/dolt-sysvars#doltreplicateheads). **Either this
    variable or `@@dolt_replicate_all_heads` must be set on a replica.** Used to configure specific
    branches (ie. HEADs) to pull. Set to a comma-separated list of branches to be replicated. The
    wildcard `*` may be used to match zero or more characters in a branch name and is useful for
    selecting multiple branches. Has no effect on a primary.
-1. [`@@dolt_replicate_all_heads`](../version-control/dolt-sysvars.md#doltreplicateallheads).
+1. [`@@dolt_replicate_all_heads`](../version-control/dolt-sysvars#doltreplicateallheads).
    **Either this variable or `@@dolt_replicate_heads` must be set on a replica.** Pull all branches
    and tags on a read replica (ie. HEADs). Defaults to 0. Has no effect on a primary.
-1. [`@@dolt_replication_remote_url_template`](../version-control/dolt-sysvars.md#doltreplicationremoteurltemplate).
+1. [`@@dolt_replication_remote_url_template`](../version-control/dolt-sysvars#doltreplicationremoteurltemplate).
    _Optional._ Set to a URL template to configure the replication remote for newly created
    databases. Without this variable set, only databases that existed at server start time will be
    replicated.
-1. [`@@dolt_skip_replication_errors`](../version-control/dolt-sysvars.md#doltskipreplicationerrors).
+1. [`@@dolt_skip_replication_errors`](../version-control/dolt-sysvars#doltskipreplicationerrors).
    Makes replication errors warnings, instead of errors. Defaults to 0.
-1. [`@@dolt_transaction_commit`](../../../reference/sql/version-control/dolt-sysvars.md#dolt_transaction_commit).
+1. [`@@dolt_transaction_commit`]../../../sql-reference/version-control/dolt-sysvars#dolt_transaction_commit).
    Makes every transaction `COMMIT` a Dolt commit to force all writes to replicate. Default 0.
-1. [`@@dolt_async_replication`](../version-control/dolt-sysvars.md#doltasyncreplication). Set to 1
+1. [`@@dolt_async_replication`](../version-control/dolt-sysvars#doltasyncreplication). Set to 1
    to make replication pushes asynchronous, which means that read replicas will be eventually
    consistent with the primary. Defaults to 0.
 
 ### Configuring a Primary
 
 To set up a primary, you use the [`@@dolt_replicate_to_remote` system
-variable](../version-control/dolt-sysvars.md#doltreplicatetoremote). You
+variable](../version-control/dolt-sysvars#doltreplicatetoremote). You
 set that variable to the name of the remote you would like to use for
 replication.
 
 In this example I am going to use a DoltHub remote to facilitate
 replication. I created an empty database on DoltHub and [configured
 the appropriate read and write credentials on this
-host](../../../products/dolthub/data-sharing.md#dolt-login).
+host](../../../products/dolthub/data-sharing#dolt-login).
 
 Then set the appropriate server variables:
 
@@ -124,8 +124,8 @@ changing replication configuration.
 
 Often, a primary would like to replicate all transaction `COMMIT`s,
 not just Dolt commits. You can make every transaction `COMMIT` a Dolt
-commit by setting the [system variable](../../../concepts/dolt/sql/system-variables.md),
-[`@@dolt_transaction_commit`](../../../reference/sql/version-control/dolt-sysvars.md#dolt_transaction_commit). With
+commit by setting the [system variable](../../../concepts/dolt/sql/system-variables),
+[`@@dolt_transaction_commit`]../../../sql-reference/version-control/dolt-sysvars#dolt_transaction_commit). With
 this setting, you lose the ability to enter commit messages.
 
 ```bash
@@ -149,7 +149,7 @@ And now on the remote.
 By default, replication is synchronous. The push must complete before
 the transaction commits. You can enable asynchronous replication using
 the [`@@dolt_async_replication` system
-variable](../version-control/dolt-sysvars.md#doltasyncreplication). This
+variable](../version-control/dolt-sysvars#doltasyncreplication). This
 setting will increase the speed of Dolt commits, but make read
 replicas eventually consistent.
 
@@ -171,12 +171,12 @@ dolt $ cd read_replica/
 
 Now, I'm going to configure my read replica to "pull on read" from
 origin. To do that I use the [`@@dolt_read_replica_remote system
-variable`](../version-control/dolt-sysvars.md#doltreadreplicaremote). I
+variable`](../version-control/dolt-sysvars#doltreadreplicaremote). I
 also must configure which branches (ie. HEADs) I would like to
 replicate using either
-[`@@dolt_replicate_heads`](../version-control/dolt-sysvars.md#doltreplicateheads)
+[`@@dolt_replicate_heads`](../version-control/dolt-sysvars#doltreplicateheads)
 to pick specific branches or
-[`@@dolt_replicate_all_heads`](../version-control/dolt-sysvars.md#doltreplicateallheads)
+[`@@dolt_replicate_all_heads`](../version-control/dolt-sysvars#doltreplicateallheads)
 to replicate all branches.
 
 ```bash
@@ -225,9 +225,9 @@ Date:  Mon Jul 11 16:48:37 -0700 2022
 #### Replicate all branches
 
 Only one of
-[`@@dolt_replicate_heads`](../version-control/dolt-sysvars.md#doltreplicateheads)
+[`@@dolt_replicate_heads`](../version-control/dolt-sysvars#doltreplicateheads)
 or
-[`@@dolt_replicate_all_heads`](../version-control/dolt-sysvars.md#doltreplicateallheads)
+[`@@dolt_replicate_all_heads`](../version-control/dolt-sysvars#doltreplicateallheads)
 can be set at a time. So I unset `@@dolt_replicate_heads` and set
 `@@dolt_replicate_all_heads`.
 
@@ -319,7 +319,7 @@ read replicas.
 No automated failover is possible using remote-based replicas, because there is no way to promote a
 read replica into a primary without a restart. To configure a database cluster that supports
 automated failover, please use [direct-to-standby replication
-instead](replication.md#direct-to-standby-replication).
+instead](replication#direct-to-standby-replication).
 
 ### Multi-Primary
 
@@ -726,7 +726,7 @@ replicating new writes to the remote.
 
 If you have an existing MySQL or MariaDB server, you can configure Dolt as a read-replica. As the Dolt read-replica
 consumes data changes from the primary server, it creates Dolt commits, giving you a read-replica with a
-versioned history of your data changes. See the [MySQL to Dolt Replication guide](../../../guides/binlog-replication.md)
+versioned history of your data changes. See the [MySQL to Dolt Replication guide](../../../guides/binlog-replication)
 for more details on how to configure this.
 
 # Dolt to MySQL Replication

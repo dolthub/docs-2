@@ -75,7 +75,7 @@ This is used in several ways, such as when creating new branches (to prevent add
 
 ## Using the Tables
 
-The branch permissions system tables, `dolt_branch_control` and `dolt_branch_namespace_control`, are both built on top of [users and privileges](access-management.md) system.
+The branch permissions system tables, `dolt_branch_control` and `dolt_branch_namespace_control`, are both built on top of [users and privileges](access-management) system.
 
 ### Default State
 
@@ -162,7 +162,7 @@ Due to the longest match rule, this entry will be ignored when a valid match is 
 ## Storage
 
 All data related to branch permissions is stored in the file `branch_control.db` under the dolt configuration directory (defaults to `.doltcfg`).
-The rules for selecting a `branch_control.db` file [are the same as for the privileges file](access-management.md).
+The rules for selecting a `branch_control.db` file [are the same as for the privileges file](access-management).
 
 ## Binlog
 

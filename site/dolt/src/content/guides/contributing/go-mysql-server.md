@@ -19,7 +19,7 @@ try(dbWriteTable(dolt_conn, "time", time, overwrite = TRUE))
 ```
 
 # Setup
-Follow these [setup instructions](../contributing.md).
+Follow these [setup instructions](../contributing).
 
 
 # Reproduce the Bug
@@ -258,4 +258,4 @@ remote:
 To github.com:reltuk/go-mysql-server.git
  * [new branch]        aaron/fix-2088-time-convert-bug -> aaron/fix-2088-time-convert-bug
 ```
-Finally, we just need to [submit a pull request](../contributing.md#submit-pull-request).
+Finally, we just need to [submit a pull request](../contributing#submit-pull-request).

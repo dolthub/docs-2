@@ -28,8 +28,8 @@ We aim to match our CLI command behavior as closely to their Git equivalent as p
 | `notes`   | ❌        |                                             |
 | `restore` | ❌        |                                             |
 | `reset`   | ✅        |                                             |
-| `rm`      | 🟠        | See [dolt table rm](./cli.md#dolt-table-rm) |
-| `mv`      | 🟠        | See [dolt table mv](./cli.md#dolt-table-mv) |
+| `rm`      | 🟠        | See [dolt table rm](./cli#dolt-table-rm) |
+| `mv`      | 🟠        | See [dolt table mv](./cli#dolt-table-mv) |
 
 ## Branching and Merging
 

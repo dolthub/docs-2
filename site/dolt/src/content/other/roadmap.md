@@ -5,7 +5,7 @@ title: Roadmap
 # Roadmap
 
 Full details on [supported SQL
-features](../reference/sql/sql-support/README.md) are
+features]../sql-reference/sql-support/) are
 available on the docs site.
 
 This is a selection of unimplemented features we're working on. Don't

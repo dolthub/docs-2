@@ -38,6 +38,20 @@ find "$SITE_CONTENT" -name "*.md" | while read -r file; do
 
   sed -i '' -E 's/\{% embed url="([^"]+)" %\}/[\1](\1)/g' "$file"
 
+  # Convert internal .md links to clean URLs:
+  #   README.md → directory path (strip /README.md)
+  #   file.md → file (strip .md)
+  #   file.md#anchor → file#anchor (strip .md, keep anchor)
+  # Also remap reference/sql/ → sql-reference/ and reference/cli/ → cli-reference/
+  sed -i '' -E \
+    -e 's|/README\.md\)|/)|g' \
+    -e 's|/README\.md#|/#|g' \
+    -e 's|\.md\)|)|g' \
+    -e 's|\.md#|#|g' \
+    -e 's|\(([^)]*)/reference/sql/|\1/sql-reference/|g' \
+    -e 's|\(([^)]*)/reference/cli/|\1/cli-reference/|g' \
+    "$file"
+
   # Add frontmatter if missing
   if ! head -1 "$file" | grep -q '^---'; then
     title=$(grep -m1 '^# ' "$file" 2>/dev/null | sed 's/^# //' || true)

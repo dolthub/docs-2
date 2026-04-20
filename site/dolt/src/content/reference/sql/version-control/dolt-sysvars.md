@@ -155,7 +155,7 @@ transaction. Defaults to `0`.
 
 ## `dolt_commit_verification_groups`
 
-When set, this system variable enables commit verification by running tests from the [`dolt_tests`](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables#dolt_tests) system table before allowing [commits](dolt-sql-procedures.md#dolt_commit), [merges](dolt-sql-procedures.md#dolt_merge), [cherry-picks](dolt-sql-procedures.md#dolt_cherry_pick), and [rebase](dolt-sql-procedures.md#dolt_rebase) operations. The variable specifies which test groups to run:
+When set, this system variable enables commit verification by running tests from the [`dolt_tests`](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables#dolt_tests) system table before allowing [commits](dolt-sql-procedures#dolt_commit), [merges](dolt-sql-procedures#dolt_merge), [cherry-picks](dolt-sql-procedures#dolt_cherry_pick), and [rebase](dolt-sql-procedures#dolt_rebase) operations. The variable specifies which test groups to run:
 
 - `"*"` - Run all tests in the `dolt_tests` table
 - `"group1,group2,group3"` - Run tests from specific test groups (comma-separated)
@@ -196,7 +196,7 @@ When set to `1`, Dolt will not attempt to automatically merge concurrent changes
 ## `dolt_replicate_to_remote`
 
 This system variable should be set on replication primaries to name a remote to replicate to. See
-[Replication](../server/replication.md).
+[Replication](../server/replication).
 
 ```sql
 mysql> select name from dolt_remotes;
@@ -215,7 +215,7 @@ mysql> CALL dolt_commit('-am', 'push on write');
 This system variable can be set to `1` on replication primaries to make remote pushes
 asynchronous. This setting can cause commits to complete faster since the push to remote is not
 synchronous, but it may also increase the remote replication delay. See
-[Replication](../server/replication.md).
+[Replication](../server/replication).
 
 ```sql
 mysql> SET @@GLOBAL.dolt_replicate_to_remote = remote1;
@@ -228,7 +228,7 @@ This system variable is set on read replicas to name a remote to pull from. New 
 time a transaction begins.
 
 Setting either `dolt_replicate_heads` or `dolt_replicate_all_heads` is
-also required for read replicas. See [Replication](../server/replication.md).
+also required for read replicas. See [Replication](../server/replication).
 
 ```sql
 mysql> SET @@GLOBAL.dolt_read_replica_remote = origin;
@@ -240,7 +240,7 @@ mysql> START TRANSACTION;
 
 This system variable indicates to pull all branches on a read replica at transaction start. Pair
 with `dolt_read_replica_remote`. Use is mutually exclusive with `dolt_replicate_heads`. See
-[Replication](../server/replication.md).
+[Replication](../server/replication).
 
 ```sql
 mysql> SET @@GLOBAL.dolt_replicate_all_heads = 1;
@@ -252,7 +252,7 @@ This system variable specifies which branch heads a read replica will fetch.
 The wildcard `*` may be used to match zero or more characters in a branch name
 and is useful for selecting multiple branch names.
 Pair with `dolt_read_replica_remote`. Use is mutually exclusive with
-`dolt_replicate_all_heads`. See [Replication](../server/replication.md).
+`dolt_replicate_all_heads`. See [Replication](../server/replication).
 
 ```sql
 mysql> SET @@GLOBAL.dolt_replicate_heads = main;
@@ -274,7 +274,7 @@ set @@persist.dolt_replication_remote_url_template = 'gs://mybucket/remotes/{dat
 
 On a read replica, setting this variable will cause the server to attempt to clone any unknown
 database used in a query or connection string by constructing a remote URL and cloning from that
-remote. See [Replication](../server/replication.md).
+remote. See [Replication](../server/replication).
 
 ## `dolt_read_replica_force_pull`
 

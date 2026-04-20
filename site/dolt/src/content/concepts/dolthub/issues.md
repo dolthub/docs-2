@@ -19,7 +19,7 @@ DoltHub issues are useful for:
 ## Difference between GitHub issues and DoltHub issues
 
 DoltHub issues are similar to GitHub issues in purpose, but are somewhat simpler in practice.
-GitHub has some extra features that let's you easily cross-reference issues and [pull requests](./prs.md). You can link an issue to a pull request and automatically close the issue when a pull request is merged. In GitHub you are also able to assign issues to users and add labels to issues.
+GitHub has some extra features that let's you easily cross-reference issues and [pull requests](./prs). You can link an issue to a pull request and automatically close the issue when a pull request is merged. In GitHub you are also able to assign issues to users and add labels to issues.
 
 These features are on our DoltHub roadmap.
 
@@ -31,7 +31,7 @@ One of the bounty participants noticed some inconsistencies with one of the colu
 
 ![](../../.gitbook/assets/new-issue-form.png)
 
-You notice the issue can be easily fixed, so you run a few SQL queries and create a new [pull request](./prs.md) with some changes.
+You notice the issue can be easily fixed, so you run a few SQL queries and create a new [pull request](./prs) with some changes.
 
 ![](../../.gitbook/assets/pr-resolves-issue.png)
 
