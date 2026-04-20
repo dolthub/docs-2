@@ -5,8 +5,9 @@
 import { DocPage } from "./dolt-pages";
 export type { DocPage };
 
+// NOTE: /introduction (the README.md) redirects to the homepage on the live
+// site, so it is not a standalone page — only the sub-pages exist.
 export const introductionPages: DocPage[] = [
-  { path: "/introduction", title: "What is Doltgres?" },
   { path: "/introduction/installation", title: "Installation" },
   { path: "/introduction/getting-started", title: "Getting Started" },
 ];
@@ -50,49 +51,36 @@ export const guidesPages: DocPage[] = [
   },
 ];
 
+// NOTE: docs.doltgres.com drops the /sql/ segment from reference paths.
+// e.g. SUMMARY.md has reference/sql/server/README.md → live URL is /reference/server
 export const referencePages: DocPage[] = [
-  { path: "/reference/sql/server", title: "Running the Server" },
-  { path: "/reference/sql/server/configuration", title: "Configuration" },
+  { path: "/reference/server", title: "Running the Server" },
+  { path: "/reference/server/configuration", title: "Configuration" },
+  { path: "/reference/server/access-management", title: "Access Management" },
+  { path: "/reference/server/branch-permissions", title: "Branch Permissions" },
+  { path: "/reference/server/backups", title: "Backups" },
+  { path: "/reference/server/garbage-collection", title: "Garbage Collection" },
+  { path: "/reference/server/metrics", title: "Metrics" },
+  { path: "/reference/server/replication", title: "Replication" },
+  { path: "/reference/server/troubleshooting", title: "Troubleshooting" },
+  { path: "/reference/version-control", title: "Version Control Features" },
+  { path: "/reference/version-control/branches", title: "Using Branches" },
+  { path: "/reference/version-control/merges", title: "Merges" },
   {
-    path: "/reference/sql/server/access-management",
-    title: "Access Management",
-  },
-  {
-    path: "/reference/sql/server/branch-permissions",
-    title: "Branch Permissions",
-  },
-  { path: "/reference/sql/server/backups", title: "Backups" },
-  {
-    path: "/reference/sql/server/garbage-collection",
-    title: "Garbage Collection",
-  },
-  { path: "/reference/sql/server/metrics", title: "Metrics" },
-  { path: "/reference/sql/server/replication", title: "Replication" },
-  { path: "/reference/sql/server/troubleshooting", title: "Troubleshooting" },
-  {
-    path: "/reference/sql/version-control",
-    title: "Version Control Features",
-  },
-  {
-    path: "/reference/sql/version-control/branches",
-    title: "Using Branches",
-  },
-  { path: "/reference/sql/version-control/merges", title: "Merges" },
-  {
-    path: "/reference/sql/version-control/querying-history",
+    path: "/reference/version-control/querying-history",
     title: "Querying History",
   },
-  { path: "/reference/sql/version-control/remotes", title: "Using Remotes" },
+  { path: "/reference/version-control/remotes", title: "Using Remotes" },
   {
-    path: "/reference/sql/version-control/dolt-sql-functions",
+    path: "/reference/version-control/dolt-sql-functions",
     title: "Functions",
   },
   {
-    path: "/reference/sql/version-control/dolt-system-tables",
+    path: "/reference/version-control/dolt-system-tables",
     title: "System Tables",
   },
   {
-    path: "/reference/sql/version-control/dolt-sysvars",
+    path: "/reference/version-control/dolt-sysvars",
     title: "System Variables",
   },
   { path: "/reference/sql-support", title: "SQL Language Support" },
@@ -100,10 +88,7 @@ export const referencePages: DocPage[] = [
     path: "/reference/sql-support/supported-functions",
     title: "Supported Functions and Operators",
   },
-  {
-    path: "/reference/sql-support/supported-types",
-    title: "Supported Types",
-  },
+  { path: "/reference/sql-support/supported-types", title: "Supported Types" },
   {
     path: "/reference/sql-support/supported-commands",
     title: "Supported SQL Commands",
@@ -112,11 +97,8 @@ export const referencePages: DocPage[] = [
     path: "/reference/sql-support/system-catalog-schema",
     title: "System Catalog Schema",
   },
-  { path: "/reference/sql/supported-clients", title: "Supported Clients" },
-  {
-    path: "/reference/sql/supported-clients/clients",
-    title: "Programmatic",
-  },
+  { path: "/reference/supported-clients", title: "Supported Clients" },
+  { path: "/reference/supported-clients/clients", title: "Programmatic" },
   { path: "/reference/benchmarks", title: "Benchmarks" },
   { path: "/reference/benchmarks/correctness", title: "Correctness" },
   { path: "/reference/benchmarks/latency", title: "Latency" },
