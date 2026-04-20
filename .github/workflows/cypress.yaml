@@ -1,0 +1,67 @@
+name: Cypress docs migration tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Run daily at 9 AM UTC to catch drift on live sites
+    - cron: "0 9 * * *"
+
+concurrency:
+  group: cypress-docs-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck:
+    name: TypeScript type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Type check
+        run: npm run compile
+
+  cypress:
+    name: Cypress (${{ matrix.site }})
+    runs-on: ubuntu-latest
+    needs: typecheck
+    strategy:
+      # Run all three suites even if one fails so we get a full picture
+      fail-fast: false
+      matrix:
+        include:
+          - site: dolt
+            config-file: cypress.config.ts
+          - site: doltlab
+            config-file: cypress.doltlab.config.ts
+          - site: doltgres
+            config-file: cypress.doltgres.config.ts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Cypress tests (${{ matrix.site }})
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          browser: chrome
+          config-file: ${{ matrix.config-file }}
+      - name: Upload screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ matrix.site }}
+          path: cypress/screenshots
+          retention-days: 7
+      - name: Print timestamp on failure
+        if: failure()
+        run: echo "Failed at $(date -u)"

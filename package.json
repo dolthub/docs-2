@@ -1,0 +1,18 @@
+{
+  "name": "docs-cypress",
+  "version": "1.0.0",
+  "description": "Cypress migration tests for DoltHub docs sites",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:open:doltlab": "cypress open --config-file cypress.doltlab.config.ts",
+    "cy:run:doltlab": "cypress run --config-file cypress.doltlab.config.ts",
+    "cy:open:doltgres": "cypress open --config-file cypress.doltgres.config.ts",
+    "cy:run:doltgres": "cypress run --config-file cypress.doltgres.config.ts",
+    "compile": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "cypress": "^13.0.0",
+    "typescript": "^5.0.0"
+  }
+}
