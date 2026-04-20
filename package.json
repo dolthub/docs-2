@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "Cypress migration tests for DoltHub docs sites",
   "scripts": {
+    "build:dolt": "cd site/dolt && npm install --legacy-peer-deps && npm run build",
+    "preview:dolt": "cd site/dolt && npm run preview -- --port 4321",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:open:doltlab": "cypress open --config-file cypress.doltlab.config.ts",
     "cy:run:doltlab": "cypress run --config-file cypress.doltlab.config.ts",
     "cy:open:doltgres": "cypress open --config-file cypress.doltgres.config.ts",
     "cy:run:doltgres": "cypress run --config-file cypress.doltgres.config.ts",
+    "cy:run:live": "cypress run --config baseUrl=https://docs.dolthub.com",
     "compile": "tsc --noEmit"
   },
   "devDependencies": {
