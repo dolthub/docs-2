@@ -18,10 +18,7 @@ describe("Doltgres docs — page content spot checks", () => {
   });
 
   context("Introduction", () => {
-    it("What is Doltgres? has correct heading", () => {
-      assertPageContent("/introduction", "Doltgres");
-    });
-
+    // /introduction (README.md) redirects to the homepage on the live site.
     it("Installation page has correct heading", () => {
       assertPageContent("/introduction/installation", "Installation");
     });
@@ -60,14 +57,11 @@ describe("Doltgres docs — page content spot checks", () => {
 
   context("Reference", () => {
     it("Running the Server page has correct heading", () => {
-      assertPageContent("/reference/sql/server", "Running the Server");
+      assertPageContent("/reference/server", "Running the Server");
     });
 
     it("Version Control Features page has correct heading", () => {
-      assertPageContent(
-        "/reference/sql/version-control",
-        "Version Control Features",
-      );
+      assertPageContent("/reference/version-control", "Version Control Features");
     });
 
     it("SQL Language Support page has correct heading", () => {
