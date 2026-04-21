@@ -25,7 +25,7 @@ const currentPath = Astro.url.pathname;
     <script is:inline src="/pagefind/pagefind-ui.js"></script>
   </head>
   <body>
-    <ThemeInit client:load />
+    <ThemeInit client:only="react" />
     <div>
       <div class="navbar-slot">
         <Navbar client:only="react" />
