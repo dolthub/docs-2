@@ -44,7 +44,7 @@ A full list of Doltgres system variables and descriptions can be found
 
 ### Reading System Variables
 
-```SQL
+```sql
 show max_connections;
  max_connections
 -----------------
@@ -54,7 +54,7 @@ show max_connections;
 
 ### Writing System Variables
 
-```SQL
+```sql
 -- some variables are read only
 SET max_connections 10;
 Error 1105: Variable 'max_connections' is a read only variable

@@ -309,7 +309,7 @@ Click connect and you'll be presented with a familiar database workbench GUI.
 
 Now we want to make some changes on a branch. You can so this by running the following SQL.
 
-```SQL
+```sql
 call dolt_checkout('-b','modifications');
 insert INTO employees values (5,'Taylor', 'Bantle');
 call dolt_commit('-am', 'Modifications on a branch');

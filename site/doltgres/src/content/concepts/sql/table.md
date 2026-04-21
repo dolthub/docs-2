@@ -39,7 +39,7 @@ change. Tables are the target of `select dolt_add()`.
 
 ## Example
 
-```SQL
+```sql
 doltgres=> \dt
         List of relations
  Schema | Name | Type  |  Owner

@@ -50,14 +50,14 @@ Now, you have to prepare MySQL to have a replica. This requires the following co
 
 Now, for the things you have to change. First you need to turn on `ENFORCE_GTID_CONSISTENCY`. Go to the you `mysql` client we started in step one and run the following query.
 
-```SQL
+```sql
 mysql> SET @@GLOBAL.ENFORCE_GTID_CONSISTENCY = ON;                              
 Query OK, 0 rows affected (0.00 sec)
 ```
 
 Finally, you have to change `GTID_MODE` to `ON`. It is `OFF` by default and [you can't go directly from `OFF` to `ON`](https://dev.mysql.com/doc/refman/8.0/en/replication-mode-change-online-enable-gtids.html). So, step through the options up to `ON` like so.
 
-```SQL
+```sql
 mysql> SET @@GLOBAL.GTID_MODE = OFF_PERMISSIVE;
 Query OK, 0 rows affected (0.01 sec)
 
@@ -70,7 +70,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 To make sure you have everything set up right, run the following and make sure the table looks the same.
 
-```SQL
+```sql
 mysql> SHOW VARIABLES WHERE Variable_Name LIKE '%gtid_mode' OR Variable_Name LIKE '%enforce_gtid_consistency' OR Variable_Name LIKE '%binlog_format' OR Variable_Name LIKE 'server_id';
 +--------------------------+-------+
 | Variable_name            | Value |
@@ -158,7 +158,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 Finally, start the replica.
 
-```SQL
+```sql
 mysql> START REPLICA;
 Query OK, 0 rows affected (0.00 sec)
 ```
