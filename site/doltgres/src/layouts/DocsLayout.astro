@@ -62,14 +62,23 @@ const currentPath = Astro.url.pathname;
   }
 
   .sidebar-slot {
-    @apply hidden lg:block;
-    width: 256px;
-    min-width: 256px;
-    border-right: 1px solid #D7D8DF;
-    overflow: hidden;
+    /* On mobile: no width, no border — the mobile toggle/drawer handle themselves.
+       On desktop: fixed 256px sidebar with border. */
+    width: 0;
+    min-width: 0;
+    overflow: visible;
   }
 
-  /* Search only shows in the desktop sidebar slot */
+  @media (min-width: 1024px) {
+    .sidebar-slot {
+      width: 256px;
+      min-width: 256px;
+      border-right: 1px solid #D7D8DF;
+      overflow: hidden;
+    }
+  }
+
+  /* Search only shows in the desktop sidebar */
   .search-slot {
     @apply hidden lg:block;
   }
