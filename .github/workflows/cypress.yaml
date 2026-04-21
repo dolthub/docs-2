@@ -65,14 +65,21 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
-      - name: Install dependencies
+      - name: Install Cypress dependencies
         run: npm ci
-      - name: Run Cypress tests against live site
+      - name: Install Astro site dependencies
+        run: cd site/doltlab && npm install --legacy-peer-deps
+      - name: Build Astro site
+        run: cd site/doltlab && npm run build
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
           install: false
           browser: chrome
           config-file: cypress.doltlab.config.ts
+          start: npm run preview:doltlab
+          wait-on: "http://localhost:4322"
+          wait-on-timeout: 30
       - name: Upload screenshots on failure
         uses: actions/upload-artifact@v4
         if: failure()
@@ -91,14 +98,21 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
-      - name: Install dependencies
+      - name: Install Cypress dependencies
         run: npm ci
-      - name: Run Cypress tests against live site
+      - name: Install Astro site dependencies
+        run: cd site/doltgres && npm install --legacy-peer-deps
+      - name: Build Astro site
+        run: cd site/doltgres && npm run build
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
           install: false
           browser: chrome
           config-file: cypress.doltgres.config.ts
+          start: npm run preview:doltgres
+          wait-on: "http://localhost:4323"
+          wait-on-timeout: 30
       - name: Upload screenshots on failure
         uses: actions/upload-artifact@v4
         if: failure()

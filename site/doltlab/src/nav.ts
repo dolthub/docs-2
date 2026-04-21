@@ -122,9 +122,16 @@ const nav: NavSection[] = [
   {
     section: "Older Versions",
     items: [
-      { title: "Installation", href: "/older-versions/installation" },
-      { title: "Upgrade", href: "/older-versions/upgrade" },
-      { title: "Administrator Guide", href: "/older-versions/administrator" },
+      {
+        title: "Installation",
+        href: "/older/installation",
+        children: [
+          { title: "Linux pre-installer", href: "/older/installation/pre-installer-linux" },
+          { title: "Start DoltLab pre-installer", href: "/older/installation/start-doltlab-pre-installer" },
+        ],
+      },
+      { title: "Upgrade", href: "/older/upgrading" },
+      { title: "Administrator Guide", href: "/older/pre-installer-administrator-guide" },
     ],
   },
 ];

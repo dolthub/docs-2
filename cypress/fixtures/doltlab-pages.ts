@@ -102,10 +102,12 @@ export const releaseNotePages: DocPage[] = [
   { path: "/reference/release-notes/v2.0.0", title: "v2.0.0" },
 ];
 
-// NOTE: /older-versions/upgrade and /older-versions/administrator return 404
-// on the live site — only the installation page exists under older-versions.
 export const olderVersionsPages: DocPage[] = [
-  { path: "/older-versions/installation", title: "Installation" },
+  { path: "/older/installation", title: "Installation" },
+  { path: "/older/installation/pre-installer-linux", title: "Linux pre-installer" },
+  { path: "/older/installation/start-doltlab-pre-installer", title: "Start DoltLab pre-installer" },
+  { path: "/older/upgrading", title: "Upgrade" },
+  { path: "/older/pre-installer-administrator-guide", title: "Administrator Guide" },
 ];
 
 export const allDoltlabPages: DocPage[] = [
