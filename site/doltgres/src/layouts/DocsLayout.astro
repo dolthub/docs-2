@@ -1,5 +1,5 @@
 ---
-import { Navbar, Footer, Search, Sidebar } from "../../../shared/components";
+import { Navbar, Footer, Search, Sidebar, ThemeInit } from "../../../shared/components";
 import nav from "../nav";
 
 export interface Props {
@@ -25,6 +25,7 @@ const currentPath = Astro.url.pathname;
     <script is:inline src="/pagefind/pagefind-ui.js"></script>
   </head>
   <body>
+    <ThemeInit client:load />
     <div>
       <div class="navbar-slot">
         <Navbar client:only="react" />
