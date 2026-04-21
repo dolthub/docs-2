@@ -28,7 +28,7 @@ const currentPath = Astro.url.pathname;
     <ThemeInit client:only="react" />
     <div>
       <div class="navbar-slot">
-        <Navbar client:only="react" />
+        <Navbar client:only="react" siteName="doltgres" />
       </div>
 
       <MobileSidebar client:only="react" nav={nav} currentPath={currentPath} />
@@ -177,6 +177,14 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <style is:global>
+  /* Navbar docs label next to logo */
+  .navbar-docs-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+
   /* Docs dropdown — desktop only; plain link on mobile */
   .docs-dropdown-desktop-only {
     display: none;
