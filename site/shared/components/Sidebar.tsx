@@ -101,12 +101,49 @@ function NavLink({
   );
 }
 
+function SidebarNav({ nav, currentPath }: SidebarProps) {
+  return (
+    <nav>
+      {nav.map((section) => (
+        <div key={section.section} className="sidebar-section">
+          <h3 className="sidebar-section-title">{section.section}</h3>
+          <ul className="sidebar-list">
+            {section.items.map((item, i) => (
+              <NavLink
+                key={item.href || i}
+                item={item}
+                currentPath={currentPath}
+                depth={0}
+              />
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  );
+}
+
 export default function Sidebar({ nav, currentPath }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Close sidebar on navigation
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [currentPath]);
+
+  // Prevent body scroll when mobile sidebar is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   return (
     <>
-      {/* Mobile toggle */}
+      {/* Mobile toggle — always visible on mobile */}
       <button
         className="sidebar-mobile-toggle"
         onClick={() => setMobileOpen(!mobileOpen)}
@@ -121,33 +158,34 @@ export default function Sidebar({ nav, currentPath }: SidebarProps) {
         <span>Menu</span>
       </button>
 
-      <aside className={`sidebar ${mobileOpen ? "sidebar-open" : ""}`}>
-        <nav>
-          {nav.map((section) => (
-            <div key={section.section} className="sidebar-section">
-              <h3 className="sidebar-section-title">{section.section}</h3>
-              <ul className="sidebar-list">
-                {section.items.map((item, i) => (
-                  <NavLink
-                    key={item.href || i}
-                    item={item}
-                    currentPath={currentPath}
-                    depth={0}
-                  />
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </aside>
-
-      {/* Mobile overlay */}
+      {/* Overlay */}
       {mobileOpen && (
         <div
           className="sidebar-overlay"
           onClick={() => setMobileOpen(false)}
         />
       )}
+
+      {/* Mobile drawer */}
+      <aside className={`sidebar-mobile ${mobileOpen ? "sidebar-mobile-open" : ""}`}>
+        <div className="sidebar-mobile-header">
+          <button
+            className="sidebar-mobile-close"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close navigation"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
+            </svg>
+          </button>
+        </div>
+        <SidebarNav nav={nav} currentPath={currentPath} />
+      </aside>
+
+      {/* Desktop sidebar — rendered inside the sidebar-slot by the layout */}
+      <aside className="sidebar-desktop">
+        <SidebarNav nav={nav} currentPath={currentPath} />
+      </aside>
     </>
   );
 }

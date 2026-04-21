@@ -65,6 +65,12 @@ const currentPath = Astro.url.pathname;
     width: 256px;
     min-width: 256px;
     border-right: 1px solid #D7D8DF;
+    overflow: hidden;
+  }
+
+  /* Search only shows in the desktop sidebar slot */
+  .search-slot {
+    @apply hidden lg:block;
   }
 
   .docs-container {
@@ -174,15 +180,7 @@ const currentPath = Astro.url.pathname;
     background: #f3f4f6;
   }
 
-  /* Sidebar styles */
-  .sidebar {
-    @apply w-64 shrink-0 overflow-y-auto;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    padding: 1.5rem 0;
-  }
-
+  /* Shared sidebar nav styles */
   .sidebar-section {
     @apply mb-4;
   }
@@ -230,30 +228,59 @@ const currentPath = Astro.url.pathname;
     color: rgba(var(--color-primary), 0.8);
   }
 
-  /* Mobile sidebar */
+  /* Desktop sidebar */
+  .sidebar-desktop {
+    @apply hidden lg:block w-64 shrink-0 overflow-y-auto;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 1.5rem 0;
+  }
+
+  /* Mobile toggle button */
   .sidebar-mobile-toggle {
-    @apply flex lg:hidden items-center gap-2 px-4 py-2 text-sm font-medium border-b border-stone-300 w-full bg-white cursor-pointer;
+    @apply flex lg:hidden items-center gap-2 px-4 py-3 text-sm font-medium border-b border-stone-300 w-full bg-white cursor-pointer;
     color: rgba(var(--color-primary), 0.7);
+    border: none;
+    border-bottom: 1px solid #D7D8DF;
   }
 
+  /* Mobile overlay */
   .sidebar-overlay {
-    @apply fixed inset-0 bg-space-700/50 z-40 lg:hidden;
+    @apply fixed inset-0 z-40 lg:hidden;
+    background: rgba(0, 0, 0, 0.3);
   }
 
-  @media (max-width: 1023px) {
-    .sidebar {
-      @apply fixed top-0 left-0 z-50 bg-white shadow-lg;
-      display: none;
-      width: 280px;
-      padding-top: 1rem;
-    }
-
-    .sidebar-open {
-      display: block;
-    }
+  /* Mobile drawer */
+  .sidebar-mobile {
+    @apply fixed top-0 left-0 z-50 bg-white shadow-lg overflow-y-auto lg:hidden;
+    width: 300px;
+    height: 100vh;
+    padding: 0 0 2rem;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-in-out;
   }
 
-  /* Search */
+  .sidebar-mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-mobile-header {
+    @apply flex justify-end p-3 border-b;
+    border-color: #D7D8DF;
+  }
+
+  .sidebar-mobile-close {
+    @apply flex items-center justify-center w-8 h-8 rounded cursor-pointer bg-transparent border-none;
+    color: rgba(var(--color-primary), 0.5);
+  }
+
+  .sidebar-mobile-close:hover {
+    color: rgba(var(--color-primary), 1);
+    background: #f3f4f6;
+  }
+
+  /* Search — only visible in desktop sidebar */
   .search-slot {
     padding: 0.75rem 0.75rem 0;
   }
