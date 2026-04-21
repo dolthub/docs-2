@@ -2,6 +2,8 @@
 title: "Overview"
 ---
 
+# What is Doltgres?
+
 ![](../.gitbook/assets/doltgres-preview.png)
 
 DoltgreSQL, or Doltgres for short, is a Postgres-compatible version of [Dolt](https://www.doltdb.com). It is currently in [pre-alpha release](#doltgres-is-pre-alpha). Dolt is the world's first version controlled SQL database. It is like Git and MySQL had a baby. Doltgres is like Git and Postgres had a baby.

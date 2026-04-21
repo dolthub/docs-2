@@ -2,6 +2,8 @@
 title: "Getting started"
 ---
 
+# Getting Started
+
 1. Download the [latest release](https://github.com/dolthub/doltgresql/releases) of `doltgres`
 2. Put `doltgres` on your `PATH`
 

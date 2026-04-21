@@ -2,6 +2,8 @@
 title: A Full-featured SQL Database
 ---
 
+# SQL
+
 Doltgres is a full-featured SQL database, akin to [Postgres](https://www.postgresql.org/) or
 [MySQL](https://www.mysql.com/).
 

@@ -2,6 +2,8 @@
 title: Relational Database Management System
 ---
 
+# RDBMS
+
 Doltgres can be used as a Relational Database Management System or RDBMS. Doltgres ships with [a
 Postgres compatible server](/concepts/rdbms/server) built in, accessed via the `doltgres`
 command.

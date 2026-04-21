@@ -2,6 +2,8 @@
 title: Git-Like Version Control
 ---
 
+# Git
+
 Doltgres implements Git-style version control on tables instead of files. 
 
 Doltgres adopts the Git-interface to version control. There are [commits](/concepts/git/commits),

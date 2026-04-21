@@ -2,6 +2,8 @@
 title: Supported Clients
 ---
 
+# Supported Clients
+
 Dolt is MySQL compatible. Any MySQL client should be able to connect
 to a running Dolt SQL Server. If you find a client that is not
 compatible with Dolt, please [file an
