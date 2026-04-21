@@ -123,30 +123,33 @@ function SidebarNav({ nav, currentPath }: SidebarProps) {
   );
 }
 
+// Desktop sidebar — rendered inside the sidebar-slot
 export default function Sidebar({ nav, currentPath }: SidebarProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  return (
+    <aside className="sidebar-desktop">
+      <SidebarNav nav={nav} currentPath={currentPath} />
+    </aside>
+  );
+}
 
-  // Close sidebar on navigation
+// Mobile sidebar — rendered outside the sidebar-slot so it's not constrained
+export function MobileSidebar({ nav, currentPath }: SidebarProps) {
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
-    setMobileOpen(false);
+    setOpen(false);
   }, [currentPath]);
 
-  // Prevent body scroll when mobile sidebar is open
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [mobileOpen]);
+  }, [open]);
 
   return (
     <>
-      {/* Mobile toggle — always visible on mobile */}
       <button
         className="sidebar-mobile-toggle"
-        onClick={() => setMobileOpen(!mobileOpen)}
+        onClick={() => setOpen(!open)}
         aria-label="Toggle navigation"
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -158,20 +161,18 @@ export default function Sidebar({ nav, currentPath }: SidebarProps) {
         <span>Menu</span>
       </button>
 
-      {/* Overlay */}
-      {mobileOpen && (
+      {open && (
         <div
           className="sidebar-overlay"
-          onClick={() => setMobileOpen(false)}
+          onClick={() => setOpen(false)}
         />
       )}
 
-      {/* Mobile drawer */}
-      <aside className={`sidebar-mobile ${mobileOpen ? "sidebar-mobile-open" : ""}`}>
+      <aside className={`sidebar-mobile ${open ? "sidebar-mobile-open" : ""}`}>
         <div className="sidebar-mobile-header">
           <button
             className="sidebar-mobile-close"
-            onClick={() => setMobileOpen(false)}
+            onClick={() => setOpen(false)}
             aria-label="Close navigation"
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -179,11 +180,6 @@ export default function Sidebar({ nav, currentPath }: SidebarProps) {
             </svg>
           </button>
         </div>
-        <SidebarNav nav={nav} currentPath={currentPath} />
-      </aside>
-
-      {/* Desktop sidebar — rendered inside the sidebar-slot by the layout */}
-      <aside className="sidebar-desktop">
         <SidebarNav nav={nav} currentPath={currentPath} />
       </aside>
     </>

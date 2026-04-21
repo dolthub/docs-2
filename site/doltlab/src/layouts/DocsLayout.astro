@@ -1,5 +1,5 @@
 ---
-import { Navbar, Footer, Search, Sidebar, ThemeInit } from "../../../shared/components";
+import { Navbar, Footer, Search, Sidebar, MobileSidebar, ThemeInit } from "../../../shared/components";
 import nav from "../nav";
 
 export interface Props {
@@ -30,6 +30,8 @@ const currentPath = Astro.url.pathname;
       <div class="navbar-slot">
         <Navbar client:only="react" />
       </div>
+
+      <MobileSidebar client:only="react" nav={nav} currentPath={currentPath} />
 
       <div class="docs-container">
         <div class="sidebar-slot">
@@ -62,20 +64,10 @@ const currentPath = Astro.url.pathname;
   }
 
   .sidebar-slot {
-    /* On mobile: no width, no border — the mobile toggle/drawer handle themselves.
-       On desktop: fixed 256px sidebar with border. */
-    width: 0;
-    min-width: 0;
-    overflow: visible;
-  }
-
-  @media (min-width: 1024px) {
-    .sidebar-slot {
-      width: 256px;
-      min-width: 256px;
-      border-right: 1px solid #D7D8DF;
-      overflow: hidden;
-    }
+    @apply hidden lg:block;
+    width: 256px;
+    min-width: 256px;
+    border-right: 1px solid #D7D8DF;
   }
 
   /* Search only shows in the desktop sidebar */
