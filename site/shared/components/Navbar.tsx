@@ -49,7 +49,7 @@ function DocsDropdown() {
   }, []);
 
   return (
-    <div ref={ref} className="docs-dropdown" style={{ position: "relative", display: "inline-block" }}>
+    <div ref={ref} className="docs-dropdown" style={{ position: "relative", display: "inline-block", marginLeft: "0.5rem", marginRight: "2.5rem" }}>
       <button
         onClick={() => setOpen(!open)}
         data-cy="navbar-documentation"
