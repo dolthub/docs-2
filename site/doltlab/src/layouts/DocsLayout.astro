@@ -1,5 +1,5 @@
 ---
-import { Navbar, Footer, Sidebar } from "../../../shared/components";
+import { Navbar, Footer, Search, Sidebar } from "../../../shared/components";
 import nav from "../nav";
 
 export interface Props {
@@ -21,6 +21,8 @@ const currentPath = Astro.url.pathname;
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
     />
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+    <script is:inline src="/pagefind/pagefind-ui.js"></script>
   </head>
   <body>
     <div>
@@ -30,11 +32,14 @@ const currentPath = Astro.url.pathname;
 
       <div class="docs-container">
         <div class="sidebar-slot">
+          <div class="search-slot">
+            <Search client:only="react" />
+          </div>
           <Sidebar client:only="react" nav={nav} currentPath={currentPath} />
         </div>
 
         <main class="docs-main">
-          <article class="docs-article">
+          <article class="docs-article" data-pagefind-body>
             <slot />
           </article>
         </main>
@@ -209,6 +214,29 @@ const currentPath = Astro.url.pathname;
     .sidebar-open {
       display: block;
     }
+  }
+
+  /* Search */
+  .search-slot {
+    padding: 0.75rem 0.75rem 0;
+  }
+
+  .search-container {
+    --pagefind-ui-scale: 0.8;
+    --pagefind-ui-primary: #327DD2;
+    --pagefind-ui-text: #333;
+    --pagefind-ui-background: #fff;
+    --pagefind-ui-border: #D7D8DF;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 6px;
+    --pagefind-ui-font: "Source Sans Pro", sans-serif;
+  }
+
+  .search-placeholder {
+    font-size: 0.75rem;
+    color: #999;
+    text-align: center;
+    padding: 0.5rem;
   }
 
   /* Anchor links */

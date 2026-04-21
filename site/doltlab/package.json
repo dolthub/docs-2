@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npx pagefind --site dist",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "@react-icons/all-files": "^4.1.0",
     "astro": "^6.0.0",
     "github-markdown-css": "^5.0.0",
+    "pagefind": "^1.5.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.0.0",
