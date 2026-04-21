@@ -93,12 +93,12 @@ function LeftLinks() {
 function RightLinks() {
   return (
     <div className="flex navbar-right">
-      <DiscordButton href={doltDiscord} dark />
-      <GithubButton href={doltGithub} dark />
+      <DiscordButton href={doltDiscord} />
+      <GithubButton href={doltGithub} />
       <a
         href={`${dolthubUrl}/signin`}
         data-cy="navbar-signin-button"
-        className="flex items-center border rounded-[0.25rem] px-8 py-[0.2rem] border-[#333C50]/20"
+        className="flex items-center border rounded-[0.25rem] px-8 py-[0.2rem] border-white/10"
         aria-label="desktop-signin"
       >
         Sign In
@@ -150,8 +150,7 @@ export default function DocsNavbar() {
       rightLinks={<RightLinks />}
       rightLinksMobile={<MobileRightLinks />}
       mobileBottomLinks={<MobileSocialLinks />}
-      bgColor="bg-transparent"
-      dark
+      bgColor="bg-background-acc-1"
       logoLeft
     />
   );
