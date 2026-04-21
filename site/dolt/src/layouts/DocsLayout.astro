@@ -135,6 +135,27 @@ const currentPath = Astro.url.pathname;
     @apply border-l-4 border-sky-300 pl-4 italic my-4;
   }
 
+  .docs-main :global(table) {
+    @apply w-full mb-4 text-sm;
+    border-collapse: collapse;
+    border: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(thead tr) {
+    background: #f3f4f6;
+  }
+
+  .docs-main :global(th) {
+    @apply font-semibold text-left;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(td) {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #D7D8DF;
+  }
+
   .bottomOuter {
     @apply w-full mt-20 overflow-hidden bg-space-500;
   }
