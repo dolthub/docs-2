@@ -1,11 +1,13 @@
 ---
-import { Navbar, Footer } from "../../../shared/components";
+import { Navbar, Footer, Sidebar } from "../../../shared/components";
+import nav from "../nav";
 
 export interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -22,13 +24,21 @@ const { title } = Astro.props;
   </head>
   <body>
     <div>
-      <Navbar client:only="react" />
+      <div class="navbar-slot">
+        <Navbar client:only="react" />
+      </div>
 
-      <main class="docs-main">
-        <article class="docs-article">
-          <slot />
-        </article>
-      </main>
+      <div class="docs-container">
+        <div class="sidebar-slot">
+          <Sidebar client:only="react" nav={nav} currentPath={currentPath} />
+        </div>
+
+        <main class="docs-main">
+          <article class="docs-article">
+            <slot />
+          </article>
+        </main>
+      </div>
 
       <div class="bottomOuter">
         <div class="bottom">
@@ -40,8 +50,24 @@ const { title } = Astro.props;
 </html>
 
 <style>
+  /* Reserve space for client-only components to prevent layout shift */
+  .navbar-slot {
+    min-height: 48px;
+  }
+
+  .sidebar-slot {
+    @apply hidden lg:block;
+    width: 256px;
+    min-width: 256px;
+    border-right: 1px solid #D7D8DF;
+  }
+
+  .docs-container {
+    @apply flex w-full max-w-[1400px] mx-auto;
+  }
+
   .docs-main {
-    @apply w-11/12 xl:w-3/4 max-w-5xl mx-auto pt-8 pb-16 min-h-[70vh];
+    @apply flex-1 min-w-0 px-6 lg:px-12 pt-8 pb-16 min-h-[70vh];
   }
 
   .docs-main :global(p) {
@@ -106,6 +132,86 @@ const { title } = Astro.props;
 </style>
 
 <style is:global>
+  /* Sidebar styles */
+  .sidebar {
+    @apply w-64 shrink-0 overflow-y-auto;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 1.5rem 0;
+  }
+
+  .sidebar-section {
+    @apply mb-4;
+  }
+
+  .sidebar-section-title {
+    @apply text-xs font-bold uppercase tracking-wider px-4 py-2;
+    color: rgba(var(--color-primary), 0.5);
+  }
+
+  .sidebar-list {
+    @apply list-none p-0 m-0;
+  }
+
+  .sidebar-children {
+    @apply list-none p-0 m-0;
+  }
+
+  .sidebar-link {
+    @apply block w-full text-left text-sm py-1 pr-3 no-underline;
+    color: rgba(var(--color-primary), 0.7);
+  }
+
+  .sidebar-link:hover {
+    color: rgba(var(--color-primary), 1);
+    @apply no-underline;
+  }
+
+  .sidebar-link-active {
+    @apply font-semibold;
+    color: rgba(var(--color-primary), 1);
+    @apply bg-sky-50;
+    @apply rounded;
+  }
+
+  .sidebar-link-section {
+    @apply cursor-pointer bg-transparent border-none font-medium;
+  }
+
+  .sidebar-chevron {
+    @apply flex items-center justify-center w-5 h-5 shrink-0 cursor-pointer bg-transparent border-none p-0;
+    color: rgba(var(--color-primary), 0.4);
+  }
+
+  .sidebar-chevron:hover {
+    color: rgba(var(--color-primary), 0.8);
+  }
+
+  /* Mobile sidebar */
+  .sidebar-mobile-toggle {
+    @apply flex lg:hidden items-center gap-2 px-4 py-2 text-sm font-medium border-b border-stone-300 w-full bg-white cursor-pointer;
+    color: rgba(var(--color-primary), 0.7);
+  }
+
+  .sidebar-overlay {
+    @apply fixed inset-0 bg-space-700/50 z-40 lg:hidden;
+  }
+
+  @media (max-width: 1023px) {
+    .sidebar {
+      @apply fixed top-0 left-0 z-50 bg-white shadow-lg;
+      display: none;
+      width: 280px;
+      padding-top: 1rem;
+    }
+
+    .sidebar-open {
+      display: block;
+    }
+  }
+
+  /* Anchor links */
   .anchor-link {
     @apply hidden;
   }

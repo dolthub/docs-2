@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/concepts/git/commits.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Commits">
+  <Content />
+</DocsLayout>

@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/features/advanced/transform-uploads.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Transform File Uploads">
+  <Content />
+</DocsLayout>

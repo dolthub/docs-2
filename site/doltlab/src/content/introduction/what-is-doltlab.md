@@ -4,6 +4,8 @@ title: What is DoltLab?
 
 # What is DoltLab?
 
+![](../.gitbook/assets/doltlab-preview.png)
+
 DoltLab gets its name from the combination of Dolt and [GitLab](https://about.gitlab.com/), because GitLab is the version of GitHub that you can host yourself and DoltLab is the version of [DoltHub](https://www.dolthub.com) that you can host yourself.
 
 Technically speaking, both DoltHub and DoltLab are [Dolt database remote](https://www.dolthub.com/blog/2024-04-25-why-remotes/) implementations, built from the ground up to provide an intuitive, pull-request style workflow for versioning and collaborating on data using a sleek, web-based GUI.

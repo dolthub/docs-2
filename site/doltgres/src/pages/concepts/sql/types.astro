@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/concepts/sql/types.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Types">
+  <Content />
+</DocsLayout>
