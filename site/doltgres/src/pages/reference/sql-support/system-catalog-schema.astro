@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/reference/sql-support/system-catalog-schema.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="System Catalog Schema">
+  <Content />
+</DocsLayout>

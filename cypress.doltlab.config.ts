@@ -1,10 +1,11 @@
 import { defineConfig } from "cypress";
 
-// DoltLab docs: https://docs.doltlab.com
+// DoltLab docs: runs against local Astro site by default.
+// To test the live GitBook site: npx cypress run --config-file cypress.doltlab.config.ts --config baseUrl=https://docs.doltlab.com
 export default defineConfig({
   video: false,
   e2e: {
-    baseUrl: "https://docs.doltlab.com",
+    baseUrl: "http://localhost:4322",
     specPattern: "cypress/e2e/doltlab/**/*.spec.ts",
   },
   viewportWidth: 1440,

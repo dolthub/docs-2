@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/concepts/sql/procedures.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Stored Procedures">
+  <Content />
+</DocsLayout>

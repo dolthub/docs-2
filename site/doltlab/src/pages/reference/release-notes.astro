@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../layouts/DocsLayout.astro";
+
+const post = await import("../../content/reference/release-notes/README.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="Release Notes">
+  <Content />
+</DocsLayout>

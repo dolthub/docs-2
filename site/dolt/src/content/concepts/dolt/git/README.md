@@ -2,6 +2,8 @@
 title: Git-Like Version Control
 ---
 
+# Git
+
 Dolt implements Git-style version control on tables instead of files. 
 
 Dolt adopts the Git-interface to version control. There are [commits](/concepts/dolt/git/commits), [branches](/concepts/dolt/git/branch), [merges](/concepts/dolt/git/merge), and all the other Git concepts you are familiar with. If you know Git, Dolt will feel very familiar because conceptually, Dolt is modeled on Git.
