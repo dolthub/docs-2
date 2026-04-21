@@ -138,7 +138,6 @@ const currentPath = Astro.url.pathname;
   .docs-main :global(table) {
     @apply w-full mb-4 text-sm;
     border-collapse: collapse;
-    border: 1px solid #D7D8DF;
   }
 
   .docs-main :global(thead tr) {
@@ -148,12 +147,24 @@ const currentPath = Astro.url.pathname;
   .docs-main :global(th) {
     @apply font-semibold text-left;
     padding: 0.5rem 0.75rem;
-    border: 1px solid #D7D8DF;
+    border-bottom: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(th + th) {
+    border-left: 1px solid #D7D8DF;
   }
 
   .docs-main :global(td) {
     padding: 0.5rem 0.75rem;
-    border: 1px solid #D7D8DF;
+    border-bottom: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(td + td) {
+    border-left: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(tbody tr:last-child td) {
+    border-bottom: none;
   }
 
   .bottomOuter {
