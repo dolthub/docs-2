@@ -2,8 +2,6 @@
 title: MySQL to Dolt Replication (Preview)
 ---
 
-# MySQL to Dolt Replication
-
 MySQL to Dolt replication allows a Dolt SQL Server to consume binlog replication events from a MySQL or MariaDB source database. This is a convenient way to try out Dolt in an existing system – there is no need to migrate your database, just configure Dolt as a replica and as your data replicates to the Dolt server, it will build up a commit history. You can access all the data versioning features of Dolt from the Dolt replica to audit how your data has changed, recover deleted data, or view the state of your data at any point in time.
 
 ![Binlog replication](../.gitbook/assets/dolt-binlog-replication.png)

@@ -2,8 +2,6 @@
 title: SQL Language Support
 ---
 
-# SQL Language Support
-
 Dolt's goal is to be compliant with the MySQL dialect, with every query and statement that works in MySQL behaving identically in Dolt. 
 
 For most syntax and technical questions, you should feel free to refer to the [MySQL user manual](https://dev.mysql.com/doc/refman/8.0/en/select.html). 

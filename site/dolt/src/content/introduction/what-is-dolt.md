@@ -16,11 +16,11 @@ Dolt is a [version controlled database](https://www.dolthub.com/blog/2021-09-17-
 
 ## Version Controlled Database
 
-Dolt is a [version controlled SQL database](https://www.dolthub.com/blog/2021-09-17-database-version-control/). Connect to Dolt just like any MySQL database to run SQL queries. Use Dolt [system tables]../sql-reference/version-control/dolt-system-tables), [functions]../sql-reference/version-control/dolt-sql-functions), or [procedures]../sql-reference/version-control/dolt-sql-procedures) to access version control information and features.
+Dolt is a [version controlled SQL database](https://www.dolthub.com/blog/2021-09-17-database-version-control/). Connect to Dolt just like any MySQL database to run SQL queries. Use Dolt [system tables](/sql-reference/version-control/dolt-system-tables), [functions](/sql-reference/version-control/dolt-sql-functions), or [procedures](/sql-reference/version-control/dolt-sql-procedures) to access version control information and features.
 
 ## Git for Data
 
-Dolt is [Git for data](https://www.dolthub.com/blog/2020-03-06-so-you-want-git-for-data/). [Dolt matches the Git CLI exactly]../cli-reference/cli). When you would have run `git add`, you run `dolt add`. When you would have run `git commit`, you run `dolt commit`.
+Dolt is [Git for data](https://www.dolthub.com/blog/2020-03-06-so-you-want-git-for-data/). [Dolt matches the Git CLI exactly](/cli-reference/cli). When you would have run `git add`, you run `dolt add`. When you would have run `git commit`, you run `dolt commit`.
 
 ## Versioned MySQL Replica
 

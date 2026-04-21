@@ -17,8 +17,8 @@ are only two notable backend implementations so far:
   that want a fast, local MySQL database.
 - Dolt. In addition to the novel git-like storage engine, Dolt also
   adds a number of [system
-  tables]../../sql-reference/version-control/dolt-system-tables), [custom
-  functions]../../sql-reference/version-control/dolt-sql-functions),
+  tables](/sql-reference/version-control/dolt-system-tables), [custom
+  functions](/sql-reference/version-control/dolt-sql-functions),
   and new connection semantics.
 
 # Project architecture

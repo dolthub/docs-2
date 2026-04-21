@@ -98,7 +98,7 @@ Originally developed by [src-d](https://github.com/src-d), [`go-mysql-server`](h
 
 Since we adopted `go-mysql-server`, we have added support for triggers, check constraints, character sets, collations, and many more features. We've also improved join performance and correctness by improving the analyzer. `go-mysql-server` is fast becoming a modern, credible SQL engine.
 
-`go-mysql-server` allowed Dolt full control of the SQL dialect and engine while also allowing Dolt to be a single compiled Golang program. We implemented [custom procedures for version control write operations]../sql-reference/version-control/dolt-sql-procedures) and custom [system tables and functions for version control read operations]../sql-reference/version-control/dolt-system-tables). No Postgres flavored alternative allowing for this level of control existed so Dolt is MySQL flavored.
+`go-mysql-server` allowed Dolt full control of the SQL dialect and engine while also allowing Dolt to be a single compiled Golang program. We implemented [custom procedures for version control write operations](/sql-reference/version-control/dolt-sql-procedures) and custom [system tables and functions for version control read operations](/sql-reference/version-control/dolt-system-tables). No Postgres flavored alternative allowing for this level of control existed so Dolt is MySQL flavored.
 
 Most other users of `go-mysql-server` use it to test their MySQL applications without a running MySQL server. We're the only people we know of intrepid enough to build a full-fledged database on top of it.
 

@@ -33,9 +33,9 @@ performance and usage in real time.
 
 ## Custom Configuration
 
-Dolt has a myriad of [configuration options]../../sql-reference/server/configuration).
+Dolt has a myriad of [configuration options](/sql-reference/server/configuration).
 Most of these can be changed on the running server by setting the appropriate [system
-variable]../../sql-reference/version-control/dolt-sysvars). However, Hosted Dolt
+variable](/sql-reference/version-control/dolt-sysvars). However, Hosted Dolt
 provides a simple UI for viewing and changing your deployment's custom configuration.
 
 ![](../../.gitbook/assets/hosted-custom-config.png)
@@ -186,7 +186,7 @@ Learn more in [our blog](https://www.dolthub.com/blog/2023-06-30-hosted-workbenc
 ## Clone a Hosted Instance
 
 In some cases you might want to clone your database from Hosted Dolt so that you can
-access Dolt's [command line interface]../../cli-reference/cli). Hosted provides an option
+access Dolt's [command line interface](/cli-reference/cli). Hosted provides an option
 to expose your instance's remotesapi endpoint to allow clone, fetch, and pull from your
 Hosted.
 

@@ -2,8 +2,6 @@
 title: FAQ
 ---
 
-# FAQ
-
 ## Why is it called Dolt? Are you calling me dumb?
 
 It's named `dolt` to pay homage to [how Linus Torvalds named
@@ -59,7 +57,7 @@ new dolt commit on the current branch. It's the same as if you run
 We are glad you asked! This is a common use case, and giving each user
 their own branch is something we've spent a lot of time getting
 right. For more details on how to use this pattern effectively, see
-[using branches]../sql-reference/version-control/branches).
+[using branches](/sql-reference/version-control/branches).
 
 ## Does Dolt support transactions?
 
@@ -68,12 +66,12 @@ for competing writes.
 
 It's also possible for different sessions to connect to different
 branches on the same server. See [using
-branches]../sql-reference/version-control/branches) for details.
+branches](/sql-reference/version-control/branches) for details.
 
 ## What SQL features / syntax are supported?
 
 Most of them! Check out [the docs for the full list of supported
-features]../sql-reference/sql-support/supported-statements).
+features](/sql-reference/sql-support/supported-statements).
 
 You can check out what we're working on next on our
 [roadmap](/other/roadmap). Paying customers get their feature requests
@@ -94,7 +92,7 @@ Our goal is to be a 100% drop-in replacement for MySQL.
 Dolt generates a lot of garbage during some writes, especially during initial import. As of Dolt 1.75, Dolt 
 collects disk garbage non-intrusively by default, a feature called automatic garbage collection. So, users of the
 newest Dolt versions should not notice high disk usage. If you do see unusually high disk usage, you can manually
-initiate garbage collection by calling [`dolt_gc()`]../sql-reference/version-control/dolt-sql-procedures#dolt_gc).
+initiate garbage collection by calling [`dolt_gc()`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc).
 
 ## How do I squash the history of a Dolt database? I only want the latest.
 
@@ -139,5 +137,5 @@ rm -rf .dolt/stats
 
 Statistics can be recollected at any time to improve join and indexing
 execution performance. See
-[the stats docs]../sql-reference/sql-support/miscellaneous#stats-controller-functions)
+[the stats docs](/sql-reference/sql-support/miscellaneous#stats-controller-functions)
 for more details.

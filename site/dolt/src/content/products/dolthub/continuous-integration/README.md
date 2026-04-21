@@ -24,12 +24,12 @@ The primary interface for creating and editing CI configuration in a Dolt databa
 
 The `dolt ci` commands as of Dolt v1.45.3 are:
 
-- [dolt ci init]../../../cli-reference/cli#dolt-ci-init). This command creates internal database tables used to store continuous integration configuration.
-- [dolt ci destroy]../../../cli-reference/cli#dolt-ci-destroy). This command drops all database tables used to store continuous integration configuration.
-- [dolt ci import]../../../cli-reference/cli#dolt-ci-import). This command will import a Dolt continuous integration workflow file into the database.
-- [dolt ci export]../../../cli-reference/cli#dolt-ci-export). This command will export a Dolt continuous integration workflow by name.
-- [dolt ci ls]../../../cli-reference/cli#dolt-ci-ls). This command lists existing Dolt continuous integration workflows by name.
-- [dolt ci remove]../../../cli-reference/cli#dolt-ci-remove). This command removes a Dolt continuous integration workflow by name.
+- [dolt ci init](/cli-reference/cli#dolt-ci-init). This command creates internal database tables used to store continuous integration configuration.
+- [dolt ci destroy](/cli-reference/cli#dolt-ci-destroy). This command drops all database tables used to store continuous integration configuration.
+- [dolt ci import](/cli-reference/cli#dolt-ci-import). This command will import a Dolt continuous integration workflow file into the database.
+- [dolt ci export](/cli-reference/cli#dolt-ci-export). This command will export a Dolt continuous integration workflow by name.
+- [dolt ci ls](/cli-reference/cli#dolt-ci-ls). This command lists existing Dolt continuous integration workflows by name.
+- [dolt ci remove](/cli-reference/cli#dolt-ci-remove). This command removes a Dolt continuous integration workflow by name.
 
 The `dolt ci init` command is the starting point for adding CI to a Dolt database, since it creates the underlying tables Dolt needs to begin storing configuration. To get started adding CI to a Dolt database, follow our [getting started guide]().
 
@@ -59,9 +59,9 @@ For more information on Steps, please see the [workflow reference](/products/dol
 
 ## Saved Query
 
-A [Saved Query]../../../sql-reference/version-control/saved-queries) is a SQL query that is stored and versioned in a Dolt database. For the purpose of DoltHub and DoltLab CI, this allows users to write a SQL query that will be executed on command at a later time, during a CI run.
+A [Saved Query](/sql-reference/version-control/saved-queries) is a SQL query that is stored and versioned in a Dolt database. For the purpose of DoltHub and DoltLab CI, this allows users to write a SQL query that will be executed on command at a later time, during a CI run.
 
-For example, take the simple SQL query "show tables;". This can be added to a Dolt database as a saved query using the [dolt sql command]../../../cli-reference/cli#dolt-sql) with the `--save` flag.
+For example, take the simple SQL query "show tables;". This can be added to a Dolt database as a saved query using the [dolt sql command](/cli-reference/cli#dolt-sql) with the `--save` flag.
 
 ```bash
 $ dolt sql --save "Show tables query" -q "show tables;"

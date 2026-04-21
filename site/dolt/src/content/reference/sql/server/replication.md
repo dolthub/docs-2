@@ -58,7 +58,7 @@ replication. The following system variables affect replication:
    replicated.
 1. [`@@dolt_skip_replication_errors`](/sql-reference/version-control/dolt-sysvars#doltskipreplicationerrors).
    Makes replication errors warnings, instead of errors. Defaults to 0.
-1. [`@@dolt_transaction_commit`]../../../sql-reference/version-control/dolt-sysvars#dolt_transaction_commit).
+1. [`@@dolt_transaction_commit`](/sql-reference/version-control/dolt-sysvars#dolt_transaction_commit).
    Makes every transaction `COMMIT` a Dolt commit to force all writes to replicate. Default 0.
 1. [`@@dolt_async_replication`](/sql-reference/version-control/dolt-sysvars#doltasyncreplication). Set to 1
    to make replication pushes asynchronous, which means that read replicas will be eventually
@@ -125,7 +125,7 @@ changing replication configuration.
 Often, a primary would like to replicate all transaction `COMMIT`s,
 not just Dolt commits. You can make every transaction `COMMIT` a Dolt
 commit by setting the [system variable](/concepts/dolt/sql/system-variables),
-[`@@dolt_transaction_commit`]../../../sql-reference/version-control/dolt-sysvars#dolt_transaction_commit). With
+[`@@dolt_transaction_commit`](/sql-reference/version-control/dolt-sysvars#dolt_transaction_commit). With
 this setting, you lose the ability to enter commit messages.
 
 ```bash

@@ -22,7 +22,7 @@ Branches can be used on a running Dolt server for write isolation or parallelism
 
 In traditional SQL databases, transactions are designed to be short lived. The rows you change in a transaction are essentially locked for the duration of the transaction. Because Dolt allows for merge and more complex conflict resolution than traditional SQL databases, Dolt can essentially support long running transactions on branches.
 
-See [the branches section in reference]../../../sql-reference/version-control/branches) for a deeper dive into how to use branches in the SQL server context.
+See [the branches section in reference](/sql-reference/version-control/branches) for a deeper dive into how to use branches in the SQL server context.
 
 ## Difference between Git branch and Dolt branch
 

@@ -48,8 +48,8 @@ find "$SITE_CONTENT" -name "*.md" | while read -r file; do
     -e 's|/README\.md#|/#|g' \
     -e 's|\.md\)|)|g' \
     -e 's|\.md#|#|g' \
-    -e 's|\(([^)]*)/reference/sql/|\1/sql-reference/|g' \
-    -e 's|\(([^)]*)/reference/cli/|\1/cli-reference/|g' \
+    -e 's|\(([^)]*)/reference/sql/|(\1/sql-reference/|g' \
+    -e 's|\(([^)]*)/reference/cli/|(\1/cli-reference/|g' \
     "$file"
 
   # Add frontmatter if missing

@@ -70,7 +70,7 @@ This should feel like a standard SQL workbench like Tableplus or Datagrip but it
 
 Now let's create some tables using SQL. We're going to enter the following SQL queries into the query box. You have to run them one at a time.
 
-```sql
+```SQL
 create table employees (
     id int,
     last_name varchar(255),
@@ -213,7 +213,7 @@ Great, Taylor is now on a new branch and can safely make her changes.
 
 This is easy if you know SQL. In the MySQL client on the `inserts` branch, Taylor ran the following SQL to add a few of the early employees here at DoltHub and assign them to teams.
 
-```sql
+```SQL
 insert into employees values
     (0, 'Sehn', 'Tim'),
     (1, 'Hendriks', 'Brian'),

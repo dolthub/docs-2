@@ -34,7 +34,7 @@ _String_. The case-insensitive name of the workflow, must be unique. Required.
 
 Runs workflow whenever a `push` event occurs. Optional.
 
-A `push` event refers to a branch head update on the remote database, usually following the [dolt push]../../../cli-reference/cli#dolt-push) command.
+A `push` event refers to a branch head update on the remote database, usually following the [dolt push](/cli-reference/cli#dolt-push) command.
 
 # on.pull_request
 
@@ -80,7 +80,7 @@ _String_. The case-insensitive name of a step, must be unique. Required.
 
 # jobs.steps.saved_query_name
 
-_String_. The name of the [saved query]../../../sql-reference/version-control/saved-queries) that should be executed during the workflow run. Required.
+_String_. The name of the [saved query](/sql-reference/version-control/saved-queries) that should be executed during the workflow run. Required.
 
 # jobs.steps.expected_rows
 

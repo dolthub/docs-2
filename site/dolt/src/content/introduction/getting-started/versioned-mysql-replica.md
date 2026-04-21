@@ -50,14 +50,14 @@ Now, you have to prepare MySQL to have a replica. This requires the following co
 
 Now, for the things you have to change. First you need to turn on `ENFORCE_GTID_CONSISTENCY`. Go to the you `mysql` client we started in step one and run the following query.
 
-```sql
+```SQL
 mysql> SET @@GLOBAL.ENFORCE_GTID_CONSISTENCY = ON;                              
 Query OK, 0 rows affected (0.00 sec)
 ```
 
 Finally, you have to change `GTID_MODE` to `ON`. It is `OFF` by default and [you can't go directly from `OFF` to `ON`](https://dev.mysql.com/doc/refman/8.0/en/replication-mode-change-online-enable-gtids.html). So, step through the options up to `ON` like so.
 
-```sql
+```SQL
 mysql> SET @@GLOBAL.GTID_MODE = OFF_PERMISSIVE;
 Query OK, 0 rows affected (0.01 sec)
 
@@ -70,7 +70,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 To make sure you have everything set up right, run the following and make sure the table looks the same.
 
-```sql
+```SQL
 mysql> SHOW VARIABLES WHERE Variable_Name LIKE '%gtid_mode' OR Variable_Name LIKE '%enforce_gtid_consistency' OR Variable_Name LIKE '%binlog_format' OR Variable_Name LIKE 'server_id';
 +--------------------------+-------+
 | Variable_name            | Value |
@@ -158,7 +158,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 Finally, start the replica.
 
-```sql
+```SQL
 mysql> START REPLICA;
 Query OK, 0 rows affected (0.00 sec)
 ```
@@ -256,7 +256,7 @@ The new database `foo` and the table `t` along with it's single row have replica
 
 Now to show off the first new feature, the Dolt Commit log. The Dolt replica makes a Dolt commit after every transaction sent from the primary so you can see what changed and when.
 
-Dolt has a number of [system tables]../../sql-reference/version-control/dolt-system-tables#database-history-system-tables), [functions]../../sql-reference/version-control/dolt-sql-functions#table-functions), and [procedures]../../sql-reference/version-control/dolt-sql-procedures) to expose the version control features. These tables, functions, and procedures are inspired by their Git equivalents, so `git log` becomes the `dolt_log` system table. 
+Dolt has a number of [system tables](/sql-reference/version-control/dolt-system-tables#database-history-system-tables), [functions](/sql-reference/version-control/dolt-sql-functions#table-functions), and [procedures](/sql-reference/version-control/dolt-sql-procedures) to expose the version control features. These tables, functions, and procedures are inspired by their Git equivalents, so `git log` becomes the `dolt_log` system table. 
 
 ```sql
 mysql> select * from dolt_log;
@@ -274,7 +274,7 @@ As you can see, we have a full audit history of the database going back to incep
 
 # Inspect a Diff
 
-Let's see what happened in the last transaction. I'm going to see what changed in table in the last commit using the [`dolt_diff()` table function]../../sql-reference/version-control/dolt-sql-functions#dolt_diff).
+Let's see what happened in the last transaction. I'm going to see what changed in table in the last commit using the [`dolt_diff()` table function](/sql-reference/version-control/dolt-sql-functions#dolt_diff).
 
 ```sql
 mysql> select * from dolt_diff('t3bp704udfjcuo83hb7qjat8ltv1osea', 'h9hsr5ij8u9gml4nkqenm8alep1la1r9', 't');
@@ -478,7 +478,7 @@ Records: 2  Duplicates: 0  Warnings: 0
 
 Let's say in this case, people are reporting their historical salaries have changed. We have a clue that something is wrong in the database. Let's head over to the Dolt replica and see what's up.
 
-First, we want to find the changes in the last 10 transactions that touched the salaries table. To do this we use the unscoped [`dolt_diff` table]../../sql-reference/version-control/dolt-system-tables#dolt_diff) to see what tables changes in each commit.
+First, we want to find the changes in the last 10 transactions that touched the salaries table. To do this we use the unscoped [`dolt_diff` table](/sql-reference/version-control/dolt-system-tables#dolt_diff) to see what tables changes in each commit.
 
 ```sql
 mysql> select * from dolt_diff where table_name='salaries' limit 10;
@@ -549,9 +549,9 @@ Take a minute to marvel at what we just did. We were able to identify what chang
 
 # Revert a bad change
 
-If you were running Dolt as the primary database, reverting a bad change is as simple as calling [`dolt_revert()`]../../sql-reference/version-control/dolt-sql-procedures#dolt_revert). But since we're running Dolt as a replica, we need Dolt to produce a SQL patch to revert the bad changes. To do this, we're going to make a branch on the replica, revert the change, and then use the [`dolt_patch()` function]../../sql-reference/version-control/dolt-sql-functions#dolt_patch) to get the SQL we need to apply to our primary database.
+If you were running Dolt as the primary database, reverting a bad change is as simple as calling [`dolt_revert()`](/sql-reference/version-control/dolt-sql-procedures#dolt_revert). But since we're running Dolt as a replica, we need Dolt to produce a SQL patch to revert the bad changes. To do this, we're going to make a branch on the replica, revert the change, and then use the [`dolt_patch()` function](/sql-reference/version-control/dolt-sql-functions#dolt_patch) to get the SQL we need to apply to our primary database.
 
-First, we use [`call dolt_checkout()`]../../sql-reference/version-control/dolt-sql-procedures#dolt_checkout) to create a branch. Our revert changes will now be isolated from the replicating branch, `main`.
+First, we use [`call dolt_checkout()`](/sql-reference/version-control/dolt-sql-procedures#dolt_checkout) to create a branch. Our revert changes will now be isolated from the replicating branch, `main`.
 
 ```sql
 mysql> call dolt_checkout('-b', 'revert_bad_change');
@@ -563,7 +563,7 @@ mysql> call dolt_checkout('-b', 'revert_bad_change');
 1 row in set (0.02 sec)
 ```
 
-Then we revert the bad commit using [`call dolt_revert()`]../../sql-reference/version-control/dolt-sql-procedures#dolt_revert).
+Then we revert the bad commit using [`call dolt_revert()`](/sql-reference/version-control/dolt-sql-procedures#dolt_revert).
 
 ```sql
 mysql> call dolt_revert('123d9jc85evssjcrv6u5mlt5dg4lk6ss');
@@ -587,7 +587,7 @@ mysql> select * from dolt_diff('HEAD^', 'HEAD', 'salaries');
 5 rows in set (0.00 sec)
 ```
 
-We use the [`dolt_patch()`]../../sql-reference/version-control/dolt-sql-functions#dolt_patch) function to generate the sql we want to run on our primary.
+We use the [`dolt_patch()`](/sql-reference/version-control/dolt-sql-functions#dolt_patch) function to generate the sql we want to run on our primary.
 
 ```sql
 mysql> select * from dolt_patch('HEAD^', 'HEAD');
