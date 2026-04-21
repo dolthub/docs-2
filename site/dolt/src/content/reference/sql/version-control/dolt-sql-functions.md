@@ -86,7 +86,7 @@ mysql> SELECT dolt_hashof_table('color');
 
 The `DOLT_HASHOF_DB()` function returns the value hash of the entire versioned database. The hash is the hash of all tables
 (schema and data) in the database, and includes additional versioned items such as stored procedures and triggers. The hash
-does not include unversioned items such as tables which have been [ignored](dolt-system-tables.md#dolt_ignore). The function
+does not include unversioned items such as tables which have been [ignored](/sql-reference/version-control/dolt-system-tables#dolt_ignore). The function
 takes an optional argument to specify a branch or one of the values of 'STAGED', 'WORKING', or 'HEAD' (default no argument call
 is equivalent to 'WORKING').
 
@@ -202,7 +202,7 @@ The `DOLT_DIFF()` table function calculates the differences in a table's data at
 Each row in the result set describes how a row in the underlying table has changed between the two commits,
 including the row's values at to and from commits and the type of change (i.e. `added`, `modified`, or `removed`).
 `DOLT_DIFF()` is an alternative to the
-[`dolt_commit_diff_$tablename` system table](dolt-system-tables.md#dolt_commit_diff_usdtablename).
+[`dolt_commit_diff_$tablename` system table](/sql-reference/version-control/dolt-system-tables#dolt_commit_diff_usdtablename).
 You should generally prefer the system tables when possible, since they have less restrictions on use.
 However, some use cases, such as viewing a table data diff containing schema changes or viewing the [three dot diff](https://www.dolthub.com/blog/2022-11-11-two-and-three-dot-diff-and-log/#three-dot-diff),
 can be easier to view with the `DOLT_DIFF` table function.
@@ -365,7 +365,7 @@ return empty result. Each row in the result set describes a diff stat for a sing
 number of rows unmodified, added, deleted and modified, number of cells added, deleted and modified and total number of
 rows and cells the table has at each commit.
 
-`DOLT_DIFF_STAT()` works like [CLI `dolt diff --stat` command](../../cli/cli.md#dolt-diff), but two commits are required to use the `DOLT_DIFF_STAT()` table function and the table name is optional. For keyless tables, this table function only provides the number of added and deleted rows. It returns empty result for tables with no data changes.
+`DOLT_DIFF_STAT()` works like [CLI `dolt diff --stat` command](/cli-reference/cli#dolt-diff), but two commits are required to use the `DOLT_DIFF_STAT()` table function and the table name is optional. For keyless tables, this table function only provides the number of added and deleted rows. It returns empty result for tables with no data changes.
 
 Note that the `DOLT_DIFF_STAT()` table function currently requires that argument values be literal values.
 
@@ -504,7 +504,7 @@ between any two commits in the database. Only changed tables will be listed in t
 along with the diff type ('added', 'dropped', 'modified', 'renamed') and whether there are
 data and schema changes.
 
-`DOLT_DIFF_SUMMARY()` works like [CLI `dolt diff --summary` command](../../cli/cli.md#dolt-diff),
+`DOLT_DIFF_SUMMARY()` works like [CLI `dolt diff --summary` command](/cli-reference/cli#dolt-diff),
 but two commits are required to use the `DOLT_DIFF_SUMMARY()` table function and the table
 name is optional. It returns empty result if there are no tables with changes.
 
@@ -760,7 +760,7 @@ in an array anywhere other than the end will shift the indexes of each element, 
 
 The `DOLT_LOG` table function gets the commit log for all commits reachable from the
 provided revision's `HEAD` (or the current `HEAD` if no revision is provided). `DOLT_LOG()`
-works like [CLI `dolt log` command](../../cli/cli.md#dolt-log).
+works like [CLI `dolt log` command](/cli-reference/cli#dolt-log).
 
 Note that the `DOLT_LOG()` table function currently requires that argument values be literal values.
 
@@ -890,7 +890,7 @@ Learn more about two vs three dot log [here](https://www.dolthub.com/blog/2022-1
 Generate the SQL statements needed to patch a table (or all tables) from a starting revision
 to a target revision. This can be useful when you want to import data into Dolt from an external source,
 compare differences, and generate the SQL statements needed to patch the original source. This command is
-equivalent of [`dolt diff -r sql` CLI command](../../cli/cli.md#dolt-diff).
+equivalent of [`dolt diff -r sql` CLI command](/cli-reference/cli#dolt-diff).
 Both schema and/or data diff statements are returned if applicable. Some data diff cannot be
 produced from incompatible schema changes; these are shown as warnings containing
 which table this occurred on.
@@ -1611,7 +1611,7 @@ This means that `other` has commits `"other commit 1"` and `"other commit 2"` th
 
 ## `DOLT_TEST_RUN()`
 
-The `DOLT_TEST_RUN()` table function executes tests defined in the [`dolt_tests` system table](dolt-system-tables.md#dolt_tests) and returns the results. Tests can be run individually by name, by test group, or all at once.
+The `DOLT_TEST_RUN()` table function executes tests defined in the [`dolt_tests` system table](/sql-reference/version-control/dolt-system-tables#dolt_tests) and returns the results. Tests can be run individually by name, by test group, or all at once.
 
 ### Privileges
 

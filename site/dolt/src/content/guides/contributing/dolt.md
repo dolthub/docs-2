@@ -8,7 +8,7 @@ Here, we will go through a fix for this
 to demonstrate how to make a change to [Dolt](https://github.com/dolthub/dolt).
 
 ## Setup
-Follow these [setup instructions](../contributing.md).
+Follow these [setup instructions](/guides/contributing).
 
 ## Identifying the Bug
 Dolt has the ability to host a SQL server and take in user queries to create, modify, and drop tables.
@@ -98,7 +98,7 @@ sqlEngine, err := engine.NewSqlEngine(ctx, mrEnv, engine.FormatTabular, "", serv
 ```
 
 ## Testing
-After [reinstalling](../contributing.md#install-dolt) dolt and running the python script, we get an exception as expected.
+After [reinstalling](/guides/contributing#install-dolt) dolt and running the python script, we get an exception as expected.
 ```bash
 $ python sqltest.py
 caught exception: 1105 (HY000): not authorized: user does not have permission: write
@@ -165,4 +165,4 @@ $ test.sh
 Use git to commit and push our changes.
 
 If you are unfamiliar with how to create a Pull Request,
-follow the instructions [here](../contributing.md#submit-pull-request).
+follow the instructions [here](/guides/contributing#submit-pull-request).

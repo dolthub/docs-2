@@ -100,8 +100,8 @@ You can build dolt from source like so:
 
 Refer to these guides to fix bugs specific to each part of dolt:
 
-1. [Contributing to Dolt](./contributing/dolt.md)
-2. [Contributing to Go MySQL Server](./contributing/go-mysql-server.md)
+1. [Contributing to Dolt](/guides/contributing/dolt)
+2. [Contributing to Go MySQL Server](/guides/contributing/go-mysql-server)
 
 # Submit Pull Request
 

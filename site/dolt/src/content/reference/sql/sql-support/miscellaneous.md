@@ -10,15 +10,15 @@ title: Miscellaneous
 |:----------------------------------|:----------|:----------------------------------------------------------------------------------------------------------------------|
 | Information schema                | ✅         |                                                                                                                       |
 | Views                             | ✅         |                                                                                                                       |
-| Window functions                  | 🟠         | Some functions not supported, see [window function docs](./expressions-functions-operators.md#window-functions)       |
+| Window functions                  | 🟠         | Some functions not supported, see [window function docs](/sql-reference/sql-support/expressions-functions-operators#window-functions)       |
 | Common table expressions \(CTEs\) | ✅         |                                                                                                                       |
-| Stored procedures                 | 🟠         | Only a few statements are not yet supported, see [compound statements](./supported-statements.md#compound-statements) |
+| Stored procedures                 | 🟠         | Only a few statements are not yet supported, see [compound statements](/sql-reference/sql-support/supported-statements#compound-statements) |
 | Cursors                           | ✅         |                                                                                                                       |
 | Triggers                          | ✅         |                                                                                                                       |
 
 ## Client Compatibility
 
-Some MySQL features are client features, not server features. Dolt ships with a client (ie. [`dolt sql`](../../cli/cli.md#dolt-sql)) and a server ([`dolt sql-server`](../../cli/cli.md#dolt-sql-server)). The Dolt client is not as sophisticated as the `mysql` client. To access these features you can use the `mysql` client that ships with MySQL.
+Some MySQL features are client features, not server features. Dolt ships with a client (ie. [`dolt sql`](/cli-reference/cli#dolt-sql)) and a server ([`dolt sql-server`](/cli-reference/cli#dolt-sql-server)). The Dolt client is not as sophisticated as the `mysql` client. To access these features you can use the `mysql` client that ships with MySQL.
 
 | Feature                         | Supported | Notes and limitations                                                                                    |
 |:--------------------------------|:----------|:---------------------------------------------------------------------------------------------------------|

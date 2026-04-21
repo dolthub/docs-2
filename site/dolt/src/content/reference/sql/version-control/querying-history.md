@@ -41,7 +41,7 @@ DESCRIBE myTable AS OF 'HEAD~';
 ```
 
 Note that `AS OF` always names a revision at a specific Dolt commit. Changes on a branch's [working
-set](../../../concepts/dolt/git/working-set.md) that have not been committed to that head via `call
+set](/concepts/dolt/git/working-set) that have not been committed to that head via `call
 dolt_commit()` or similar are not visible via this syntax.
 
 ## Specifying a revision in the database name
@@ -67,10 +67,10 @@ show create table `mydb/ia1ibijq8hq1llr7u85uivsi5lh3310p`.myTable;
 ```
 
 There are other variations on this as well. See the docs on [using
-branches](branches.md) for more details.
+branches](/sql-reference/version-control/branches) for more details.
 
 Note that this syntax applied to a branch will name that branch's [working
-set](../../../concepts/dolt/git/working-set.md) and therefore includes any changes not yet committed to
+set](/concepts/dolt/git/working-set) and therefore includes any changes not yet committed to
 the HEAD of the branch.
 
 ## Querying history using dolt system tables
@@ -107,7 +107,7 @@ ORDER BY state, to_commit_date;
 ```
 
 For more information, see the [system table
-docs](./dolt-system-tables.md).
+docs](/sql-reference/version-control/dolt-system-tables).
 
 ## Querying historical view data
 
@@ -118,7 +118,7 @@ tables as they existed at the revision provided.
 
 To query the historical definition of a view, you must checkout the
 database at a particular commit. You can do this by [changing your
-branch](./branches.md), e.g.:
+branch](/sql-reference/version-control/branches), e.g.:
 
 ```sql
 call dolt_checkout('-b', 'old-view-def', '81223g1cpmib215gmov8686b6310p37d');

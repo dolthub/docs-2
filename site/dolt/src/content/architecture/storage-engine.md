@@ -23,7 +23,7 @@ Git-style version control on a database provides a number of useful features inc
 
 # Requirements
 
-As noted in [an earlier, requirements exercise for Dolt itself](./architecture.md), a storage engine for a SQL database with Git-style versioning would provide:
+As noted in [an earlier, requirements exercise for Dolt itself](/architecture/architecture), a storage engine for a SQL database with Git-style versioning would provide:
 
 1. **Tables**
 
@@ -51,7 +51,7 @@ Dolt's storage engine is built on a Git-style commit graph of Prolly Trees. Tabl
 
 Databases are built on top of [Search Trees](https://en.wikipedia.org/wiki/Search_tree), a class of data structure. Most databases are built on [B-trees](https://www.dolthub.com/blog/2020-04-01-how-dolt-stores-table-data/#b-tree-review). 
 
-Dolt is built on a novel Search Tree, closely related to a B-tree, called a Probabilistic B-Tree, or Prolly Tree for short. As far as we can tell, Prolly Trees were [invented by the Noms team specifically for database version control](https://github.com/attic-labs/noms/blob/master/doc/intro.md) and they also coined the term.
+Dolt is built on a novel Search Tree, closely related to a B-tree, called a Probabilistic B-Tree, or Prolly Tree for short. As far as we can tell, Prolly Trees were [invented by the Noms team specifically for database version control](https://github.com/attic-labs/noms/blob/master/doc/intro) and they also coined the term.
 
 ## B-Trees
 
@@ -79,11 +79,11 @@ Moreover, sections of the tree that share the same root hash can share storage b
 
 ![Prolly Tree Update](../.gitbook/assets/prolly-tree-structural-sharing.png)
 
-Prolly trees are described in more detail [here](./storage-engine/prolly-tree.md).
+Prolly trees are described in more detail [here](/architecture/storage-engine/prolly-tree).
 
 ## Comparison
 
-[The Noms documentation](https://github.com/attic-labs/noms/blob/master/doc/intro.md#some-properties-of-prolly-trees) provides the following useful algorithmic, big O() comparison of B-trees and Prolly Trees:
+[The Noms documentation](https://github.com/attic-labs/noms/blob/master/doc/intro#some-properties-of-prolly-trees) provides the following useful algorithmic, big O() comparison of B-trees and Prolly Trees:
 
 Operation | B-Trees | Prolly Trees
 --------- | ------- | ------------
@@ -119,4 +119,4 @@ And, thus, you end up with Dolt's storage engine.
 
 ![Dolt's Storage Engine](../.gitbook/assets/prolly-tree-plus-commit-graph.png)
 
-Read more about the Dolt commit graph [here](./storage-engine/commit-graph.md)
+Read more about the Dolt commit graph [here](/architecture/storage-engine/commit-graph)

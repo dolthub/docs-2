@@ -8,4 +8,4 @@ The [Dolt Workbench](https://github.com/dolthub/dolt-workbench) is a modern, ope
 
 The Dolt Workbench is available via the [Mac](https://apps.apple.com/us/app/dolt-workbench/id6720702995?mt=12) or [Windows](https://apps.microsoft.com/detail/9nq8lqph9vvh?hl=en-us&gl=US) App stores.
 
-See the [Dolt Workbench README](https://github.com/dolthub/dolt-workbench/blob/main/README.md) on GitHub for more information.
+See the [Dolt Workbench README](https://github.com/dolthub/dolt-workbench/blob/main/) on GitHub for more information.

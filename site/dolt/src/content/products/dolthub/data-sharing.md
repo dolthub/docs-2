@@ -12,7 +12,7 @@ Our [discover page](https://www.dolthub.com/discover) on DoltHub lets you find p
 
 ## Clone data locally
 
-See an interesting database you'd like to make changes to? Get the database locally with just one command (assuming you have [Dolt installed](../../introduction/installation.md)), which is found on every database page:
+See an interesting database you'd like to make changes to? Get the database locally with just one command (assuming you have [Dolt installed](/introduction/installation)), which is found on every database page:
 
 ![](../../.gitbook/assets/dolt-clone-corona-virus.png)
 
@@ -44,7 +44,7 @@ corona_virus> exit;
 Bye
 ```
 
-You can see how the insert query changed the `cases` table by viewing the [diff](../../concepts/dolt/git/diff.md):
+You can see how the insert query changed the `cases` table by viewing the [diff](/concepts/dolt/git/diff):
 
 ```
 % dolt diff
@@ -135,7 +135,7 @@ When you navigate to the fork on DoltHub, you'll see the new branch in the branc
 
 ## Create a pull request to the parent database
 
-In order to incorporate this change into the parent database (`dolthub/corona-virus`), we need to create a [pull request](../../concepts/dolthub/prs.md). A pull request is a way to propose changes to a database and discuss these changes with the database owners.
+In order to incorporate this change into the parent database (`dolthub/corona-virus`), we need to create a [pull request](/concepts/dolthub/prs). A pull request is a way to propose changes to a database and discuss these changes with the database owners.
 
 To create a pull request, we first navigate to the parent database. In the "Pull Requests" tab click on the "Create Pull Request" button. Choose your fork as the "From database" and add a title and description.
 

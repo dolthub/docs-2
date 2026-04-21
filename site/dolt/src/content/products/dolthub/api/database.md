@@ -12,9 +12,9 @@ Please make sure to send your requests to `https://www.dolthub.com` instead of `
 
 ## Create database
 
-Here's an example of how to create a new database called `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+Here's an example of how to create a new database called `museum-collections` under the organization `dolthub` using an [authorization token](/products/dolthub/api/authentication).
 
-Creating a database requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Creating a database requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -28,13 +28,13 @@ headers = {
 
 ## Fork database
 
-Here's an example of how to fork a database called `dolthub/museum-collections` to the username `taylor` using an [authorization token](authentication.md). Note that the fork operation is asynchronous and creates an operation that can be polled to get the result.
+Here's an example of how to fork a database called `dolthub/museum-collections` to the username `taylor` using an [authorization token](/products/dolthub/api/authentication). Note that the fork operation is asynchronous and creates an operation that can be polled to get the result.
 
 To poll the operation and check its status, you can use the `operationName` in the returned response of the fork request to query the API. Once the operation is complete, the response will contain the new database owner and name.
 
 Keep in mind that the time it takes for the fork operation to complete can vary depending on the size of the database.
 
-Forking a database requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Forking a database requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -54,7 +54,7 @@ Then use `GET` to poll the operation to check if the fork operation is done.
 
 ## List forks
 
-Here's an example of how to list the databases within the fork network of a database called `dolthub/museum-collections` using an [authorization token](authentication.md).
+Here's an example of how to list the databases within the fork network of a database called `dolthub/museum-collections` using an [authorization token](/products/dolthub/api/authentication).
 
 ```python
 headers = {
@@ -68,7 +68,7 @@ headers = {
 
 ## Create pull request
 
-Here is an example of opening a pull request on the `museum-collections` database with data from the Los Angeles County Museum of Art. This data was added to the `lacma` branch on a fork database, whose `owner` is `liuliu`, we would like to eventually merge `lacma` branch into the `main` branch using an [authorization token](authentication.md).
+Here is an example of opening a pull request on the `museum-collections` database with data from the Los Angeles County Museum of Art. This data was added to the `lacma` branch on a fork database, whose `owner` is `liuliu`, we would like to eventually merge `lacma` branch into the `main` branch using an [authorization token](/products/dolthub/api/authentication).
 
 Include this `header` in your request.
 
@@ -116,7 +116,7 @@ headers = {
 
 ## List pull requests
 
-Here is an example of listing pull requests for the `museum-collections` database using an [authorization token](authentication.md). The response of pull request list is paginated, so you need to use the next page token included in the response to retrieve the following pages of pull requests.
+Here is an example of listing pull requests for the `museum-collections` database using an [authorization token](/products/dolthub/api/authentication). The response of pull request list is paginated, so you need to use the next page token included in the response to retrieve the following pages of pull requests.
 
 Include this `header` in your request.
 
@@ -132,7 +132,7 @@ headers = {
 
 ## Create a pull request comment&#x20;
 
-Here is an example of adding a pull request comment using an [authorization token](authentication.md).
+Here is an example of adding a pull request comment using an [authorization token](/products/dolthub/api/authentication).
 
 Include this `header` in your request.
 
@@ -148,7 +148,7 @@ headers = {
 
 ## Merge pull request
 
-Here is an example of merging a pull request `#66` on a database `museum-collections` using an [authorization token](authentication.md). Note that the merge operation is asynchronous and creates an operation that can be polled to get the result.
+Here is an example of merging a pull request `#66` on a database `museum-collections` using an [authorization token](/products/dolthub/api/authentication). Note that the merge operation is asynchronous and creates an operation that can be polled to get the result.
 
 To poll the operation and check its status, you can use the `operationName` in the returned response of the merge request to query the API. Once the operation is complete, the response will contain a `job_id` field indicating the job that's running the merge, as well as other information such as the `database_owner`, `database_name`, and `pull_id`.
 
@@ -174,7 +174,7 @@ Then use `GET` to poll the operation to check if the merge operation is done.
 
 ## Upload a file
 
-Here is an example of uploading a file `lacma.csv` to create a table `lacma` on a database `museum-collections` using an [authorization token](authentication.md). Note that the file import operation is asynchronous and creates an operation that can be polled to get the result.
+Here is an example of uploading a file `lacma.csv` to create a table `lacma` on a database `museum-collections` using an [authorization token](/products/dolthub/api/authentication). Note that the file import operation is asynchronous and creates an operation that can be polled to get the result.
 
 To poll the operation and check its status, you can use the `operationName` in the returned response of the file upload post to query the API. Once the operation is complete, the response will contain a `job_id` field indicating the job that's running the file import as well as the id of the pull request that's created when the import job is completed.
 
@@ -281,9 +281,9 @@ function pollOperation(op_name,branch_name) {
 
 ## Create a branch
 
-Here's an example of how to create a new branch in database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+Here's an example of how to create a new branch in database `museum-collections` under the organization `dolthub` using an [authorization token](/products/dolthub/api/authentication).
 
-Creating a branch requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Creating a branch requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -297,9 +297,9 @@ headers = {
 
 ## List branches
 
-Here's an example of how to list branches in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+Here's an example of how to list branches in the database `museum-collections` under the organization `dolthub` using an [authorization token](/products/dolthub/api/authentication).
 
-Listing branches requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Listing branches requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -313,9 +313,9 @@ headers = {
 
 ## Create a tag
 
-Here's an example of how to create a new tag in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+Here's an example of how to create a new tag in the database `museum-collections` under the organization `dolthub` using an [authorization token](/products/dolthub/api/authentication).
 
-Creating a tag requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Creating a tag requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -329,9 +329,9 @@ headers = {
 
 ## List tags
 
-Here's an example of how to list tags in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+Here's an example of how to list tags in the database `museum-collections` under the organization `dolthub` using an [authorization token](/products/dolthub/api/authentication).
 
-Listing tags requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Listing tags requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -345,9 +345,9 @@ headers = {
 
 ## Create a release
 
-Here's an example of how to create a new release in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+Here's an example of how to create a new release in the database `museum-collections` under the organization `dolthub` using an [authorization token](/products/dolthub/api/authentication).
 
-Creating a release requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Creating a release requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -361,9 +361,9 @@ headers = {
 
 ## List releases
 
-Here's an example of how to list releases in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+Here's an example of how to list releases in the database `museum-collections` under the organization `dolthub` using an [authorization token](/products/dolthub/api/authentication).
 
-Listing releases requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Listing releases requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -381,11 +381,11 @@ DoltHub provides support for asynchronous operations, including merging, SQL wri
 
 This API endpoint lets you monitor the status of all the operations you started in one place without needing to poll the endpoints for singular operations. These operations have `error` and `metadata` fields which contain useful information for troubleshooting and debugging.
 
-For example, if you have executed a few SQL write queries using that [API endpoint](sql.md#writing), you can list those operations using the `operationType` query parameter to filter for `SqlWrite` operations. The `metadata` will show the query executed, database and branch that the query ran on, as well as any syntax or other errors you may have encountered.
+For example, if you have executed a few SQL write queries using that [API endpoint](/products/dolthub/api/sql#writing), you can list those operations using the `operationType` query parameter to filter for `SqlWrite` operations. The `metadata` will show the query executed, database and branch that the query ran on, as well as any syntax or other errors you may have encountered.
 
-Here's an example of how to list `SqlWrite` operations initiated by user `liuliu` using an [authorization token](authentication.md).
+Here's an example of how to list `SqlWrite` operations initiated by user `liuliu` using an [authorization token](/products/dolthub/api/authentication).
 
-Listing operations requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Listing operations requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {
@@ -403,9 +403,9 @@ DoltHub performs certain asynchronous operations through job execution, includin
 
 This API endpoint lets you monitor the status of jobs started in a specific database.
 
-Here is an example of how to list all the jobs on a database `museum-collections` using an [authorization token](authentication.md).
+Here is an example of how to list all the jobs on a database `museum-collections` using an [authorization token](/products/dolthub/api/authentication).
 
-Listing jobs requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Listing jobs requires authentication, so you must include this authorization header in your request. See the [Authentication](/products/dolthub/api/authentication) section for more details.
 
 ```python
 headers = {

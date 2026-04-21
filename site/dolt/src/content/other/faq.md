@@ -57,7 +57,7 @@ new dolt commit on the current branch. It's the same as if you run
 We are glad you asked! This is a common use case, and giving each user
 their own branch is something we've spent a lot of time getting
 right. For more details on how to use this pattern effectively, see
-[using branches](../reference/sql/version-control/branches.md).
+[using branches]../sql-reference/version-control/branches).
 
 ## Does Dolt support transactions?
 
@@ -66,20 +66,20 @@ for competing writes.
 
 It's also possible for different sessions to connect to different
 branches on the same server. See [using
-branches](../reference/sql/version-control/branches.md) for details.
+branches]../sql-reference/version-control/branches) for details.
 
 ## What SQL features / syntax are supported?
 
 Most of them! Check out [the docs for the full list of supported
-features](../reference/sql/sql-support/supported-statements.md).
+features]../sql-reference/sql-support/supported-statements).
 
 You can check out what we're working on next on our
-[roadmap](./roadmap.md). Paying customers get their feature requests
+[roadmap](/other/roadmap). Paying customers get their feature requests
 bumped to the front of the line.
 
 ## Does Dolt support my favorite SQL workbench / tool?
 
-Probably! Have you tried it? We have [blogs and sample code](../guides/dolt-tested-apps.md)
+Probably! Have you tried it? We have [blogs and sample code](/guides/dolt-tested-apps)
 for many popular ORMs and tools.
 
 If you try it and it doesn't work, [let
@@ -92,7 +92,7 @@ Our goal is to be a 100% drop-in replacement for MySQL.
 Dolt generates a lot of garbage during some writes, especially during initial import. As of Dolt 1.75, Dolt 
 collects disk garbage non-intrusively by default, a feature called automatic garbage collection. So, users of the
 newest Dolt versions should not notice high disk usage. If you do see unusually high disk usage, you can manually
-initiate garbage collection by calling [`dolt_gc()`](../reference/sql/version-control/dolt-sql-procedures.md#dolt_gc).
+initiate garbage collection by calling [`dolt_gc()`]../sql-reference/version-control/dolt-sql-procedures#dolt_gc).
 
 ## How do I squash the history of a Dolt database? I only want the latest.
 
@@ -137,5 +137,5 @@ rm -rf .dolt/stats
 
 Statistics can be recollected at any time to improve join and indexing
 execution performance. See
-[the stats docs](../reference/sql/sql-support/miscellaneous.md#stats-controller-functions)
+[the stats docs]../sql-reference/sql-support/miscellaneous#stats-controller-functions)
 for more details.

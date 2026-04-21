@@ -20,7 +20,7 @@ management system. It implements the MySQL parser and the MySQL
 server, including the wire protocol.
 
 [Read more about the vitess project and how it's used in
-Dolt.](sql/vitess.md)
+Dolt.](/architecture/sql/vitess)
 
 ## go-mysql-server
 
@@ -30,7 +30,7 @@ query analyzer and execution engine, and defines interfaces for
 storage backend integrators (like Dolt) to implement.
 
 [Read more about the go-mysql-server project and how it's used in
-Dolt.](sql/go-mysql-server.md)
+Dolt.](/architecture/sql/go-mysql-server)
 
 ## Dolt
 

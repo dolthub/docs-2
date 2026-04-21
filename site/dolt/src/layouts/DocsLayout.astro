@@ -24,10 +24,14 @@ const currentPath = Astro.url.pathname;
   </head>
   <body>
     <div>
-      <Navbar client:only="react" />
+      <div class="navbar-slot">
+        <Navbar client:only="react" />
+      </div>
 
       <div class="docs-container">
-        <Sidebar client:only="react" nav={nav} currentPath={currentPath} />
+        <div class="sidebar-slot">
+          <Sidebar client:only="react" nav={nav} currentPath={currentPath} />
+        </div>
 
         <main class="docs-main">
           <article class="docs-article">
@@ -46,6 +50,18 @@ const currentPath = Astro.url.pathname;
 </html>
 
 <style>
+  /* Reserve space for client-only components to prevent layout shift */
+  .navbar-slot {
+    min-height: 48px;
+  }
+
+  .sidebar-slot {
+    @apply hidden lg:block;
+    width: 256px;
+    min-width: 256px;
+    border-right: 1px solid #D7D8DF;
+  }
+
   .docs-container {
     @apply flex w-full max-w-[1400px] mx-auto;
   }
@@ -118,7 +134,7 @@ const currentPath = Astro.url.pathname;
 <style is:global>
   /* Sidebar styles */
   .sidebar {
-    @apply hidden lg:block w-64 shrink-0 border-r border-stone-300 overflow-y-auto;
+    @apply w-64 shrink-0 overflow-y-auto;
     position: sticky;
     top: 0;
     height: 100vh;

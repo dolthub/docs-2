@@ -60,7 +60,7 @@ with open(local_file, 'wb') as file:
 
 #### Authentication
 
-API tokens can be used to authenticate calls to the CSV API over Basic [Authentication](authentication.md). This is useful for downloading data from private databases.
+API tokens can be used to authenticate calls to the CSV API over Basic [Authentication](/products/dolthub/api/authentication). This is useful for downloading data from private databases.
 
 You can use the token in the header when downloading CSVs from a private database.
 

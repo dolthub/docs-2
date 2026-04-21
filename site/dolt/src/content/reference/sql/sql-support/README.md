@@ -16,11 +16,11 @@ This series of documents shows:
 
 This section is divided into five main categories:
 
-1. [Data Description](data-description.md): SQL features for describing and organizing data
-2. [Expressions, Functions, Operators](expressions-functions-operators.md): SQL expressions, functions and operators used in queries
-3. [Supported Statements](supported-statements.md): statements Dolt supports
-4. [Information Schema](information-schema.md): Dolt support for MySQL information schema
-5. [Collations and Character Sets](collations-and-charsets.md): SQL features for describing and comparing strings
-6. [System Variables](system-variables.md): SQL features for configuring server behavior
-7. [SQL Modes](sql-modes.md): Dolt support for MySQL SQL modes
-8. [Miscellaneous](miscellaneous.md): miscellaneous SQL features 
+1. [Data Description](/sql-reference/sql-support/data-description): SQL features for describing and organizing data
+2. [Expressions, Functions, Operators](/sql-reference/sql-support/expressions-functions-operators): SQL expressions, functions and operators used in queries
+3. [Supported Statements](/sql-reference/sql-support/supported-statements): statements Dolt supports
+4. [Information Schema](/sql-reference/sql-support/information-schema): Dolt support for MySQL information schema
+5. [Collations and Character Sets](/sql-reference/sql-support/collations-and-charsets): SQL features for describing and comparing strings
+6. [System Variables](/sql-reference/sql-support/system-variables): SQL features for configuring server behavior
+7. [SQL Modes](/sql-reference/sql-support/sql-modes): Dolt support for MySQL SQL modes
+8. [Miscellaneous](/sql-reference/sql-support/miscellaneous): miscellaneous SQL features 

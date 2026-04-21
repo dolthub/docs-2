@@ -14,7 +14,7 @@ To upgrade the server, download the latest Dolt binary for your platform and rep
 
 ## Examine your CPU, Memory, and Disk usage
 
-Dolt consumes CPU, Memory, and Disk. Consuming more of any of these resources than the host has available can lead to degraded performance. Use your system's built in resource monitoring systems to inspect Dolt's usage of these resources. You may need a larger host or additional [read replicas](./replication.md) to support your load.
+Dolt consumes CPU, Memory, and Disk. Consuming more of any of these resources than the host has available can lead to degraded performance. Use your system's built in resource monitoring systems to inspect Dolt's usage of these resources. You may need a larger host or additional [read replicas](/sql-reference/server/replication) to support your load.
 
 ## Set your log level to DEBUG or TRACE
 
@@ -28,7 +28,7 @@ Note: `EXPLAIN` currently returns MySQL-consistent but otherwise no-op output. U
 
 ## Compare to MySQL
 
-Dolt strives to be 100% MySQL compatible. If you run a query that works in MySQL but does not work in Dolt, it is a Dolt bug and you should [submit an issue](#submitting-issues). You can dump your Dolt database using [`dolt dump`](../../cli/cli.md#dolt-dump) and import the resulting file into MySQL using `mysql < dump.sql`. The test the query you think should work using any MySQL client.
+Dolt strives to be 100% MySQL compatible. If you run a query that works in MySQL but does not work in Dolt, it is a Dolt bug and you should [submit an issue](#submitting-issues). You can dump your Dolt database using [`dolt dump`](/cli-reference/cli#dolt-dump) and import the resulting file into MySQL using `mysql < dump.sql`. The test the query you think should work using any MySQL client.
 
 # Submitting Issues
 
@@ -42,7 +42,7 @@ Dolt operational issues usually manifest as slow SQL queries. In rare occasions,
 
 Dolt creates disk garbage on write. As of Dolt 1.75, automatic garbage collection is on by default. Thus, you should not experience disk garbage accumulation under normal operation for newer versions of Dolt.
 
-However, you may want to manually initiate garbage collection if you notice high disk usage. To manually trigger garbage collection online, run [`call dolt_gc()`](../version-control/dolt-sql-procedures.md#dolt_gc). To run garbage collection offline, stop your `dolt sql-server`, navigate to the Dolt directory where your database is stored and run `dolt gc`. Once the operation is complete, restart your server using `dolt sql-server`. 
+However, you may want to manually initiate garbage collection if you notice high disk usage. To manually trigger garbage collection online, run [`call dolt_gc()`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc). To run garbage collection offline, stop your `dolt sql-server`, navigate to the Dolt directory where your database is stored and run `dolt gc`. Once the operation is complete, restart your server using `dolt sql-server`. 
 
 Another potential cause is a commit-heavy workflow that uses a database design that is antagonistic to Dolt's structural sharing. We've written thoroughly about this [here](https://www.dolthub.com/blog/2020-05-13-dolt-commit-graph-and-structural-sharing/), but some examples include
 
@@ -72,7 +72,7 @@ fixes as high priority.
 ## Server Consuming CPU
 
 Under too much concurrent load, Dolt may consume all the CPU on a host. This is likely caused by too
-much read concurrency. In this case, create more [read replicas](./replication.md) and load balance
+much read concurrency. In this case, create more [read replicas](/sql-reference/server/replication) and load balance
 your reads among your replicas.
 
 If you discover a query consuming all of your CPU, please submit a [GitHub

@@ -8,7 +8,7 @@ title: "Expressions, Functions, and Operators"
 
 | Component         | Supported | Notes and limitations                                       |
 | :---------------- | :-------- | :---------------------------------------------------------- |
-| Common statements | ✅        | See the [supported statements doc](supported-statements.md) |
+| Common statements | ✅        | See the [supported statements doc](/sql-reference/sql-support/supported-statements) |
 
 ## Clauses
 
