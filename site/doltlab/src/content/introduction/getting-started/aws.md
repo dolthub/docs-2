@@ -4,6 +4,8 @@ title: "Get a Ubuntu EC2 Instance"
 
 # Get a Ubuntu EC2 Instance
 
+# Get a Ubuntu EC2 Instance
+
 To get your DoltLab ready host on AWS:
 
 1. Go to [AWS EC2 console](https://console.aws.amazon.com/ec2/) and click "Launch instance".

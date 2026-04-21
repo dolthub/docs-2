@@ -4,6 +4,8 @@ title: Pull Requests
 
 # Pull Requests
 
+# Pull Requests
+
 ## What is a pull request?
 
 Pull requests are a way to propose changes to a database. A pull request is created from a [branch](/concepts/dolt/git/branch) with new changes that a user would like to make to another branch (commonly the `main` or `master` branch). Once the pull request is opened, the reviewer can easily review the [diff](/concepts/dolt/git/diff) of the proposed changes and discuss potential improvements or implications of the change. If approved, the pull request can be merged, which will update the base branch with the changes from the feature branch.

@@ -4,6 +4,8 @@ title: "Enterprise Administrator Guide"
 
 # Enterprise Administrator Guide
 
+# Enterprise Administrator Guide
+
 This guide will cover how to run DoltLab in Enterprise mode and use exclusive features not covered in the [Basic Administrator's Guide](/guides/basic).
 
 As of DoltLab >= v2.3.5, DoltLab Enterprise can either run in "online" mode or "offline" mode. In online mode, egress http traffic must be permitted on the DoltLab host as it relies on responses from an http server to verify the Enterprise license.

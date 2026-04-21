@@ -2,6 +2,8 @@
 title: Offline First
 ---
 
+# Offline First
+
 # Problem
 
 * Are you expecting your application to make writes locally while offline?

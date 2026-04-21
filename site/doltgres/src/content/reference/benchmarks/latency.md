@@ -4,6 +4,8 @@ title: Latency
 
 # Latency
 
+# Latency
+
 Latency is measured using a standard suite of tests called [`sysbench`](https://github.com/akopytov/sysbench).
 
 Latency is benchmarked for Doltgres release 0.50.0. All measurements are median latency in

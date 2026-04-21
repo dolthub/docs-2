@@ -2,6 +2,8 @@
 title: Data Sharing
 ---
 
+# Data Sharing
+
 # Problem
 
 - Do you share data with customers?

@@ -4,6 +4,8 @@ title: Correctness
 
 # Correctness
 
+# Correctness
+
 Correctness is measured using a standard suite of test called [`sqllogictest`](https://github.com/dolthub/sqllogictest).
 
 Correctness is benchmarked for Doltgres release 0.50.0.

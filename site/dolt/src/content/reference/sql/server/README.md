@@ -2,6 +2,8 @@
 title: Running the Dolt SQL Server
 ---
 
+# Running the Dolt SQL Server
+
 There are two ways to run SQL queries against your database:
 
 - `dolt sql-server` starts a MySQL-compatible server

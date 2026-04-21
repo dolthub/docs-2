@@ -4,6 +4,8 @@ title: Access Management
 
 # Access Management
 
+# Access Management
+
 Access management in Dolt is handled similarly to how it is handled in MySQL.
 When Dolt is running, it relies upon the grant tables (`mysql.user`, `mysql.db`, etc.) to control user access.
 Access is determined by the privileges that a user has.

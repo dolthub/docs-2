@@ -2,6 +2,8 @@
 title: Dolt System Tables
 ---
 
+# Dolt System Tables
+
 # Table of contents
 
 - [Database Metadata](#database-metadata-system-tables)

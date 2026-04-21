@@ -4,6 +4,8 @@ title: Conflicts
 
 # Conflicts
 
+# Conflicts
+
 ## What is a Conflict?
 
 A conflict is a signal to a user that a [merge](/concepts/dolt/git/merge) has produced a database that requires further action. The merge algorithm could not infer the state of the database based on the merge rules after the merge. Further input is required to tell Dolt what the resulting merged database should contain.

@@ -4,6 +4,8 @@ title: Commits
 
 # Commits
 
+# Commits
+
 ## What is a Commit?
 
 A commit signals to Dolt that you would like to save the state of the current database permanently for future reference. In practice, this stores the root hash (or reference) of the database in a graph of all the commits with a link to its parent commit. If the commit is a merge commit, the commit will have multiple parents.

@@ -4,6 +4,8 @@ title: Backups
 
 # Backups
 
+# Backups
+
 ## What is a Backup?
 
 A backup is a copy of your database. You can restore the state of the database as it existed at the time of the backup.

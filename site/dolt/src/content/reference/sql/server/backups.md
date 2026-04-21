@@ -4,6 +4,8 @@ title: Backups
 
 # Backups
 
+# Backups
+
 There are several ways to safely backup Dolt databases and Dolt SQL servers. If you are using [Hosted Dolt](/products/hosted/), then you get automatic backups without having to configure anything. If you are running your own Dolt SQL server, then you need to handle your own backups using one of the approaches below.
 
 Backing up through [point-in-time snapshots at a block device level](#point-in-time-snapshots-on-block-devices) is often the easiest approach and what we recommended if this works for your setup. Backing up by [copying files at a file system level](#copying-files-on-file-systems) can also work in some cases, but requires that no Dolt processes are reading or writing any data while the file copy operation is in progress. You can also roll your own custom solutions by [pushing to remotes](#pushing-to-remotes) or using the [Dolt backup command](#dolt-backup-command). Make sure you include [all additional configuration files](#additional-sql-server-configuration) needed to fully restore your Dolt SQL server environment. As with any backup solution, it is important that you regularly test your backup and restore processes.

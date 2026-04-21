@@ -4,6 +4,8 @@ title: Triggers
 
 # Triggers
 
+# Triggers
+
 ## What is a Trigger?
 
 Triggers are SQL statements you can set to run every time a row is inserted, updated, or deleted from a particular table. Triggers receive the value of the row being inserted, updated, or deleted like a parameter, and can change it in some cases.

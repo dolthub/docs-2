@@ -4,6 +4,8 @@ title: Types
 
 # Types
 
+# Types
+
 ## What are Types?
 
 A column in a SQL database has a defined type, like an integer or a string. Some databases are more strict on types than others. MySQL supports [a number of types](https://dev.mysql.com/doc/refman/8.0/en/data-types.html).

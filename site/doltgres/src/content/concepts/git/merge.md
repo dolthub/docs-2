@@ -4,6 +4,8 @@ title: Merge
 
 # Merge
 
+# Merge
+
 ## What is a merge?
 
 A merge is an operation that takes two branches and assembles a reasonable combination of the two

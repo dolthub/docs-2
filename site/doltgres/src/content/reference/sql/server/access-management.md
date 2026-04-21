@@ -4,6 +4,8 @@ title: Access Management
 
 # Access Management
 
+# Access Management
+
 Access management in Doltgres is handled similarly to how it is handled in Postgres.  Create users,
 roles, and grants with standard SQL statements. Access is determined by the privileges that a user
 has.

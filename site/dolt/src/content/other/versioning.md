@@ -2,6 +2,8 @@
 title: Versioning
 ---
 
+# Versioning
+
 Dolt uses a three digit versioning format – `major`.`minor`.`patch`. For major, minor, and patch version bumps, you can expect:
 
 - **Patch version bumps** (e.g. `1.0.0` &#8594; `1.0.1`) – Patch version bumps will **NOT** change any interfaces; they include bug fixes, performance improvements, and additive features. You can safely pick up patch releases without having to update your application code.

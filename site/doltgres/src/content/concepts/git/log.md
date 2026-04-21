@@ -4,6 +4,8 @@ title: Log
 
 # Log
 
+# Log
+
 ## What is a log?
 
 The Doltgres log is a way to visualize the Doltgres commit graph in an intuitive way. When viewing

@@ -2,6 +2,8 @@
 title: Getting Started
 ---
 
+# Getting Started
+
 Dolt has three primary functions all with different ways to get started.
 
 ## 1. [Version Controlled Database](/introduction/getting-started/database)

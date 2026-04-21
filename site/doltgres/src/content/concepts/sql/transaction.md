@@ -4,6 +4,8 @@ title: Transactions
 
 # Transactions
 
+# Transactions
+
 ## What is a Transaction?
 
 A transaction is the unit of change isolation is a database.

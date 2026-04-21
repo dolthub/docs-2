@@ -2,6 +2,8 @@
 title: "Hosted Dolt: Single Sign-On"
 ---
 
+# Hosted Dolt: Single Sign-On
+
 ## What is SAML?
 
 [SAML](https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language) (Security

@@ -2,6 +2,8 @@
 title: Configuration
 ---
 
+# Configuration
+
 A Dolt SQL server can be configured at server start time using a [configuration file](#configyaml), or by
 setting [system variables](#system-variables) in the SQL session.
 

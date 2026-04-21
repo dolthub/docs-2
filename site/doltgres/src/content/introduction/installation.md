@@ -4,6 +4,8 @@ title: "Installation"
 
 # Installation
 
+# Installation
+
 Download DoltgreSQL from the [releases
 page](https://github.com/dolthub/doltgresql/releases/latest). Unpack it and put the `doltgres`
 binary on your `PATH`.

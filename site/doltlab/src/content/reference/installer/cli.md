@@ -4,6 +4,8 @@ title: Installer command line reference
 
 # Installer command line reference
 
+# Installer command line reference
+
 ## automated-dolt-backups-backup-on-boot
 
 _Boolean_. If true, will create a backup when the `backup-syncer` service comes online, DoltLab Enterprise only (default true).

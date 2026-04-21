@@ -4,6 +4,8 @@ title: Table
 
 # Table
 
+# Table
+
 ## What is a Table?
 
 Tables are the core unit of database [schema](/concepts/sql/schema). Tables are defined by a set of

@@ -2,6 +2,8 @@
 title: Using remotes
 ---
 
+# Using remotes
+
 # What are Remotes?
 
 Just like Git, Dolt supports syncing with a [remote database](/concepts/dolt/git/remotes). A remote is a copy of your database that is distinct from your local copy. It usually is stored on a separate host or service for fault tolerance. The primary use cases are disaster recovery and collaboration. More conceptual description of remotes can be found [here](/concepts/dolt/git/remotes).

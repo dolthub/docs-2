@@ -2,6 +2,8 @@
 title: Integrations
 ---
 
+# Integrations
+
 ## Drop-in MySQL Replacement
 
 Dolt is the world's first version controlled SQL database. Dolt is designed to be a drop-in replacement for MySQL. All the tools you use with MySQL work the same way with Dolt but with Dolt's added version control features. Below is the list of ORMs and tools we have integrated with Dolt and links to the getting started guides.

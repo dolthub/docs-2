@@ -2,6 +2,8 @@
 title: Benchmarks
 ---
 
+# Benchmarks
+
 Dolt publishes benchmarks for its correctness and performance relative
 to other relational databases. Additional benchmarks will be added
 over time.

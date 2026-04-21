@@ -55,6 +55,15 @@ find "$SITE_CONTENT" -name "*.md" | while read -r file; do
     cat "$file" >> "$tmpfile"
     mv "$tmpfile" "$file"
   fi
+
+  # Ensure every page has an h1 heading from its frontmatter title.
+  title=$(awk '/^---$/{c++; next} c==1 && /^title:/{sub(/^title: */, ""); gsub(/^["'"'"']|["'"'"']$/, ""); print; exit}' "$file")
+  if [ -n "$title" ]; then
+    first_content=$(awk '/^---$/{c++; next} c>=2 && /\S/{print; exit}' "$file")
+    if ! echo "$first_content" | grep -q "^# "; then
+      awk -v h="# $title" 'BEGIN{c=0} /^---$/{c++; if(c==2){print; print ""; print h; next}} {print}' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+    fi
+  fi
 done
 
 echo "Converted GitBook syntax"

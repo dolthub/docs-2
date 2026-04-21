@@ -4,6 +4,8 @@ title: Log
 
 # Log
 
+# Log
+
 ## What is a log?
 
 The Dolt log is a way to visualize the Dolt commit graph in an intuitive way. When viewing the log, you are seeing a topologically sorted commit order that led to the commit you have checked out. The log is an audit trail of commits. 

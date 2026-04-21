@@ -4,6 +4,8 @@ title: Issues
 
 # Issues
 
+# Issues
+
 ## What is an issue?
 
 Issues on DoltHub are a useful management tool that let users track bugs, ask questions, or document any nuances of data.

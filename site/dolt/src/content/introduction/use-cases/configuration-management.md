@@ -2,6 +2,8 @@
 title: Configuration Management
 ---
 
+# Configuration Management
+
 # Problem
 
 * Is your configuration too big and complex for files? 

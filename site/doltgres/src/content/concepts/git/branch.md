@@ -4,6 +4,8 @@ title: Branch
 
 # Branch
 
+# Branch
+
 ## What is a Branch?
 
 A branch adds non-distributed, write isolation to Doltgres. A branch can be thought of as a long

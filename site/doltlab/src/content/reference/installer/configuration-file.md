@@ -4,6 +4,8 @@ title: Installer configuration file reference
 
 # Installer configuration file reference
 
+# Installer configuration file reference
+
 ```yaml
 # installer_config.yaml
 

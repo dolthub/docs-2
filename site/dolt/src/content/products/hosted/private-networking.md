@@ -4,6 +4,8 @@ title: "Private Networking"
 
 # Private Networking
 
+# Private Networking
+
 When you create a Hosted Dolt deployment, you get a server setup and configured to accept connections from anywhere.
 These connections obviously still require authentication, and your standard grants and roles will dictate the things
 that a user can do. However, this isn't the behavior that most mature companies with established and secure cloud

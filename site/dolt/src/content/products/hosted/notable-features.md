@@ -2,6 +2,8 @@
 title: "Hosted Dolt: Notable Features"
 ---
 
+# Hosted Dolt: Notable Features
+
 # Version Control
 
 [Dolt](https://doltdb.com) is a database like no other. There are numerous Dolt version

@@ -2,6 +2,8 @@
 title: Merges
 ---
 
+# Merges
+
 # Merging branches
 
 To merge a branch into your current branch, use the [`DOLT_MERGE()`

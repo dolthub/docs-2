@@ -4,6 +4,8 @@ title: "Collations and character sets"
 
 # Collations and character sets
 
+# Collations and character sets
+
 Dolt supports a subset of the character sets and collations that MySQL supports.
 Notably, the default character set is `utf8mb4`, while the default collation is `utf8mb4_0900_bin` (a case-sensitive collation).
 This default was chosen as it has the fastest implementation, and also from a legacy perspective, as before proper collation support was added, it was the only real collation that we supported.

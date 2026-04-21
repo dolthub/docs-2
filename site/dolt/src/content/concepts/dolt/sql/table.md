@@ -4,6 +4,8 @@ title: Table
 
 # Table
 
+# Table
+
 ## What is a Table?
 
 Tables are the core unit of database [schema](/concepts/dolt/sql/schema). Tables are defined by a set of columns. Columns can be [primary keys](/concepts/dolt/sql/primary-key) which act as a unique identifier for each row. Once a table schema is defined, rows containing data can be inserted into the table.

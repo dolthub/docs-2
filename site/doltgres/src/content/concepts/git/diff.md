@@ -4,6 +4,8 @@ title: Diff
 
 # Diff
 
+# Diff
+
 ## What is a Diff?
 
 Diff, short for difference, is used to display the differences between two references, usually

@@ -2,6 +2,8 @@
 title: "Contributing to Dolt"
 ---
 
+# Contributing to Dolt
+
 # How to Contribute to Dolt
 Here, we will go through a fix for this
 [bug where Dolt wasn't respecting a config flag](https://github.com/dolthub/dolt/issues/2442)

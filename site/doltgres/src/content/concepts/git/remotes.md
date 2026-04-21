@@ -4,6 +4,8 @@ title: Remotes
 
 # Remotes
 
+# Remotes
+
 ## What is a remote?
 
 A remote is a Doltgres database in another location, usually on a different, network accessible

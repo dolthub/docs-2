@@ -4,6 +4,8 @@ title: Linux
 
 # Linux
 
+# Linux
+
 For Linux users we provide an installation script that will detect your architecture, download the appropriate binary, and place in `/usr/local/bin`:
 
 ```text

@@ -2,6 +2,8 @@
 title: CLI
 ---
 
+# CLI
+
 # Command Line Interface Reference
 
 ```

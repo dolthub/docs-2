@@ -2,6 +2,8 @@
 title: Audit
 ---
 
+# Audit
+
 # Problem
 
 * Do you need to know who changed what, when, why in your SQL database?

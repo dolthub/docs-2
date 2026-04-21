@@ -4,6 +4,8 @@ title: Functions
 
 # Functions
 
+# Functions
+
 ## What is a Function?
 
 A function is SQL code that can be accessed using the SQL expression syntax, e.g. `SELECT

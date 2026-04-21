@@ -4,6 +4,8 @@ title: Commits
 
 # Commits
 
+# Commits
+
 ## What is a Commit?
 
 A commit signals to Doltgres that you would like to save the state of the current database

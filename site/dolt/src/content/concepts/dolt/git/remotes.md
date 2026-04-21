@@ -4,6 +4,8 @@ title: Remotes
 
 # Remotes
 
+# Remotes
+
 ## What is a remote?
 
 A remote is a Dolt database in another location, usually on a different, network accessible host. A Dolt remote is the coordination mechanism between many local copies of Dolt. A Dolt database can have multiple remotes.

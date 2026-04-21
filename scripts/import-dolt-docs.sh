@@ -56,13 +56,22 @@ find "$SITE_CONTENT" -name "*.md" | while read -r file; do
   if ! head -1 "$file" | grep -q '^---'; then
     title=$(grep -m1 '^# ' "$file" 2>/dev/null | sed 's/^# //' || true)
     if [ -z "$title" ]; then
-      # Use filename as fallback title
       title=$(basename "$file" .md | sed 's/-/ /g; s/README/Overview/')
     fi
     tmpfile=$(mktemp)
     printf -- '---\ntitle: "%s"\n---\n\n' "$title" > "$tmpfile"
     cat "$file" >> "$tmpfile"
     mv "$tmpfile" "$file"
+  fi
+
+  # Ensure every page has an h1 heading from its frontmatter title.
+  # GitBook auto-rendered titles from SUMMARY.md, but Astro doesn't.
+  title=$(awk '/^---$/{c++; next} c==1 && /^title:/{sub(/^title: */, ""); gsub(/^["'"'"']|["'"'"']$/, ""); print; exit}' "$file")
+  if [ -n "$title" ]; then
+    first_content=$(awk '/^---$/{c++; next} c>=2 && /\S/{print; exit}' "$file")
+    if ! echo "$first_content" | grep -q "^# "; then
+      awk -v h="# $title" 'BEGIN{c=0} /^---$/{c++; if(c==2){print; print ""; print h; next}} {print}' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+    fi
   fi
 done
 
