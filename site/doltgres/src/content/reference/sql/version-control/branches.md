@@ -2,7 +2,6 @@
 title: Using branches and database revisions
 ---
 
-# Using branches and database revisions
 
 # Using branches and database revisions
 

@@ -2,7 +2,6 @@
 title: "Basic Features"
 ---
 
-# Basic Features
 
 # Basic Features
 

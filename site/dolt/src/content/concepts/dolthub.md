@@ -2,7 +2,6 @@
 title: Why DoltHub?
 ---
 
-# Why DoltHub?
 
 # Why DoltHub?
 

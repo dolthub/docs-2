@@ -2,7 +2,6 @@
 title: Types
 ---
 
-# Types
 
 # Types
 

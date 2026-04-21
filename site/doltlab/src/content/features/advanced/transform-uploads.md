@@ -2,7 +2,6 @@
 title: "Transform File Uploads"
 ---
 
-# Transform File Uploads
 
 # Transform File Uploads
 

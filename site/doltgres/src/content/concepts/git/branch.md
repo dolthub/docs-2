@@ -2,7 +2,6 @@
 title: Branch
 ---
 
-# Branch
 
 # Branch
 

@@ -2,7 +2,6 @@
 title: "Basic Administrator Guide"
 ---
 
-# Basic Administrator Guide
 
 # Basic Administrator Guide
 

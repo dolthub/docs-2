@@ -2,7 +2,6 @@
 title: Branch Permissions
 ---
 
-# Branch Permissions
 
 # Branch Permissions
 

@@ -2,7 +2,6 @@
 title: Primary Key
 ---
 
-# Primary Key
 
 # Primary Key
 

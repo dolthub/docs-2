@@ -2,7 +2,6 @@
 title: "Get A Ubuntu Host on GCP"
 ---
 
-# Get A Ubuntu Host on GCP
 
 # Get A Ubuntu Host on GCP
 

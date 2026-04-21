@@ -2,7 +2,6 @@
 title: Views
 ---
 
-# Views
 
 # Views
 

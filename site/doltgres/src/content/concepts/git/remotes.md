@@ -2,7 +2,6 @@
 title: Remotes
 ---
 
-# Remotes
 
 # Remotes
 

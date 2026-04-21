@@ -2,7 +2,6 @@
 title: Log
 ---
 
-# Log
 
 # Log
 

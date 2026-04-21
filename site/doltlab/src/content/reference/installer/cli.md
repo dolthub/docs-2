@@ -2,7 +2,6 @@
 title: Installer command line reference
 ---
 
-# Installer command line reference
 
 # Installer command line reference
 

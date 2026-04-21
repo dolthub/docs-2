@@ -2,7 +2,6 @@
 title: Conflicts
 ---
 
-# Conflicts
 
 # Conflicts
 

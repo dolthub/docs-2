@@ -2,7 +2,6 @@
 title: Merge
 ---
 
-# Merge
 
 # Merge
 

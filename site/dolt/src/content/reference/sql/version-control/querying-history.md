@@ -2,7 +2,6 @@
 title: Querying database history
 ---
 
-# Querying database history
 
 # Querying database history
 

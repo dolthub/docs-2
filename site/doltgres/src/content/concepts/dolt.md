@@ -2,7 +2,6 @@
 title: Why Doltgres?
 ---
 
-# Why Doltgres?
 
 # Why Doltgres?
 

@@ -2,7 +2,6 @@
 title: "Collations and character sets"
 ---
 
-# Collations and character sets
 
 # Collations and character sets
 

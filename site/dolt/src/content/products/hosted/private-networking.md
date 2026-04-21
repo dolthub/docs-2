@@ -2,7 +2,6 @@
 title: "Private Networking"
 ---
 
-# Private Networking
 
 # Private Networking
 

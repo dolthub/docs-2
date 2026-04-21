@@ -2,7 +2,6 @@
 title: Benchmarks
 ---
 
-# Benchmarks
 
 # Benchmarks
 

@@ -2,7 +2,6 @@
 title: "Database"
 ---
 
-# Database
 
 # Database
 

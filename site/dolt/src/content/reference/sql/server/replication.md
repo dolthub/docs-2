@@ -2,7 +2,6 @@
 title: Replication
 ---
 
-# Replication
 
 # Replication
 

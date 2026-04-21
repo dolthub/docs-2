@@ -2,7 +2,6 @@
 title: "Workspaces"
 ---
 
-# Workspaces
 
 # Workspaces
 

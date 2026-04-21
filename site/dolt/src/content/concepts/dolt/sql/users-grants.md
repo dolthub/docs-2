@@ -2,7 +2,6 @@
 title: Users/Grants
 ---
 
-# Users/Grants
 
 # Users/Grants
 

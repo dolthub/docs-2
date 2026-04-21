@@ -2,7 +2,6 @@
 title: Configuration
 ---
 
-# Configuration
 
 # Configuration
 

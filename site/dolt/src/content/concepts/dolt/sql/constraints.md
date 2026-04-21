@@ -2,7 +2,6 @@
 title: Constraints
 ---
 
-# Constraints
 
 # Constraints
 

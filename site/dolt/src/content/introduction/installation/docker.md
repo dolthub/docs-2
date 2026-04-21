@@ -2,7 +2,6 @@
 title: Docker
 ---
 
-# Docker
 
 # Docker
 

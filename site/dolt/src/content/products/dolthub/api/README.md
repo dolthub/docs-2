@@ -2,7 +2,6 @@
 title: "DoltHub/DoltLab API"
 ---
 
-# DoltHub/DoltLab API
 
 # DoltHub/DoltLab API
 

@@ -2,7 +2,6 @@
 title: What is Dolt?
 ---
 
-# What is Dolt?
 
 # What is Dolt?
 

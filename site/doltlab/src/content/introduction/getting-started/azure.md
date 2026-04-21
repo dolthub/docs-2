@@ -2,7 +2,6 @@
 title: "Get A Ubuntu Host on Azure"
 ---
 
-# Get A Ubuntu Host on Azure
 
 # Get A Ubuntu Host on Azure
 

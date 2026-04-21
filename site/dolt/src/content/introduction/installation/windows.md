@@ -2,7 +2,6 @@
 title: Windows
 ---
 
-# Windows
 
 # Windows
 

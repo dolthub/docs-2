@@ -2,7 +2,6 @@
 title: Miscellaneous
 ---
 
-# Miscellaneous
 
 # Miscellaneous
 

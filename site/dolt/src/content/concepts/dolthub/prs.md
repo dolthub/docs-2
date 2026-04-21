@@ -2,7 +2,6 @@
 title: Pull Requests
 ---
 
-# Pull Requests
 
 # Pull Requests
 

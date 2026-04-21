@@ -2,7 +2,6 @@
 title: "What is DoltHub"
 ---
 
-# What is DoltHub
 
 ![](../../.gitbook/assets/dolthub-preview.png)
 

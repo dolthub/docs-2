@@ -2,7 +2,6 @@
 title: Correctness
 ---
 
-# Correctness
 
 # Correctness
 

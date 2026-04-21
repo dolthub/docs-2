@@ -2,7 +2,6 @@
 title: Commits
 ---
 
-# Commits
 
 # Commits
 

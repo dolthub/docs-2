@@ -2,7 +2,6 @@
 title: Databases
 ---
 
-# Databases
 
 # Databases
 

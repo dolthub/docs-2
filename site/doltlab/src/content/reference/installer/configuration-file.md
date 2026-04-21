@@ -2,7 +2,6 @@
 title: Installer configuration file reference
 ---
 
-# Installer configuration file reference
 
 # Installer configuration file reference
 

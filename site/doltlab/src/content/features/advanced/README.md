@@ -2,7 +2,6 @@
 title: "Advanced Features"
 ---
 
-# Advanced Features
 
 # Advanced Features
 

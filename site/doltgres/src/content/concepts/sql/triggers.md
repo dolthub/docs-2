@@ -2,7 +2,6 @@
 title: Triggers
 ---
 
-# Triggers
 
 # Triggers
 

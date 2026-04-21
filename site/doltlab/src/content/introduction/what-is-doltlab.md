@@ -2,7 +2,6 @@
 title: What is DoltLab?
 ---
 
-# What is DoltLab?
 
 # What is DoltLab?
 

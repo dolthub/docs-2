@@ -2,7 +2,6 @@
 title: "DoltHub/DoltLab Continuous Integration (CI)"
 ---
 
-# DoltHub/DoltLab Continuous Integration (CI)
 
 # DoltHub/DoltLab Continuous Integration (CI)
 

@@ -2,7 +2,6 @@
 title: Installer
 ---
 
-# Installer
 
 # Installer
 

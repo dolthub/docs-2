@@ -2,7 +2,6 @@
 title: "Get a Ubuntu EC2 Instance"
 ---
 
-# Get a Ubuntu EC2 Instance
 
 # Get a Ubuntu EC2 Instance
 

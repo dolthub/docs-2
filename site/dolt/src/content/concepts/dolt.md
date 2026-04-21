@@ -2,7 +2,6 @@
 title: Why Dolt?
 ---
 
-# Why Dolt?
 
 # Why Dolt?
 
