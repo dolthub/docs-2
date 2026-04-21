@@ -144,7 +144,19 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <style is:global>
-  /* Docs dropdown in navbar */
+  /* Docs dropdown — desktop only; plain link on mobile */
+  .docs-dropdown-desktop-only {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .docs-dropdown-desktop-only {
+      display: inline-block;
+    }
+    .docs-link-mobile-only {
+      display: none !important;
+    }
+  }
+
   .docs-dropdown-trigger {
     background: none;
     border: none;

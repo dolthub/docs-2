@@ -82,7 +82,13 @@ function LeftLinks() {
       <a href={`${dolthubUrl}/pricing`} data-cy="navbar-pricing">
         Pricing
       </a>
-      <DocsDropdown />
+      {/* Dropdown on desktop, plain link on mobile (mobile nav already has individual doc links) */}
+      <span className="docs-dropdown-desktop-only">
+        <DocsDropdown />
+      </span>
+      <a href="https://docs.dolthub.com" className="docs-link-mobile-only" data-cy="navbar-documentation">
+        Documentation
+      </a>
       <a href={blogUrl} data-cy="navbar-blog">
         Blog
       </a>
@@ -93,12 +99,12 @@ function LeftLinks() {
 function RightLinks() {
   return (
     <div className="flex navbar-right">
-      <DiscordButton href={doltDiscord} />
-      <GithubButton href={doltGithub} />
+      <DiscordButton href={doltDiscord} dark />
+      <GithubButton href={doltGithub} dark />
       <a
         href={`${dolthubUrl}/signin`}
         data-cy="navbar-signin-button"
-        className="flex items-center border rounded-[0.25rem] px-8 py-[0.2rem] border-white/10"
+        className="flex items-center border rounded-[0.25rem] px-8 py-[0.2rem] border-[#333C50]/20"
         aria-label="desktop-signin"
       >
         Sign In
@@ -150,7 +156,8 @@ export default function DocsNavbar() {
       rightLinks={<RightLinks />}
       rightLinksMobile={<MobileRightLinks />}
       mobileBottomLinks={<MobileSocialLinks />}
-      bgColor="bg-background-acc-1"
+      bgColor="bg-transparent"
+      dark
       logoLeft
     />
   );
