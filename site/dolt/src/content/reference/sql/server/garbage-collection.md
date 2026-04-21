@@ -18,7 +18,7 @@ chunks, garbage is created.
 # Automatic GC
 As of Dolt 1.75, garbage collection will be performed automatically in both `dolt sql-server` and `dolt sql` contexts.
 
-If you determine you need to disable Automatic GC in the `sql-server` context, you must set the following [configuration](./configuration):
+If you determine you need to disable Automatic GC in the `sql-server` context, you must set the following [configuration](/sql-reference/server/configuration):
 
 ```yaml
 behavior:
@@ -34,7 +34,7 @@ $ dolt sql --disable-auto-gc
 
 # How to run garbage collection manually
 
-Garbage collection can be run offline using [`dolt gc`](../../cli/cli#dolt-gc) or online using [`call dolt_gc()`](../version-control/dolt-sql-procedures#dolt_gc).
+Garbage collection can be run offline using [`dolt gc`](/cli-reference/cli#dolt-gc) or online using [`call dolt_gc()`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc).
 
 ## Offline
 
@@ -42,9 +42,9 @@ If you have access to the server where your Dolt database is located and a Dolt 
 
 ## Online, with Automatic GC disabled
 
-If you have disabled Automatic GC, you can run garbage collection on your running SQL server using [`call dolt_gc`](../version-control/dolt-sql-procedures#dolt_gc) through any connected client. To prevent concurrent
+If you have disabled Automatic GC, you can run garbage collection on your running SQL server using [`call dolt_gc`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc) through any connected client. To prevent concurrent
 writes potentially referencing garbage collected chunks, running
-[`call dolt_gc`](../version-control/dolt-sql-procedures#dolt_gc) will break all open
+[`call dolt_gc`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc) will break all open
 connections to the running server. In-flight queries on those connections may fail and must be retried. Re-establishing connections after they are broken is safe.
 
 At the end of the run, the connection which ran `call dolt_gc()` will be left open in order to deliver the results of the operation itself. The connection will be left in a terminally broken state where any attempt to run a query on it will result in the following error:
@@ -53,4 +53,4 @@ At the end of the run, the connection which ran `call dolt_gc()` will be left op
 
 The connection should be closed. In some connection pools it can be awkward to cause a single connection to actually close. If you need to run `call dolt_gc()` programmatically, one workaround is to use a separate connection pool with a size of 1 which can be closed after the run is successful.
 
-NOTE: Performing GC on [a cluster replica](../server/replication) which is in standby mode is not yet supported, and running `call dolt_gc()` on the replica will fail. This only applies when Automatic GC is disabled on the secondary.
+NOTE: Performing GC on [a cluster replica](/sql-reference/server/replication) which is in standby mode is not yet supported, and running `call dolt_gc()` on the replica will fail. This only applies when Automatic GC is disabled on the secondary.

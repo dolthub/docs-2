@@ -18,7 +18,7 @@ changes only visible to other clients connected to the same branch.
 
 A database server has a default branch, which is the checked-out branch at the time the server was
 started, and can be changed for new connections with a [system
-variable](./dolt-sysvars#dbname_default_branch). Using database revision specifiers, clients can
+variable](/sql-reference/version-control/dolt-sysvars#dbname_default_branch). Using database revision specifiers, clients can
 choose a specific branch, tag, or commit to pin their queries to.
 
 ## Specify a database revision in the connection string
@@ -123,11 +123,11 @@ session until a new transaction begins.
 The data on a branch is versioned, but the metadata of the branch head itself is not, so if you delete a 
 branch or reset it to point at an older commit, you can't revert or undo that change the same way you can 
 with your data. Instead, you can use 
-[the `dolt_reflog()` table function](./dolt-sql-functions#dolt_reflog) to see the history of commits
+[the `dolt_reflog()` table function](/sql-reference/version-control/dolt-sql-functions#dolt_reflog) to see the history of commits
 your branch has referenced and either recreate the branch from the last referenced commit with 
-[the `dolt_branch()` stored procedure](./dolt-sql-procedures#dolt_branch) or reset the branch to a 
-previous commit with [the `dolt_reset()` stored procedure](./dolt-sql-procedures#dolt_reset). See
-[the `dolt_reflog()` table function](./dolt-sql-functions#dolt_reflog) for an example of recreating
+[the `dolt_branch()` stored procedure](/sql-reference/version-control/dolt-sql-procedures#dolt_branch) or reset the branch to a 
+previous commit with [the `dolt_reset()` stored procedure](/sql-reference/version-control/dolt-sql-procedures#dolt_reset). See
+[the `dolt_reflog()` table function](/sql-reference/version-control/dolt-sql-functions#dolt_reflog) for an example of recreating
 a deleted branch and more information on how the Dolt reflog works and what limitations it has.
 
 ## Restrictions on committing to multiple branches in a single transaction

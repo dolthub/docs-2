@@ -6,9 +6,9 @@ title: DoltHub Workspaces
 
 Workspaces are a concept we invented for editing data on DoltHub. There is not a GitHub
 equivalent. Essentially workspaces are a special type of ref, similar to
-[branches](../../concepts/dolt/git/branch) or [tags]../../cli-reference/cli#dolt-tag).
+[branches](/concepts/dolt/git/branch) or [tags]../../cli-reference/cli#dolt-tag).
 They are meant to simulate a "staging area" on DoltHub, similar to [working
-sets](../../concepts/dolt/git/working-set) in Dolt.
+sets](/concepts/dolt/git/working-set) in Dolt.
 
 Workspaces are shareable and temporary. Make any change to your database without affecting
 the state of your database. When you're satisfied with your changes you can commit them to
@@ -58,9 +58,9 @@ changes. This will have no consequences to the rest of your database.
 
 4. Create a pull request or commit
 
-Either create a [pull request](../../concepts/dolthub/prs) from the workspace by
+Either create a [pull request](/concepts/dolthub/prs) from the workspace by
 clicking on the "Create pull request" button, or click on the arrow to change the button
-to "Commit directly" to create a [commit](../../concepts/dolt/git/commits) on the
+to "Commit directly" to create a [commit](/concepts/dolt/git/commits) on the
 `main` branch (or whatever branch you created the workspace from).
 
 ![](../../.gitbook/assets/dolthub-workspace-button-dropdown.png)

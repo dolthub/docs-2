@@ -68,6 +68,65 @@ done
 
 echo "Converted GitBook syntax"
 
+# Step 2b: Convert relative links to absolute.
+# Relative links break because the browser resolves them against the URL path,
+# which differs from the filesystem path (README.md → directory, URL remapping).
+echo "Converting relative links to absolute..."
+
+find "$SITE_CONTENT" -name "*.md" -not -path "*/.gitbook/*" | while read -r file; do
+  relpath="${file#$SITE_CONTENT/}"
+
+  # Use the ORIGINAL filesystem path as the base for resolving relative links.
+  # We remap the resolved result afterwards, not the base.
+  if [ "$(basename "$relpath")" = "README.md" ]; then
+    url_dir="/$(dirname "$relpath")"
+  else
+    url_dir="/$(dirname "$relpath")"
+  fi
+  # Normalize /. to /
+  url_dir=$(echo "$url_dir" | sed 's|/\.$|/|; s|/\./|/|g')
+  # Ensure trailing slash
+  [[ "$url_dir" != */ ]] && url_dir="$url_dir/"
+
+  # Use a python one-liner to resolve relative links to absolute
+  python3 -c "
+import re, sys
+from urllib.parse import urljoin
+
+base = 'http://x${url_dir}'
+content = sys.stdin.read()
+
+def resolve_link(m):
+    prefix = m.group(1)  # ](
+    href = m.group(2)
+    suffix = m.group(3)  # )
+    # Skip external, anchors, images
+    if href.startswith(('http://', 'https://', 'mailto:', '#')):
+        return m.group(0)
+    if '.gitbook/assets' in href:
+        return m.group(0)
+    # Split off anchor
+    if '#' in href:
+        path, anchor = href.split('#', 1)
+        anchor = '#' + anchor
+    else:
+        path, anchor = href, ''
+    if not path:
+        return m.group(0)
+    resolved = urljoin(base, path).replace('http://x', '')
+    # Apply URL remapping to the resolved absolute path
+    import re as re2
+    resolved = re2.sub(r'^/reference/sql/', '/sql-reference/', resolved)
+    resolved = re2.sub(r'^/reference/cli/', '/cli-reference/', resolved)
+    return prefix + resolved + anchor + suffix
+
+result = re.sub(r'(\]\()([^)]+)(\))', resolve_link, content)
+sys.stdout.write(result)
+" < "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+done
+
+echo "Converted relative links to absolute"
+
 # Step 3: Generate Astro page files
 # First, clean all generated page dirs (but keep root index.astro)
 find "$SITE_PAGES" -mindepth 1 -type d -exec rm -rf {} + 2>/dev/null || true

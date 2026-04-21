@@ -74,12 +74,12 @@ Most of them! Check out [the docs for the full list of supported
 features]../sql-reference/sql-support/supported-statements).
 
 You can check out what we're working on next on our
-[roadmap](./roadmap). Paying customers get their feature requests
+[roadmap](/other/roadmap). Paying customers get their feature requests
 bumped to the front of the line.
 
 ## Does Dolt support my favorite SQL workbench / tool?
 
-Probably! Have you tried it? We have [blogs and sample code](../guides/dolt-tested-apps)
+Probably! Have you tried it? We have [blogs and sample code](/guides/dolt-tested-apps)
 for many popular ORMs and tools.
 
 If you try it and it doesn't work, [let

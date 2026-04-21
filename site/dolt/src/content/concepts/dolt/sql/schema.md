@@ -8,13 +8,13 @@ title: Schema
 
 Schema defines the shape of the data in your database. 
 
-[Tables](./table) are the core unit of schema. Tables have columns and rows. Each column in a table has a [type](./types). A table can have one or more [primary keys](./primary-key), the combination of which identify the row and must be unique. Columns can also be assigned additional [constraints](./constraints), including foreign key constraints which are references to other tables in the database. 
+[Tables](/concepts/dolt/sql/table) are the core unit of schema. Tables have columns and rows. Each column in a table has a [type](/concepts/dolt/sql/types). A table can have one or more [primary keys](/concepts/dolt/sql/primary-key), the combination of which identify the row and must be unique. Columns can also be assigned additional [constraints](/concepts/dolt/sql/constraints), including foreign key constraints which are references to other tables in the database. 
 
-Schema also includes [views](./views). Views look like tables but the data in them is generated using SQL stored in the view definition. The data is stored in the tables the views reference not the view itself.
+Schema also includes [views](/concepts/dolt/sql/views). Views look like tables but the data in them is generated using SQL stored in the view definition. The data is stored in the tables the views reference not the view itself.
 
-[Secondary Indexes](./indexes) are a part of schema. An index allows read query performance to be improved at the expense of write performance and increased storage. 
+[Secondary Indexes](/concepts/dolt/sql/indexes) are a part of schema. An index allows read query performance to be improved at the expense of write performance and increased storage. 
 
-Finally, schema includes [triggers](./triggers) and [procedures](./procedures). Triggers and procedures are code stored in your database that executes on specific conditions or when a user asks, respectively.
+Finally, schema includes [triggers](/concepts/dolt/sql/triggers) and [procedures](/concepts/dolt/sql/procedures). Triggers and procedures are code stored in your database that executes on specific conditions or when a user asks, respectively.
 
 ## How to use Schema
 

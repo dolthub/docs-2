@@ -8,9 +8,9 @@ over time.
 
 To learn more, click on a subsection heading.
 
-* [SQL correctness](./correctness) tests Dolt's query engine against
+* [SQL correctness](/sql-reference/benchmarks/correctness) tests Dolt's query engine against
   the `sqllogictest` suite for correctness issues.
-* [Server latency](./latency) uses `sysbench` to compare Dolt's read
+* [Server latency](/sql-reference/benchmarks/latency) uses `sysbench` to compare Dolt's read
   and write latencies against MySQL.
-* [Import latency](./import) uses a custom benchmark to compare Dolt's bulk import performance
+* [Import latency](/sql-reference/benchmarks/import) uses a custom benchmark to compare Dolt's bulk import performance
   against MySQL's `LOAD DATA` command's performance.

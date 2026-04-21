@@ -3,7 +3,7 @@ title: "Hosted Dolt: Using DoltHub as a Remote"
 ---
 
 To interact with DoltHub from your Hosted instance, you can use DoltHub as a
-[remote](../../concepts/dolt/git/remotes). We have [SQL
+[remote](/concepts/dolt/git/remotes). We have [SQL
 remote](https://www.dolthub.com/blog/2021-09-22-sql-remotes) operations such as
 `dolt_clone`, `dolt_pull`, and `dolt_push` that let you interact with remotes using SQL.
 You can add Dolt credentials to your Hosted instance to authenticate certain operations,

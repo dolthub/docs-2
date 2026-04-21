@@ -4,11 +4,11 @@ title: Using remotes
 
 # What are Remotes?
 
-Just like Git, Dolt supports syncing with a [remote database](../../../concepts/dolt/git/remotes). A remote is a copy of your database that is distinct from your local copy. It usually is stored on a separate host or service for fault tolerance. The primary use cases are disaster recovery and collaboration. More conceptual description of remotes can be found [here](../../../concepts/dolt/git/remotes).
+Just like Git, Dolt supports syncing with a [remote database](/concepts/dolt/git/remotes). A remote is a copy of your database that is distinct from your local copy. It usually is stored on a separate host or service for fault tolerance. The primary use cases are disaster recovery and collaboration. More conceptual description of remotes can be found [here](/concepts/dolt/git/remotes).
 
 # Configuring Remotes
 
-Remotes are configured using the [`remote` command](../../cli/cli#dolt-remote). You configure a remote with a name and a URL. When you want to use the remote, you refer to it by name. When you clone a remote, a remote named `origin` is automatically configured for you.
+Remotes are configured using the [`remote` command](/cli-reference/cli#dolt-remote). You configure a remote with a name and a URL. When you want to use the remote, you refer to it by name. When you clone a remote, a remote named `origin` is automatically configured for you.
 
 <h1 id="pushing-to-remote">Pushing to a Remote</h1>
 
@@ -98,7 +98,7 @@ It's important to be aware of this global state directory in the event you wante
 
 # Remote Actions
 
-Sync functionality is supported via the [`clone`](../../cli/cli#dolt-clone), [`fetch`](../../cli/cli#dolt-fetch), [`push`](../../cli/cli#dolt-push), and [`pull`](../../cli/cli#dolt-pull).
+Sync functionality is supported via the [`clone`](/cli-reference/cli#dolt-clone), [`fetch`](/cli-reference/cli#dolt-fetch), [`push`](/cli-reference/cli#dolt-push), and [`pull`](/cli-reference/cli#dolt-pull).
 
 # Remote Options
 
@@ -106,7 +106,7 @@ Sync functionality is supported via the [`clone`](../../cli/cli#dolt-clone), [`f
 
 [DoltHub](https://www.dolthub.com) is a remote operated by DoltHub Inc. Public repositories are free. Private repositories are free up to a Gigabyte. After a Gigabyte, private repositories are $50 a month and scale up in cost after 100GB. DoltHub adds a web GUI to your remotes along with Forks, Pull Requests, and Issues.
 
-See the [Getting Started Guide for DoltHub](../../../products/dolthub/data-sharing) on how to get started with a DoltHub remote.
+See the [Getting Started Guide for DoltHub](/products/dolthub/data-sharing) on how to get started with a DoltHub remote.
 
 ## DoltLab
 

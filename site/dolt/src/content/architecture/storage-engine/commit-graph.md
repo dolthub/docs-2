@@ -100,6 +100,6 @@ After merging, it is common to delete the branch that was merged signaling the c
 
 ![Merge branch deleted](../../.gitbook/assets/commit-graph-merge-branch-deleted.png)
 
-Merges can generate [conflicts](../../concepts/dolt/git/conflicts). If two branches modify the same value, Git and Dolt notify the user. The user has the opportunity to resolve the conflicts as part of the merge.
+Merges can generate [conflicts](/concepts/dolt/git/conflicts). If two branches modify the same value, Git and Dolt notify the user. The user has the opportunity to resolve the conflicts as part of the merge.
 
 Merges allow for collaboration among multiple users. Usually prior to merge, changes are reviewed by observing the computed differences between the branch you are merging from and the branch you are merging to. If the changes pass review, the merge is executed.

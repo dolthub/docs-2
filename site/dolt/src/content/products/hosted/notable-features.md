@@ -70,7 +70,7 @@ Learn more about backups [here](https://www.dolthub.com/blog/2022-08-31-hosted-b
 Want to use Hosted Dolt, but don't want your database to be reachable through the public internet.
 We support both AWS and GCP private networking.
 
-[Private networking setup instructions](./private-networking)
+[Private networking setup instructions](/products/hosted/private-networking)
 
 ## Dolt Upgrades
 
@@ -99,7 +99,7 @@ Learn more about our support ticket system
 ## Access Management
 
 Easily manage access to your deployment using the same permissions model as
-[DoltHub](../../concepts/dolthub/permissions) and
+[DoltHub](/concepts/dolthub/permissions) and
 [GitHub](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/managing-teams-and-people-with-access-to-your-repository).
 
 Create a deployment under an organization. All organization members have read access to
@@ -143,7 +143,7 @@ favorite DoltHub features, including [pull requests](#pull-requests), [diffs](#d
 
 ![SQL workbench](../../.gitbook/assets/hosted-support.png)
 
-Learn more about the SQL workbench [here](./sql-workbench).
+Learn more about the SQL workbench [here](/products/hosted/sql-workbench).
 
 ## Pull Requests
 
@@ -192,12 +192,12 @@ Hosted.
 
 ![](../../.gitbook/assets/hosted-clone-commands.png)
 
-Learn more in our [cloning guide](./cloning).
+Learn more in our [cloning guide](/products/hosted/cloning).
 
 ## Use DoltHub as a Remote
 
 To interact with DoltHub from your Hosted instance, you can use DoltHub as a
-[remote](../../concepts/dolt/git/remotes). We have [SQL
+[remote](/concepts/dolt/git/remotes). We have [SQL
 remote](https://www.dolthub.com/blog/2021-09-22-sql-remotes) operations such as
 `dolt_clone`, `dolt_pull`, and `dolt_push` that let you interact with remotes using SQL.
 You can add Dolt credentials to your Hosted instance to authenticate certain operations,
@@ -224,4 +224,4 @@ mysql> show databases;
 3 rows in set (0.05 sec)
 ```
 
-Learn more in our [DoltHub as a remote guide](./dolthub-as-remote).
+Learn more in our [DoltHub as a remote guide](/products/hosted/dolthub-as-remote).

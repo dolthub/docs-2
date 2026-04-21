@@ -12,11 +12,11 @@ title: Version Control Your Application
 
 # Dolt solves this by…
 
-If you have an application that would benefit from [branches](../../concepts/dolt/git/branch), [merges](../../concepts/dolt/git/merge), [diffs](../../concepts/dolt/git/diff), [logs](../../concepts/dolt/git/log), and human review of changes, you can use Dolt to power that application. Dolt gives you branch, diff, and merge at the database layer. 
+If you have an application that would benefit from [branches](/concepts/dolt/git/branch), [merges](/concepts/dolt/git/merge), [diffs](/concepts/dolt/git/diff), [logs](/concepts/dolt/git/log), and human review of changes, you can use Dolt to power that application. Dolt gives you branch, diff, and merge at the database layer. 
 
-Programmatically access git functionality via [procedures]../../sql-reference/version-control/dolt-sql-procedures), [system tables]../../sql-reference/version-control/dolt-system-tables), and [functions]../../sql-reference/version-control/dolt-sql-functions). Programmatic control of Git operations combined with the ability to use [standard SQL](../../concepts/dolt/sql/) creates the ideal foundation to add version control to your application.
+Programmatically access git functionality via [procedures]../../sql-reference/version-control/dolt-sql-procedures), [system tables]../../sql-reference/version-control/dolt-system-tables), and [functions]../../sql-reference/version-control/dolt-sql-functions). Programmatic control of Git operations combined with the ability to use [standard SQL](/concepts/dolt/sql/) creates the ideal foundation to add version control to your application.
 
-Dolt ships with standard [RDBMS](../../concepts/dolt/rdbms/) tools like [replication](../../concepts/dolt/rdbms/replication) and [backups](../../concepts/dolt/rdbms/backups). Run Dolt with a hot standby and failover just like MySQL or Postgres.
+Dolt ships with standard [RDBMS](/concepts/dolt/rdbms/) tools like [replication](/concepts/dolt/rdbms/replication) and [backups](/concepts/dolt/rdbms/backups). Run Dolt with a hot standby and failover just like MySQL or Postgres.
 
 [Hosted Dolt](https://hosted.doltdb.com/) is a hosted version of Dolt that works like AWS RDS. Let us worry about operating Dolt in the cloud. Write your application against a cloud endpoint.
 
@@ -30,7 +30,7 @@ A common technique to version your database is to use [soft deletes](https://www
 
 ## Slowly Changing Dimension
 
-A more advanced technique for versioning databases is [slowly changing dimension](https://www.dolthub.com/blog/2023-06-22-slowly-changing-dimension/). Slowly Changing Dimension is similar to soft deletes. Additional database columns are added to tables to manage versioning. Dolt is slowly changing dimension on every table by default. Queries involving the slowly changing dimension become Dolt history queries against [system tables]../../sql-reference/version-control/dolt-system-tables). Moreover, complicated [merge](../../concepts/dolt/git/merge) processes can happen at the database layer. Merges must handled by custom code at the application layer with slowly changing dimension.
+A more advanced technique for versioning databases is [slowly changing dimension](https://www.dolthub.com/blog/2023-06-22-slowly-changing-dimension/). Slowly Changing Dimension is similar to soft deletes. Additional database columns are added to tables to manage versioning. Dolt is slowly changing dimension on every table by default. Queries involving the slowly changing dimension become Dolt history queries against [system tables]../../sql-reference/version-control/dolt-system-tables). Moreover, complicated [merge](/concepts/dolt/git/merge) processes can happen at the database layer. Merges must handled by custom code at the application layer with slowly changing dimension.
 
 # Companies Doing This
 

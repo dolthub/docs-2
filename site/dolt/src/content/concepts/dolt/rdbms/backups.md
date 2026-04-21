@@ -26,7 +26,7 @@ Dolt databases contain the entire history of the database, meaning Dolt has back
 
 To replicate your database off host so you can restore if you lose the host, Dolt supports two different concepts: remotes and backups. 
 
-Using a [remote](../git/remotes) for backup allows you to back up all committed changes. You add a remote using the [`dolt remote` command]../../../cli-reference/cli#dolt-remote). Then you push a branch to a remote using the [`dolt push` command]../../../cli-reference/cli#dolt-push) or [`dolt_push()` procedure]../../../sql-reference/version-control/dolt-sql-procedures#doltpush).
+Using a [remote](/concepts/dolt/git/remotes) for backup allows you to back up all committed changes. You add a remote using the [`dolt remote` command]../../../cli-reference/cli#dolt-remote). Then you push a branch to a remote using the [`dolt push` command]../../../cli-reference/cli#dolt-push) or [`dolt_push()` procedure]../../../sql-reference/version-control/dolt-sql-procedures#doltpush).
 
 Dolt has an additional backup functionality beyond remotes. Using `dolt backup` backs up uncommitted changes as well. Backups are accessed via the [`dolt backup` command]../../../cli-reference/cli#dolt-backup) or [dolt_backup() procedure]../../../sql-reference/version-control/dolt-sql-procedures#doltbackup). 
 

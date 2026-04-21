@@ -540,7 +540,7 @@ We do not see any more commits in the debug log or in the Dolt log.
 
 ### `auto_gc_behavior`
 
-The `auto_gc_behavior` subsection of `behavior` controls the configuration of [automatic garbage collection](./garbage-collection#automatic-gc).
+The `auto_gc_behavior` subsection of `behavior` controls the configuration of [automatic garbage collection](/sql-reference/server/garbage-collection#automatic-gc).
 
 #### `enable`
 
@@ -1604,4 +1604,4 @@ set @@dolt_transaction_commit = 1;
 ```
 
 A full list of available system variables can be found in the [docs on
-system variables](../version-control/dolt-sysvars).
+system variables](/sql-reference/version-control/dolt-sysvars).

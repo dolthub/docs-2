@@ -23,7 +23,7 @@ Git-style version control on a database provides a number of useful features inc
 
 # Requirements
 
-As noted in [an earlier, requirements exercise for Dolt itself](./architecture), a storage engine for a SQL database with Git-style versioning would provide:
+As noted in [an earlier, requirements exercise for Dolt itself](/architecture/architecture), a storage engine for a SQL database with Git-style versioning would provide:
 
 1. **Tables**
 
@@ -79,7 +79,7 @@ Moreover, sections of the tree that share the same root hash can share storage b
 
 ![Prolly Tree Update](../.gitbook/assets/prolly-tree-structural-sharing.png)
 
-Prolly trees are described in more detail [here](./storage-engine/prolly-tree).
+Prolly trees are described in more detail [here](/architecture/storage-engine/prolly-tree).
 
 ## Comparison
 
@@ -119,4 +119,4 @@ And, thus, you end up with Dolt's storage engine.
 
 ![Dolt's Storage Engine](../.gitbook/assets/prolly-tree-plus-commit-graph.png)
 
-Read more about the Dolt commit graph [here](./storage-engine/commit-graph)
+Read more about the Dolt commit graph [here](/architecture/storage-engine/commit-graph)

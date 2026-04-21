@@ -82,7 +82,7 @@ We've been working on Dolt since 2018. We've forked and heavily modified all thr
 
 ![](../.gitbook/assets/noms.png)
 
-[Noms](https://github.com/attic-labs/noms) pioneered a data storage engine with Git properties. Noms built a content-addressed B-tree called a [Prolly tree](./storage-engine/prolly-tree) that had seek performance characteristics of a B-tree but also provided fast diff. You could stick the root content addresses of Prolly trees in a Merkle DAG to achieve versioning similar to Git with shared storage across versions.
+[Noms](https://github.com/attic-labs/noms) pioneered a data storage engine with Git properties. Noms built a content-addressed B-tree called a [Prolly tree](/architecture/storage-engine/prolly-tree) that had seek performance characteristics of a B-tree but also provided fast diff. You could stick the root content addresses of Prolly trees in a Merkle DAG to achieve versioning similar to Git with shared storage across versions.
 
 Noms was implemented in Golang. Dolt was implemented in Golang to take advantage of Noms work. Additionally, Golang is compiled so we could ship Dolt as a single program, satisfying that requirement.
 
@@ -112,5 +112,5 @@ Most other users of `go-mysql-server` use it to test their MySQL applications wi
 
 Continue reading for a deeper dive into the Dolt storage engine and SQL implementation.
 
-1. [The Storage Engine](./storage-engine)
-2. [The SQL Implementation](./sql)
+1. [The Storage Engine](/architecture/storage-engine)
+2. [The SQL Implementation](/architecture/sql)

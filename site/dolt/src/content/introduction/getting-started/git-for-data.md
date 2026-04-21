@@ -6,7 +6,7 @@ Dolt is Git for Data. You can use Dolt's command line interface to
 version control data like you version control files with Git. Git
 versions files, Dolt versions tables.
 
-Once you have [Dolt installed](../installation), type `dolt` and you'll start to feel the `git` vibes immediately.
+Once you have [Dolt installed](/introduction/installation), type `dolt` and you'll start to feel the `git` vibes immediately.
 
 ```bash
 $ dolt

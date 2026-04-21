@@ -76,7 +76,7 @@ DoltHub uses
 [workspaces](https://www.dolthub.com/blog/2021-08-04-edit-on-the-web-redux/#edit-using-the-sql-console)
 to stage changes made from the web and creates a commit on the workspace for each executed
 SQL query. Hosted works more like Dolt where each change is added to the [working
-set](../../concepts/dolt/git/working-set). When there are uncommitted changes you'll
+set](/concepts/dolt/git/working-set). When there are uncommitted changes you'll
 see the link to the diff with the option to create a commit.
 
 You can make as many changes as you want to the new branch before committing. Adding a new
@@ -91,7 +91,7 @@ You will now see a commit for this change in the Commit Log for the branch.
 
 ## 5. Creating a pull request
 
-Now create a [pull request](../../concepts/dolthub/prs) to submit your change for
+Now create a [pull request](/concepts/dolthub/prs) to submit your change for
 review. Navigate to the Pull Requests tab and click on "Create Pull Request". Choose the
 new branch you just updated as the "From branch" and add a title and description.
 

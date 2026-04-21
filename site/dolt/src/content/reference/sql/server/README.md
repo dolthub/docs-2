@@ -22,7 +22,7 @@ The host, user, password, timeout, logging info and other options can
 be set on the command line or via a config file.
 
 View the `dolt sql-server` command documentation
-[here](../../cli/cli#dolt-sql-server).
+[here](/cli-reference/cli#dolt-sql-server).
 
 ## Stopping the server
 
@@ -74,10 +74,10 @@ With the `-q` flag, it executes queries specified as arguments.
 ```
 
 You can also use `STDIN` to the `dolt sql` command to execute many SQL
-statements at once. This is useful for [importing a dump from another database](../../../guides/import#mysql-databases).
+statements at once. This is useful for [importing a dump from another database](/guides/import#mysql-databases).
 
 ```bash
 % dolt sql < mysqldump.sql
 ```
 
-View the `dolt sql` command documentation [here](../../cli/cli#dolt-sql).
+View the `dolt sql` command documentation [here](/cli-reference/cli#dolt-sql).

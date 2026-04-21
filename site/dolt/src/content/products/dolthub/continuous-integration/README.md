@@ -43,7 +43,7 @@ More specifically, a workflow file specifies _when_ it should run, by the Events
 
 Events are specific activities that occur in a DoltHub or DoltLab database that trigger a workflow to run. One such event might be the pushing of a branch to the database, known as a `push` event, or the opening of a pull request on a database, a `pull_request` event. When these events occur on a database that contains a workflow that specifies it should run on these events, DoltHub and DoltLab run them.
 
-For a complete list of events that trigger workflows, please see the [workflow reference](./reference).
+For a complete list of events that trigger workflows, please see the [workflow reference](/products/dolthub/continuous-integration/reference).
 
 # Jobs
 
@@ -55,7 +55,7 @@ These DoltHub/DoltLab Jobs, are the automated asynchronous machinery that allow 
 
 A workflow Job is made up of a series of Steps. A step, in its current form, is a single Saved Query that will run against the database as the "check", or test, that asserts the database branch's validity. Steps run in the order they're defined and will "pass", or succeed, if the Saved Query they execute completes without error and if the defined expected SQL results match the actual SQL results returned from the Saved Query.
 
-For more information on Steps, please see the [workflow reference](./reference).
+For more information on Steps, please see the [workflow reference](/products/dolthub/continuous-integration/reference).
 
 ## Saved Query
 
@@ -90,4 +90,4 @@ During the execution of the example workflow defined above, the "Show tables que
 
 Saved queries are currently the primary method for defining tests or checks on a Dolt database.
 
-For more information on Saved Query Steps, please see the [workflow reference](./reference). 
+For more information on Saved Query Steps, please see the [workflow reference](/products/dolthub/continuous-integration/reference). 

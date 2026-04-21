@@ -20,7 +20,7 @@ Dolt triggers match MySQL triggers exactly.
 
 ## Interaction with Dolt Version Control
 
-Triggers are versioned in the `dolt_schemas` table just like [views](./views). You add and commit that table just like any other changed table after you create or modify a trigger.
+Triggers are versioned in the `dolt_schemas` table just like [views](/concepts/dolt/sql/views). You add and commit that table just like any other changed table after you create or modify a trigger.
 
 ## Example
 
