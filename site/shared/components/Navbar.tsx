@@ -10,11 +10,29 @@ import React, { useState, useRef, useEffect } from "react";
 const dolthubUrl = "https://www.dolthub.com";
 const blogUrl = `${dolthubUrl}/blog`;
 
-const docsLinks = [
+function isLocal(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+  );
+}
+
+const prodDocsLinks = [
   { name: "Dolt", href: "https://docs.dolthub.com" },
   { name: "DoltLab", href: "https://docs.doltlab.com" },
   { name: "Doltgres", href: "https://docs.doltgres.com" },
 ];
+
+const localDocsLinks = [
+  { name: "Dolt", href: "http://localhost:4321" },
+  { name: "DoltLab", href: "http://localhost:4322" },
+  { name: "Doltgres", href: "http://localhost:4323" },
+];
+
+function useDocsLinks() {
+  return isLocal() ? localDocsLinks : prodDocsLinks;
+}
 const doltGithub = "https://github.com/dolthub/dolt";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
@@ -37,6 +55,7 @@ function Logo() {
 function DocsDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const links = useDocsLinks();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -62,7 +81,7 @@ function DocsDropdown() {
       </button>
       {open && (
         <div className="docs-dropdown-menu">
-          {docsLinks.map(l => (
+          {links.map(l => (
             <a key={l.name} href={l.href} className="docs-dropdown-item">
               {l.name}
             </a>
@@ -136,9 +155,10 @@ function MobileSocialLinks() {
 }
 
 function MobileRightLinks() {
+  const links = useDocsLinks();
   return (
     <>
-      {docsLinks.map(l => (
+      {links.map(l => (
         <a key={l.name} href={l.href}>
           {l.name} Docs
         </a>
