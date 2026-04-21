@@ -137,6 +137,43 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <style is:global>
+  /* Docs dropdown in navbar */
+  .docs-dropdown-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    padding: 0;
+  }
+
+  .docs-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border: 1px solid #D7D8DF;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 140px;
+    z-index: 100;
+    padding: 0.25rem 0;
+  }
+
+  .docs-dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #333 !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+  }
+
+  .docs-dropdown-item:hover {
+    background: #f3f4f6;
+  }
+
   /* Sidebar styles */
   .sidebar {
     @apply w-64 shrink-0 overflow-y-auto;

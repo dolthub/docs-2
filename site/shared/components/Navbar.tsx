@@ -5,11 +5,16 @@ import { FaLinkedin } from "@react-icons/all-files/fa/FaLinkedin";
 import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
 import { ExternalLink } from "@dolthub/react-components";
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const dolthubUrl = "https://www.dolthub.com";
 const blogUrl = `${dolthubUrl}/blog`;
-const docsUrl = "https://docs.dolthub.com";
+
+const docsLinks = [
+  { name: "Dolt", href: "https://docs.dolthub.com" },
+  { name: "DoltLab", href: "https://docs.doltlab.com" },
+  { name: "Doltgres", href: "https://docs.doltgres.com" },
+];
 const doltGithub = "https://github.com/dolthub/dolt";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
@@ -29,24 +34,58 @@ function Logo() {
   );
 }
 
+function DocsDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={ref} className="docs-dropdown" style={{ position: "relative", display: "inline-block" }}>
+      <button
+        onClick={() => setOpen(!open)}
+        data-cy="navbar-documentation"
+        className="docs-dropdown-trigger"
+      >
+        Documentation
+        <svg width="10" height="6" viewBox="0 0 10 6" style={{ marginLeft: 4, display: "inline" }}>
+          <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      </button>
+      {open && (
+        <div className="docs-dropdown-menu">
+          {docsLinks.map(l => (
+            <a key={l.name} href={l.href} className="docs-dropdown-item">
+              {l.name}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function LeftLinks() {
-  const links = [
-    { name: "Databases", href: `${dolthubUrl}/discover` },
-    { name: "Pricing", href: `${dolthubUrl}/pricing` },
-    { name: "Documentation", href: docsUrl },
-    { name: "Blog", href: blogUrl },
-  ];
   return (
     <>
-      {links.map(l => (
-        <a
-          key={l.name}
-          href={l.href}
-          data-cy={`navbar-${l.name.toLowerCase()}`}
-        >
-          {l.name}
-        </a>
-      ))}
+      <a href={`${dolthubUrl}/discover`} data-cy="navbar-databases">
+        Databases
+      </a>
+      <a href={`${dolthubUrl}/pricing`} data-cy="navbar-pricing">
+        Pricing
+      </a>
+      <DocsDropdown />
+      <a href={blogUrl} data-cy="navbar-blog">
+        Blog
+      </a>
     </>
   );
 }
@@ -92,7 +131,14 @@ function MobileSocialLinks() {
 
 function MobileRightLinks() {
   return (
-    <a href={`${dolthubUrl}/signin`}>Sign In</a>
+    <>
+      {docsLinks.map(l => (
+        <a key={l.name} href={l.href}>
+          {l.name} Docs
+        </a>
+      ))}
+      <a href={`${dolthubUrl}/signin`}>Sign In</a>
+    </>
   );
 }
 
