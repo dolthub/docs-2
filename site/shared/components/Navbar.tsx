@@ -39,10 +39,10 @@ const dolthubTwitter = "https://www.twitter.com/dolthub";
 const dolthubYoutube =
   "https://www.youtube.com/channel/UCDPjHnjeQV0_knGaksmKTZw";
 
-const siteConfig: Record<string, { name: string; color: string }> = {
-  dolt: { name: "Dolt", color: "#29E3C1" },
-  doltlab: { name: "DoltLab", color: "#6DB0FC" },
-  doltgres: { name: "Doltgres", color: "#F0A35C" },
+const siteConfig: Record<string, { alt: string }> = {
+  dolt: { alt: "Dolt" },
+  doltlab: { alt: "DoltLab" },
+  doltgres: { alt: "Doltgres" },
 };
 
 type NavbarProps = {
@@ -53,7 +53,7 @@ function Logo({ siteName = "dolt" }: NavbarProps) {
   const config = siteConfig[siteName] || siteConfig.dolt;
   return (
     <a href="/" aria-label="logo home link" data-cy="navbar-logo" className="navbar-logo-link">
-      <span className="navbar-logo-name" style={{ color: config.color }}>{config.name}</span>
+      <img src="/images/logo.png" alt={config.alt} className="navbar-logo-img" />
       <span className="navbar-logo-docs">Docs</span>
     </a>
   );
