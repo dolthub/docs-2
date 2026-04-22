@@ -37,7 +37,7 @@ find "$SITE_CONTENT" -name "*.md" | while read -r file; do
     "$file"
 
   # Convert DoltHub SQL console embeds to iframes with fallback link
-  sed -i '' -E 's|^\{% embed url="(https://www\.dolthub\.com/repositories/[^"]*embed[^"]*)" %\}|<div class="dolthub-embed-wrapper"><iframe src="\1" class="dolthub-embed" loading="lazy"></iframe><a href="\1" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console \&#x2197;</a></div>|g' "$file"
+  sed -i '' -E 's|^\{% embed url="(https://www\.dolthub\.com/repositories/[^"]*embed[^"]*)" %\}|<div class="dolthub-embed-wrapper"><iframe src="\1" class="dolthub-embed" loading="lazy"></iframe><a href="\1" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console \&#x2197;</a></div>|g' "$file"
   # Convert YouTube embeds to iframes
   sed -i '' -E 's|^\{% embed url="(https://(www\.)?youtube\.com/embed/[^"]+)" %\}|<iframe src="\1" class="youtube-embed" allowfullscreen></iframe>|g' "$file"
   # Convert remaining embeds to links
