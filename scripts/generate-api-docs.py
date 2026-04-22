@@ -8,10 +8,23 @@ and generates markdown with inline API endpoint documentation.
 import json
 import re
 import os
+from pathlib import Path
 
-DOCS_ROOT = "/Users/taylor/go/src/github.com/dolthub/docs/packages/dolt/content"
-SITE_CONTENT = "/Users/taylor/go/src/github.com/dolthub/docs-2/site/dolt/src/content"
 
+def _resolve_path(env_var: str, *default_parts: str) -> str:
+    env_value = os.environ.get(env_var)
+    if env_value:
+        return env_value
+    repo_root = Path(__file__).resolve().parent.parent
+    return str(repo_root.joinpath(*default_parts))
+
+
+DOCS_ROOT = _resolve_path(
+    "DOCS_ROOT", "docs", "packages", "dolt", "content"
+)
+SITE_CONTENT = _resolve_path(
+    "SITE_CONTENT", "docs-2", "site", "dolt", "src", "content"
+)
 API_DIR = os.path.join(DOCS_ROOT, "products/dolthub/api")
 
 
