@@ -167,6 +167,15 @@ const currentPath = Astro.url.pathname;
     border-bottom: none;
   }
 
+  /* YouTube embed */
+  .docs-main :global(.youtube-embed) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+
   /* DoltHub SQL console embed */
   .docs-main :global(.dolthub-embed-wrapper) {
     margin: 1rem 0;
