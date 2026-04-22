@@ -172,7 +172,6 @@ const currentPath = Astro.url.pathname;
     border: 1px solid #D7D8DF;
     border-radius: 8px;
     margin: 1.5rem 0;
-    overflow: hidden;
   }
 
   .docs-main :global(.api-endpoint-header) {
@@ -241,6 +240,14 @@ const currentPath = Astro.url.pathname;
   .docs-main :global(.api-params) {
     font-size: 0.8125rem;
     margin: 0 !important;
+    table-layout: fixed;
+    word-wrap: break-word;
+  }
+
+  .docs-main :global(.api-params td),
+  .docs-main :global(.api-params th) {
+    white-space: normal;
+    overflow-wrap: break-word;
   }
 
   .docs-main :global(.api-params th) {
