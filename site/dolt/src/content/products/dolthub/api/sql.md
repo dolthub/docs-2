@@ -165,7 +165,7 @@ We can use our [SHAQ database](https://www.dolthub.com/repositories/dolthub/SHAQ
 <tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>SHAQ</code></em></td></tr>
 <tr><td><code>from_branch</code></td><td>path</td><td>string</td><td>Yes</td><td>The base branch. <em>Example: <code>main</code></em></td></tr>
 <tr><td><code>to_branch</code></td><td>path</td><td>string</td><td>Yes</td><td>The branch to write to. Will be created from the from_branch if it doesn't exist. <em>Example: <code>feature</code></em></td></tr>
-<tr><td><code>q</code></td><td>query</td><td>string</td><td>No</td><td>The SQL query to execute. Use the request body instead for larger queries. <em>Example: <code>UPDATE player_season_stat_totals SET player_id=714287 WHERE player_id=15404617</code></em></td></tr>
+<tr><td><code>q</code></td><td>query</td><td>string</td><td>No</td><td>The SQL query to execute. Use the request body instead for larger queries.</td></tr>
 </tbody></table>
 </div>
 <div class="api-section">

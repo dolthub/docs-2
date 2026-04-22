@@ -76,8 +76,8 @@ def render_endpoint(spec: dict, path: str, method: str) -> str:
             ptype = schema.get("type", "")
             required = "Yes" if p.get("required", False) else "No"
             desc = p.get("description", "")
-            example = schema.get("example", "")
-            if example:
+            example = str(schema.get("example", ""))
+            if example and len(example) <= 60:
                 desc += f' <em>Example: <code>{example}</code></em>'
             lines.append(f'<tr><td><code>{name}</code></td><td>{location}</td><td>{ptype}</td><td>{required}</td><td>{desc}</td></tr>')
         lines.append('</tbody></table>')
