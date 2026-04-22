@@ -10,14 +10,6 @@ import React, { useState, useRef, useEffect } from "react";
 const dolthubUrl = "https://www.dolthub.com";
 const blogUrl = `${dolthubUrl}/blog`;
 
-function isLocal(): boolean {
-  if (typeof window === "undefined") return false;
-  return (
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
-  );
-}
-
 const prodDocsLinks = [
   { name: "Dolt", href: "https://docs.dolthub.com" },
   { name: "DoltLab", href: "https://docs.doltlab.com" },
@@ -31,7 +23,14 @@ const localDocsLinks = [
 ];
 
 function useDocsLinks() {
-  return isLocal() ? localDocsLinks : prodDocsLinks;
+  const [links, setLinks] = useState(prodDocsLinks);
+  useEffect(() => {
+    const host = window.location.hostname;
+    if (host === "localhost" || host === "127.0.0.1") {
+      setLinks(localDocsLinks);
+    }
+  }, []);
+  return links;
 }
 const doltGithub = "https://github.com/dolthub/dolt";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
