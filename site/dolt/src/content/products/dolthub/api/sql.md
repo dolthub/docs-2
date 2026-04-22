@@ -14,8 +14,33 @@ Please make sure to send your requests to `https://www.dolthub.com` instead of `
 
 ### Using the default branch
 
-<!-- API spec embed removed -->
-[sqlRead.json](../../../.gitbook/assets/dolthub-api/sqlRead.json)
+#### `GET` /{owner}/{database}
+
+SQL read queries on the default branch
+
+**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}`
+
+**Parameters**
+
+**`owner`** (path, string, Required)
+  The name of the database owner.
+  Example: `dolthub`
+
+**`database`** (path, string, Required)
+  The name of the database.
+  Example: `ip-to-country`
+
+**`q`** (q, string, Optional)
+  The SQL query to execute.
+  Example: `SHOW TABLES`
+
+
+**Responses**
+
+- **200**: Success
+- **400**: Bad request. The request was invalid or could not be processed.
+
+---
 
 
 We will use an example DoltHub database, [dolthub/ip-to-country](https://www.dolthub.com/repositories/dolthub/ip-to-country/) and the Python `requests` library to explore it in the Python console:
@@ -44,8 +69,37 @@ This shows our database metadata as a dictionary:
 
 ### Specifying a ref
 
-<!-- API spec embed removed -->
-[sqlRead.json](../../../.gitbook/assets/dolthub-api/sqlRead.json)
+#### `GET` /{owner}/{database}/{ref}
+
+SQL read queries on a specified ref
+
+**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/{ref}`
+
+**Parameters**
+
+**`owner`** (path, string, Required)
+  The name of the database owner.
+  Example: `dolthub`
+
+**`database`** (path, string, Required)
+  The name of the database.
+  Example: `ip-to-country`
+
+**`ref`** (path, string, Required)
+  The database ref to execute the query against.
+  Example: `newbranch`
+
+**`q`** (q, string, Optional)
+  The SQL query to execute.
+  Example: `SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'`
+
+
+**Responses**
+
+- **200**: Success
+- **400**: Bad request. The request was invalid or could not be processed.
+
+---
 
 
 We can now execute a query:
@@ -105,8 +159,50 @@ We can use our [SHAQ database](https://www.dolthub.com/repositories/dolthub/SHAQ
 
 ### 1. Run query
 
-<!-- API spec embed removed -->
-[sqlWrite.json](../../../.gitbook/assets/dolthub-api/sqlWrite.json)
+#### `POST` /{owner}/{database}/write/{from_branch}/{to_branch}
+
+SQL write query and merge branches
+
+Executes SQL write against to_branch (will be created from from_branch if it doesn't exist). If no query is provided, will merge to_branch into from_branch.
+
+**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/write/{from_branch}/{to_branch}`
+
+**Parameters**
+
+**`owner`** (path, string, Required)
+  The name of the database owner.
+  Example: `dolthub`
+
+**`database`** (path, string, Required)
+  The name of the database.
+  Example: `SHAQ`
+
+**`from_branch`** (path, string, Required)
+  The base branch.
+  Example: `main`
+
+**`to_branch`** (path, string, Required)
+  The branch to write to. Will be created from the from_branch if it doesn't exist.
+  Example: `feature`
+
+**`q`** (query, string, Optional)
+  The SQL query to execute. Use the request body instead for larger queries.
+  Example: `UPDATE player_season_stat_totals SET player_id=714287 WHERE player_id=15404617`
+
+
+**Request Body**
+
+Content-Type: `application/json`
+
+- **`query`** (string, Optional) — SQL write query to execute. Can be used in place of the query parameter for larger queries.
+
+
+**Responses**
+
+- **200**: Success
+- **400**: Bad request. The request was invalid or could not be processed.
+
+---
 
 
 First, we want to hit the write endpoint with our `UPDATE` query. This will start an asynchronous operation.
@@ -149,8 +245,35 @@ The yielded JSON results include an `operation_name`.
 
 ### 2. Poll operation
 
-<!-- API spec embed removed -->
-[sqlWrite.json](../../../.gitbook/assets/dolthub-api/sqlWrite.json)
+#### `GET` /{owner}/{database}/write
+
+Check write query operation status
+
+Poll the operation to check if the SQL write operation is done
+
+**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/write`
+
+**Parameters**
+
+**`owner`** (path, string, Required)
+  The name of the database owner.
+  Example: `dolthub`
+
+**`database`** (path, string, Required)
+  The name of the database.
+  Example: `SHAQ`
+
+**`operationName`** (query, string, Required)
+  The name of the operation
+  Example: `operations/72abb56b-d478-43ae-9a2d-c9602184c7ab`
+
+
+**Responses**
+
+- **200**: Success
+- **400**: Bad request. The request was invalid or could not be processed.
+
+---
 
 
 `operation_name` can be used to poll the second endpoint to check if the operation is done.

@@ -2,7 +2,6 @@
 title: "Authentication"
 ---
 
-
 # Authentication
 
 API tokens can be used to authenticate calls to the SQL API over Basic Authentication. This is useful for executing SQL queries against private databases or executing write queries.

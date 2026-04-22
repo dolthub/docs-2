@@ -2,7 +2,6 @@
 title: Hooks
 ---
 
-
 # Hooks
 
 ## What is a hook?
