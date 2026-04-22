@@ -4,7 +4,7 @@ title: Getting Started
 
 # Getting Started
 
-[DoltLab](httpos://www.doltlab.com) is [Dolt](https://www.doltdb.com)'s self-hosted [remote](https://www.dolthub.com/blog/2024-04-25-why-remotes/) with a built-in web interface. You get all the features of [DoltHub](https://www.dolthub.com), a built in SQL Workbench, Pull Requests, Issues, etc, on infrastructure deployed in your own network.
+[DoltLab](https://www.doltlab.com) is [Dolt](https://www.doltdb.com)'s self-hosted [remote](https://www.dolthub.com/blog/2024-04-25-why-remotes/) with a built-in web interface. You get all the features of [DoltHub](https://www.dolthub.com), a built in SQL Workbench, Pull Requests, Issues, etc, on infrastructure deployed in your own network.
 
 This guide will walk through the simplest way to set up a basic DoltLab installation. Once complete, you'll have a DoltLab running on an internet-accessible EC2 instance that works for a single `admin` user. Some features like multiple users, HTTPS, and custom logo and colors are not enabled but links to documentation to enable those things are provided.
 
