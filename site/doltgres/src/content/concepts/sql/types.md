@@ -2,6 +2,7 @@
 title: Types
 ---
 
+
 # Types
 
 ## What are Types?

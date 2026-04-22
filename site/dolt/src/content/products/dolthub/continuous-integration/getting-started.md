@@ -2,6 +2,8 @@
 title: Getting Started with DoltHub/DoltLab CI
 ---
 
+# Getting Started with DoltHub/DoltLab CI
+
 CI for DoltHub and DoltLab requires [Dolt v1.45.3](https://github.com/dolthub/dolt/releases/tag/v1.45.3). This release contains the `dolt ci` command you will use to configure CI to run.
 
 To start, let's ensure we have the correct Dolt version installed locally.
@@ -25,7 +27,7 @@ Your branch is up to date with 'origin/master'.
 nothing to commit, working tree clean
 ```
 
-The first step required to enable a Dolt database to run CI is to run the [dolt ci init]../../../cli-reference/cli#dolt-ci-init) command. This command will create Dolt's internal CI tables and also writes a new commit to the branch.
+The first step required to enable a Dolt database to run CI is to run the [dolt ci init](/cli-reference/cli#dolt-ci-init) command. This command will create Dolt's internal CI tables and also writes a new commit to the branch.
 
 ```bash
 % dolt ci init
@@ -114,7 +116,7 @@ The final step we need to perform on our local database is to define the saved q
 
 # Defining a saved query
 
-A saved query can be added by using the [dolt sql command]../../../cli-reference/cli#dolt-sql) with the `--save` option. And, as the name of our saved query suggests, we'll save the query "SHOW TABLES;".
+A saved query can be added by using the [dolt sql command](/cli-reference/cli#dolt-sql) with the `--save` option. And, as the name of our saved query suggests, we'll save the query "SHOW TABLES;".
 
 ```bash
 % dolt sql --save "show tables" -q "SHOW TABLES;"

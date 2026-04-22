@@ -4,9 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "dev": "astro dev --port 4321",
+    "build": "astro build && npx pagefind --site dist",
+    "preview": "astro preview --port 4321"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.1",
@@ -16,6 +16,7 @@
     "@react-icons/all-files": "^4.1.0",
     "astro": "^6.0.0",
     "github-markdown-css": "^5.0.0",
+    "pagefind": "^1.5.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.0.0",

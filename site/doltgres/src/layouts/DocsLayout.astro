@@ -1,5 +1,5 @@
 ---
-import { Navbar, Footer, Sidebar } from "../../../shared/components";
+import { Navbar, Footer, Search, Sidebar, MobileSidebar, ThemeInit } from "../../../shared/components";
 import nav from "../nav";
 
 export interface Props {
@@ -8,6 +8,7 @@ export interface Props {
 
 const { title } = Astro.props;
 const currentPath = Astro.url.pathname;
+const isDev = import.meta.env.DEV;
 ---
 
 <!doctype html>
@@ -21,20 +22,28 @@ const currentPath = Astro.url.pathname;
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
     />
+    {!isDev && <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />}
+    {!isDev && <script is:inline src="/pagefind/pagefind-ui.js"></script>}
   </head>
   <body>
+    <ThemeInit client:only="react" />
     <div>
       <div class="navbar-slot">
-        <Navbar client:only="react" />
+        <Navbar client:only="react" siteName="doltgres" />
       </div>
+
+      <MobileSidebar client:only="react" nav={nav} currentPath={currentPath} />
 
       <div class="docs-container">
         <div class="sidebar-slot">
+          <div class="search-slot">
+            <Search client:only="react" />
+          </div>
           <Sidebar client:only="react" nav={nav} currentPath={currentPath} />
         </div>
 
         <main class="docs-main">
-          <article class="docs-article">
+          <article class="docs-article" data-pagefind-body>
             <slot />
           </article>
         </main>
@@ -60,6 +69,11 @@ const currentPath = Astro.url.pathname;
     width: 256px;
     min-width: 256px;
     border-right: 1px solid #D7D8DF;
+  }
+
+  /* Search only shows in the desktop sidebar */
+  .search-slot {
+    @apply hidden lg:block;
   }
 
   .docs-container {
@@ -122,6 +136,189 @@ const currentPath = Astro.url.pathname;
     @apply border-l-4 border-sky-300 pl-4 italic my-4;
   }
 
+  .docs-main :global(table) {
+    @apply w-full mb-4 text-sm;
+    border-collapse: collapse;
+  }
+
+  .docs-main :global(thead tr) {
+    background: #f3f4f6;
+  }
+
+  .docs-main :global(th) {
+    @apply font-semibold text-left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(th + th) {
+    border-left: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(td) {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(td + td) {
+    border-left: 1px solid #D7D8DF;
+  }
+
+  .docs-main :global(tbody tr:last-child td) {
+    border-bottom: none;
+  }
+
+  /* YouTube embed */
+  .docs-main :global(.youtube-embed) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+
+  /* DoltHub SQL console embed */
+  .docs-main :global(.dolthub-embed-wrapper) {
+    margin: 1rem 0;
+    border: 1px solid #D7D8DF;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .docs-main :global(.dolthub-embed) {
+    width: 100%;
+    height: 400px;
+    border: none;
+    display: block;
+  }
+
+  .docs-main :global(.dolthub-embed-fallback) {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    text-align: center;
+    background: #f8f9fa;
+    border-top: 1px solid #D7D8DF;
+    text-decoration: none !important;
+  }
+
+  /* API endpoint styles */
+  .docs-main :global(.api-endpoint) {
+    border: 1px solid #D7D8DF;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+  }
+
+  .docs-main :global(.api-endpoint-header) {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #D7D8DF;
+    font-family: "Space Mono", monospace;
+  }
+
+  .docs-main :global(.api-method) {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+  }
+
+  .docs-main :global(.api-path) {
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: none !important;
+    padding: 0 !important;
+    color: inherit;
+  }
+
+  .docs-main :global(.api-summary) {
+    padding: 0.75rem 1rem 0;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .docs-main :global(.api-description) {
+    padding: 0.25rem 1rem 0;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  .docs-main :global(.api-url) {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .docs-main :global(.api-url code) {
+    font-size: 0.8rem;
+  }
+
+  .docs-main :global(.api-section) {
+    padding: 0 1rem 0.75rem;
+  }
+
+  .docs-main :global(.api-section h5) {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0.75rem 0 0.5rem;
+    opacity: 0.6;
+  }
+
+  .docs-main :global(.api-params) {
+    font-size: 0.8125rem;
+    margin: 0 !important;
+  }
+
+  .docs-main :global(.api-example) {
+    word-break: break-all;
+    white-space: normal;
+  }
+
+  .docs-main :global(.api-params th) {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.7;
+  }
+
+  .docs-main :global(.api-response) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    font-size: 0.875rem;
+  }
+
+  .docs-main :global(.api-status-success) {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: "Space Mono", monospace;
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .docs-main :global(.api-status-error) {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: "Space Mono", monospace;
+    background: #f8d7da;
+    color: #721c24;
+  }
+
   .bottomOuter {
     @apply w-full mt-20 overflow-hidden bg-space-500;
   }
@@ -132,15 +329,63 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <style is:global>
-  /* Sidebar styles */
-  .sidebar {
-    @apply w-64 shrink-0 overflow-y-auto;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    padding: 1.5rem 0;
+  /* Navbar logo */
+  .navbar-logo-link {
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none !important;
   }
 
+  .navbar-logo-img {
+    height: 22px;
+    width: auto;
+  }
+
+  .navbar-logo-docs {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.6;
+    letter-spacing: 0.05em;
+  }
+
+  .docs-dropdown-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    padding: 0;
+  }
+
+  .docs-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border: 1px solid #D7D8DF;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 140px;
+    z-index: 100;
+    padding: 0.25rem 0;
+  }
+
+  .docs-dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #333 !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+  }
+
+  .docs-dropdown-item:hover {
+    background: #f3f4f6;
+  }
+
+  /* Shared sidebar nav styles */
   .sidebar-section {
     @apply mb-4;
   }
@@ -188,27 +433,79 @@ const currentPath = Astro.url.pathname;
     color: rgba(var(--color-primary), 0.8);
   }
 
-  /* Mobile sidebar */
+  /* Desktop sidebar */
+  .sidebar-desktop {
+    @apply hidden lg:block w-64 shrink-0 overflow-y-auto;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 1.5rem 0;
+  }
+
+  /* Mobile toggle button */
   .sidebar-mobile-toggle {
-    @apply flex lg:hidden items-center gap-2 px-4 py-2 text-sm font-medium border-b border-stone-300 w-full bg-white cursor-pointer;
+    @apply flex lg:hidden items-center gap-2 px-4 py-3 text-sm font-medium border-b border-stone-300 w-full bg-white cursor-pointer;
     color: rgba(var(--color-primary), 0.7);
+    border: none;
+    border-bottom: 1px solid #D7D8DF;
   }
 
+  /* Mobile overlay */
   .sidebar-overlay {
-    @apply fixed inset-0 bg-space-700/50 z-40 lg:hidden;
+    @apply fixed inset-0 z-40 lg:hidden;
+    background: rgba(0, 0, 0, 0.3);
   }
 
-  @media (max-width: 1023px) {
-    .sidebar {
-      @apply fixed top-0 left-0 z-50 bg-white shadow-lg;
-      display: none;
-      width: 280px;
-      padding-top: 1rem;
-    }
+  /* Mobile drawer */
+  .sidebar-mobile {
+    @apply fixed top-0 left-0 z-50 bg-white shadow-lg overflow-y-auto lg:hidden;
+    width: 300px;
+    height: 100vh;
+    padding: 0 0 2rem;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-in-out;
+  }
 
-    .sidebar-open {
-      display: block;
-    }
+  .sidebar-mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-mobile-header {
+    @apply flex justify-end p-3 border-b;
+    border-color: #D7D8DF;
+  }
+
+  .sidebar-mobile-close {
+    @apply flex items-center justify-center w-8 h-8 rounded cursor-pointer bg-transparent border-none;
+    color: rgba(var(--color-primary), 0.5);
+  }
+
+  .sidebar-mobile-close:hover {
+    color: rgba(var(--color-primary), 1);
+    background: #f3f4f6;
+  }
+
+  /* Search — only visible in desktop sidebar */
+  .search-slot {
+    padding: 0.75rem 0.75rem 0;
+  }
+
+  .search-container {
+    --pagefind-ui-scale: 0.8;
+    --pagefind-ui-primary: #327DD2;
+    --pagefind-ui-text: #333;
+    --pagefind-ui-background: #fff;
+    --pagefind-ui-border: #D7D8DF;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 6px;
+    --pagefind-ui-font: "Source Sans Pro", sans-serif;
+  }
+
+  .search-placeholder {
+    font-size: 0.75rem;
+    color: #999;
+    text-align: center;
+    padding: 0.5rem;
   }
 
   /* Anchor links */

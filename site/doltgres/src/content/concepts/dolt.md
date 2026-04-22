@@ -2,6 +2,7 @@
 title: Why Doltgres?
 ---
 
+
 # Why Doltgres?
 
 Doltgres brings the features of Git-style distributed version control to the SQL database.

@@ -2,6 +2,7 @@
 title: Correctness
 ---
 
+
 # Correctness
 
 Correctness is measured using a standard suite of test called [`sqllogictest`](https://github.com/dolthub/sqllogictest).

@@ -2,7 +2,7 @@
 title: "Overview"
 ---
 
-# DoltLab
+# Overview
 
 ![](../../.gitbook/assets/doltlab-preview.png)
 

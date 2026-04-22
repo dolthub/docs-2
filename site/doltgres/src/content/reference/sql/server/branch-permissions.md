@@ -2,6 +2,7 @@
 title: Branch Permissions
 ---
 
+
 # Branch Permissions
 
 ## What are Branch Permissions?

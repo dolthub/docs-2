@@ -2,6 +2,7 @@
 title: Primary Key
 ---
 
+
 # Primary Key
 
 ## What is a Primary Key?

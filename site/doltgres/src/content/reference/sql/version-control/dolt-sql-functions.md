@@ -2,6 +2,8 @@
 title: Dolt SQL Functions
 ---
 
+# Dolt SQL Functions
+
 # Table of Contents
 
 - [Version Control Functions](#version-control-functions)

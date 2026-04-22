@@ -2,6 +2,7 @@
 title: Why Dolt?
 ---
 
+
 # Why Dolt?
 
 Dolt brings the features of Git-style distributed version control to the SQL database.

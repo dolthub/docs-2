@@ -2,6 +2,7 @@
 title: Functions
 ---
 
+
 # Functions
 
 ## What is a Function?

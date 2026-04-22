@@ -2,6 +2,7 @@
 title: Latency
 ---
 
+
 # Latency
 
 Latency is measured using a standard suite of tests called [`sysbench`](https://github.com/akopytov/sysbench).

@@ -2,6 +2,7 @@
 title: Docker
 ---
 
+
 # Docker
 
 You can get a Dolt Docker container using our [official Docker images](https://hub.docker.com/u/dolthub).

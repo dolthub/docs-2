@@ -2,6 +2,7 @@
 title: Log
 ---
 
+
 # Log
 
 ## What is a log?

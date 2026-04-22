@@ -2,6 +2,8 @@
 title: "Contributing to Dolt"
 ---
 
+# Contributing to Dolt
+
 [Dolt](https://doltdb.com) is an open-source SQL database that has Git-like
 functionality, including branch, merge, clone, push and pull. As we attract
 more and more users with various use cases and ways of integrating Dolt into

@@ -36,6 +36,11 @@ find "$SITE_CONTENT" -name "*.md" | while read -r file; do
     -e 's/{% endswagger %}//g' \
     "$file"
 
+  # Convert DoltHub SQL console embeds to iframes with fallback link
+  sed -i '' -E 's|^\{% embed url="(https://www\.dolthub\.com/repositories/[^"]*embed[^"]*)" %\}|<div class="dolthub-embed-wrapper"><iframe src="\1" class="dolthub-embed" loading="lazy"></iframe><a href="\1" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console \&#x2197;</a></div>|g' "$file"
+  # Convert YouTube embeds to iframes
+  sed -i '' -E 's|^\{% embed url="(https://(www\.)?youtube\.com/embed/[^"]+)" %\}|<iframe src="\1" class="youtube-embed" allowfullscreen></iframe>|g' "$file"
+  # Convert remaining embeds to links
   sed -i '' -E 's/\{% embed url="([^"]+)" %\}/[\1](\1)/g' "$file"
 
   # Convert internal .md links to clean URLs:
@@ -48,21 +53,31 @@ find "$SITE_CONTENT" -name "*.md" | while read -r file; do
     -e 's|/README\.md#|/#|g' \
     -e 's|\.md\)|)|g' \
     -e 's|\.md#|#|g' \
-    -e 's|\(([^)]*)/reference/sql/|\1/sql-reference/|g' \
-    -e 's|\(([^)]*)/reference/cli/|\1/cli-reference/|g' \
+    -e 's|\(([^)]*)/reference/sql/|(\1/sql-reference/|g' \
+    -e 's|\(([^)]*)/reference/cli/|(\1/cli-reference/|g' \
     "$file"
 
   # Add frontmatter if missing
   if ! head -1 "$file" | grep -q '^---'; then
     title=$(grep -m1 '^# ' "$file" 2>/dev/null | sed 's/^# //' || true)
     if [ -z "$title" ]; then
-      # Use filename as fallback title
       title=$(basename "$file" .md | sed 's/-/ /g; s/README/Overview/')
     fi
     tmpfile=$(mktemp)
     printf -- '---\ntitle: "%s"\n---\n\n' "$title" > "$tmpfile"
     cat "$file" >> "$tmpfile"
     mv "$tmpfile" "$file"
+  fi
+
+  # Ensure every page has an h1 heading from its frontmatter title.
+  # GitBook auto-rendered titles from SUMMARY.md, but Astro doesn't.
+  # Only inject if there is NO h1 anywhere in the body after frontmatter.
+  title=$(awk '/^---$/{c++; next} c==1 && /^title:/{sub(/^title: */, ""); gsub(/^["'"'"']|["'"'"']$/, ""); print; exit}' "$file")
+  if [ -n "$title" ]; then
+    has_any_h1=$(awk '/^---$/{c++; next} c>=2 && /^#[[:space:]]/{found=1; exit} END{print found+0}' "$file")
+    if [ "$has_any_h1" -eq 0 ]; then
+      awk -v h="# $title" 'BEGIN{c=0} /^---$/{c++; if(c==2){print; print ""; print h; next}} {print}' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+    fi
   fi
 done
 

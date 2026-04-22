@@ -2,6 +2,7 @@
 title: Backups
 ---
 
+
 # Backups
 
 There are several ways to safely backup Dolt databases and Dolt SQL servers. If you are using [Hosted Dolt](/products/hosted/), then you get automatic backups without having to configure anything. If you are running your own Dolt SQL server, then you need to handle your own backups using one of the approaches below.

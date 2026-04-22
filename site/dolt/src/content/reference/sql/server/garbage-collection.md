@@ -2,6 +2,8 @@
 title: Garbage Collection
 ---
 
+# Garbage Collection
+
 # How garbage is created
 
 Dolt creates on-disk garbage. Dolt transactions that do not have a corresponding Dolt commit create on-disk garbage. This garbage is most noticeable after large data imports.

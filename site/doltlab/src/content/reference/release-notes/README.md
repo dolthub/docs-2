@@ -2,6 +2,7 @@
 title: Release Notes
 ---
 
+
 # Release Notes
 
 DoltLab is currently closed-source, but the [dolthub/doltlab-issues](https://github.com/dolthub/doltlab-issues) repository is used to track DoltLab issues and "publish" releases.

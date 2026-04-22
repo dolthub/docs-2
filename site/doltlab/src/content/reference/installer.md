@@ -2,6 +2,7 @@
 title: Installer
 ---
 
+
 # Installer
 
 DoltLab ships with a binary called `installer` that serves as the primary interface for configuring a DoltLab deployment.

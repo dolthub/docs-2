@@ -2,6 +2,8 @@
 title: Audit
 ---
 
+# Audit
+
 # Problem
 
 * Do you need to know who changed what, when, why in your SQL database?
@@ -16,7 +18,7 @@ Dolt provides a built-in, queryable audit log of every cell in your database. Wh
 
 Dolt stores these changes efficiently by [sharing data that hasn't changed between all commits referencing that data](https://www.dolthub.com/blog/2020-05-13-dolt-commit-graph-and-structural-sharing/). Effectively, only the differences are stored between versions of the data. 
 
-The audit log created between commits is queryable via standard SQL using custom Dolt [system tables]../../sql-reference/version-control/dolt-system-tables) and [functions]../../sql-reference/version-control/dolt-sql-functions). The results can be filtered and joined using other data in your database. 
+The audit log created between commits is queryable via standard SQL using custom Dolt [system tables](/sql-reference/version-control/dolt-system-tables) and [functions](/sql-reference/version-control/dolt-sql-functions). The results can be filtered and joined using other data in your database. 
 
 If you're not ready to switch your primary database to Dolt to get its audit capabilities, you can run MySQL as your primary and set Dolt up as [a versioned replica](/introduction/use-cases/versioned-replica). You lose users and commit messages but you still get a queryable log of every cell in your database.
 

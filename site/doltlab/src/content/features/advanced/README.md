@@ -2,6 +2,7 @@
 title: "Advanced Features"
 ---
 
+
 # Advanced Features
 
 DoltLab has all the features of [DoltHub](https://www.dolthub.com). Some of the basic

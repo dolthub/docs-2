@@ -18,7 +18,7 @@ Stored Procedures are used to store code you want the database to execute when a
 
 Dolt stored procedures match MySQL stored procedures exactly. 
 
-Dolt exposes custom [stored procedures for version control operations]../../../sql-reference/version-control/dolt-sql-procedures). These are named after the corresponding Dolt commands.  
+Dolt exposes custom [stored procedures for version control operations](/sql-reference/version-control/dolt-sql-procedures). These are named after the corresponding Dolt commands.  
 
 ## Interaction with Dolt Version Control
 

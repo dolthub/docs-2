@@ -2,6 +2,7 @@
 title: "Workspaces"
 ---
 
+
 # Workspaces
 
 DoltHub and DoltLab use the same "workspaces".

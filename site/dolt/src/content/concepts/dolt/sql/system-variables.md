@@ -31,7 +31,7 @@ The ones we do support should have the same lifecycle behavior as MySQL.
 One exception is that we do not currently support deleting persisted variables.
 
 We also have Dolt-specific system variables, which can be found
-[here]../../../sql-reference/version-control/dolt-sysvars).
+[here](/sql-reference/version-control/dolt-sysvars).
 Most dolt specific variables are prefixed with either `dolt_...` or the database's name (ex: `mydb_...`).
 These can be listed in the MySQL shell with show queries: `show variables like 'dolt_%';` (see below for output).
 
@@ -46,7 +46,7 @@ both creates a new Dolt commit for every SQL transaction, and dismisses
 merge conflicts in the process of auto-executing these commits.
 
 A full list of Dolt system variables and descriptions can be found
-[here]../../../sql-reference/version-control/dolt-sysvars).
+[here](/sql-reference/version-control/dolt-sysvars).
 
 ## Example
 

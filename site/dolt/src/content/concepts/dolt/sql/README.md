@@ -2,7 +2,7 @@
 title: A Full-featured SQL Database
 ---
 
-# SQL
+# A Full-featured SQL Database
 
 Dolt is a full-featured SQL database, akin to [Postgres](https://www.postgresql.org/) or [MySQL](https://www.mysql.com/).
 

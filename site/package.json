@@ -4,12 +4,18 @@
   "version": "0.0.1",
   "description": "Docs sites for Dolt, DoltLab, and Doltgres",
   "scripts": {
+    "install:all": "cd dolt && npm install --legacy-peer-deps && cd ../doltlab && npm install --legacy-peer-deps && cd ../doltgres && npm install --legacy-peer-deps",
     "dev:dolt": "cd dolt && npm run dev",
     "dev:doltlab": "cd doltlab && npm run dev",
     "dev:doltgres": "cd doltgres && npm run dev",
+    "dev": "npm run dev:dolt & npm run dev:doltlab & npm run dev:doltgres & wait",
     "build:dolt": "cd dolt && npm run build",
     "build:doltlab": "cd doltlab && npm run build",
     "build:doltgres": "cd doltgres && npm run build",
-    "build": "npm run build:dolt && npm run build:doltlab && npm run build:doltgres"
+    "build": "npm run build:dolt && npm run build:doltlab && npm run build:doltgres",
+    "preview:dolt": "cd dolt && npm run preview",
+    "preview:doltlab": "cd doltlab && npm run preview",
+    "preview:doltgres": "cd doltgres && npm run preview",
+    "preview": "npm run preview:dolt & npm run preview:doltlab & npm run preview:doltgres & wait"
   }
 }

@@ -2,6 +2,7 @@
 title: Merge
 ---
 
+
 # Merge
 
 ## What is a merge?

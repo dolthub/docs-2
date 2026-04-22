@@ -2,6 +2,8 @@
 title: "Hosted Dolt: SQL Workbench"
 ---
 
+# Hosted Dolt: SQL Workbench
+
 Hosted Dolt has a built-in SQL Workbench with a [DoltHub](https://www.dolthub.com)-like
 UI. This allows users to browse their data, as well as utilize Dolt's powerful version
 control features like diffs and commit logs. When you enable writes, you can also access

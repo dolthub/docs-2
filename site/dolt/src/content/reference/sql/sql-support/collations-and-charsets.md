@@ -2,6 +2,7 @@
 title: "Collations and character sets"
 ---
 
+
 # Collations and character sets
 
 Dolt supports a subset of the character sets and collations that MySQL supports.

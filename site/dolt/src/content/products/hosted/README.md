@@ -2,7 +2,7 @@
 title: "Overview"
 ---
 
-# Hosted Dolt
+# Overview
 
 ![](../../.gitbook/assets/hosted-dolt-preview.png)
 

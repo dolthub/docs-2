@@ -2,6 +2,8 @@
 title: Dolt System Tables
 ---
 
+# Dolt System Tables
+
 # Table of contents
 
 - [Dolt Schema](#dolt-schema)

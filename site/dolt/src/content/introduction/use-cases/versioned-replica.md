@@ -2,6 +2,8 @@
 title: Versioned MySQL Replica
 ---
 
+# Versioned MySQL Replica
+
 # Problem
 
 * Is your production MySQL vulnerable to data loss? 
@@ -12,11 +14,11 @@ title: Versioned MySQL Replica
 
 # Dolt solves this by…
 
-Because Dolt is [MySQL-compatible]../../sql-reference/benchmarks/correctness), you can set Dolt up as [a versioned replica](/introduction/getting-started/versioned-mysql-replica) of your MySQL primary. Every transaction commit on your primary becomes a [Dolt commit](/concepts/dolt/git/commits) on the Dolt replica. 
+Because Dolt is [MySQL-compatible](/sql-reference/benchmarks/correctness), you can set Dolt up as [a versioned replica](/introduction/getting-started/versioned-mysql-replica) of your MySQL primary. Every transaction commit on your primary becomes a [Dolt commit](/concepts/dolt/git/commits) on the Dolt replica. 
 
 On your Dolt replica, you get a full, immutable, queryable audit log of every cell in your database. If an auditor wants guarantees that a cell in your database has not been modified, you can use Dolt to prove it. [Diffs](/concepts/dolt/git/diff) can be produced for every transaction.
 
-If an operator makes a bad query, runs a bad script, or makes a bad deployment, you have an additional tool beyond backups and logs to restore production data. Find the bad transactions using Dolt's audit capabilities. Rollback the bad individual transactions. [Produce a SQL patch]../../sql-reference/version-control/dolt-sql-functions#dolt_patch) and apply that back to your primary. If there are conflicting writes, Dolt will surface those for you and you can decide how to proceed. A Dolt replica becomes an essential part of your disaster recovery plan, shortening some outages by hours or days or recovering lost production data.
+If an operator makes a bad query, runs a bad script, or makes a bad deployment, you have an additional tool beyond backups and logs to restore production data. Find the bad transactions using Dolt's audit capabilities. Rollback the bad individual transactions. [Produce a SQL patch](/sql-reference/version-control/dolt-sql-functions#dolt_patch) and apply that back to your primary. If there are conflicting writes, Dolt will surface those for you and you can decide how to proceed. A Dolt replica becomes an essential part of your disaster recovery plan, shortening some outages by hours or days or recovering lost production data.
 
 Moreover, Dolt can be added to your serving path as a read-only MySQL replica, so you know that it is always in sync with your primary. Your disaster recovery instance can serve production traffic so you always know it's working.
 

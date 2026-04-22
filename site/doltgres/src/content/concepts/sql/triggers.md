@@ -2,6 +2,7 @@
 title: Triggers
 ---
 
+
 # Triggers
 
 ## What is a Trigger?

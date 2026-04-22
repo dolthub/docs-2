@@ -2,6 +2,7 @@
 title: "Installation"
 ---
 
+
 # Installation
 
 Download DoltgreSQL from the [releases

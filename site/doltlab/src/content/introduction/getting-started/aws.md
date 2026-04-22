@@ -2,6 +2,7 @@
 title: "Get a Ubuntu EC2 Instance"
 ---
 
+
 # Get a Ubuntu EC2 Instance
 
 To get your DoltLab ready host on AWS:

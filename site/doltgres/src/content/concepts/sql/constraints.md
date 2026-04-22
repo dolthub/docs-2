@@ -2,6 +2,7 @@
 title: Constraints
 ---
 
+
 # Constraints
 
 ## What is a Constraint?

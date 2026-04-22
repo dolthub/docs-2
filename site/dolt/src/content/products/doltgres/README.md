@@ -2,7 +2,7 @@
 title: "Overview"
 ---
 
-# DoltgreSQL
+# Overview
 
 ![](../../.gitbook/assets/doltgres-preview.png)
 

@@ -2,6 +2,7 @@
 title: Access Management
 ---
 
+
 # Access Management
 
 Access management in Doltgres is handled similarly to how it is handled in Postgres.  Create users,

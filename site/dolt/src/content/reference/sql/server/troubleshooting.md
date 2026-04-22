@@ -2,6 +2,8 @@
 title: Troubleshooting
 ---
 
+# Troubleshooting
+
 Debugging a running Dolt server can be challenging. This document covers the debugging basics and how to diagnose what is happening from common symptoms.
 
 # Basics

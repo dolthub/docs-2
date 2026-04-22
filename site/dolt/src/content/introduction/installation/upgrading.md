@@ -2,6 +2,7 @@
 title: Upgrading
 ---
 
+
 # Upgrading
 
 Dolt is constantly evolving. We release a new Dolt approximately once a week. 

@@ -2,7 +2,7 @@
 title: "Hosted Dolt: Single Sign-On"
 ---
 
-# SSO
+# Hosted Dolt: Single Sign-On
 
 ## What is SAML?
 

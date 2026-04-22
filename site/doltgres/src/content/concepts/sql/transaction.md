@@ -2,6 +2,7 @@
 title: Transactions
 ---
 
+
 # Transactions
 
 ## What is a Transaction?

@@ -2,6 +2,7 @@
 title: Views
 ---
 
+
 # Views
 
 ## What is a View?

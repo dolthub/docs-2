@@ -55,6 +55,16 @@ find "$SITE_CONTENT" -name "*.md" | while read -r file; do
     cat "$file" >> "$tmpfile"
     mv "$tmpfile" "$file"
   fi
+
+  # Ensure every page has an h1 heading from its frontmatter title.
+  # Only inject if there is NO h1 anywhere in the body after frontmatter.
+  title=$(awk '/^---$/{c++; next} c==1 && /^title:/{sub(/^title: */, ""); gsub(/^["'"'"']|["'"'"']$/, ""); print; exit}' "$file")
+  if [ -n "$title" ]; then
+    has_any_h1=$(awk '/^---$/{c++; next} c>=2 && /^# /{found=1; exit} END{print found+0}' "$file")
+    if [ "$has_any_h1" -eq 0 ]; then
+      awk -v h="# $title" 'BEGIN{c=0} /^---$/{c++; if(c==2){print; print ""; print h; next}} {print}' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+    fi
+  fi
 done
 
 echo "Converted GitBook syntax"

@@ -2,6 +2,7 @@
 title: Dolt SQL Procedures
 ---
 
+
 # Table of Contents
 
 - [Dolt SQL Procedures](#dolt-sql-procedures)

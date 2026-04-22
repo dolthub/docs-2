@@ -2,6 +2,8 @@
 title: "Expressions, Functions, and Operators"
 ---
 
+# Expressions, Functions, and Operators
+
 # Expressions, Functions, Operators
 
 ## Statements

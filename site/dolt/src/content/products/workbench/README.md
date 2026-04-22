@@ -2,7 +2,7 @@
 title: "Overview"
 ---
 
-# Dolt Workbench
+# Overview
 
 ![](../../.gitbook/assets/dolt-workbench-preview.png)
 

@@ -2,6 +2,7 @@
 title: Replication
 ---
 
+
 # Replication
 
 Doltgres can [replicate data](/concepts/rdbms/replication) between two or more

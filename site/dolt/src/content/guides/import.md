@@ -2,6 +2,8 @@
 title: Importing Data
 ---
 
+# Importing Data
+
 # Get data into Dolt
 
 You can load the following data formats into Dolt:

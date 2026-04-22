@@ -2,13 +2,14 @@
 title: "What is DoltHub"
 ---
 
+
 ![](../../.gitbook/assets/dolthub-preview.png)
 
 [DoltHub](https://www.dolthub.com) is a place to share Dolt databases. We host public data for free! DoltHub adds a modern, secure, always on database management web GUI to the Dolt ecosystem. Edit your database on the web, have another person review it via a pull request, and have the production database pull it to deploy.
 
 # What is DoltHub
 
-DoltHub is GitHub for Dolt. DoltHub acts as a [Dolt remote](/concepts/dolt/git/remotes) you can [clone, push, pull and fetch]../../cli-reference/cli) from. DoltHub adds [permissions](/concepts/dolthub/permissions), [pull requests](/concepts/dolthub/prs), [issues](/concepts/dolthub/issues), and [forks](/concepts/dolthub/forks) to the Dolt ecosystem. Additionally, DoltHub has a modern SQL workbench built in so you can explore and change databases on the web.
+DoltHub is GitHub for Dolt. DoltHub acts as a [Dolt remote](/concepts/dolt/git/remotes) you can [clone, push, pull and fetch](/cli-reference/cli) from. DoltHub adds [permissions](/concepts/dolthub/permissions), [pull requests](/concepts/dolthub/prs), [issues](/concepts/dolthub/issues), and [forks](/concepts/dolthub/forks) to the Dolt ecosystem. Additionally, DoltHub has a modern SQL workbench built in so you can explore and change databases on the web.
 
 # Getting Started
 

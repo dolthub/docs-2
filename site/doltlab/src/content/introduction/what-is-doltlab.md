@@ -2,6 +2,7 @@
 title: What is DoltLab?
 ---
 
+
 # What is DoltLab?
 
 ![](../.gitbook/assets/doltlab-preview.png)

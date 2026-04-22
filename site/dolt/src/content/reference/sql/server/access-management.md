@@ -2,6 +2,7 @@
 title: Access Management
 ---
 
+
 # Access Management
 
 Access management in Dolt is handled similarly to how it is handled in MySQL.

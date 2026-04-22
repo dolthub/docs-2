@@ -2,6 +2,7 @@
 title: "Basic Administrator Guide"
 ---
 
+
 # Basic Administrator Guide
 
 This guide will cover how to perform common DoltLab administrator configuration and tasks for the latest versions of DoltLab, >= `v2.1.0`. These versions use the [installer](/reference/installer) binary included in DoltLab's `.zip` file. For instructions on running DoltLab in Enterprise mode and configuring exclusive Enterprise features, see the [Enterprise Guide](/guides/enterprise). If you're using an older version of DoltLab that does not include the [installer](/reference/installer), please see the [pre-installer Admin guide](/older/pre-installer-administrator-guide).

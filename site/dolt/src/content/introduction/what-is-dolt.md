@@ -2,6 +2,7 @@
 title: What is Dolt?
 ---
 
+
 # What is Dolt?
 
 ![](../.gitbook/assets/dolt-preview.png)
@@ -12,15 +13,15 @@ All the commands you know from Git work exactly the same in Dolt. Git versions f
 
 Dolt is a [version controlled database](https://www.dolthub.com/blog/2021-09-17-database-version-control/). Dolt is [Git for Data](https://www.dolthub.com/blog/2020-03-06-so-you-want-git-for-data/). Dolt is a [Versioned MySQL Replica](https://www.dolthub.com/blog/2023-02-17-binlog-replication-preview/).
 
-[https://www.youtube.com/embed/H2iZy0Cme10?si=iMjkiGIatgZnGE_3](https://www.youtube.com/embed/H2iZy0Cme10?si=iMjkiGIatgZnGE_3)
+<iframe src="https://www.youtube.com/embed/H2iZy0Cme10?si=iMjkiGIatgZnGE_3" class="youtube-embed" allowfullscreen></iframe>
 
 ## Version Controlled Database
 
-Dolt is a [version controlled SQL database](https://www.dolthub.com/blog/2021-09-17-database-version-control/). Connect to Dolt just like any MySQL database to run SQL queries. Use Dolt [system tables]../sql-reference/version-control/dolt-system-tables), [functions]../sql-reference/version-control/dolt-sql-functions), or [procedures]../sql-reference/version-control/dolt-sql-procedures) to access version control information and features.
+Dolt is a [version controlled SQL database](https://www.dolthub.com/blog/2021-09-17-database-version-control/). Connect to Dolt just like any MySQL database to run SQL queries. Use Dolt [system tables](/sql-reference/version-control/dolt-system-tables), [functions](/sql-reference/version-control/dolt-sql-functions), or [procedures](/sql-reference/version-control/dolt-sql-procedures) to access version control information and features.
 
 ## Git for Data
 
-Dolt is [Git for data](https://www.dolthub.com/blog/2020-03-06-so-you-want-git-for-data/). [Dolt matches the Git CLI exactly]../cli-reference/cli). When you would have run `git add`, you run `dolt add`. When you would have run `git commit`, you run `dolt commit`.
+Dolt is [Git for data](https://www.dolthub.com/blog/2020-03-06-so-you-want-git-for-data/). [Dolt matches the Git CLI exactly](/cli-reference/cli). When you would have run `git add`, you run `dolt add`. When you would have run `git commit`, you run `dolt commit`.
 
 ## Versioned MySQL Replica
 

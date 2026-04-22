@@ -2,6 +2,7 @@
 title: Configuration
 ---
 
+
 # Configuration
 
 A Doltgres SQL server can be configured at server start time, or by

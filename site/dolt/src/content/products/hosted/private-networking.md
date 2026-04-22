@@ -2,6 +2,7 @@
 title: "Private Networking"
 ---
 
+
 # Private Networking
 
 When you create a Hosted Dolt deployment, you get a server setup and configured to accept connections from anywhere.

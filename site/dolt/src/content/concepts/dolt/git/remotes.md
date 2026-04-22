@@ -2,13 +2,14 @@
 title: Remotes
 ---
 
+
 # Remotes
 
 ## What is a remote?
 
 A remote is a Dolt database in another location, usually on a different, network accessible host. A Dolt remote is the coordination mechanism between many local copies of Dolt. A Dolt database can have multiple remotes.
 
-DoltHub is a hosted Dolt remote with an additional discovery and management user interface. [DoltLab](https://www.dolthub.com/blog/2022-01-14-announcing-doltlab/) is a self-hosted version of DoltHub. [Dolt also supports filesystem, SSH, HTTPS, AWS, and GCS remotes]../../../sql-reference/version-control/remotes).
+DoltHub is a hosted Dolt remote with an additional discovery and management user interface. [DoltLab](https://www.dolthub.com/blog/2022-01-14-announcing-doltlab/) is a self-hosted version of DoltHub. [Dolt also supports filesystem, SSH, HTTPS, AWS, and GCS remotes](/sql-reference/version-control/remotes).
 
 You configure a storage location as a remote. Once configured, you can perform Dolt's distributed operations using that remote: clone, fetch, push, and pull. 
 
@@ -38,7 +39,7 @@ Now, Dolt also supports using **Git repositories as Dolt remotes**. This lets yo
 
 This is separate from filesystem remotes: you still can’t use an existing Dolt working directory as a `file://` remote. Use either a dedicated filesystem-remote directory, or a Git repo ending in `.git` for Git remotes.
 
-For example, you can use GitHub via SSH (`git@github.com:ORG/REPO.git`) or HTTPS (`https://github.com/ORG/REPO.git`). For detailed examples, see [Using remotes → Git remotes]../../../sql-reference/version-control/remotes#git-remotes).
+For example, you can use GitHub via SSH (`git@github.com:ORG/REPO.git`) or HTTPS (`https://github.com/ORG/REPO.git`). For detailed examples, see [Using remotes → Git remotes](/sql-reference/version-control/remotes#git-remotes).
 
 ## Example
 

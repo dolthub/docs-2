@@ -2,6 +2,7 @@
 title: Backups
 ---
 
+
 # Backups
 
 There are several ways to safely backup Doltgres databases. If you are using [Hosted

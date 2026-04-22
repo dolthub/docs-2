@@ -2,6 +2,7 @@
 title: Types
 ---
 
+
 # Types
 
 ## What are Types?
@@ -20,7 +21,7 @@ When querying tables, the type of the column defines which functions can be used
 
 ## Difference between MySQL Types and Dolt Types
 
-Dolt supports [all MYSQL types]../../../sql-reference/sql-support/data-description#data-types).
+Dolt supports [all MYSQL types](/sql-reference/sql-support/data-description#data-types).
 
 ## Interaction with Dolt Version Control
 
