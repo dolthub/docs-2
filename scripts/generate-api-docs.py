@@ -7,14 +7,12 @@ and generates markdown with inline API endpoint documentation.
 
 import json
 import re
-import sys
 import os
 
 DOCS_ROOT = "/Users/taylor/go/src/github.com/dolthub/docs/packages/dolt/content"
 SITE_CONTENT = "/Users/taylor/go/src/github.com/dolthub/docs-2/site/dolt/src/content"
 
 API_DIR = os.path.join(DOCS_ROOT, "products/dolthub/api")
-ASSETS_DIR = os.path.join(DOCS_ROOT, ".gitbook/assets/dolthub-api")
 
 
 def load_spec(spec_path: str) -> dict:
@@ -23,54 +21,17 @@ def load_spec(spec_path: str) -> dict:
         return json.load(f)
 
 
-def render_param(param: dict) -> str:
-    name = param.get("name", "")
-    location = param.get("in", "")
-    desc = param.get("description", "")
-    required = param.get("required", False)
-    schema = param.get("schema", {})
-    ptype = schema.get("type", "")
-    example = schema.get("example", "")
-    req_label = "Required" if required else "Optional"
-    parts = [f"**`{name}`** ({location}, {ptype}, {req_label})"]
-    if desc:
-        parts.append(f"  {desc}")
-    if example:
-        parts.append(f"  Example: `{example}`")
-    return "\n".join(parts)
-
-
-def render_request_body(body: dict) -> str:
-    lines = ["", "**Request Body**", ""]
-    content = body.get("content", {})
-    for content_type, schema_info in content.items():
-        lines.append(f"Content-Type: `{content_type}`")
-        schema = schema_info.get("schema", {})
-        props = schema.get("properties", {})
-        required_fields = schema.get("required", [])
-        if props:
-            lines.append("")
-            for pname, pinfo in props.items():
-                req = "Required" if pname in required_fields else "Optional"
-                ptype = pinfo.get("type", "")
-                desc = pinfo.get("description", "")
-                line = f"- **`{pname}`** ({ptype}, {req})"
-                if desc:
-                    line += f" — {desc}"
-                lines.append(line)
-    return "\n".join(lines)
-
-
-def render_responses(responses: dict) -> str:
-    lines = ["", "**Responses**", ""]
-    for code, info in responses.items():
-        desc = info.get("description", "")
-        lines.append(f"- **{code}**: {desc}")
-    return "\n".join(lines)
+METHOD_COLORS = {
+    "get": "#29E3C1",
+    "post": "#6DB0FC",
+    "put": "#F0A35C",
+    "patch": "#F0A35C",
+    "delete": "#E35D5D",
+}
 
 
 def render_endpoint(spec: dict, path: str, method: str) -> str:
-    """Render a single API endpoint as markdown."""
+    """Render a single API endpoint as an HTML block."""
     path_obj = spec.get("paths", {}).get(path, {})
     op = path_obj.get(method, {})
     if not op:
@@ -85,36 +46,75 @@ def render_endpoint(spec: dict, path: str, method: str) -> str:
     servers = spec.get("servers", [])
     base_url = servers[0]["url"] if servers else ""
 
-    lines = []
-    lines.append(f"#### `{method.upper()}` {path}")
-    lines.append("")
-    if summary:
-        lines.append(f"{summary}")
-        lines.append("")
-    if description:
-        lines.append(f"{description}")
-        lines.append("")
+    color = METHOD_COLORS.get(method, "#999")
+    method_upper = method.upper()
 
-    lines.append(f"**URL**: `{base_url}{path}`")
-    lines.append("")
+    lines = []
+    lines.append(f'<div class="api-endpoint">')
+    lines.append(f'<div class="api-endpoint-header">')
+    lines.append(f'<span class="api-method" style="background:{color}">{method_upper}</span>')
+    lines.append(f'<code class="api-path">{path}</code>')
+    lines.append(f'</div>')
+
+    if summary:
+        lines.append(f'<p class="api-summary">{summary}</p>')
+    if description and description != summary:
+        lines.append(f'<p class="api-description">{description}</p>')
+
+    lines.append(f'<div class="api-url"><strong>URL</strong> <code>{base_url}{path}</code></div>')
 
     if params:
-        lines.append("**Parameters**")
-        lines.append("")
+        lines.append('<div class="api-section">')
+        lines.append('<h5>Parameters</h5>')
+        lines.append('<table class="api-params">')
+        lines.append('<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>')
+        lines.append('<tbody>')
         for p in params:
-            lines.append(render_param(p))
-            lines.append("")
+            name = p.get("name", "")
+            location = p.get("in", "")
+            schema = p.get("schema", {})
+            ptype = schema.get("type", "")
+            required = "Yes" if p.get("required", False) else "No"
+            desc = p.get("description", "")
+            example = schema.get("example", "")
+            if example:
+                desc += f' <em>Example: <code>{example}</code></em>'
+            lines.append(f'<tr><td><code>{name}</code></td><td>{location}</td><td>{ptype}</td><td>{required}</td><td>{desc}</td></tr>')
+        lines.append('</tbody></table>')
+        lines.append('</div>')
 
     if request_body:
-        lines.append(render_request_body(request_body))
-        lines.append("")
+        lines.append('<div class="api-section">')
+        lines.append('<h5>Request Body</h5>')
+        content = request_body.get("content", {})
+        for content_type, schema_info in content.items():
+            lines.append(f'<p>Content-Type: <code>{content_type}</code></p>')
+            schema = schema_info.get("schema", {})
+            props = schema.get("properties", {})
+            required_fields = schema.get("required", [])
+            if props:
+                lines.append('<table class="api-params">')
+                lines.append('<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>')
+                lines.append('<tbody>')
+                for pname, pinfo in props.items():
+                    req = "Yes" if pname in required_fields else "No"
+                    ptype = pinfo.get("type", "")
+                    desc = pinfo.get("description", "")
+                    lines.append(f'<tr><td><code>{pname}</code></td><td>{ptype}</td><td>{req}</td><td>{desc}</td></tr>')
+                lines.append('</tbody></table>')
+        lines.append('</div>')
 
     if responses:
-        lines.append(render_responses(responses))
-        lines.append("")
+        lines.append('<div class="api-section">')
+        lines.append('<h5>Responses</h5>')
+        for code, info in responses.items():
+            desc = info.get("description", "")
+            code_class = "api-status-success" if str(code).startswith("2") else "api-status-error"
+            lines.append(f'<div class="api-response"><span class="{code_class}">{code}</span> {desc}</div>')
+        lines.append('</div>')
 
-    lines.append("---")
-    lines.append("")
+    lines.append('</div>')
+    lines.append('')
     return "\n".join(lines)
 
 
@@ -123,7 +123,6 @@ def process_file(src_path: str, dest_path: str):
     with open(src_path) as f:
         content = f.read()
 
-    # Match {% swagger src="..." path="..." method="..." %}...{% endswagger %}
     pattern = r'\{% swagger src="([^"]+)" path="([^"]+)" method="([^"]+)" %\}\n.*?\n\{% endswagger %\}'
 
     def replace_swagger(m):
@@ -152,7 +151,6 @@ def main():
 
         result = process_file(src, dest)
 
-        # Apply the same transformations as the import script:
         # Strip .md from links
         result = re.sub(r'/README\.md\)', '/)', result)
         result = re.sub(r'/README\.md#', '/#', result)
@@ -161,7 +159,6 @@ def main():
 
         # Add frontmatter if missing
         if not result.startswith("---"):
-            # Extract title from first heading
             title_match = re.search(r'^# (.+)$', result, re.MULTILINE)
             title = title_match.group(1) if title_match else filename.replace(".md", "")
             result = f'---\ntitle: "{title}"\n---\n\n{result}'
@@ -172,7 +169,11 @@ def main():
             title_match = re.search(r'^title:\s*"?(.+?)"?\s*$', result, re.MULTILINE)
             if title_match:
                 title = title_match.group(1)
-                result = re.sub(r'(^---\n.*?^---\n)', rf'\1\n# {title}\n', result, count=1, flags=re.MULTILINE | re.DOTALL)
+                result = re.sub(
+                    r'(^---\n.*?^---\n)',
+                    rf'\1\n# {title}\n',
+                    result, count=1, flags=re.MULTILINE | re.DOTALL
+                )
 
         # Convert GitBook hints
         result = result.replace('{% hint style="info" %}', '> **Note**')

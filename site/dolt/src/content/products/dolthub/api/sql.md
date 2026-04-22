@@ -14,33 +14,29 @@ Please make sure to send your requests to `https://www.dolthub.com` instead of `
 
 ### Using the default branch
 
-#### `GET` /{owner}/{database}
-
-SQL read queries on the default branch
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `ip-to-country`
-
-**`q`** (q, string, Optional)
-  The SQL query to execute.
-  Example: `SHOW TABLES`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}</code>
+</div>
+<p class="api-summary">SQL read queries on the default branch</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>ip-to-country</code></em></td></tr>
+<tr><td><code>q</code></td><td>q</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code>SHOW TABLES</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 We will use an example DoltHub database, [dolthub/ip-to-country](https://www.dolthub.com/repositories/dolthub/ip-to-country/) and the Python `requests` library to explore it in the Python console:
@@ -69,37 +65,30 @@ This shows our database metadata as a dictionary:
 
 ### Specifying a ref
 
-#### `GET` /{owner}/{database}/{ref}
-
-SQL read queries on a specified ref
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/{ref}`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `ip-to-country`
-
-**`ref`** (path, string, Required)
-  The database ref to execute the query against.
-  Example: `newbranch`
-
-**`q`** (q, string, Optional)
-  The SQL query to execute.
-  Example: `SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/{ref}</code>
+</div>
+<p class="api-summary">SQL read queries on a specified ref</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/{ref}</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>ip-to-country</code></em></td></tr>
+<tr><td><code>ref</code></td><td>path</td><td>string</td><td>Yes</td><td>The database ref to execute the query against. <em>Example: <code>newbranch</code></em></td></tr>
+<tr><td><code>q</code></td><td>q</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code>SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 We can now execute a query:
@@ -159,50 +148,41 @@ We can use our [SHAQ database](https://www.dolthub.com/repositories/dolthub/SHAQ
 
 ### 1. Run query
 
-#### `POST` /{owner}/{database}/write/{from_branch}/{to_branch}
-
-SQL write query and merge branches
-
-Executes SQL write against to_branch (will be created from from_branch if it doesn't exist). If no query is provided, will merge to_branch into from_branch.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/write/{from_branch}/{to_branch}`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `SHAQ`
-
-**`from_branch`** (path, string, Required)
-  The base branch.
-  Example: `main`
-
-**`to_branch`** (path, string, Required)
-  The branch to write to. Will be created from the from_branch if it doesn't exist.
-  Example: `feature`
-
-**`q`** (query, string, Optional)
-  The SQL query to execute. Use the request body instead for larger queries.
-  Example: `UPDATE player_season_stat_totals SET player_id=714287 WHERE player_id=15404617`
-
-
-**Request Body**
-
-Content-Type: `application/json`
-
-- **`query`** (string, Optional) — SQL write query to execute. Can be used in place of the query parameter for larger queries.
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/{owner}/{database}/write/{from_branch}/{to_branch}</code>
+</div>
+<p class="api-summary">SQL write query and merge branches</p>
+<p class="api-description">Executes SQL write against to_branch (will be created from from_branch if it doesn't exist). If no query is provided, will merge to_branch into from_branch.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/write/{from_branch}/{to_branch}</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>SHAQ</code></em></td></tr>
+<tr><td><code>from_branch</code></td><td>path</td><td>string</td><td>Yes</td><td>The base branch. <em>Example: <code>main</code></em></td></tr>
+<tr><td><code>to_branch</code></td><td>path</td><td>string</td><td>Yes</td><td>The branch to write to. Will be created from the from_branch if it doesn't exist. <em>Example: <code>feature</code></em></td></tr>
+<tr><td><code>q</code></td><td>query</td><td>string</td><td>No</td><td>The SQL query to execute. Use the request body instead for larger queries. <em>Example: <code>UPDATE player_season_stat_totals SET player_id=714287 WHERE player_id=15404617</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>query</code></td><td>string</td><td>No</td><td>SQL write query to execute. Can be used in place of the query parameter for larger queries.</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 First, we want to hit the write endpoint with our `UPDATE` query. This will start an asynchronous operation.
@@ -245,35 +225,30 @@ The yielded JSON results include an `operation_name`.
 
 ### 2. Poll operation
 
-#### `GET` /{owner}/{database}/write
-
-Check write query operation status
-
-Poll the operation to check if the SQL write operation is done
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/write`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `SHAQ`
-
-**`operationName`** (query, string, Required)
-  The name of the operation
-  Example: `operations/72abb56b-d478-43ae-9a2d-c9602184c7ab`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/write</code>
+</div>
+<p class="api-summary">Check write query operation status</p>
+<p class="api-description">Poll the operation to check if the SQL write operation is done</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/write</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>SHAQ</code></em></td></tr>
+<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The name of the operation <em>Example: <code>operations/72abb56b-d478-43ae-9a2d-c9602184c7ab</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 `operation_name` can be used to poll the second endpoint to check if the operation is done.

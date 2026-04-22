@@ -22,31 +22,32 @@ headers = {
 }
 ```
 
-#### `POST` /database
-
-Create a new Dolt database
-
-This API allows you to create a new Dolt database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/database`
-
-
-**Request Body**
-
-Content-Type: `application/json`
-
-- **`description`** (string, Optional) — A description of the database.
-- **`ownerName`** (string, Optional) — The name of the owner of the database.
-- **`repoName`** (string, Optional) — The name of the repository for the database.
-- **`visibility`** (string, Optional) — The visibility of the database (public or private).
-
-
-**Responses**
-
-- **200**: Database created successfully.
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/database</code>
+</div>
+<p class="api-summary">Create a new Dolt database</p>
+<p class="api-description">This API allows you to create a new Dolt database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/database</code></div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>description</code></td><td>string</td><td>No</td><td>A description of the database.</td></tr>
+<tr><td><code>ownerName</code></td><td>string</td><td>No</td><td>The name of the owner of the database.</td></tr>
+<tr><td><code>repoName</code></td><td>string</td><td>No</td><td>The name of the repository for the database.</td></tr>
+<tr><td><code>visibility</code></td><td>string</td><td>No</td><td>The visibility of the database (public or private).</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Database created successfully.</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Fork database
@@ -65,55 +66,57 @@ headers = {
 }
 ```
 
-#### `POST` /fork
-
-Fork an existing Dolt database
-
-This API allows you to fork an existing Dolt database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/fork`
-
-
-**Request Body**
-
-Content-Type: `application/json`
-
-- **`parentOwnerName`** (string, Optional) — The name of the owner of the parent database.
-- **`parentDatabaseName`** (string, Optional) — The name of the parent database.
-- **`ownerName`** (string, Optional) — The name of the owner to fork to.
-
-
-**Responses**
-
-- **200**: Success.
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/fork</code>
+</div>
+<p class="api-summary">Fork an existing Dolt database</p>
+<p class="api-description">This API allows you to fork an existing Dolt database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/fork</code></div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>parentOwnerName</code></td><td>string</td><td>No</td><td>The name of the owner of the parent database.</td></tr>
+<tr><td><code>parentDatabaseName</code></td><td>string</td><td>No</td><td>The name of the parent database.</td></tr>
+<tr><td><code>ownerName</code></td><td>string</td><td>No</td><td>The name of the owner to fork to.</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success.</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 Then use `GET` to poll the operation to check if the fork operation is done.
 
-#### `GET` /fork
-
-Check fork operation status
-
-Poll the operation to check if the fork operation is done
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/fork`
-
-**Parameters**
-
-**`operationName`** (query, string, Required)
-  The operation name to check
-  Example: `operations/b09a9221-9dcb-4a15-9ca8-a64656946f12`
-
-
-**Responses**
-
-- **200**: The status of the fork operation
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/fork</code>
+</div>
+<p class="api-summary">Check fork operation status</p>
+<p class="api-description">Poll the operation to check if the fork operation is done</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/fork</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check <em>Example: <code>operations/b09a9221-9dcb-4a15-9ca8-a64656946f12</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> The status of the fork operation</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## List forks
@@ -126,31 +129,29 @@ headers = {
 }
 ```
 
-#### `GET` /{owner}/{database}/forks
-
-List Forks
-
-This API endpoint allows you to list all forks within the fork network of a database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/forks`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the owner of the database.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/forks</code>
+</div>
+<p class="api-summary">List Forks</p>
+<p class="api-description">This API endpoint allows you to list all forks within the fork network of a database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/forks</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Create pull request
@@ -165,45 +166,45 @@ headers = {
 }
 ```
 
-#### `POST` /{owner}/{database}/pulls
-
-Create a new pull request
-
-This API allows you to create a new pull request.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the owner of the database.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-
-**Request Body**
-
-Content-Type: `application/json`
-
-- **`title`** (string, Optional) — The title of the pull request.
-- **`description`** (string, Optional) — The description of the pull request.
-- **`fromBranchOwnerName`** (string, Optional) — The name of the owner of the source branch.
-- **`fromBranchRepoName`** (string, Optional) — The name of the database containing the source branch.
-- **`fromBranchName`** (string, Optional) — The name of the source branch.
-- **`toBranchOwnerName`** (string, Optional) — The name of the owner of the destination branch.
-- **`toBranchRepoName`** (string, Optional) — The name of the database containing the destination branch.
-- **`toBranchName`** (string, Optional) — The name of the destination branch.
-
-
-**Responses**
-
-- **200**: Pull request created successfully.
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/{owner}/{database}/pulls</code>
+</div>
+<p class="api-summary">Create a new pull request</p>
+<p class="api-description">This API allows you to create a new pull request.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>title</code></td><td>string</td><td>No</td><td>The title of the pull request.</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>No</td><td>The description of the pull request.</td></tr>
+<tr><td><code>fromBranchOwnerName</code></td><td>string</td><td>No</td><td>The name of the owner of the source branch.</td></tr>
+<tr><td><code>fromBranchRepoName</code></td><td>string</td><td>No</td><td>The name of the database containing the source branch.</td></tr>
+<tr><td><code>fromBranchName</code></td><td>string</td><td>No</td><td>The name of the source branch.</td></tr>
+<tr><td><code>toBranchOwnerName</code></td><td>string</td><td>No</td><td>The name of the owner of the destination branch.</td></tr>
+<tr><td><code>toBranchRepoName</code></td><td>string</td><td>No</td><td>The name of the database containing the destination branch.</td></tr>
+<tr><td><code>toBranchName</code></td><td>string</td><td>No</td><td>The name of the destination branch.</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Pull request created successfully.</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Get pull request details
@@ -218,35 +219,30 @@ headers = {
 }
 ```
 
-#### `GET` /{owner}/{database}/pulls/{pull_id}
-
-Get pull request by ID
-
-Get information about a specific pull request.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-**`pull_id`** (path, string, Required)
-  ID of the pull request
-  Example: `1`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/pulls/{pull_id}</code>
+</div>
+<p class="api-summary">Get pull request by ID</p>
+<p class="api-description">Get information about a specific pull request.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>ID of the pull request <em>Example: <code>1</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Update a pull request
@@ -261,44 +257,41 @@ headers = {
 }
 ```
 
-#### `PATCH` /{owner}/{database}/pulls/{pull_id}
-
-Update Pull Request
-
-Updates a pull request by ID, including its title, description, and sets its state to be 'closed'.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-**`pull_id`** (path, string, Required)
-  ID of the pull request to update.
-  Example: `1`
-
-
-**Request Body**
-
-Content-Type: `application/json`
-
-- **`title`** (string, Optional) — The updated title of the pull request.
-- **`description`** (string, Optional) — The updated description of the pull request.
-- **`state`** (string, Optional) — The updated state of the pull request (can only update to 'closed')
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#F0A35C">PATCH</span>
+<code class="api-path">/{owner}/{database}/pulls/{pull_id}</code>
+</div>
+<p class="api-summary">Update Pull Request</p>
+<p class="api-description">Updates a pull request by ID, including its title, description, and sets its state to be 'closed'.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>ID of the pull request to update. <em>Example: <code>1</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>title</code></td><td>string</td><td>No</td><td>The updated title of the pull request.</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>No</td><td>The updated description of the pull request.</td></tr>
+<tr><td><code>state</code></td><td>string</td><td>No</td><td>The updated state of the pull request (can only update to 'closed')</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## List pull requests
@@ -313,47 +306,33 @@ headers = {
 }
 ```
 
-#### `GET` /{owner}/{database}/pulls
-
-List pull requests of a database
-
-List pull requests
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-**`pageToken`** (query, string, Optional)
-  The pageToken to get the next page of results
-  Example: `AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw`
-
-**`filterByState`** (query, string, Optional)
-  Filter pulls by state, can be Open, Closed, or Merged.
-  Example: `Open`
-
-**`filterByReviewStatus`** (query, string, Optional)
-  Filter pulls by review status, can be Approved, AssignedReviewer, Rejected or Reviewed
-  Example: `Approved`
-
-**`query`** (query, string, Optional)
-  Search by pull request title or author name.
-  Example: `test`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/pulls</code>
+</div>
+<p class="api-summary">List pull requests of a database</p>
+<p class="api-description">List pull requests</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>pageToken</code></td><td>query</td><td>string</td><td>No</td><td>The pageToken to get the next page of results <em>Example: <code>AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw</code></em></td></tr>
+<tr><td><code>filterByState</code></td><td>query</td><td>string</td><td>No</td><td>Filter pulls by state, can be Open, Closed, or Merged. <em>Example: <code>Open</code></em></td></tr>
+<tr><td><code>filterByReviewStatus</code></td><td>query</td><td>string</td><td>No</td><td>Filter pulls by review status, can be Approved, AssignedReviewer, Rejected or Reviewed <em>Example: <code>Approved</code></em></td></tr>
+<tr><td><code>query</code></td><td>query</td><td>string</td><td>No</td><td>Search by pull request title or author name. <em>Example: <code>test</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Create a pull request comment&#x20;
@@ -368,40 +347,38 @@ headers = {
 }
 ```
 
-#### `POST` /{owner}/{database}/pulls/{pull_id}/comments
-
-Add comment to pull request
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}/comments`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  Owner of the database
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  database name
-  Example: `museum-collections`
-
-**`pull_id`** (path, string, Required)
-  Pull request ID
-  Example: `66`
-
-
-**Request Body**
-
-Content-Type: `application/json`
-
-- **`comment`** (string, Required) — Comment to be added to the pull request
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/{owner}/{database}/pulls/{pull_id}/comments</code>
+</div>
+<p class="api-summary">Add comment to pull request</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}/comments</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>Owner of the database <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>database name <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>Pull request ID <em>Example: <code>66</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>comment</code></td><td>string</td><td>Yes</td><td>Comment to be added to the pull request</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Merge pull request
@@ -420,72 +397,59 @@ headers = {
 }
 ```
 
-#### `POST` /{owner}/{database}/pulls/{pull_id}/merge
-
-Merge a pull request
-
-This endpoint merges a pull request into the destination branch.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}/merge`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-**`pull_id`** (path, string, Required)
-  The ID of the pull request to merge.
-  Example: `66`
-
-
-**Responses**
-
-- **200**: The pull request was merged successfully.
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/{owner}/{database}/pulls/{pull_id}/merge</code>
+</div>
+<p class="api-summary">Merge a pull request</p>
+<p class="api-description">This endpoint merges a pull request into the destination branch.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}/merge</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>The ID of the pull request to merge. <em>Example: <code>66</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> The pull request was merged successfully.</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 Then use `GET` to poll the operation to check if the merge operation is done.
 
-#### `GET` /{owner}/{database}/pulls/{pull_id}/merge
-
-Check merge operation status
-
-Poll the operation to check if the merge operation is done
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}/merge`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The owner of the database
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The database name
-  Example: `museum-collections`
-
-**`pull_id`** (path, string, Required)
-  The ID of the pull request
-  Example: `66`
-
-**`operationName`** (query, string, Required)
-  The operation name to check
-  Example: `repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12`
-
-
-**Responses**
-
-- **200**: The status of the merge operation
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/pulls/{pull_id}/merge</code>
+</div>
+<p class="api-summary">Check merge operation status</p>
+<p class="api-description">Poll the operation to check if the merge operation is done</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls/{pull_id}/merge</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The owner of the database <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The database name <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>The ID of the pull request <em>Example: <code>66</code></em></td></tr>
+<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check <em>Example: <code>repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> The status of the merge operation</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Upload a file
@@ -506,76 +470,68 @@ headers = {
 
 To upload the file, include two fields in the request body, `file` and `params`, the `file` should be type of `Blob`, and `params` should be a JSON object.
 
-#### `POST` /{owner}/{database}/upload
-
-Upload a file to a DoltHub database
-
-This endpoint allows you to upload a file to DoltHub to create, update, overwrite, or replace a table.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/upload`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the database owner.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-
-**Request Body**
-
-Content-Type: `multipart/form-data`
-
-- **`file`** (string, Optional) — The file to be uploaded.
-- **`params`** (object, Optional)
-
-
-**Responses**
-
-- **200**: Pull request created successfully.
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/{owner}/{database}/upload</code>
+</div>
+<p class="api-summary">Upload a file to a DoltHub database</p>
+<p class="api-description">This endpoint allows you to upload a file to DoltHub to create, update, overwrite, or replace a table.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/upload</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>multipart/form-data</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>file</code></td><td>string</td><td>No</td><td>The file to be uploaded.</td></tr>
+<tr><td><code>params</code></td><td>object</td><td>No</td><td></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Pull request created successfully.</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 Then use `GET` to poll the operation to check if the import operation is done.
 
-#### `GET` /{owner}/{database}/upload
-
-Check import operation status
-
-Poll the operation to check if the file import operation is done
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/upload`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The owner of the database
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The database name
-  Example: `museum-collections`
-
-**`branch`** (query, string, Required)
-  The name of the branch to upload the file to.
-  Example: `main`
-
-**`operationName`** (query, string, Required)
-  The operation name to check
-  Example: `repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12`
-
-
-**Responses**
-
-- **200**: The status of the file import operation
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/upload</code>
+</div>
+<p class="api-summary">Check import operation status</p>
+<p class="api-description">Poll the operation to check if the file import operation is done</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/upload</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The owner of the database <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The database name <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>branch</code></td><td>query</td><td>string</td><td>Yes</td><td>The name of the branch to upload the file to. <em>Example: <code>main</code></em></td></tr>
+<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check <em>Example: <code>repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> The status of the file import operation</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 Here is an example of uploading a CSV file to create a table through this api endpoint in Javascript, you can reference the [`dolt table import`](https://docs.dolthub.com/cli-reference/cli#dolt-table-import) documentation for additional information.:
@@ -669,40 +625,40 @@ headers = {
 }
 ```
 
-#### `POST` /{owner}/{database}/branches
-
-Create Branch
-
-This API endpoint allows you to create a new branch in your database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/branches`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the owner of the database.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-
-**Request Body**
-
-Content-Type: `application/json`
-
-- **`revisionType`** (string, Required) — The type of revision, can be either 'branch', 'ref' or 'commit'.
-- **`revisionName`** (string, Required) — The name of revision. If revisionType is 'branch', this is the name of the base branch. If revisionType is 'commit', this is the commit hash.
-- **`newBranchName`** (string, Required) — The name of the new branch.
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/{owner}/{database}/branches</code>
+</div>
+<p class="api-summary">Create Branch</p>
+<p class="api-description">This API endpoint allows you to create a new branch in your database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/branches</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>revisionType</code></td><td>string</td><td>Yes</td><td>The type of revision, can be either 'branch', 'ref' or 'commit'.</td></tr>
+<tr><td><code>revisionName</code></td><td>string</td><td>Yes</td><td>The name of revision. If revisionType is 'branch', this is the name of the base branch. If revisionType is 'commit', this is the commit hash.</td></tr>
+<tr><td><code>newBranchName</code></td><td>string</td><td>Yes</td><td>The name of the new branch.</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## List branches
@@ -717,31 +673,29 @@ headers = {
 }
 ```
 
-#### `GET` /{owner}/{database}/branches
-
-List Branches
-
-This API endpoint allows you to list all branches in your database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/branches`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the owner of the database.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/branches</code>
+</div>
+<p class="api-summary">List Branches</p>
+<p class="api-description">This API endpoint allows you to list all branches in your database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/branches</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Create a tag
@@ -756,41 +710,41 @@ headers = {
 }
 ```
 
-#### `POST` /{owner}/{database}/tags
-
-Create Tag
-
-This API endpoint allows you to create a new tag in your database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/tags`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the owner of the database.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-
-**Request Body**
-
-Content-Type: `application/json`
-
-- **`tagName`** (string, Required) — The name of the tag.
-- **`tagMessage`** (string, Required) — The description of the tag.
-- **`revisionType`** (string, Required) — The type of revision, can be either 'branch', 'ref' or 'commit'.
-- **`revisionName`** (string, Required) — The name of revision. If revisionType is 'branch', this is the name of the base branch. If revisionType is 'commit', this is the commit hash.
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/{owner}/{database}/tags</code>
+</div>
+<p class="api-summary">Create Tag</p>
+<p class="api-description">This API endpoint allows you to create a new tag in your database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/tags</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>tagName</code></td><td>string</td><td>Yes</td><td>The name of the tag.</td></tr>
+<tr><td><code>tagMessage</code></td><td>string</td><td>Yes</td><td>The description of the tag.</td></tr>
+<tr><td><code>revisionType</code></td><td>string</td><td>Yes</td><td>The type of revision, can be either 'branch', 'ref' or 'commit'.</td></tr>
+<tr><td><code>revisionName</code></td><td>string</td><td>Yes</td><td>The name of revision. If revisionType is 'branch', this is the name of the base branch. If revisionType is 'commit', this is the commit hash.</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## List tags
@@ -805,31 +759,29 @@ headers = {
 }
 ```
 
-#### `GET` /{owner}/{database}/tags
-
-List Tags
-
-This API endpoint allows you to list all tags in your database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/tags`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the owner of the database.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/tags</code>
+</div>
+<p class="api-summary">List Tags</p>
+<p class="api-description">This API endpoint allows you to list all tags in your database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/tags</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Create a release
@@ -860,35 +812,30 @@ headers = {
 }
 ```
 
-#### `GET` /{owner}/{database}/releases
-
-List Releases
-
-This API endpoint allows you to list all releases in your database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/releases`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the owner of the database.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-**`next_page_token`** (query, string, Optional)
-  The next page token.
-  Example: `1234567890`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/releases</code>
+</div>
+<p class="api-summary">List Releases</p>
+<p class="api-description">This API endpoint allows you to list all releases in your database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/releases</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>next_page_token</code></td><td>query</td><td>string</td><td>No</td><td>The next page token. <em>Example: <code>1234567890</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## List operations
@@ -909,35 +856,30 @@ headers = {
 }
 ```
 
-#### `GET` /users/{username}/operations
-
-List operations
-
-This API endpoint allows you to list all operations that are created by the user.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/users/{username}/operations`
-
-**Parameters**
-
-**`username`** (path, string, Required)
-  The name of the user who initiated the operations. This user's name must match the user associated with the api token.
-  Example: `liuliu`
-
-**`operationType`** (query, string, Optional)
-  Specific type of operation for this query. Supported operation types are SqlWrite, SqlRead, Import, Merge, Migrate.
-  Example: `SqlWrite`
-
-**`pageToken`** (query, string, Optional)
-  Token for the next page of results
-  Example: `AWE2Nm9uMWQ26pQQpqLNLXu7a60647lpiZoDFrf5WDGHo68XNC-rfr068rymbEdUHCXidRxx7_fwGBMSzQi6C_D50NcJFXm0BwRnGmmHEL4T4xxkWoX3sL5mKD-PuMRuxeHPsR0NB5Rzi70jGzblVlfBTIHPJ20c630pNLrI_spxH0tYTzMnQ4uPpr3ub9P50FEH9i4Au0gUkmvj8NUibbGWi-R1AJYplEPr=`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/users/{username}/operations</code>
+</div>
+<p class="api-summary">List operations</p>
+<p class="api-description">This API endpoint allows you to list all operations that are created by the user.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/users/{username}/operations</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>username</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the user who initiated the operations. This user's name must match the user associated with the api token. <em>Example: <code>liuliu</code></em></td></tr>
+<tr><td><code>operationType</code></td><td>query</td><td>string</td><td>No</td><td>Specific type of operation for this query. Supported operation types are SqlWrite, SqlRead, Import, Merge, Migrate. <em>Example: <code>SqlWrite</code></em></td></tr>
+<tr><td><code>pageToken</code></td><td>query</td><td>string</td><td>No</td><td>Token for the next page of results <em>Example: <code>AWE2Nm9uMWQ26pQQpqLNLXu7a60647lpiZoDFrf5WDGHo68XNC-rfr068rymbEdUHCXidRxx7_fwGBMSzQi6C_D50NcJFXm0BwRnGmmHEL4T4xxkWoX3sL5mKD-PuMRuxeHPsR0NB5Rzi70jGzblVlfBTIHPJ20c630pNLrI_spxH0tYTzMnQ4uPpr3ub9P50FEH9i4Au0gUkmvj8NUibbGWi-R1AJYplEPr=</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## List jobs
@@ -956,29 +898,27 @@ headers = {
 }
 ```
 
-#### `GET` /{owner}/{database}/jobs
-
-List jobs
-
-This API endpoint allows you to list all jobs in your database.
-
-**URL**: `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/jobs`
-
-**Parameters**
-
-**`owner`** (path, string, Required)
-  The name of the owner of the database.
-  Example: `dolthub`
-
-**`database`** (path, string, Required)
-  The name of the database.
-  Example: `museum-collections`
-
-
-**Responses**
-
-- **200**: Success
-- **400**: Bad request. The request was invalid or could not be processed.
-
----
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/jobs</code>
+</div>
+<p class="api-summary">List jobs</p>
+<p class="api-description">This API endpoint allows you to list all jobs in your database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/jobs</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
