@@ -108,7 +108,7 @@ Then use `GET` to poll the operation to check if the fork operation is done.
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check <em>Example: <code>operations/b09a9221-9dcb-4a15-9ca8-a64656946f12</code></em></td></tr>
+<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check <em>Example: <code class="api-example">operations/b09a9221-9dcb-4a15-9ca8-a64656946f12</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -142,8 +142,8 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -179,8 +179,8 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -232,9 +232,9 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
-<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>ID of the pull request <em>Example: <code>1</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>ID of the pull request <em>Example: <code class="api-example">1</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -270,9 +270,9 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
-<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>ID of the pull request to update. <em>Example: <code>1</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>ID of the pull request to update. <em>Example: <code class="api-example">1</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -319,12 +319,12 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
-<tr><td><code>pageToken</code></td><td>query</td><td>string</td><td>No</td><td>The pageToken to get the next page of results</td></tr>
-<tr><td><code>filterByState</code></td><td>query</td><td>string</td><td>No</td><td>Filter pulls by state, can be Open, Closed, or Merged. <em>Example: <code>Open</code></em></td></tr>
-<tr><td><code>filterByReviewStatus</code></td><td>query</td><td>string</td><td>No</td><td>Filter pulls by review status, can be Approved, AssignedReviewer, Rejected or Reviewed <em>Example: <code>Approved</code></em></td></tr>
-<tr><td><code>query</code></td><td>query</td><td>string</td><td>No</td><td>Search by pull request title or author name. <em>Example: <code>test</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>pageToken</code></td><td>query</td><td>string</td><td>No</td><td>The pageToken to get the next page of results <em>Example: <code class="api-example">AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw</code></em></td></tr>
+<tr><td><code>filterByState</code></td><td>query</td><td>string</td><td>No</td><td>Filter pulls by state, can be Open, Closed, or Merged. <em>Example: <code class="api-example">Open</code></em></td></tr>
+<tr><td><code>filterByReviewStatus</code></td><td>query</td><td>string</td><td>No</td><td>Filter pulls by review status, can be Approved, AssignedReviewer, Rejected or Reviewed <em>Example: <code class="api-example">Approved</code></em></td></tr>
+<tr><td><code>query</code></td><td>query</td><td>string</td><td>No</td><td>Search by pull request title or author name. <em>Example: <code class="api-example">test</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -359,9 +359,9 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>Owner of the database <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>database name <em>Example: <code>museum-collections</code></em></td></tr>
-<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>Pull request ID <em>Example: <code>66</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>Owner of the database <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>database name <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>Pull request ID <em>Example: <code class="api-example">66</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -410,9 +410,9 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
-<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>The ID of the pull request to merge. <em>Example: <code>66</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>The ID of the pull request to merge. <em>Example: <code class="api-example">66</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -438,10 +438,10 @@ Then use `GET` to poll the operation to check if the merge operation is done.
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The owner of the database <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The database name <em>Example: <code>museum-collections</code></em></td></tr>
-<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>The ID of the pull request <em>Example: <code>66</code></em></td></tr>
-<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check</td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The owner of the database <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The database name <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>pull_id</code></td><td>path</td><td>string</td><td>Yes</td><td>The ID of the pull request <em>Example: <code class="api-example">66</code></em></td></tr>
+<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check <em>Example: <code class="api-example">repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -483,8 +483,8 @@ To upload the file, include two fields in the request body, `file` and `params`,
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -520,10 +520,10 @@ Then use `GET` to poll the operation to check if the import operation is done.
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The owner of the database <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The database name <em>Example: <code>museum-collections</code></em></td></tr>
-<tr><td><code>branch</code></td><td>query</td><td>string</td><td>Yes</td><td>The name of the branch to upload the file to. <em>Example: <code>main</code></em></td></tr>
-<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check</td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The owner of the database <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The database name <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>branch</code></td><td>query</td><td>string</td><td>Yes</td><td>The name of the branch to upload the file to. <em>Example: <code class="api-example">main</code></em></td></tr>
+<tr><td><code>operationName</code></td><td>query</td><td>string</td><td>Yes</td><td>The operation name to check <em>Example: <code class="api-example">repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -638,8 +638,8 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -686,8 +686,8 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -723,8 +723,8 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -772,8 +772,8 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -825,9 +825,9 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
-<tr><td><code>next_page_token</code></td><td>query</td><td>string</td><td>No</td><td>The next page token. <em>Example: <code>1234567890</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>next_page_token</code></td><td>query</td><td>string</td><td>No</td><td>The next page token. <em>Example: <code class="api-example">1234567890</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -869,9 +869,9 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>username</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the user who initiated the operations. This user's name must match the user associated with the api token. <em>Example: <code>liuliu</code></em></td></tr>
-<tr><td><code>operationType</code></td><td>query</td><td>string</td><td>No</td><td>Specific type of operation for this query. Supported operation types are SqlWrite, SqlRead, Import, Merge, Migrate. <em>Example: <code>SqlWrite</code></em></td></tr>
-<tr><td><code>pageToken</code></td><td>query</td><td>string</td><td>No</td><td>Token for the next page of results</td></tr>
+<tr><td><code>username</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the user who initiated the operations. This user's name must match the user associated with the api token. <em>Example: <code class="api-example">liuliu</code></em></td></tr>
+<tr><td><code>operationType</code></td><td>query</td><td>string</td><td>No</td><td>Specific type of operation for this query. Supported operation types are SqlWrite, SqlRead, Import, Merge, Migrate. <em>Example: <code class="api-example">SqlWrite</code></em></td></tr>
+<tr><td><code>pageToken</code></td><td>query</td><td>string</td><td>No</td><td>Token for the next page of results <em>Example: <code class="api-example">AWE2Nm9uMWQ26pQQpqLNLXu7a60647lpiZoDFrf5WDGHo68XNC-rfr068rymbEdUHCXidRxx7_fwGBMSzQi6C_D50NcJFXm0BwRnGmmHEL4T4xxkWoX3sL5mKD-PuMRuxeHPsR0NB5Rzi70jGzblVlfBTIHPJ20c630pNLrI_spxH0tYTzMnQ4uPpr3ub9P50FEH9i4Au0gUkmvj8NUibbGWi-R1AJYplEPr=</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -911,8 +911,8 @@ headers = {
 <table class="api-params">
 <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code>dolthub</code></em></td></tr>
-<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code>museum-collections</code></em></td></tr>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">

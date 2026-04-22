@@ -242,6 +242,11 @@ const currentPath = Astro.url.pathname;
     margin: 0 !important;
   }
 
+  .docs-main :global(.api-example) {
+    word-break: break-all;
+    white-space: normal;
+  }
+
   .docs-main :global(.api-params th) {
     font-size: 0.75rem;
     text-transform: uppercase;
