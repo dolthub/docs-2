@@ -123,7 +123,7 @@ describe("Dolt docs — page content spot checks", () => {
     });
 
     it("Importing Data page has correct heading", () => {
-      assertPageContent("/guides/import", "Get data into Dolt");
+      assertPageContent("/guides/import", "Importing Data");
     });
   });
 
