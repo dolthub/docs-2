@@ -4,7 +4,7 @@ title: Dolt System Tables
 
 # Dolt System Tables
 
-# Table of contents
+## Table of contents
 
 - [Database Metadata](#database-metadata-system-tables)
 
@@ -59,7 +59,7 @@ title: Dolt System Tables
 
   - [dolt_rebase](#dolt_rebase)
 
-# Database Metadata System Tables
+## Database Metadata System Tables
 
 ## `dolt_branches`
 

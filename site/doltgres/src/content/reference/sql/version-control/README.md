@@ -9,7 +9,7 @@ graph, like git. This makes it possible to efficiently diff any two commits, as 
 branch into another. All the git-like version control functionality is exposed as system tables,
 system variables, functions, and stored procedures.
 
-# Version control overview
+## Version control overview
 
 - [Using Branches](/reference/version-control/branches) explains how to work with different
   branches in a running server.

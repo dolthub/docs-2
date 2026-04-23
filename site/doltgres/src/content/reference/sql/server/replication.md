@@ -37,7 +37,7 @@ between Remote-Based Replication and Hot Standby Replication.
 The rest of this page describes configuration and considerations for both types of
 replication, starting with replication through a remote.
 
-# Replication Through a Remote
+## Replication Through a Remote
 
 ## Configuration
 
@@ -302,7 +302,7 @@ database does. Providing a transactional layer to enforce multi-primary
 conflicts is necessary to run Dolt as a multi-primary database
 effectively.
 
-# Direct to Standby Replication
+## Direct to Standby Replication
 
 ## Configuration
 
@@ -632,7 +632,7 @@ like isCa, key usage, validity windows and the signatures chaining to a trusted
 root, but no assertions will be made against the identity presented in the
 certificates themselves.
 
-# Direct vs. Remote Replication
+## Direct vs. Remote Replication
 
 The above presents two different ways of achieving replication and running
 read-replicas with dolt sql-server. For some use cases, either one might meet
@@ -690,7 +690,7 @@ in this mode, only the primary replicates its writes to the configured remote
 take over write responsibilities, at which point the new primary will start
 replicating new writes to the remote.
 
-# Postgres to Dolt Replication
+## Postgres to Dolt Replication
 
 If you have an existing Postgres server, you can configure Doltgres as a read-replica. As the
 Doltgres read-replica consumes data changes from the primary server, it creates Dolt commits, giving

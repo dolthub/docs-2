@@ -9,7 +9,7 @@ you had to stand up your own instances deployed with the Dolt binary, and then h
 your own monitoring, alerting, and upgrades. This page will go through the infrastructure
 behind Hosted Dolt and the decision to use Dolt as our production OLTP server.
 
-# Architecture
+## Architecture
 
 The diagram below shows the key pieces of infrastructure used to run
 [https://hosted.doltdb.com](https://hosted.doltdb.com).
@@ -57,7 +57,7 @@ information such as the DNS to reach the host, the instance and volume ids, and 
 information about the deployment. After that the Deployment Manager continuously sends
 heartbeat requests, and monitors the state of running deployments.
 
-# Using Dolt
+## Using Dolt
 
 When we started building the backend for
 [https://hosted.doltdb.com](http://hosted.doltdb.com) we thought we would use an identical

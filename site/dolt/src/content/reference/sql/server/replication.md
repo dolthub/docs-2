@@ -33,7 +33,7 @@ details on the differences between Remote-Based Replication and Hot Standby Repl
 The rest of this page describes configuration and considerations for both types of
 replication, starting with replication through a remote.
 
-# Replication Through a Remote
+## Replication Through a Remote
 
 ## Configuration
 
@@ -333,7 +333,7 @@ database does. Providing a transactional layer to enforce multi-primary
 conflicts is necessary to run Dolt as a multi-primary database
 effectively.
 
-# Direct to Standby Replication
+## Direct to Standby Replication
 
 ## Configuration
 
@@ -665,7 +665,7 @@ like isCa, key usage, validity windows and the signatures chaining to a trusted
 root, but no assertions will be made against the identity presented in the
 certificates themselves.
 
-# Direct vs. Remote Replication
+## Direct vs. Remote Replication
 
 The above presents two different ways of achieving replication and running
 read-replicas with dolt sql-server. For some use cases, either one might meet
@@ -723,14 +723,14 @@ in this mode, only the primary replicates its writes to the configured remote
 take over write responsibilities, at which point the new primary will start
 replicating new writes to the remote.
 
-# MySQL to Dolt Replication
+## MySQL to Dolt Replication
 
 If you have an existing MySQL or MariaDB server, you can configure Dolt as a read-replica. As the Dolt read-replica
 consumes data changes from the primary server, it creates Dolt commits, giving you a read-replica with a
 versioned history of your data changes. See the [MySQL to Dolt Replication guide](/guides/binlog-replication)
 for more details on how to configure this.
 
-# Dolt to MySQL Replication
+## Dolt to MySQL Replication
 
 If you want to run Dolt as your primary database server, you can still replicate a single branch to a MySQL database.
 This is often useful for change data capture (CDC) or data warehouse use cases that require pulling data via

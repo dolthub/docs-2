@@ -4,7 +4,7 @@ title: Garbage Collection
 
 # Garbage Collection
 
-# How garbage is created
+## How garbage is created
 
 Dolt creates on-disk garbage. Dolt transactions that do not have a corresponding Dolt commit create on-disk garbage. This garbage is most noticeable after large data imports.
 
@@ -17,7 +17,7 @@ chunks, garbage is created.
 
 ![How garbage is created](../../../.gitbook/assets/how-garbage-is-created.png)
 
-# Automatic GC
+## Automatic GC
 As of Dolt 1.75, garbage collection will be performed automatically in both `dolt sql-server` and `dolt sql` contexts.
 
 If you determine you need to disable Automatic GC in the `sql-server` context, you must set the following [configuration](/sql-reference/server/configuration):
@@ -34,7 +34,7 @@ To disable Automatic GC in the `dolt sql` context, start the command with the `-
 $ dolt sql --disable-auto-gc
 ```
 
-# How to run garbage collection manually
+## How to run garbage collection manually
 
 Garbage collection can be run offline using [`dolt gc`](/cli-reference/cli#dolt-gc) or online using [`call dolt_gc()`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc).
 

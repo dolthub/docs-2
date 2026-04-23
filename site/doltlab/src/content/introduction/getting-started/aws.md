@@ -37,7 +37,7 @@ This will create a `.pem` file and download it locally.
 
 After this you should get a public IP for your new host. Mine was `54.191.163.60`.
 
-# SSH to your New Host
+## SSH to your New Host
 
 Now I need to SSH to this host. I copy the `.pem` file I created when I launched the instance to my `.ssh` folder, give it appropriate permissions and then I can ssh to my new host.
 

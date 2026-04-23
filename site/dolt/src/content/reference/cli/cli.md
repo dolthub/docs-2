@@ -4,7 +4,7 @@ title: CLI
 
 # CLI
 
-# Command Line Interface Reference
+## Command Line Interface Reference
 
 ```
 $ dolt

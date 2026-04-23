@@ -4,7 +4,7 @@ title: Data Sharing
 
 # Data Sharing
 
-# Problem
+## Problem
 
 - Do you share data with customers?
 - Do they ask you what changed between versions you share?
@@ -16,7 +16,7 @@ title: Data Sharing
 - Do you want to add automated testing to data shared with you?
 - Would you like to instantly rollback to the previous version if tests fail?
 
-# Dolt solves this by…
+## Dolt solves this by…
 
 Dolt was built for sharing. The Git model of code sharing has scaled to thousands of contributors for open source software. We believe the same model can work for data.
 
@@ -26,7 +26,7 @@ Dolt and DoltHub is the best way to share data with customers. Use versions to s
 
 Dolt and DoltHub are also great if vendors share data with you. When you receive data from a vendor, import the data into Dolt. Examine the diff, either with the human eye or programmatically, before putting the data into production. You can now build integration tests for vendor data. If there's a problem, never [merge](/concepts/dolt/git/merge) the import [branch](/concepts/dolt/git/branch) into main or roll the change back if a bug was discovered in production. Use the problematic [diff](/concepts/dolt/git/diff) to debug with your vendor. The same tools you have for software dependencies, you now have for data dependencies.
 
-# Dolt replaces...
+## Dolt replaces...
 
 ## Exchanging Files
 
@@ -36,16 +36,16 @@ Dolt replaces exchanging flat data files like CSVs via email, FTP servers, or ot
 
 Dolt is ideal for sharing data that does not have an API. But even for data with an API, Dolt is often more convenient. With Dolt, you get all the data and its history. With APIs you often have to assemble the data with multiple API calls. With APIs, the data can change out from under you, whereas with Dolt you can read a version of the data until you are ready to upgrade. DoltHub ships with a [SQL API](/products/dolthub/api/sql) so you can choose the data sharing solution that is right for your use case.
 
-# Companies Doing This
+## Companies Doing This
 
 - [Bitfinex](https://www.bitfinex.com/)
 - [KAPSARC](https://www.kapsarc.org/)
 
-# Case Studies
+## Case Studies
 
 Let us know if you would like us to feature your use of Dolt for data sharing here.
 
-# Other Related Articles
+## Other Related Articles
 
 - [Distribute Data with Dolt, not APIs](https://www.dolthub.com/blog/2020-05-18-distribute-dolt-not-api/)
 - [Data Collaboration on DoltHub](https://www.dolthub.com/blog/2020-10-05-data-collaboration-on-dolthub/)

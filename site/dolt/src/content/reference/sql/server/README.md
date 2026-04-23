@@ -9,7 +9,7 @@ There are two ways to run SQL queries against your database:
 - `dolt sql-server` starts a MySQL-compatible server
 - `dolt sql` runs SQL queries from your shell without starting a server
 
-# dolt sql-server
+## dolt sql-server
 
 The `dolt sql-server` command runs a MySQL compatible server which
 clients can connect to and execute queries against. Any library or tool
@@ -42,7 +42,7 @@ $ ps -a | grep dolt
 $ kill -QUIT 46800
 ```
 
-# dolt sql
+## dolt sql
 
 Using `dolt sql` you can issue SQL statements against a local database
 without starting a server.

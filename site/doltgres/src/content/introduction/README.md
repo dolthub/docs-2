@@ -4,7 +4,7 @@ title: "Overview"
 
 # Overview
 
-# What is Doltgres?
+## What is Doltgres?
 
 ![](../.gitbook/assets/doltgres-preview.png)
 

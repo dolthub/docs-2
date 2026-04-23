@@ -6,7 +6,7 @@ title: Troubleshooting
 
 Debugging a running Doltgres server can be challenging. This document covers the debugging basics and how to diagnose what is happening from common symptoms.
 
-# Basics
+## Basics
 
 ## Make sure you are running the latest Doltgres version
 
@@ -28,11 +28,11 @@ To see queries being run against the server, query results, and query latency se
 
 Doltgres strives to be 100% Postgres compatible. If you run a query that works in Postgres but does not work in Doltgres, it is a Doltgres bug and you should [submit an issue](#submitting-issues). You can dump your Doltgres database using the `pg_dump` tool and import the resulting file into Doltgres. Then test the query you think should work using any Postgres client.
 
-# Submitting Issues
+## Submitting Issues
 
 If you run into any issues requiring engineering attention, please submit a [GitHub Issue](https://github.com/dolthub/doltgresql/issues) to the Doltgres project. Please be as detailed as possible in your report. Note the schema of the database and query or queries that can be used to trigger the issue. If possible, push the database to a cloud remote and give us access.
 
-# Problems
+## Problems
 
 Doltgres operational issues usually manifest as slow SQL queries. In rare occasions, Doltgres may consume more of your system's resources than you expect. In these cases, this document has some recommendations.
 

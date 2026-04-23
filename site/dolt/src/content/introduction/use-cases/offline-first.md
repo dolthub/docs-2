@@ -4,7 +4,7 @@ title: Offline First
 
 # Offline First
 
-# Problem
+## Problem
 
 * Are you expecting your application to make writes locally while offline?
 * Do these writes need to be synced to a central server or other nodes?
@@ -12,7 +12,7 @@ title: Offline First
 * What are you going to do if you detect them?
 * Would the Git model of clone, push, and pull on your data help?
 
-# Dolt solves this by…
+## Dolt solves this by…
 
 Dolt brings Git-style decentralization to the SQL database. Just like Git is ideal in no connectivity environments when dealing with files, Dolt is ideal in low connectivity environments when dealing with tables. Most large scale data is stored in tables.
 
@@ -22,21 +22,21 @@ When it is safe to connect to the internet, Dolt computes the difference between
 
 Conflicting writes are surfaced quickly and an operator or software can take additional action to resolve.
 
-# Dolt replaces
+## Dolt replaces
 
 ## Custom syncing processes
 
 Dolt replaces custom code to synchronize your client and server. This code is complicated and hard to get right. The Git [remote](/concepts/dolt/git/remotes) model of clone, fetch, push, and pull is a proven synchronization model. Dolt brings this model to the database allowing you to remove most of your synchronization code. 
 
-# Companies Doing This
+## Companies Doing This
 
 Be the first
 
-# Case Studies
+## Case Studies
 
 Let us know if you would like us to feature your use of Dolt for data sharing here.
 
-# Other Related Articles
+## Other Related Articles
 
 * [So you want a Decentralized database?](https://www.dolthub.com/blog/2022-05-27-decentralized-database/)
 * [Dolt for Military Applications](https://www.dolthub.com/blog/2022-03-07-dolt-military/)

@@ -56,7 +56,7 @@ Valid commands for dolt are
 
 That's right, all the git commands your used to like `checkout`, `diff`, and `merge` are all implemented on top of SQL tables instead of files. Dolt really is [Git for Data](https://www.dolthub.com/blog/2020-03-06-so-you-want-git-for-data/).
 
-# Configure Dolt
+## Configure Dolt
 
 After installing Dolt, the first thing you must do is set the `user.name` and `user.email` config variables. This information will be used to attribute each Dolt commit to you. Defining the Git equivalent variables is also required by Git.
 
@@ -72,7 +72,7 @@ $ ls ~/.dolt/config_global.json
 /Users/timsehn/.dolt/config_global.json
 ```
 
-# Navigate to the directory where you would like your data stored
+## Navigate to the directory where you would like your data stored
 
 Dolt needs a place to store your databases. I'm going to put my databases in `~/dolt`.
 
@@ -82,7 +82,7 @@ $ mkdir dolt
 $ cd dolt
 ```
 
-# Initialize a database
+## Initialize a database
 
 Like Git, Dolt relies on directories to store your databases. The directories will have a hidden `.dolt` directory where your database is stored after you run `dolt init`. So, let's make a directory called `git_for_data` that will house our `dolt` database, `cd` to it, and run `dolt init`. The database name will be `git_for_data`, the same as the directory name.
 
@@ -105,7 +105,7 @@ Date:  Wed Jan 18 17:02:38 -0800 2023
 
 ```
 
-# Make a table
+## Make a table
 
 Git versions files. Dolt versions tables. 
 
@@ -172,7 +172,7 @@ $ dolt sql -q "select * from employees"
 +----+------------+-----------+
 ```
 
-# Make a Dolt commit
+## Make a Dolt commit
 
 Everything looks good so it's time to `add` and `commit` our new `employees` table. This is just like adding and committing a new file in Git. Tables start off untracked so you must explicitly add them, just like new files in Git.
 
@@ -210,7 +210,7 @@ Date:  Wed Jan 18 17:02:38 -0800 2023
 
 And inspecting the log it looks like we're good! As you can see, Dolt takes "Git for Data" very literally.
 
-# Examine a diff
+## Examine a diff
 
 Now, I want to add an employee and change my name from "Tim" to "Timothy", you know, to be professional. I'm going to do that through the command line SQL interface and show you the diff.
 
@@ -237,7 +237,7 @@ diff --dolt a/employees b/employees
 
 That's not right! Diffs in Dolt are a powerful way to ensure you changed exactly what you thought you've changed, ensuring data quality.
 
-# Oh no! I made a mistake.
+## Oh no! I made a mistake.
 
 Just like with Git, In Dolt I can roll back a number of ways. I can `checkout` the table or `reset --hard`. Let's `checkout` the table.
 
@@ -287,7 +287,7 @@ Date:  Thu Jan 19 16:55:14 -0800 2023
 
 ```
 
-# Create a branch
+## Create a branch
 
 Dolt is also a drop in replacement for MySQL. So, if you like working in a SQL Workbench like [TablePlus](https://tableplus.com/) or [Datagrip](https://www.jetbrains.com/datagrip/) instead of the command line, I will show you how now. This is the closest you will get to using something like Visual Studio Code with Git.
 
@@ -360,7 +360,7 @@ diff --dolt a/employees b/employees
 
 Branches work the exact same way as Git. Make a branch so that your changes don't effect other people.
 
-# Merge to Main
+## Merge to Main
 
 Finally, let's merge it all to main and delete our branch.
 
@@ -387,6 +387,6 @@ $ dolt branch
 
 I got a fast-forward merge, just like Git, since there were no other changes on main.
 
-# Conclusion
+## Conclusion
 
 As you can see, Dolt is Git For Data. The Dolt command line works exactly like the Git command line except the versioning target is tables instead of files.

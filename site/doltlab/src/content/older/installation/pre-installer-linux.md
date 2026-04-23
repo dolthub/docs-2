@@ -82,6 +82,6 @@ The `smtp_connection_helper` binary can be used to help you troubleshoot any iss
 
 `alertmanager.yaml` is a [AlertManager](https://prometheus.io/docs/alerting/latest/alertmanager/) configuration file for sending email alerts to DoltLab admins based on Prometheus metrics. Used for DoltLab Enterprise automated backups.
 
-# Next Steps
+## Next Steps
 
 - [Start DoltLab (Pre-Installer)](/older/installation/start-doltlab-pre-installer)

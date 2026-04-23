@@ -7,7 +7,7 @@ title: Configuration
 A Dolt SQL server can be configured at server start time using a [configuration file](#configyaml), or by
 setting [system variables](#system-variables) in the SQL session.
 
-# config.yaml
+## config.yaml
 
 
 The simplest way to configure server behavior is to provide a config file with the
@@ -1595,7 +1595,7 @@ The `jwks` section of `config.yaml` is used to configure JSON web token (JWT) au
 
 This section of `config.yaml` is used to configure "Direct to Standby" or cluster replication. Refer to [the documentation for replication](https://docs.dolthub.com/sql-reference/server/replication#direct-to-standby-replication) for this section of `config.yaml`. This configuration requires multiple Dolt instances configured so it is out of scope for this article.
 
-# System Variables
+## System Variables
 
 Dolt defines system variables that you can set in your session via the
 `SET` syntax. Many of these can be persisted, so they remain set after

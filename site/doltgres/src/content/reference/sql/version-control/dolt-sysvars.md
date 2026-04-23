@@ -4,7 +4,7 @@ title: Dolt System Variables
 
 # Dolt System Variables
 
-# Table of contents
+## Table of contents
 
 - [General system setting variables](#general-system-setting-variables)
 
@@ -36,7 +36,7 @@ title: Dolt System Variables
   - [dbname_working](#dbname_working)
   - [dbname_staged](#dbname_staged)
 
-# General system setting variables
+## General system setting variables
 
 ## `dbname_default_branch`
 
@@ -141,7 +141,7 @@ When set to `1`, this system variable ignores all merge conflicts,
 constraint violations, and other correctness issues resulting from a
 merge and allows them to be committed. Defaults to `0`.
 
-# Replication variables
+## Replication variables
 
 ## `dolt_replicate_to_remote`
 
@@ -242,7 +242,7 @@ a warning rather than causing queries to fail. Defaults to `0`.
 SET dolt_skip_replication_errors TO 1;
 ```
 
-# Session metadata variables
+## Session metadata variables
 
 ## `dbname_head_ref`
 

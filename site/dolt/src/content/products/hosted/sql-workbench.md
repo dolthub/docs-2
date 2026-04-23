@@ -11,7 +11,7 @@ the same features on the Hosted Workbench that make DoltHub easy to use as a col
 tool among users of varying levels of SQL and Git knowledge, including cell buttons and
 pull requests.
 
-# Getting started with the workbench
+## Getting started with the workbench
 
 It's easy to get started browsing and updating data in your Hosted database with the SQL
 Workbench for both new and existing deployments.
@@ -115,7 +115,7 @@ approve. Once approved, merge your branch.
 You will see the new commit reflected in the Commit Log for the `main` branch, as well as
 in any connected MySQL client.
 
-# The Hosted Workbench vs DoltHub
+## The Hosted Workbench vs DoltHub
 
 There are two ways to use Dolt. You can run Dolt offline, treating data and schema like
 source code in the same way you'd use Git. Or you can run Dolt online, like you would
@@ -139,7 +139,7 @@ features](https://docs.dolthub.com/sql-reference/version-control) to display dat
 similar to way to DoltHub. But unlike DoltHub, changes you make from a connected client
 are reflected immediately in other clients without any manual syncing.
 
-# Implementation Notes
+## Implementation Notes
 
 ## Authentication model
 
@@ -292,7 +292,7 @@ USE `museum-collections/main`;
 SELECT * FROM objects WHERE category="drawing";
 ```
 
-# Additional Resources
+## Additional Resources
 
 Here are some blogs that go more into depth about the SQL Workbench on Hosted:
 

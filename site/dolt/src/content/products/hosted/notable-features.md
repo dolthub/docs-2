@@ -4,7 +4,7 @@ title: "Hosted Dolt: Notable Features"
 
 # Hosted Dolt: Notable Features
 
-# Version Control
+## Version Control
 
 [Dolt](https://doltdb.com) is a database like no other. There are numerous Dolt version
 control features that you won't find elsewhere. Hosted Dolt gives you all the version
@@ -17,7 +17,7 @@ example:
 - Diff data between two commits or branches.
 - Revert the changes made by a commit.
 
-# Operations
+## Operations
 
 ## Logs
 
@@ -115,7 +115,7 @@ collaborator in your deployment's Settings tab.
 
 ![](../../.gitbook/assets/hosted-add-collaborator.png)
 
-# Quick Start
+## Quick Start
 
 ## Trial Instance
 
@@ -133,7 +133,7 @@ tab of your deployment console.
 
 ![](../../.gitbook/assets/hosted-connectivity.png)
 
-# SQL Workbench
+## SQL Workbench
 
 ## User Friendly Built-In Web GUI
 
@@ -183,7 +183,7 @@ And download query results as a CSV.
 
 Learn more in [our blog](https://www.dolthub.com/blog/2023-06-30-hosted-workbench-csv-support/).
 
-# Dolt Ecosystem
+## Dolt Ecosystem
 
 ## Clone a Hosted Instance
 

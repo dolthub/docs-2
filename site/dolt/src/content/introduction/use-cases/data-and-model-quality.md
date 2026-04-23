@@ -4,7 +4,7 @@ title: Data and Model Quality Control
 
 # Data and Model Quality Control
 
-# Problem
+## Problem
 
 * Are you in the business of creating data and models? 
 * Do you want to institute human or automated review on data changes for data quality assurance?
@@ -14,7 +14,7 @@ title: Data and Model Quality Control
 * Would data branches help?
 * Do you want the ability to query or roll back to a previous version of the data instantly?
 
-# Dolt solves this by…
+## Dolt solves this by…
 
 Traditional databases were built for a world of transactions and reports. Modern data science tools use data to create models that behave more like software than reports. Models produce user visible outputs and define application behavior. Tuning data to get the right model can be a lot like writing code.
 
@@ -30,7 +30,7 @@ Dolt is the only database with [branch](/concepts/dolt/git/branch) and [merge](/
 
 Lastly, [commits](/concepts/dolt/git/commits), [logs](/concepts/dolt/git/log), and [diffs](/concepts/dolt/git/diff) can be used for model insights. Did Thursday's model perform better than Tuesday's but had the same model weights? Inspect the data diff to see what changed. Inspect the commit log to see where that new data came from.
 
-# Dolt replaces...
+## Dolt replaces...
 
 ## Unstructured files in cloud storage
 
@@ -40,7 +40,7 @@ It is common practice to store copies of training data or database backups in cl
 
 Dolt can replace any database used to store and query data. Many of our customers switch from other OLTP databases like MySQL or Postgres to improve data and model quality through versioning. Customers have also switched to Dolt from document databases like MongoDB. Dolt's additional unique features like branches, diffs, and merges allow for human review of data changes and multiple parallel data projects.
 
-# Companies Doing This
+## Companies Doing This
 
 * [Turbine](https://turbine.ai/)
 * [KAPSARC](https://www.kapsarc.org/) 
@@ -49,11 +49,11 @@ Dolt can replace any database used to store and query data. Many of our customer
 * [Bosch](https://www.bosch-home.com/) 
 * [IMTF](https://imtf.com/)
 
-# Case Studies
+## Case Studies
 
 [Turbine](https://www.dolthub.com/blog/2022-08-17-dolt-turbine/)
 
-# Other Related Articles
+## Other Related Articles
 
 * [Better Data with Great Expectations + Dolt](https://www.dolthub.com/blog/2021-06-15-great-expectations-plus-dolt/)
 * [Upleveling Flyte’s Data Lineage Using Dolt](https://www.dolthub.com/blog/2021-06-04-flyte-dolt-plugin/)

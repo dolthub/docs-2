@@ -16,7 +16,7 @@ sharding solution that was created to scale YouTube:
 In addition to implementing the MySQL server and wire protocol, Vitess
 also provides the SQL parser for the database.
 
-# Dolt's use of Vitess
+## Dolt's use of Vitess
 
 Dolt's fork of Vitess has headed in a different direction from the
 main project. In addition to adding support for DDL statements, stored

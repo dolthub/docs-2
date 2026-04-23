@@ -10,7 +10,7 @@ In this mode, you set up Dolt to replicate a primary MySQL. Set up can take as a
 
 This document will walk you through step-by-step on how to get Dolt running as a MySQL replica on your host. It will show off some unique version control features you get in this set up, including finding and fixing a bad change on primary.
 
-# Start a Local MySQL Server
+## Start a Local MySQL Server
 
 First, we need a running MySQL instance. We'll consider this our "primary" database. 
 
@@ -42,7 +42,7 @@ mysql>
 
 Simple enough. Keep that open. You're going to need it.
 
-# Prepare Your Primary MySQL for a Replica
+## Prepare Your Primary MySQL for a Replica
 
 Now, you have to prepare MySQL to have a replica. This requires the following configuration which are on by default. So, don't touch these if you're starting fresh like me.
 
@@ -86,7 +86,7 @@ mysql> SHOW VARIABLES WHERE Variable_Name LIKE '%gtid_mode' OR Variable_Name LIK
 
 You're now ready to configure a Dolt replica.
 
-# Install Dolt
+## Install Dolt
 
 Dolt is a single ~68 megabyte program.
 
@@ -103,7 +103,7 @@ Here is a convenience script that does that for `*NIX` platforms. Open a termina
 sudo bash -c 'curl -L https://github.com/dolthub/dolt/releases/latest/download/install.sh | sudo bash'
 ```
 
-# Start a Dolt SQL Server
+## Start a Dolt SQL Server
 
 Dolt needs a place to put your databases. I put mine in `~/dolt_replica`.
 
@@ -123,7 +123,7 @@ Starting server with Config HP="localhost:1234"|T="28800000"|R="false"|L="debug"
 
 The shell will just hang there. That means Dolt is running. Any errors you encounter running Dolt will be printed here. Because we're in debug mode, you can also see the queries run against the server in this log.
 
-# Configure Dolt as a Replica
+## Configure Dolt as a Replica
 
 Open a new terminal and connect a MySQL client to your running Dolt just like you did to MySQL above, but this time specify port `1243` and host `127.0.0.1` to force MySQL through the TCP interface. Without the host specified it will connect using the socket interface to your running MySQL, not Dolt like you want.
 
@@ -179,7 +179,7 @@ If you look at the logs in the Dolt terminal, you should see something like this
 
 You now have a Dolt replica of a running MySQL! If you have any data in the `binlog` of the MySQL (ie. you didn't start from scratch), that data will replicate over to Dolt right now.
 
-# Write Something on the Primary
+## Write Something on the Primary
 
 Now it's time to test out what you created. We'll start by creating a databases and a table.
 
@@ -225,7 +225,7 @@ You can see the queries replicating in the Dolt log:
 
 All seems to be working. 
 
-# Inspect the Replica
+## Inspect the Replica
 
 Let's hop over to the `mysql` client connected to Dolt and inspect it just to make sure.
 
@@ -254,7 +254,7 @@ mysql> select * from t;
 
 The new database `foo` and the table `t` along with it's single row have replicated.
 
-# Inspect the Commit Log
+## Inspect the Commit Log
 
 Now to show off the first new feature, the Dolt Commit log. The Dolt replica makes a Dolt commit after every transaction sent from the primary so you can see what changed and when.
 
@@ -274,7 +274,7 @@ mysql> select * from dolt_log;
 
 As you can see, we have a full audit history of the database going back to inception. That should be useful.
 
-# Inspect a Diff
+## Inspect a Diff
 
 Let's see what happened in the last transaction. I'm going to see what changed in table in the last commit using the [`dolt_diff()` table function](/sql-reference/version-control/dolt-sql-functions#dolt_diff).
 
@@ -289,7 +289,7 @@ mysql> select * from dolt_diff('t3bp704udfjcuo83hb7qjat8ltv1osea', 'h9hsr5ij8u9g
 
 It looks like `c1` and `c2` both went from `NULL` to `0` in that commit, just as we'd expect. With a Dolt replica, you get a queryable audit log of every cell in your database.
 
-# A Bigger Database...
+## A Bigger Database...
 
 Now, let's examine a more interesting database. This time, I'm going to use [`https://github.com/datacharmer/test_db`](https://github.com/datacharmer/test_db) recommended by [MySQL](https://dev.mysql.com/doc/index-other.html). As the [README says](https://github.com/datacharmer/test_db/blob/master/):
 
@@ -363,7 +363,7 @@ mysql> show tables;
 8 rows in set (0.00 sec)
 ```
 
-# Make a bad change
+## Make a bad change
 
 Now, let's do something crazy. We're going to mix a bad change in with a couple good changes and use the Dolt replica to find and revert the change.
 
@@ -476,7 +476,7 @@ Query OK, 2 rows affected (0.00 sec)
 Records: 2  Duplicates: 0  Warnings: 0
 ```
 
-# Find a bad change
+## Find a bad change
 
 Let's say in this case, people are reporting their historical salaries have changed. We have a clue that something is wrong in the database. Let's head over to the Dolt replica and see what's up.
 
@@ -549,7 +549,7 @@ mysql> select * from dolt_diff('4te2i1qheceek434m3uoqsuejfv6f0nu', '123d9jc85evs
 
 Take a minute to marvel at what we just did. We were able to identify what changed from a `update salaries set salary=salary-1 order by rand() limit 5;` query all using queryable system tables on a replica. What a time to be alive! Now let's revert the change.
 
-# Revert a bad change
+## Revert a bad change
 
 If you were running Dolt as the primary database, reverting a bad change is as simple as calling [`dolt_revert()`](/sql-reference/version-control/dolt-sql-procedures#dolt_revert). But since we're running Dolt as a replica, we need Dolt to produce a SQL patch to revert the bad changes. To do this, we're going to make a branch on the replica, revert the change, and then use the [`dolt_patch()` function](/sql-reference/version-control/dolt-sql-functions#dolt_patch) to get the SQL we need to apply to our primary database.
 

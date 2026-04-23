@@ -120,6 +120,6 @@ To run DoltLab with TLS instead run:
 
 And navigating to `https://${HOST_IP}:443` in a web browser should show the DoltLab homepage.
 
-# Next Steps
+## Next Steps
 
 - [DoltLab Administrator Guide](/older/pre-installer-administrator-guide)

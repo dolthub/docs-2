@@ -13,7 +13,7 @@ soon, but for now this set of manual setup work is necessary.
 
 We have the instructions below packaged in a script [here](../../.gitbook/assets/deploy-server.sh).
 
-# Installation
+## Installation
 
 Install dolt. Run the following command:
 
@@ -25,7 +25,7 @@ This script puts the `dolt` binary in `/usr/local/bin`, which is
 probably on your `$PATH`. If it isn't add it there or use use the
 absolute path of the `dolt` binary for next steps.
 
-# Configuration
+## Configuration
 
 Create a system account for the dolt user to run the server.
 
@@ -46,7 +46,7 @@ $ sudo -u dolt dolt config --global --add user.name "Dolt Server Account"
 You can override this user for future commits with the `--author`
 flag, but this will be default author of every commit in the server.
 
-# Database creation
+## Database creation
 
 Before running the dolt server for the first time, you need to create
 a database. Choose a directory within `/var/lib/doltdb/databases`
@@ -67,7 +67,7 @@ initialized:
 Successfully initialized dolt data repository.
 ```
 
-# Start the server
+## Start the server
 
 Assuming you want your dolt server to always be running when the
 machine is alive, you should configure it to run through the Linux
@@ -121,14 +121,14 @@ Note that by default, Dolt runs on the same port as MySQL (3306). If
 you have MySQL installed on the same host, choose a different port for
 the server with the `-P` argument.
 
-# Users and passwords
+## Users and passwords
 
 By default, when starting `dolt sql-server, Dolt will automatically initialize the default 
 `root@localhost` superuser, which is accessible only from the localhost and without a password. 
 To change this account or add any additional accounts, you can use the standard `CREATE USER`, 
 `ALTER USER`, and `GRANT` SQL statements. 
 
-# Other Linux distributions
+## Other Linux distributions
 
 These instructions should work for Debian, Ubuntu, Amazon Linux, and many other common
 distributions. If you find they don't work for yours and you would like your distribution

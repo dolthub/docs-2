@@ -6,7 +6,7 @@ title: Troubleshooting
 
 Debugging a running Dolt server can be challenging. This document covers the debugging basics and how to diagnose what is happening from common symptoms.
 
-# Basics
+## Basics
 
 ## Make sure you are running the latest Dolt version
 
@@ -32,11 +32,11 @@ Note: `EXPLAIN` currently returns MySQL-consistent but otherwise no-op output. U
 
 Dolt strives to be 100% MySQL compatible. If you run a query that works in MySQL but does not work in Dolt, it is a Dolt bug and you should [submit an issue](#submitting-issues). You can dump your Dolt database using [`dolt dump`](/cli-reference/cli#dolt-dump) and import the resulting file into MySQL using `mysql < dump.sql`. The test the query you think should work using any MySQL client.
 
-# Submitting Issues
+## Submitting Issues
 
 If you run into any issues requiring engineering attention, please submit a [GitHub Issue](https://github.com/dolthub/dolt/issues) to the Dolt project. Please be as detailed as possible in your report. Note the schema of the database and query or queries that can be used to trigger the issue.  If possible, push the database to [DoltHub](https://www.dolthub.com) so we can use a clone to reproduce the issue.
 
-# Problems
+## Problems
 
 Dolt operational issues usually manifest as slow SQL queries. In rare occasions, Dolt may consume more of your system's resources than you expect. In these cases, this document has some recommendations.
 

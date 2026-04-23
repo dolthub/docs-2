@@ -38,6 +38,6 @@ The [installer](/reference/installer) binary, is the primary interface for confi
 
 The `smtp_connection_helper` binary can be used to help you troubleshoot any issues connecting your DoltLab instance to your existing SMTP server. This tool uses similar code to DoltLab's email service and sends a test email if the connection to the SMTP server is properly configured. The source code for the tool is available [here](https://gist.github.com/coffeegoddd/66f5aeec98640ff8a22a1b6910826667) and basic instructions for using the tool are [here](/guides/basic#troubleshoot-smtp-connection).
 
-# Next Steps
+## Next Steps
 
 - [Start DoltLab](/guides/installation/start-doltlab)

@@ -43,7 +43,7 @@ Date:  Wed Nov 13 15:36:27 -0800 2024
 
 After CI initialization, we need to create the workflow file that will define our CI tests.
 
-# Defining a Workflow
+## Defining a Workflow
 
 Modeled after GitHub Action's [Workflows](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions), Dolt CI is configured with a yaml file that gets imported into the database.
 
@@ -114,7 +114,7 @@ my_first_DoltHub_workflow.yaml
 
 The final step we need to perform on our local database is to define the saved query named "show tables".
 
-# Defining a saved query
+## Defining a saved query
 
 A saved query can be added by using the [dolt sql command](/cli-reference/cli#dolt-sql) with the `--save` option. And, as the name of our saved query suggests, we'll save the query "SHOW TABLES;".
 
@@ -163,7 +163,7 @@ To https://doltremoteapi.dolthub.com/dolthub/options
 %
 ```
 
-# Workflow Jobs on DoltHub
+## Workflow Jobs on DoltHub
 
 Once we push the `master` branch, DoltHub will run our workflow for the first time. It does this by creating a new Dolt CI Job, in the same way it creates Jobs for pull request merges.
 
@@ -257,7 +257,7 @@ And after that latest Workflow Job completes, we can see that our "validate tabl
 
 ![Failed Workflow Fixed](../../../.gitbook/assets/workflow_fail_fixed.png)
 
-# Getting fancier
+## Getting fancier
 
 Let's update our `workflow.yaml` once more, but get a little fancier with it.
 

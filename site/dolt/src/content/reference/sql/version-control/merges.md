@@ -4,7 +4,7 @@ title: Merges
 
 # Merges
 
-# Merging branches
+## Merging branches
 
 To merge a branch into your current branch, use the [`DOLT_MERGE()`
 procedure](/sql-reference/version-control/dolt-sql-procedures#doltmerge):
@@ -52,7 +52,7 @@ If conflicts/constraint-violations were encountered, the current transaction
 will be left incomplete and you should resolve them using the instructions
 below. Once resolved, you will need to make a dolt commit.
 
-# Conflicts
+## Conflicts
 
 Merging branches can create
 [conflicts](/concepts/dolt/git/conflicts), which you must resolve
@@ -238,7 +238,7 @@ variable](/sql-reference/version-control/dolt-sysvars#dolttransactioncommit)) if
 set has conflicts. You must resolve conflicts before creating a Dolt
 commit.
 
-# Constraint violations
+## Constraint violations
 
 If any table in your database contains foreign key constraints or unique key
 constraints, it's possible that a merge will create constraint violations. When

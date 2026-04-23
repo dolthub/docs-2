@@ -4,7 +4,7 @@ title: Dolt SQL Functions
 
 # Dolt SQL Functions
 
-# Table of Contents
+## Table of Contents
 
 - [Version Control Functions](#version-control-functions)
 
@@ -54,7 +54,7 @@ title: Dolt SQL Functions
   - [dolt_schema_diff()](#dolt_schema_diff)
   - [dolt_query_diff()](#dolt_query_diff)
 
-# Version Control Functions
+## Version Control Functions
 
 Doltgres provides functions for version control features that update the state of the database, such
 as creating or deleting branches, making a new commit, etc. Each is named after the Git command that
@@ -1571,7 +1571,7 @@ SELECT * from dolt_constraint_violations_child;
 */
 ```
 
-# Informational Functions
+## Informational Functions
 
 ## `ACTIVE_BRANCH()`
 
@@ -1689,7 +1689,7 @@ select has_ancestor('main', 'E');    -- true
 select has_ancestor('G', 'main');    -- true
 ```
 
-# Table Functions
+## Table Functions
 
 Table functions operate like regular SQL functions, but instead of returning a single,
 scalar value, a table function returns rows of data, just like a table. Dolt's table

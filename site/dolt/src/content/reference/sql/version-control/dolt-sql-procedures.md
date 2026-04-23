@@ -41,7 +41,7 @@ title: Dolt SQL Procedures
   - [dolt_stats_gc()](#dolt_stats_gc)
   - [dolt_stats_info()](#dolt_stats_info)
 - [Access Control](#access-control)
-# Dolt SQL Procedures
+## Dolt SQL Procedures
 
 Dolt provides native stored procedures to allow access to `dolt` CLI
 commands from within a SQL session. Each procedure is named after the
@@ -1807,7 +1807,7 @@ SELECT * from dolt_constraint_violations_child;
 */
 ```
 
-# Statistics Updates
+## Statistics Updates
 
 Control functions are used to start and stop background thread activity related to statistics updates.
 See [stats documentation](/sql-reference/sql-support/miscellaneous#stats-controller-functions) for more information.
@@ -1856,7 +1856,7 @@ Returns the current state of the stats provider (optional `'-short'` flag).
 {""dbCnt":1,"active":false,"storageBucketCnt":2,"cachedBucketCnt":2,"cachedBoundCnt":2,"cachedTemplateCnt":4,"statCnt":2,"backing":""repo2""}
 ```
 
-# Access Control
+## Access Control
 Dolt stored procedures are access controlled using the GRANT permissions system. MySQL database permissions trickle down to tables and procedures, someone who has Execute permission on a database would have Execute permission on all procedures related to that database. Dolt deviates moderately from this behavior for sensitive operations. See [Administrative Procedures](#administrative-procedures) below.
 
 Users who need common Dolt capability such as adding and committing to a branch will need Execute permission granted on the database in question. As a privileged user, you can grant access with the following command:

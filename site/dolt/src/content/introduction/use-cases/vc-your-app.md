@@ -4,7 +4,7 @@ title: Version Control Your Application
 
 # Version Control Your Application
 
-# Problem
+## Problem
 
 * Do your customers want branches and merges in your application? 
 * Do your customers want to review changes in your application before they go live? 
@@ -12,7 +12,7 @@ title: Version Control Your Application
 * Do you want to expose audit log functionality in your application?
 * Do you want to expose rollback functionality in your application?
 
-# Dolt solves this by…
+## Dolt solves this by…
 
 If you have an application that would benefit from [branches](/concepts/dolt/git/branch), [merges](/concepts/dolt/git/merge), [diffs](/concepts/dolt/git/diff), [logs](/concepts/dolt/git/log), and human review of changes, you can use Dolt to power that application. Dolt gives you branch, diff, and merge at the database layer. 
 
@@ -24,7 +24,7 @@ Dolt ships with standard [RDBMS](/concepts/dolt/rdbms/) tools like [replication]
 
 In the past applications that needed these features required [slowly changing dimension](https://www.dolthub.com/blog/2021-09-17-database-version-control/) or [soft deletes](https://www.dolthub.com/blog/2022-11-03-soft-deletes/). These approaches are cumbersome and do not support merge. Dolt gives application the full development power of Git.
 
-# Dolt replaces
+## Dolt replaces
 
 ## Soft Deletes
 
@@ -34,19 +34,19 @@ A common technique to version your database is to use [soft deletes](https://www
 
 A more advanced technique for versioning databases is [slowly changing dimension](https://www.dolthub.com/blog/2023-06-22-slowly-changing-dimension/). Slowly Changing Dimension is similar to soft deletes. Additional database columns are added to tables to manage versioning. Dolt is slowly changing dimension on every table by default. Queries involving the slowly changing dimension become Dolt history queries against [system tables](/sql-reference/version-control/dolt-system-tables). Moreover, complicated [merge](/concepts/dolt/git/merge) processes can happen at the database layer. Merges must handled by custom code at the application layer with slowly changing dimension.
 
-# Companies Doing This
+## Companies Doing This
 
 * [Threekit](https://www.threekit.com/) 
 * [Network To Code](https://www.networktocode.com/)
 * [FJA](https://www.fja.com/)
 * [Idearoom](https://www.idearoom.com/)
 
-# Case Studies
+## Case Studies
 
 * [Nautobot by Network To Code](https://www.dolthub.com/blog/2021-11-19-dolt-nautobot/)
 * [Turbine](https://www.dolthub.com/blog/2022-08-17-dolt-turbine/)
 
-# Other Related Articles
+## Other Related Articles
 
 * [Django and Dolt](https://www.dolthub.com/blog/2021-06-09-running-django-on-dolt/)
 * [Django and Dolt Part II](https://www.dolthub.com/blog/2021-08-27-django-dolt-2/)

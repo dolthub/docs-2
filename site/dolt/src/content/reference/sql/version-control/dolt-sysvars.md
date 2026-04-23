@@ -4,7 +4,7 @@ title: Dolt System Variables
 
 # Dolt System Variables
 
-# Table of contents
+## Table of contents
 
 - [General system setting variables](#general-system-setting-variables)
 
@@ -41,7 +41,7 @@ title: Dolt System Variables
 
 - [Persisting System Variables](#persisting-system-variables)
 
-# General system setting variables
+## General system setting variables
 
 ## `dbname_default_branch`
 
@@ -193,7 +193,7 @@ merge and allows them to be committed. Defaults to `0`.
 
 When set to `1`, Dolt will not attempt to automatically merge concurrent changes to the same JSON document, and will instead report the merge as having conflicts which must manually be resolved. Use this if your JSON requires invariants that could be violated if two commits make concurrent changes to different locations in the same document. Defaults to `0`.
 
-# Replication variables
+## Replication variables
 
 ## `dolt_replicate_to_remote`
 
@@ -294,7 +294,7 @@ a warning rather than causing queries to fail. Defaults to `0`.
 mysql> SET @@GLOBAL.dolt_skip_replication_errors = 1;
 ```
 
-# Session metadata variables
+## Session metadata variables
 
 ## `dbname_head_ref`
 
@@ -341,7 +341,7 @@ This system variable reflects the current staged root value's hash. For a databa
 this variable will be called `@@mydb_staged` Selecting it is useful for diagnostics. It is
 read-only.
 
-# Persisting System Variables
+## Persisting System Variables
 
 Dolt supports a limited form of system variable persistence. The same way session variables can be
 changed with `SET`, global variables can be persisted to disk with `SET PERSIST`. Persisted system

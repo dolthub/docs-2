@@ -4,7 +4,7 @@ title: Versioned MySQL Replica
 
 # Versioned MySQL Replica
 
-# Problem
+## Problem
 
 * Is your production MySQL vulnerable to data loss? 
 * If an operator runs a bad query, script, or deployment can your production MySQL can be down for hours or days as you recover data from backups or logs?
@@ -12,7 +12,7 @@ title: Versioned MySQL Replica
 * Does internal audit want an immutable log of what changes on your MySQL instance?
 * Do you want the ability to copy and sync your production MySQL database for analytics, development, or debugging?
 
-# Dolt solves this by…
+## Dolt solves this by…
 
 Because Dolt is [MySQL-compatible](/sql-reference/benchmarks/correctness), you can set Dolt up as [a versioned replica](/introduction/getting-started/versioned-mysql-replica) of your MySQL primary. Every transaction commit on your primary becomes a [Dolt commit](/concepts/dolt/git/commits) on the Dolt replica. 
 
@@ -24,7 +24,7 @@ Moreover, Dolt can be added to your serving path as a read-only MySQL replica, s
 
 Additionally, a Dolt replica can be easily cloned (ie. copied) to a developer's machine for debugging purposes. See a data issue in production? Debug locally on your laptop safely.
 
-# Dolt replaces...
+## Dolt replaces...
 
 ## Backups and Transaction Logs
 
@@ -34,15 +34,15 @@ Dolt as a versioned replica becomes your first line of defense against a bad ope
 
 [Change Data Capture](https://www.dolthub.com/blog/2023-03-01-change-data-capture/) is a way to add a history of data changes to an existing database. Modern change data capture tools consume replication logs to produce database changes in a consumable stream. Dolt can consume the same logs producing a simpler change data capture solution. 
 
-# Companies Doing this
+## Companies Doing this
 
 * [NoCD](https://www.treatmyocd.com/)
 
-# Case Studies
+## Case Studies
 
 Let us know if you would like us to feature your use of Dolt as a versioned MySQL replica here.
 
-# Related Articles
+## Related Articles
 
 * [Dolt Binlog Replication Preview](https://www.dolthub.com/blog/2023-02-17-binlog-replication-preview/)
 * [Getting Started: Versioned MySQL Replica](https://www.dolthub.com/blog/2023-03-15-getting-started-versioned-mysql-replica/)

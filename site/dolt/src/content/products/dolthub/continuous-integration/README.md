@@ -15,7 +15,7 @@ Dolt's revolutionary technology that marries Git and MySql now allows for CI tes
 
 The following sections will introduce you to how CI works with Dolt, DoltHub and DoltLab and help you setup CI testing for your own databases.
 
-# CI starts with Dolt
+## CI starts with Dolt
 
 CI configuration for a DoltHub or DoltLab database is stored in the database itself. At the time of this writing, in order to add CI configuration to a DoltHub or DoltLab database, you will need to have a local Dolt client version >= [v1.45.3](https://github.com/dolthub/dolt/releases/tag/v1.45.3) and will have to clone a copy of the the database. In order to configure CI on the database, you will use Dolt's CI CLI commands.
 
@@ -34,25 +34,25 @@ The `dolt ci` commands as of Dolt v1.45.3 are:
 
 The `dolt ci init` command is the starting point for adding CI to a Dolt database, since it creates the underlying tables Dolt needs to begin storing configuration. To get started adding CI to a Dolt database, follow our [getting started guide]().
 
-# Workflows
+## Workflows
 
 Borrowing from [GitHub Actions](https://github.com/features/actions) terminology, Dolt CI configuration is also defined as _workflows_ and follows their same general syntax and definitions. Workflows are yaml files that define when CI on a database should run, and what should happen during the course of that run. Though workflows in Dolt are defined and edited as files, Dolt does not store these files directly. Instead, it parses these files and only stores the relevant content of each file in its internal CI tables. These tables are then read by DoltHub and DoltLab to enact the defined CI runs.
 
 More specifically, a workflow file specifies _when_ it should run, by the Events defined in it, and _what_ should happen during the run by the Jobs defined in it.
 
-# Events
+## Events
 
 Events are specific activities that occur in a DoltHub or DoltLab database that trigger a workflow to run. One such event might be the pushing of a branch to the database, known as a `push` event, or the opening of a pull request on a database, a `pull_request` event. When these events occur on a database that contains a workflow that specifies it should run on these events, DoltHub and DoltLab run them.
 
 For a complete list of events that trigger workflows, please see the [workflow reference](/products/dolthub/continuous-integration/reference).
 
-# Jobs
+## Jobs
 
 In addition to Events, A workflow file also contains Jobs. In the context of a workflow, Jobs define what should happen when a workflow runs. This definition consists of a series of programmatic Steps that DoltHub or DoltLab will execute during the course of a workflow run. These workflow Jobs are somewhat related to DoltHub and DoltLab _Jobs_, although at this time their relationship has no direct impact on the end-user.
 
 These DoltHub/DoltLab Jobs, are the automated asynchronous machinery that allow DoltHub and DoltLab to run long running processes to do programmatic work outside of its main API. These come in different types and depending on their type, do things like merge pull requests, or import a file uploaded by a user into a database. With the addition of CI on DoltHub and DoltLab, a new type of Job was added, a Dolt CI Job. This is the type of DoltHub/DoltLab Job executes a workflow Job as it is defined in the workflow file.
 
-# Steps
+## Steps
 
 A workflow Job is made up of a series of Steps. A step, in its current form, is a single Saved Query that will run against the database as the "check", or test, that asserts the database branch's validity. Steps run in the order they're defined and will "pass", or succeed, if the Saved Query they execute completes without error and if the defined expected SQL results match the actual SQL results returned from the Saved Query.
 

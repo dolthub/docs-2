@@ -4,7 +4,7 @@ title: Dolt SQL Functions
 
 # Dolt SQL Functions
 
-# Table of Contents
+## Table of Contents
 
 - [Informational Functions](#informational-functions)
 
@@ -32,7 +32,7 @@ title: Dolt SQL Functions
   - [dolt_branch_status()](#dolt_branch_status)
   - [dolt_test_run()](#dolt_test_run)
 
-# Informational Functions
+## Informational Functions
 
 ## `ACTIVE_BRANCH()`
 
@@ -190,7 +190,7 @@ Query OK, 2 rows affected (0.00 sec)
 +-----+
 ```
 
-# Table Functions
+## Table Functions
 
 Table functions operate like regular SQL functions, but instead of returning a single,
 scalar value, a table function returns rows of data, just like a table. Dolt's table

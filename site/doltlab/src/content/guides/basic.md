@@ -32,11 +32,11 @@ This guide will cover how to perform common DoltLab administrator configuration 
 21. [Troubleshoot common issues](#troubleshoot-common-issues)
 22. [Run DoltLab with Podman](#run-doltlab-with-podman)
 
-# File issues and view release notes
+## File issues and view release notes
 
 DoltLab's source code is currently closed, but you can file DoltLab issues the [issues repository](https://github.com/dolthub/doltlab-issues). Release notes are available [here](/reference/release-notes/).
 
-# Backup and restore volumes
+## Backup and restore volumes
 
 DoltLab currently persists all data to local disk using Docker volumes. To backup or restore DoltLab's data, we recommend the following steps which follow Docker's official [volume backup and restore documentation](https://docs.docker.com/storage/volumes/#back-up-restore-or-migrate-data-volumes).
 
@@ -216,11 +216,11 @@ dolthubapi
 
 The database has now been successfully restored, and you can now restart DoltLab.
 
-# Connect with the DoltLab Team
+## Connect with the DoltLab Team
 
 If you need to connect to a DoltLab team member, the best way to do so is on [Discord](https://discord.gg/s8uVgc3), in the `#doltlab` server.
 
-# View DoltLab Service Logs
+## View DoltLab Service Logs
 
 DoltLab is composed of [multiple services](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/) running in a single container network via Compose. The container engine writes the logs of each DoltLab service to an internal location. Logs for a particular service can be viewed using the engine's logs command. For example, to view logs of `doltlabapi` service, run:
 
@@ -355,7 +355,7 @@ DoltLab GraphQL API is the data API for DoltLab's frontend UI. This service only
 DoltLab UI is a react application. It does not log any information in the server, and only logs a internal "ResourceType" name
 in the client on a particular error.
 
-# Send Service Logs to DoltLab Team
+## Send Service Logs to DoltLab Team
 
 If you need to send service logs to the DoltLab team, first locate the logs on the host using the `docker inspect` command, then `cp` the logs to your working directory:
 
@@ -372,7 +372,7 @@ chmod 0644 ./doltlab-api-logs.json
 
 Finally, download the copied log file from your DoltLab host using `scp`. You can then send this and any other log files to the DoltLab team member you're working with via email.
 
-# Authenticate a Dolt Client to use a DoltLab account
+## Authenticate a Dolt Client to use a DoltLab account
 
 To authenticate a Dolt client against a DoltLab remote, use the `--auth-endpoint`, `--login-url`, and `--insecure` arguments with the [dolt login](https://docs.dolthub.com/cli-reference/cli#dolt-login) command.
 
@@ -422,7 +422,7 @@ Paste the public key into the "Public Key" field, write a description in the "De
 
 Your Dolt client is now authenticated for this DoltLab account.
 
-# Monitor DoltLab with cAdvisor and Prometheus
+## Monitor DoltLab with cAdvisor and Prometheus
 
 [Prometheus](https://prometheus.io/) [gRPC](https://grpc.io/) service metrics for [DoltLab's Remote API Server](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-remoteapi-server), `doltlabremoteapi`, and [DoltLab's Main API server](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-api-server), `doltlabapi`, are published on port `7770`.
 
@@ -471,7 +471,7 @@ docker run -d --add-host host.docker.internal:host-gateway --name=prometheus -p 
 
 `--add-host host.docker.internal:host-gateway` is only required if you are running the Prometheus server _on_ your DoltLab host. If its running elsewhere, this argument may be omitted, and the `host.docker.internal` hostname in `prometheus.yml` can be changed to the hostname of your DoltLab host.
 
-# Prevent unauthorized user account creation
+## Prevent unauthorized user account creation
 
 DoltLab supports explicit email whitelisting to prevent account creation by unauthorized users.
 
@@ -508,7 +508,7 @@ Execute the following `INSERT` to allow the user with `example@address.com` to c
 INSERT INTO email_whitelist_elements (email_address, updated_at, created_at) VALUES ('example@address.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 ```
 
-# Use an external database server with DoltLab
+## Use an external database server with DoltLab
 
 In the external Dolt database, prior to connecting your DoltLab instance, run the following SQL statements:
 
@@ -523,13 +523,13 @@ Next, stop your DoltLab instance if it is running. Then, supply the `--doltlabdb
 
 When you restart your instance it should now be connected to your external Dolt database.
 
-# DoltLab Jobs
+## DoltLab Jobs
 
 DoltLab Jobs are stand-alone, long-running Docker containers that perform specific tasks for DoltLab users behind the scenes.
 
 As a result, DoltLab may consume additional memory and disk, depending on the number of running Jobs and their workload.
 
-# Disable usage metrics
+## Disable usage metrics
 
 By default, DoltLab collects first-party metrics for deployed instances. We use DoltLab's metrics to determine how many resources to allocate toward its development and improvement.
 
@@ -548,7 +548,7 @@ Save these changes, then rerun the [installer](/reference/installer) to regenera
 
 Alternatively, to disable first-party metrics using command line arguments, run the [installer](/reference/installer) with `--disable-usage-metrics=true`.
 
-# Use a domain name with DoltLab
+## Use a domain name with DoltLab
 
 It's common practice to provision a domain name to use for a DoltLab instance. To do so, secure a domain name and map it to the _stable_, public IP address of the DoltLab host. Then, supply the domain name as the value to the `--host` argument used with the [installer](/reference/installer).
 
@@ -579,7 +579,7 @@ Restart your DoltLab instance with `./start.sh`.
 
 In the event you are configuring your domain name with an Elastic Load Balancer, ensure that it specifies Target Groups for each of the ports required to operate DoltLab, `80`, `100`, `4321`, and `50051`.
 
-# Run DoltLab on Hosted Dolt
+## Run DoltLab on Hosted Dolt
 
 DoltLab can be configured to use a [Hosted Dolt](https://hosted.doltdb.com) instance as its application database. This allows DoltLab administrators to use the feature-rich SQL workbench Hosted Dolt provides to interact with their DoltLab database.
 
@@ -667,7 +667,7 @@ Start DoltLab using the `./start.sh` script generated by the [installer](/refere
 
 ![](../.gitbook/assets/hosted_dolt_workbench.png)
 
-# Improve DoltLab performance
+## Improve DoltLab performance
 
 It is possible to limit the number of concurrent Jobs running on a DoltLab host, which might be starving the host for resources and affecting DoltLab's performance.
 
@@ -701,7 +701,7 @@ Alternatively, you can use the following command line arguments with the [instal
 --job-max-retries="5
 ```
 
-# Serve DoltLab behind an AWS Network Load Balancer
+## Serve DoltLab behind an AWS Network Load Balancer
 
 The following section describes how to setup an [AWS Network Load Balancer (NLB)](https://aws.amazon.com/elasticloadbalancing/network-load-balancer/) for a DoltLab instance.
 
@@ -758,7 +758,7 @@ On the NLB page you should now see the DNS name of your NLB which can be used to
 
 Restart your DoltLab instance supplying this DNS name as the `--host` to the [installer](/reference/installer), and your DoltLab instance will now be ready to run exclusively through the NLB.
 
-# Update application database passwords
+## Update application database passwords
 
 If DoltLab has never been started before on the host using the `start.sh` script, the passwords for its application database `doltlabdb` can be updated simply by editing their value in the `installer_config.yaml`, and then running the `installer`.
 
@@ -810,7 +810,7 @@ Finally, rerun the `installer` to regenerate DoltLab's assets with the new passw
 
 Completing these steps ensures that the passwords are consistent on disk _and_ in the assets generated by the `installer`. You can now restart DoltLab.
 
-# Run DoltLab with no egress access
+## Run DoltLab with no egress access
 
 Starting with DoltLab >= `v2.3.3`, DoltLab's service images are available [to download](https://github.com/dolthub/doltlab-issues/releases/tag/v2.3.3) and do not need to be pulled from their AWS ECR repositories. This is useful for when egress traffic is restricted on the DoltLab host.
 
@@ -906,7 +906,7 @@ $ cd ../doltlab
 $ ./start.sh
 ```
 
-# Reset a user's password
+## Reset a user's password
 
 As of [DoltLab v2.2.0](https://www.dolthub.com/blog/2024-07-11-announcing-doltlab-v220/), if a user of your DoltLab instance has forgotten their password, the DoltLab admin must reset that user's password on their behalf.
 
@@ -918,7 +918,7 @@ After completing the form, the selected user will be able to login with their ne
 
 Starting with DoltLab >= v2.3.7, resetting a user's password will also reset the user's password attempts. If you're instance is < v2.3.7, follow the steps in the next section to reset the user's password attempts also, if this too is required.
 
-# Reset password attempts for a user
+## Reset password attempts for a user
 
 In the event a user has exceeded the maximumum number of password attempts, 3, the DoltLab admin can reset the user's password attempts by using the `doltlabdb/shell-db.sh` script.
 
@@ -934,7 +934,7 @@ DELETE FROM password_attempts WHERE user_id_fk = 'user_id';
 
 This will reset the user's password attempts to 0 and allow them to attempt to login again.
 
-# Change doltlabdb Server Configuration
+## Change doltlabdb Server Configuration
 
 In DoltLab >= v2.3.12, the unused `doltlabdb-dolt-configs` volume has been removed, in favor of explicitly generating and mounting a [config.yaml](https://docs.dolthub.com/sql-reference/server/configuration#config.yaml) file used to configure the `doltlabdb` application server.
 
@@ -944,7 +944,7 @@ When the `installer` runs, it will generate a new Dolt server configuration file
 
 Alternatively, a custom `config.yaml` file can be supplied to the [server_config](/reference/installer/configuration-file#server_config) field in the `installer_config.yaml` file. If this is supplied, it will take precedence and the installer will not generate its own `config.yaml`. All settings for `doltlabdb` will need to be defined in this file.
 
-# Troubleshoot common issues
+## Troubleshoot common issues
 
 ## DoltLab UI displaying an error after starting the instance
 
@@ -985,7 +985,7 @@ After deleting the volume, start your DoltLab instance again. DoltLab will recre
 
 For all other issues not covered in this section, please reach out to our support team on [Discord](https://discord.gg/dolthub).
 
-# Run DoltLab with Podman
+## Run DoltLab with Podman
 
 To run DoltLab with Podman (rootless), do the following:
 

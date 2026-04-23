@@ -25,7 +25,7 @@ This guide will cover how to perform common DoltLab administrator configuration 
 17. [Serve DoltLab behind an AWS Network Load Balancer](#serve-doltlab-behind-an-aws-network-load-balancer)
 18. [Enable DoltLab Enterprise features](#enable-doltlab-enterprise-features)
 
-# Backup and restore volumes
+## Backup and restore volumes
 
 DoltLab persists all data to local disk using Docker volumes. To backup or restore DoltLab's data, we recommend the following steps which follow Docker's official [volume backup and restore documentation](https://docs.docker.com/storage/volumes/#back-up-restore-or-migrate-data-volumes), with the exception of DoltLab's PostgreSQL server.
 
@@ -260,7 +260,7 @@ dolthubapi
 
 The database has now been successfully restored, and you can now restart DoltLab.
 
-# Authenticate a Dolt client to use a DoltLab account
+## Authenticate a Dolt client to use a DoltLab account
 
 As of Dolt `v0.39.0`, the [dolt login](https://docs.dolthub.com/cli-reference/cli#dolt-login) command can be used to authenticate against DoltLab instances.
 
@@ -312,7 +312,7 @@ Paste the public key into the "Public Key" field, write a description in the "De
 
 Your Dolt client is now authenticated for this DoltLab account.
 
-# Monitor DoltLab with cAdvisor and Prometheus
+## Monitor DoltLab with cAdvisor and Prometheus
 
 As of DoltLab `v0.3.0`, [Prometheus](https://prometheus.io/) [gRPC](https://grpc.io/) service metrics for [DoltLab's Remote API Server](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-remoteapi-server), `doltlabremoteapi`, and [DoltLab's Main API server](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-api-server), `doltlabapi`, are published on port `7770`.
 
@@ -361,7 +361,7 @@ docker run -d --add-host host.docker.internal:host-gateway --name=prometheus -p 
 
 `--add-host host.docker.internal:host-gateway` is only required if running the Prometheus server on the DoltLab host. If running it elsewhere, this argument may be omitted, and the `host.docker.internal` hostname in `prometheus.yml` can be changed to the hostname of your DoltLab host.
 
-# Connect to an SMTP server with implicit TLS
+## Connect to an SMTP server with implicit TLS
 
 For DoltLab >= `v0.4.2` and < `v2.1.0`, connections to existing SMTP servers using implicit TLS (on port `465`, for example) are supported. To connect using implicit TLS, edit the `docker-compose.yaml` included in the DoltLab zip. Under the `doltlabapi` section, in the `command` block, add the following argument:
 
@@ -377,7 +377,7 @@ doltlabapi:
 
 After adding the argument, restart DoltLab for it to take effect. Additionally, TLS verification can be skipped by adding the additional argument `-emailInsecureTLS`.
 
-# Troubleshoot SMTP server connection problems
+## Troubleshoot SMTP server connection problems
 
 DoltLab requires a connection to an existing SMTP server in order for users to create accounts, verify email addresses, reset forgotten passwords, and collaborate on databases.
 
@@ -465,7 +465,7 @@ Sending email with auth method: plain
 Successfully sent email!
 ```
 
-# Prevent unauthorized user account creation
+## Prevent unauthorized user account creation
 
 DoltLab for non-enterprise use currently supports explicit email whitelisting to prevent account creation by unauthorized users.
 
@@ -495,7 +495,7 @@ INSERT INTO email_whitelist_elements (email_address, updated_at, created_at) VAL
 
 For DoltLab >= `v1.0.0` the same script can be used to update the `email_whitelist_elements` table, but expects `DOLT_PASSWORD` in place of `PGPASSWORD`. It will also open a `mysql>` prompt.
 
-# Use an external database server with DoltLab
+## Use an external database server with DoltLab
 
 For DoltLab `v0.8.4` and earlier, you can connect a DoltLab instance to an external PostgreSQL server version `13` or later. To connect, in DoltLab's `docker-compose.yaml`, supply the host and port for the external server to `doltlabapi`'s `-pghost` and `-pgport` arguments.
 
@@ -544,11 +544,11 @@ GRANT ALL ON *.* TO 'dolthubadmin';
 GRANT ALL ON dolthubapi.* TO 'dolthubapi';
 ```
 
-# Expose a DoltLab instance with ngrok
+## Expose a DoltLab instance with ngrok
 
 As of DoltLab `v0.5.5`, DoltLab instances can be exposed with [ngrok](https://ngrok.com/). ["How to expose DoltLab with ngrok"](https://www.dolthub.com/blog/2022-08-08-expose-doltlab-with-ngrok/) contains the instructions for this process, however, we do not recommend doing this for production DoltLab instances. This process requires one of DoltLab's services to be run _without_ authentication, which may expose sensitive data. Do this at your own risk.
 
-# DoltLab Jobs
+## DoltLab Jobs
 
 Jobs were [introduced](https://www.dolthub.com/blog/2022-10-07-dolthub-jobs-and-doltlab-v060/) on [DoltHub](https://www.dolthub.com) and are now available on DoltLab ^`v0.7.0`. DoltLab Jobs are stand-alone, long-running Docker containers that perform specific tasks for DoltLab users behind the scenes.
 
@@ -556,13 +556,13 @@ As a result of the Jobs infrastructure, DoltLab now requires more memory and dis
 
 We recommend running DoltLab on a host with at least 64 GB of memory, and 20 TBs of disk. These recommended amounts will decrease as we continue to improve Dolt's resource efficiency and utilization.
 
-# Disable usage metrics
+## Disable usage metrics
 
 By default, DoltLab collects first-party metrics for deployed instances. We use DoltLab's metrics to determine how many resources to allocate toward its development and improvement.
 
 As of `v0.7.0`, DoltLab does not collect third-party metrics, and additionally, DoltLab's first-party metrics can be disabled. To disable metrics, edit the `start-doltlab.sh` script and remove `run_with_metrics` from the `_main` function.
 
-# Migrate old format DoltLab databases
+## Migrate old format DoltLab databases
 
 Unlike [DoltHub](https://www.dolthub.com), DoltLab does not support automatic database migration for old format Dolt databases. Instead, old format database hosted on DoltLab need to be migrated manually. To migrate a DoltLab database:
 
@@ -572,7 +572,7 @@ Unlike [DoltHub](https://www.dolthub.com), DoltLab does not support automatic da
 4. Add the remote of the new DoltLab database to the cloned database with `dolt remote add <remote name> http://<host ip>:50051/<owner>/<new db name>`.
 5. Push the migrated clone to the new database with `dolt push <remote name> <branch name>`.
 
-# Use a domain name with DoltLab
+## Use a domain name with DoltLab
 
 It's common practice to provision a domain name to use for a DoltLab instance. To do so, secure a domain name and map it to the _stable_, public IP address of the DoltLab host. Then, supply the domain name as the value to the `HOST_IP` environment variable when starting DoltLab. Let's look at an example using services offered by AWS.
 
@@ -588,7 +588,7 @@ Your DoltLab host should now be accessible via your new domain name. You can now
 
 In the event you are configuring your domain name with an Elastic Load Balancer, ensure that it specifies Target Groups for each of the ports required to operate DoltLab, `80`, `100`, `4321`, and `50051`.
 
-# Run DoltLab on Hosted Dolt
+## Run DoltLab on Hosted Dolt
 
 Starting with DoltLab `v1.0.0`, DoltLab can be configured to use a [Hosted Dolt](https://hosted.doltdb.com) instance as its application database. This allows DoltLab administrators to use the feature-rich SQL workbench Hosted Dolt provides to interact with their DoltLab database.
 
@@ -720,7 +720,7 @@ Once DoltLab is running successfully against `my-doltlab-db-1`, you can create a
 
 ![](../.gitbook/assets/hosted_dolt_workbench.png)
 
-# Serve DoltLab over HTTPS with a TLS reverse proxy
+## Serve DoltLab over HTTPS with a TLS reverse proxy
 
 Starting with DoltLab `v1.0.5`, it is possible to serve a DoltLab instance behind a TLS reverse proxy. You may want to do this if you want to serve your DoltLab instance over `HTTPS` instead of `HTTP`. Let's walkthrough an example of how to run a DoltLab instance behind an [nginx](https://www.nginx.com/) TLS proxy, running on the same host. We will use [doltlab.dolthub.com](https://doltlab.dolthub.com) as our example.
 
@@ -925,7 +925,7 @@ export DOLTLAB_REMOTE_PORT=50043 # set to new TLS port for cloning/pushing/pulli
 
 Once your DoltLab instance comes up, it will be served on `HTTPS` via the `nginx` TLS proxy.
 
-# Serve DoltLab over HTTPS natively
+## Serve DoltLab over HTTPS natively
 
 Starting with DoltLab `v1.0.6`, it is possible to run DoltLab over `HTTPS` with TLS natively. To do so, make sure that port `443` is open on the host running DoltLab (as well as the other required ports `100`, `4321`, and `50051`) and that you have a valid TLS certificate that uses the `HOST_IP` of the DoltLab host. We recommend creating a TLS certificate using [certbot](https://certbot.eff.org/).
 
@@ -940,7 +940,7 @@ export TLS_PRIVATE_KEY=/path/to/tls/private/key
 
 Once the services are spun up, DoltLab will be available at `https://${HOST_IP}`.
 
-# Improve DoltLab Performance
+## Improve DoltLab Performance
 
 Starting with DoltLab `v1.1.0`, it is possible to limit the number of concurrent Jobs running on a DoltLab host by adding optional arguments to the `doltlabapi` block of the `docker-compose.yaml` or `docker-compose-tls.yaml` files.
 
@@ -968,7 +968,7 @@ command:
 
 `jobMaxRetries` is the number of times the Job Scheduler will retry scheduling a Job before permanently giving up, requiring the Job to be recreated.
 
-# Serve DoltLab behind an AWS Network Load Balancer
+## Serve DoltLab behind an AWS Network Load Balancer
 
 The following section describes how to setup an [AWS Network Load Balancer (NLB)](https://aws.amazon.com/elasticloadbalancing/network-load-balancer/) for a DoltLab instance. This guide will be using DoltLab `v2.0.8`.
 
@@ -1080,6 +1080,6 @@ On the NLB page you should now see the DNS name of your NLB which can be used to
 
 Restart your DoltLab instance supplying this DNS name as the `HOST_IP`, and your DoltLab instance will now be running exclusively through the NLB.
 
-# Enable DoltLab Enterprise Features
+## Enable DoltLab Enterprise Features
 
 DoltLab Enterprise is available in versions >= v2.0.0. If your version of DoltLab is >= v2.1.0, please use the [current DoltLab Enterprise guide](/guides/enterprise). Otherwise, please see [this blog post](https://www.dolthub.com/blog/2023-10-30-announcing-doltlab-enterprise/) for instructions on configuring the available DoltLab Enterprise features.

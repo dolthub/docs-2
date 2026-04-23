@@ -145,6 +145,6 @@ runtime: podman
 
 When the Podman runtime is selected, `start.sh` uses `podman-compose`, exports `UID`/`GID` for rootless volumes, removes unsupported `depends_on` entries in the compose file, and maps the rootless socket at `/run/user/${UID}/podman/podman.sock`.
 
-# Next Steps
+## Next Steps
 
 - [Administrator Guide](/guides/basic)
