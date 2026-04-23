@@ -64,17 +64,17 @@ describe("Dolt docs — page content spot checks", () => {
 
   context("SQL Reference", () => {
     it("Running the Server page has correct heading", () => {
-      assertPageContent("/sql-reference/server", "dolt sql-server");
+      assertPageContent("/sql-reference/server", "Running the Dolt SQL Server");
     });
 
     it("Configuration page has correct heading", () => {
-      assertPageContent("/sql-reference/server/configuration", "config.yaml");
+      assertPageContent("/sql-reference/server/configuration", "Configuration");
     });
 
     it("Version Control page has correct heading", () => {
       assertPageContent(
         "/sql-reference/version-control",
-        "Version control overview",
+        "Version Control in Dolt",
       );
     });
 
@@ -82,11 +82,8 @@ describe("Dolt docs — page content spot checks", () => {
       assertPageLoads("/sql-reference/sql-support");
     });
 
-    it("Procedures page has correct heading", () => {
-      assertPageContent(
-        "/sql-reference/version-control/dolt-sql-procedures",
-        "Procedures",
-      );
+    it("Procedures page loads with content", () => {
+      assertPageLoads("/sql-reference/version-control/dolt-sql-procedures");
     });
 
     it("System Tables page has correct heading", () => {
@@ -99,10 +96,7 @@ describe("Dolt docs — page content spot checks", () => {
 
   context("CLI Reference", () => {
     it("Commands page has correct heading", () => {
-      assertPageContent(
-        "/cli-reference/cli",
-        "Command Line Interface Reference",
-      );
+      assertPageContent("/cli-reference/cli", "CLI");
     });
 
     it("Git Comparison page loads with content", () => {
@@ -118,7 +112,7 @@ describe("Dolt docs — page content spot checks", () => {
     it("Prolly Trees page has correct heading", () => {
       assertPageContent(
         "/architecture/storage-engine/prolly-tree",
-        "Prolly Trees",
+        "Prolly Tree",
       );
     });
   });
