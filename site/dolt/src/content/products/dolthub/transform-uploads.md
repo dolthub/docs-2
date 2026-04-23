@@ -13,7 +13,7 @@ Additionally, on the Database Settings page of DoltHub/DoltLab, users can provid
 
 Pull requests are automatically created against a database after successful file uploads and imports.
 
-<h1 id="#receive-post-request">Receiving the POST request</h1>
+<h2 id="#receive-post-request">Receiving the POST request</h2>
 
 The transform file server can expect a http `POST` request containing the contents of an uploaded file along with the following minimum http headers:
 
@@ -36,7 +36,7 @@ If the uploaded file has a `content-type` of `text/csv`, `text/psv`, `applicatio
     * `replace`: Used to replace a table with contents of file using table&apos;s existing schema.
 * `x-import-force`: If `x-import-operation=overwrite` and data already exists in the destination table, a value of `true` here allows the target table to be overwritten.
 
-<h1 id="#send-post-response">Sending the POST response</h1>
+<h2 id="#send-post-response">Sending the POST response</h2>
 
 In the http response to this `POST`, transform file servers should provide the transformed file contents in the response body. Additionally, depending on the type of import desired, the response should include some combination of the following http headers:
 
@@ -57,7 +57,7 @@ In the http response to this `POST`, transform file servers should provide the t
 * `x-import-primary-keys`: Optional. The primary keys of the table.
 * `x-import-force`: Optional. If `x-import-operation=overwrite` and data already exists in the destination table, a value of `true` here allows the target table to be overwritten.
 
-<h1 id="#example-transform-server">Example Transform Server</h1>
+<h2 id="#example-transform-server">Example Transform Server</h2>
 
 We&apos;ve created a simple example golang [transform server](https://github.com/dolthub/transform-file-server) to demonstrate how you can run one yourself.
 
@@ -88,7 +88,7 @@ Running the example server its default mode will always respond to a transform r
 
 The pull request opened on DoltHub/DoltLab for this import will reflect this static CSV content, regardless of the contents of the file uploaded originally.
 
-<h1 id="#multiple-imports-from-single-transform">Create Multiple Imports from a Single Transform Request</h1>
+<h2 id="#multiple-imports-from-single-transform">Create Multiple Imports from a Single Transform Request</h2>
 
 DoltHub and DoltLab&apos;s automated file import process will create pull requests between new branches created during the database import process and the target branch chosen during file upload.
 

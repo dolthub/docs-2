@@ -12,7 +12,7 @@ Just like Git, Dolt supports syncing with a [remote database](/concepts/dolt/git
 
 Remotes are configured using the [`remote` command](/cli-reference/cli#dolt-remote). You configure a remote with a name and a URL. When you want to use the remote, you refer to it by name. When you clone a remote, a remote named `origin` is automatically configured for you.
 
-<h1 id="pushing-to-remote">Pushing to a Remote</h1>
+<h2 id="pushing-to-remote">Pushing to a Remote</h2>
 
 Let's go through an example of how you can push data from a local Dolt database to a remote. In this example, we'll use the running Dolt server we created in the [Getting Started](https://docs.dolthub.com/introduction/getting-started/database) section to push a branch to [DoltHub.com](https://www.dolthub.com).
 
