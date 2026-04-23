@@ -25,19 +25,19 @@ describe("Doltgres docs — single h1 per page", () => {
         cy.get("body", { timeout }).should("exist");
 
         cy.get(".docs-article h1").then($h1s => {
-          if ($h1s.length > 1) {
+          if ($h1s.length !== 1) {
             const headings = Array.from($h1s).map(
               el => el.textContent?.replace(/#$/, "").trim() || "",
             );
             violations.push(
-              `${page.path} has ${$h1s.length} h1s: ${headings.join(", ")}`,
+              `${page.path} has ${$h1s.length} h1s${headings.length ? `: ${headings.join(", ")}` : ""}`,
             );
           }
         });
       }).then(() => {
         if (violations.length > 0) {
           throw new Error(
-            `Found ${violations.length} page(s) with multiple h1s:\n${violations.join("\n")}`,
+            `Found ${violations.length} page(s) that do not have exactly one h1:\n${violations.join("\n")}`,
           );
         }
       });
