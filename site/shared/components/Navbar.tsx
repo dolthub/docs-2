@@ -120,9 +120,9 @@ function RightLinks() {
     <div className="flex navbar-right">
       <DiscordButton href={doltDiscord} dark />
       <ExternalLink href={doltGithub} data-cy="github-link" aria-label="github-link">
-        <span className="navbar-github-btn">
+        <span className="navbar-icon-btn">
           <FaGithub />
-          <span className="navbar-github-label">GitHub</span>
+          <span className="navbar-icon-btn-label">GitHub</span>
         </span>
       </ExternalLink>
       <a
