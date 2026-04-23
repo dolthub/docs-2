@@ -23,7 +23,7 @@ are only two notable backend implementations so far:
   functions](/sql-reference/version-control/dolt-sql-functions),
   and new connection semantics.
 
-# Project architecture
+## Project architecture
 
 go-mysql-server defines a number of interfaces to allow integrators to
 communicate about their database's capabilities, what tables exist,

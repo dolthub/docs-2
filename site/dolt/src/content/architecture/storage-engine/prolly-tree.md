@@ -10,7 +10,7 @@ title: Prolly Tree
 
 A Prolly Tree is a data structure closely related to a [B-tree](https://en.wikipedia.org/wiki/B-tree). Prolly Trees are generally useful but have proven particularly effective as the basis of [the storage engine](https://docs.dolthub.com/architecture/storage-engine) for [version controlled databases](https://www.dolthub.com/blog/2022-08-04-database-versioning/).
 
-# Motivation
+## Motivation
 
 Let's say you need a data structure with the following properties:
 
@@ -34,7 +34,7 @@ As you can see a Prolly Tree approximates B-tree performance on reads and writes
 
 Let's dive a bit deeper and show you how.
 
-# How Prolly Trees work
+## How Prolly Trees work
 
 Prolly Trees are a variant of B-trees so let's first review some key B-tree concepts and then dive into how Prolly Trees work in light of those concepts.
 
@@ -122,7 +122,7 @@ When you delete a key, the tree is modified under the same rules as an insert.
 
 ![Prolly Tree Delete Key](../../.gitbook/assets/prolly-tree-delete.png)
 
-# Properties
+## Properties
 
 ## History Independence
 
@@ -172,7 +172,7 @@ Thus, any blocks that share the same content address are only stored in the bloc
 
 As noted earlier, in Dolt's Prolly Tree implementation, the block size is set to be on average 4 kilobytes. Thus, a single change will cause a change in the block store of 4 kilobytes times the size of the tree on average.
 
-# The Nitty Gritty Details
+## The Nitty Gritty Details
 
 Now that you have the general details, let's dive into some details highlighting some of the things we learned iterating on the Noms implementation of Prolly Trees and finally landing on Dolt's stable Prolly Tree implementation.
 
@@ -206,7 +206,7 @@ Prolly Trees themselves are [block store](/architecture/storage-engine/block-sto
 
 Noms block store encoded the types of the data in the store. [Dolt's block store](/architecture/storage-engine/block-store) is built for a SQL database with fixed schema. Thus, type information is stored out of band of the block store and a [more specific, less flexible layout of data on disk is used](https://www.dolthub.com/blog/2022-05-20-new-format-alpha/). This new, type-less layout improves Dolt read and write performance.
 
-# Explaining Algorithmic Performance
+## Explaining Algorithmic Performance
 
 Recall this table:
 
@@ -222,13 +222,13 @@ Structural sharing | ❌ | ✅
 
 We now understand what `n`, `k`, and `w` are in the context of B-Trees and Prolly Trees. As you can see, B-Trees and Prolly Trees offer similar read performance. Prolly Trees pay a slight performance penalty on writes due to the small probability of a chunk split. However, Prolly Trees can produce differences in time proportional to the size of the differences, rather than the size of the tree.
 
-# How Prolly Trees are used in Dolt
+## How Prolly Trees are used in Dolt
 
 In Dolt, [all data in the database is stored in Prolly Trees](https://docs.dolthub.com/architecture/storage-engine#commit-graph). 
 
 For table data, a map of primary key to data columns is stored in a Prolly Tree. Similarly, secondary indexes are maps of index values to the primary key identifying each row. Schemas are stored as Prolly trees to make calculating the root of the database easy. Keyless tables are implemented as every column is a primary key with a count of the number of duplicate rows as the value.
 
-# Prolly Trees In Practice
+## Prolly Trees In Practice
 
 This all looks good on paper. How do Prolly Trees work in practice? On a standard suite of `sysbench` performance tests, Dolt is approximately [as fast as MySQL](https://docs.dolthub.com/sql-reference/benchmarks/latency). 
 

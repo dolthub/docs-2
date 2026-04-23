@@ -4,7 +4,7 @@ title: Dolt System Tables
 
 # Dolt System Tables
 
-# Table of contents
+## Table of contents
 
 - [Database Metadata](#database-metadata-system-tables)
 
@@ -59,9 +59,9 @@ title: Dolt System Tables
 
   - [dolt_rebase](#dolt_rebase)
 
-# Database Metadata System Tables
+## Database Metadata System Tables
 
-## `dolt_branches`
+### `dolt_branches`
 
 `dolt_branches` contains information about branches known to the database.
 
@@ -103,7 +103,7 @@ To find the current active branch use [`select active_branch()`](/sql-reference/
 branches on a remote you have fetched, see
 [`dolt_remote_branches`](#dolt_remote_branches).
 
-## `dolt_remote_branches`
+### `dolt_remote_branches`
 
 `dolt_remote_branches` contains information about branches on remotes
 you have fetched. It has a similar schema as `dolt_branches`, but the `remote`, `branch`, and `dirty` columns
@@ -145,7 +145,7 @@ SELECT * FROM dolt_remote_branches;
 +-----------------+----------------------------------+------------------+------------------------+-------------------------+----------------------------+
 ```
 
-## `dolt_docs`
+### `dolt_docs`
 
 `dolt_docs` stores the contents of Dolt docs \(`LICENSE.md`,
 `README.md`\).
@@ -170,7 +170,7 @@ Gets all docs.
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_procedures`
+### `dolt_procedures`
 
 `dolt_procedures` stores each stored procedure that has been created
 on the database.
@@ -209,7 +209,7 @@ CREATE PROCEDURE simple_proc2() SELECT name FROM category;
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_query_catalog`
+### `dolt_query_catalog`
 
 The `dolt_query_catalog` system table stores named queries for your database.
 Like all data stored in Dolt, these named queries are versioned alongside your data, so
@@ -268,7 +268,7 @@ dolt add dolt_query_catalog
 dolt commit -m "Adding new named query"
 ```
 
-## `dolt_remotes`
+### `dolt_remotes`
 
 `dolt_remotes` returns the remote subcontents of the `repo_state.json`, similar
 to running `dolt remote -v` from the command line.
@@ -305,7 +305,7 @@ WHERE name = 'origin';
 +--------+-----------------------------------------+--------------------------------------+--------+
 ```
 
-## `dolt_backups`
+### `dolt_backups`
 
 `dolt_backups` returns the backup contents of the `repo_state.json`, similar to running `dolt backup -v` from the command line.
 
@@ -494,7 +494,7 @@ commit graph and is not subject to versioning semantics.
 +-----------------+----------+------+-----+---------+-------+
 ```
 
-# Database History System Tables
+## Database History System Tables
 
 ## `dolt_blame_$tablename`
 
@@ -686,7 +686,7 @@ The following query shows the commits reachable from the current checked out hea
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_log%0AWHERE+committer+%3D+%22jennifersp%22+and+date+%3E+%222022-04-01%22%0AORDER+BY+date%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_log%0AWHERE+committer+%3D+%22jennifersp%22+and+date+%3E+%222022-04-01%22%0AORDER+BY+date%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_log%0AWHERE+committer+%3D+%22jennifersp%22+and+date+%3E+%222022-04-01%22%0AORDER+BY+date%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-# Database Diffs
+## Database Diffs
 
 ## `dolt_commit_diff_$TABLENAME`
 
@@ -992,7 +992,7 @@ num_inmates_rated_for have changed the most between 2 versions.
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/us-jails/embed/main?q=SELECT+to_county%2C+from_county%2Cto_num_inmates_rated_for%2Cfrom_num_inmates_rated_for%2C++abs%28to_num_inmates_rated_for+-+from_num_inmates_rated_for%29+AS+delta%0AFROM+dolt_diff_jails%0AWHERE+from_commit+%3D+HASHOF%28%22HEAD~3%22%29+AND+diff_type+%3D+%22modified%22%0AORDER+BY+delta+DESC%0ALIMIT+10%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/us-jails/embed/main?q=SELECT+to_county%2C+from_county%2Cto_num_inmates_rated_for%2Cfrom_num_inmates_rated_for%2C++abs%28to_num_inmates_rated_for+-+from_num_inmates_rated_for%29+AS+delta%0AFROM+dolt_diff_jails%0AWHERE+from_commit+%3D+HASHOF%28%22HEAD~3%22%29+AND+diff_type+%3D+%22modified%22%0AORDER+BY+delta+DESC%0ALIMIT+10%3B%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/us-jails/embed/main?q=SELECT+to_county%2C+from_county%2Cto_num_inmates_rated_for%2Cfrom_num_inmates_rated_for%2C++abs%28to_num_inmates_rated_for+-+from_num_inmates_rated_for%29+AS+delta%0AFROM+dolt_diff_jails%0AWHERE+from_commit+%3D+HASHOF%28%22HEAD~3%22%29+AND+diff_type+%3D+%22modified%22%0AORDER+BY+delta+DESC%0ALIMIT+10%3B%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-# Working Set Metadata System Tables
+## Working Set Metadata System Tables
 
 ## `dolt_conflicts`
 
@@ -1364,7 +1364,7 @@ CALL dolt_commit("-m", "Added row id 3 in my table");
 The `dolt_workspace_$TABLENAME` tables are generated based on the session state when inspected,
 so they can not be considered stable on a branch which has multiple editors.
 
-# Constraint Violation System Tables
+## Constraint Violation System Tables
 
 ## `dolt_constraint_violations`
 
@@ -1468,7 +1468,7 @@ For **check constraints**:
 As with `dolt_conflicts`, delete rows from the corresponding `dolt_constraint_violations` table to signal to dolt that
 you have resolved any such violations before committing.
 
-# Configuration Tables
+## Configuration Tables
 
 Configuration Tables can be staged and versioned just like user tables. They always exist, even in an empty database.
 
@@ -1615,7 +1615,7 @@ INSERT INTO dolt_tests VALUES
 ('total_revenue', 'finance', 'SELECT SUM(amount) FROM sales', 'expected_single_value', '>=', '100000');
 ```
 
-# Rebasing Tables
+## Rebasing Tables
 
 ## `dolt_rebase`
 

@@ -4,7 +4,7 @@ title: Latency
 
 # Latency
 
-# Latency and Throughput
+## Latency and Throughput
 
 Our approach to SQL performance benchmarking is to use `sysbench`, an
 industry standard benchmarking tool. We also benchmark Dolt using 

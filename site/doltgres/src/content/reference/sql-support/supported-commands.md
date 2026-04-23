@@ -25,7 +25,7 @@ title: Supported SQL Commands
 | UPDATE       |   🟠   |  🟠   |                       |
 | VALUES       |   🟠   |  🟠   |                       |
 
-# All SQL
+## All SQL
 
 ## Access management statements
 

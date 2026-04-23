@@ -4,7 +4,7 @@ title: "Hosted Dolt: Getting Started"
 
 # Hosted Dolt: Getting Started
 
-# Create an account
+## Create an account
 
 Your journey today starts on the internet. Open a web browser and navigate to https://hosted.doltdb.com. You should be greeted by this welcoming site (pun intended).
 
@@ -18,7 +18,7 @@ Either use your Google account or use a valid email to create a Hosted Dolt acco
 
 ![](../../.gitbook/assets/hosted-getting-started/hosted-no-deployments.png)
 
-# Create a Deployment
+## Create a Deployment
 
 Now it's time to create a deployment. A deployment is a dedicated cloud host running the world's first and only version controlled SQL database, Dolt. This cloud host can be in Amazon Web Services (AWS) or Google Cloud Platform (GCP). This cloud host is monitored and backed up for you so you don't need to worry about operating it.
 
@@ -44,7 +44,7 @@ Once the deployment completes your deployment page will look something like this
 
 You now have a cloud deployed Dolt! Let's do something interesting with it.
 
-# Use the built-in SQL workbench
+## Use the built-in SQL workbench
 
 Dolt is a version controlled SQL database. Let's make some tables to show off how to use it.
 
@@ -118,7 +118,7 @@ I can also see my new commit in the Commit Log.
 
 The built in Workbench in Hosted Dolt gives you a powerful web GUI to interact with Dolt. It has all the features of a workbench like Tableplus or Datagrip combined with features of GitHub like a commit log and Pull Requests. We'll be demoing Hosted Pull Requests later so keep reading.
 
-# Add a collaborator
+## Add a collaborator
 
 Dolt is a [multiplayer database](https://www.dolthub.com/blog/2022-10-17-multiplayer-database/). It works best when you have multiple editors collaborating.
 
@@ -136,7 +136,7 @@ Finish up by clicking the "Add Collaborator" button.
 
 Taylor can now access the deployment page to get connectivity information. Her mission is to add rows to these new tables and make a Pull Request for me to review. Taylor actually did the next section as you can tell from the Hosted Dolt screenshots.
 
-# Connect a MySQL client
+## Connect a MySQL client
 
 Dolt is a MySQL-compatible database. You can connect any client that can connect to MySQL to it. We're going to use the MySQl client that comes with MySQL in this section to connect to Dolt.
 

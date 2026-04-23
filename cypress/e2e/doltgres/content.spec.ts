@@ -62,11 +62,11 @@ describe("Doltgres docs — page content spot checks", () => {
 
   context("Reference", () => {
     it("Server page has correct heading", () => {
-      assertPageContent("/reference/server", "Configuration options");
+      assertPageContent("/reference/server", "Running the DoltgreSQL Server");
     });
 
     it("Version Control page has correct heading", () => {
-      assertPageContent("/reference/version-control", "Version control overview");
+      assertPageContent("/reference/version-control", "Version Control in Doltgres");
     });
 
     it("SQL Language Support page loads with content", () => {

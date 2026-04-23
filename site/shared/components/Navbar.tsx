@@ -1,10 +1,9 @@
-import { Navbar as Nav, DiscordButton, GithubButton } from "@dolthub/react-components";
+import { Navbar as Nav, DiscordButton, ExternalLink } from "@dolthub/react-components";
 import { FaDiscord } from "@react-icons/all-files/fa/FaDiscord";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaLinkedin } from "@react-icons/all-files/fa/FaLinkedin";
 import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
-import { ExternalLink } from "@dolthub/react-components";
 import React, { useState, useRef, useEffect } from "react";
 
 const dolthubUrl = "https://www.dolthub.com";
@@ -120,7 +119,12 @@ function RightLinks() {
   return (
     <div className="flex navbar-right">
       <DiscordButton href={doltDiscord} dark />
-      <GithubButton href={doltGithub} dark />
+      <ExternalLink href={doltGithub} data-cy="github-link" aria-label="GitHub">
+        <span className="navbar-icon-btn">
+          <FaGithub />
+          <span className="navbar-icon-btn-label">GitHub</span>
+        </span>
+      </ExternalLink>
       <a
         href={`${dolthubUrl}/signin`}
         data-cy="navbar-signin-button"

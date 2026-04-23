@@ -8,7 +8,7 @@ Doltgres has the capability to replicate from a running Postgres server via Post
 replication feature. This is useful when you want to continue serving production traffic with your
 existing Postgres server, but want to add auditing and diff capability via a live DoltgreSQL backup.
 
-# Configuring the Postgres primary server
+## Configuring the Postgres primary server
 
 Logical replication must be enabled on your primary Postgres server via the `postgresql.conf` file,
 followed by a server restart. Your config file may be in a different location from the one below.
@@ -51,7 +51,7 @@ PUBLICATION` command. See the [Postgres
 documentation](https://www.postgresql.org/docs/current/sql-createpublication.html) on this subject
 for more detail.
 
-# Configuring the Doltgres replica
+## Configuring the Doltgres replica
 
 `CREATE TABLE` and other DDL statements are not replicated from the primary. Every table being
 replicated must exist on the replica before replication begins, so create them with `CREATE TABLE`
@@ -92,7 +92,7 @@ In every other respect, a replication server is a normal Doltgres server, which 
 other connections to it and run other queries (including queries that may interfere with
 replication).
 
-# Importing initial data into DoltgreSQL
+## Importing initial data into DoltgreSQL
 
 By default, Doltgres will begin replicating from WAL position `0/0` (the very beginning of table
 history). For some primary servers, this location in the WAL may no longer be available because

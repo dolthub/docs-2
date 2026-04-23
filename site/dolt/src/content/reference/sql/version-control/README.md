@@ -11,7 +11,7 @@ another. All the git-like version control functionality available on
 the Dolt CLI is available in the SQL server as well, exposed as system
 tables, system variables, functions, and stored procedures.
 
-# Version control overview
+## Version control overview
 
 * [Using Branches](/sql-reference/version-control/branches) explains how to work with different
   branches in a running server.

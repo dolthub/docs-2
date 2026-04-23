@@ -30,7 +30,7 @@ describe("DoltLab docs — page content spot checks", () => {
     it("Getting Started page has correct heading", () => {
       assertPageContent(
         "/introduction/getting-started/getting-started",
-        "Ubuntu Host",
+        "Getting Started",
       );
     });
   });

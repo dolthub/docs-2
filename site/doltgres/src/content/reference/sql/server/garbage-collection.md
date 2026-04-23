@@ -4,7 +4,7 @@ title: Garbage Collection
 
 # Garbage Collection
 
-# How garbage is created
+## How garbage is created
 
 Doltgres creates on disk garbage. Doltgres transactions that do not have a corresponding Doltgres commit create on disk garbage. This garbage is most noticeable after large data imports.
 
@@ -25,7 +25,7 @@ dolt_gc`](/reference/version-control/dolt-sql-functions#dolt_gc) through any con
 NOTE: Performing GC on [a cluster replica](/reference/server/replication) which is in standby mode is not
 yet supported, and running `select dolt_gc()` on the replica will fail.
 
-# Automated GC
+## Automated GC
 
 Automated garbage collection is currently experimental and will be enabled by default in a release
 later this year. Check back for details.

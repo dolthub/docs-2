@@ -20,11 +20,11 @@ try(dbWriteTable(dolt_conn, "time", time, overwrite = TRUE))
 #> Error : value "2014-1-2" can't be converted to time.Time [1105]
 ```
 
-# Setup
+## Setup
 Follow these [setup instructions](/guides/contributing).
 
 
-# Reproduce the Bug
+## Reproduce the Bug
 Let's see if we can make progress on reproducing the bug.
 Here, we just attempt to insert the same string that
 appears in the error message into a `timestamp` column:
@@ -45,7 +45,7 @@ value "2014-1-2" can't be converted to time.Time
 Brilliant, we've managed to reproduce the bug. Let's track down where that
 error is coming from.
 
-# Tracking Down the Error
+## Tracking Down the Error
 Hopefully this isn't too hard:
 ```shell
 $ ~/dolt_workspace $ grep -R "can't be converted to time.Time"
@@ -238,7 +238,7 @@ test_db> insert into has_timestamp values ('2014-1-2');
 Query OK, 1 row affected
 ```
 
-# Committing and Opening a Pull Request
+## Committing and Opening a Pull Request
 At this point, the bug is fixed in Dolt's SQL engine. 
 Commit and push your changes through git.
 ```shell

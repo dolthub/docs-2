@@ -4,7 +4,7 @@ title: DoltHub Workspaces
 
 # DoltHub Workspaces
 
-# What are workspaces?
+## What are workspaces?
 
 Workspaces are a concept we invented for editing data on DoltHub. There is not a GitHub
 equivalent. Essentially workspaces are a special type of ref, similar to
@@ -17,7 +17,7 @@ the state of your database. When you're satisfied with your changes you can comm
 a branch or create a pull request. If you're not satisfied with your changes, you can
 delete the workspace without any repercussions.
 
-# How are they be used?
+## How are they be used?
 
 Workspaces are automatically created when you run a write query from the SQL Console on a
 DoltHub database page.

@@ -17,7 +17,7 @@ on your goals, but there are also reasons to use DoltHub and Hosted together. Ea
 an online application based on a crowd-sourced database on
 DoltHub or isolate changes to your production database and sync on your schedule.
 
-# How Dolt credentials work on Hosted
+## How Dolt credentials work on Hosted
 
 When you use Dolt on the [command line](/cli-reference/cli) to interact with DoltHub
 or DoltLab to pull private databases or push to databases you have permission to, you're
@@ -39,7 +39,7 @@ pull, and fetch from public or private databases.
 
 ![](../../.gitbook/assets/dolthub-hosted-remote.png)
 
-# Example
+## Example
 
 ## 1. Find a database on DoltHub to clone
 

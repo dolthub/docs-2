@@ -8,7 +8,7 @@ title: Storage Engine
 
 Dolt's storage engine is heavily influenced and shares code with [Noms](https://github.com/attic-labs/noms). We here at [DoltHub](https://www.dolthub.com) have immense respect for the Noms team's pioneering work, without which [Dolt](https://www.doltdb.com) would not exist.
 
-# Motivation: Database Version Control
+## Motivation: Database Version Control
 
 Dolt's storage engine is motivated by the desire to add Git-style version control to databases. Both Noms and Dolt share this vision. Noms attempts to achieve the vision on a generic, document-like database while Dolt restricts the vision to an Online Transaction Processing (OLTP) SQL database. Currently, [Noms](https://github.com/attic-labs/noms) is not under active development while [Dolt](https://www.doltdb.com) is.
 
@@ -23,7 +23,7 @@ Git-style version control on a database provides a number of useful features inc
 5. Fast synchronization with remote versions for backup or decentralized collaboration
 6. Queryable differences (ie. diffs) between versions
 
-# Requirements
+## Requirements
 
 As noted in [an earlier, requirements exercise for Dolt itself](/architecture/architecture), a storage engine for a SQL database with Git-style versioning would provide:
 
@@ -43,13 +43,13 @@ Comparing and producing the differences between two versions must be fast. Displ
 
 To offer version control in a database, all versions of the data must be stored. Storing a full copy of the database at every change is untenable. Data that does not change between versions must share storage.
 
-# Prolly Trees + Commit Graph = Dolt Storage Engine
+## Prolly Trees + Commit Graph = Dolt Storage Engine
 
 Dolt's storage engine is built on a Git-style commit graph of Prolly Trees. Table schema and data is stored in Prolly Trees. The roots of those Prolly Trees along with other metadata are stored in a commit graph to provide Git-style version control. We'll start by explaining Prolly Trees and then show how these fit into a commit graph.
 
 ![Dolt's Storage Engine](../.gitbook/assets/prolly-tree-plus-commit-graph.png)
 
-# The Database Backbone: Search Trees
+## The Database Backbone: Search Trees
 
 Databases are built on top of [Search Trees](https://en.wikipedia.org/wiki/Search_tree), a class of data structure. Most databases are built on [B-trees](https://www.dolthub.com/blog/2020-04-01-how-dolt-stores-table-data/#b-tree-review). 
 
@@ -99,7 +99,7 @@ Structural sharing | ❌ | ✅
 
 As you can see a Prolly Tree approximates B-tree performance on reads and writes while also offering the ability to compute differences in time proportional to the size of differences rather than the total size of the data. 
 
-# Commit Graph
+## Commit Graph
 
 Effectively, Prolly Tree storage laid out in a Commit Graph, or [Merkle DAG](https://en.wikipedia.org/wiki/Merkle_tree) of versions, allows for Git-style version control on a SQL database. [Dolt](https://github.com/dolthub/dolt), the world's first version controlled SQL database, is working proof of the combination of a Commit Graph with Prolly Trees effectiveness. 
 

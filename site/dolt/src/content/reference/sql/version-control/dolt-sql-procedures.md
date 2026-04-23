@@ -41,7 +41,7 @@ title: Dolt SQL Procedures
   - [dolt_stats_gc()](#dolt_stats_gc)
   - [dolt_stats_info()](#dolt_stats_info)
 - [Access Control](#access-control)
-# Dolt SQL Procedures
+## Dolt SQL Procedures
 
 Dolt provides native stored procedures to allow access to `dolt` CLI
 commands from within a SQL session. Each procedure is named after the
@@ -69,7 +69,7 @@ is that the command line environment is effectively a session, one
 that happens to be shared with whomever runs CLI commands from that
 directory.
 
-## `DOLT_ADD()`
+### `DOLT_ADD()`
 
 Adds working changes to staged for this session. Works exactly like
 `dolt add` on the CLI, and takes the same arguments.
@@ -118,7 +118,7 @@ CALL DOLT_ADD('-A');
 CALL DOLT_COMMIT('-m', 'committing all changes');
 ```
 
-## `DOLT_BACKUP()`
+### `DOLT_BACKUP()`
 
 Add or remove a configured backup, sync with a configured backup, sync a backup
 to a remote URL, restore a remote URL backup as a new database.
@@ -175,7 +175,7 @@ CALL dolt_backup('sync', 'my-backup')
 CALL dolt_backup('restore', 'https://dolthub.com/some_organization/some_dolthub_repository', 'mydb_restored');
 ```
 
-## `DOLT_BRANCH()`
+### `DOLT_BRANCH()`
 
 Create, delete, and rename branches.
 
@@ -286,7 +286,7 @@ CALL DOLT_BRANCH('-m', 'bugfix-3482', 'critical-bugfix-3482');
 CALL DOLT_BRANCH('-d', 'old-unused-branch');
 ```
 
-## `DOLT_CHECKOUT()`
+### `DOLT_CHECKOUT()`
 
 Switches this session to a different branch.
 
@@ -372,7 +372,7 @@ CALL DOLT_COMMIT('-a', '-m', 'committing all changes');
 CALL DOLT_CHECKOUT('main');
 ```
 
-## `DOLT_CHERRY_PICK()`
+### `DOLT_CHERRY_PICK()`
 
 Apply the changes introduced by an existing commit.
 
@@ -496,7 +496,7 @@ mydb> SELECT commit_hash, message FROM dolt_log;
 3 rows in set (0.00 sec)
 ```
 
-## `DOLT_CLEAN()`
+### `DOLT_CLEAN()`
 
 Deletes untracked tables in the working set.
 
@@ -576,7 +576,7 @@ show tables;
 +----------------+
 ```
 
-## `DOLT_CLONE()`
+### `DOLT_CLONE()`
 
 Clones an existing Dolt database into a new database within the current Dolt environment. The existing database must be specified as an argument, either as a file URL that points to an existing Dolt database on disk, or a `doltremote` URL for remote hosted database (e.g. a database hosted on DoltHub or DoltLab), or a `<org>/<database>` (e.g. `dolthub/us-jails`) as a shorthand for a database hosted on DoltHub. An additional argument can optionally be supplied to specify the name of the new, cloned database, otherwise the current name of the existing database will be used.
 
@@ -646,7 +646,7 @@ SELECT * FROM DOLT_REMOTES;
 
 ```
 
-## `DOLT_COMMIT()`
+### `DOLT_COMMIT()`
 
 Commits staged tables to HEAD. Works like `dolt commit` with
 each value directly following the flag. The one difference is that the 
@@ -707,7 +707,7 @@ WHERE pk = "key";
 CALL DOLT_COMMIT('-a', '-m', 'This is a commit', '--author', 'John Doe <johndoe@example.com>');
 ```
 
-## `DOLT_CONFLICTS_RESOLVE()`
+### `DOLT_CONFLICTS_RESOLVE()`
 
 When a merge finds conflicting changes, it documents them in the dolt_conflicts table.
 A conflict is between two versions: ours (the rows at the destination branch head) and theirs
@@ -754,7 +754,7 @@ SELECT * FROM dolt_conflicts;
 CALL DOLT_CONFLICTS_RESOLVE('--ours', 't1', 't2');
 ```
 
-## `DOLT_FETCH()`
+### `DOLT_FETCH()`
 
 Fetch refs, along with the objects necessary to complete their histories
 and update remote-tracking branches. Works exactly like `dolt fetch` on
@@ -799,7 +799,7 @@ CALL DOLT_MERGE('origin/main');
 Dropping the second argument, or passing NULL, will result is using the default refspec.
 
 
-## `DOLT_GC()`
+### `DOLT_GC()`
 
 Cleans up unreferenced data from the database. Running the `dolt_gc` procedure on a Dolt
 sql-server will block all writes while garbage collection is in progress.
@@ -843,7 +843,7 @@ single connection to actually close. If you need to run call dolt_gc() programma
 one work around is to use a separate connection pool with a size of 1 which can be 
 closed after the run is successful.
 
-## `DOLT_MERGE()`
+### `DOLT_MERGE()`
 
 Incorporates changes from the named commits \(since the time their
 histories diverged from the current branch\) into the current
@@ -931,7 +931,7 @@ CALL DOLT_COMMIT('-a', '-m', 'committing all changes');
 CALL DOLT_MERGE('feature-branch', '--author', 'John Doe <johndoe@example.com>');
 ```
 
-## `DOLT_PULL()`
+### `DOLT_PULL()`
 
 Fetch from and integrate with another database or a local branch. In
 its default mode, `dolt pull` is shorthand for `dolt fetch` followed by
@@ -996,7 +996,7 @@ SELECT * FROM dolt_log LIMIT 5;
 ```
 
 
-## `DOLT_PURGE_DROPPED_DATABASES()`
+### `DOLT_PURGE_DROPPED_DATABASES()`
 
 Permanently deletes any dropped databases that are being held in a temporary holding area. When a Dolt database is 
 dropped, it is moved to a temporary holding area where the [`dolt_undrop()` stored procedure](#dolt_undrop) can restore
@@ -1021,7 +1021,7 @@ DROP DATABASE database1;
 CALL dolt_purge_dropped_databases(); 
 ```
 
-## `DOLT_PUSH()`
+### `DOLT_PUSH()`
 
 Updates remote refs using local refs, while sending objects necessary to
 complete the given refs. Works exactly like `dolt push` on the CLI, and
@@ -1064,7 +1064,7 @@ CALL DOLT_PUSH('origin', 'feature-branch');
 ```
 
 
-## `DOLT_REBASE()`
+### `DOLT_REBASE()`
 
 Rewrites commit history for the current branch by replaying commits, allowing the commits to be reordered, squashed, or dropped. The commits included in the rebase plan are the commits reachable by the current branch, but NOT reachable from the branch specified as the argument when starting a rebase (also known as the upstream branch). This is the same as Git and Dolt's ["two dot log" syntax](https://www.dolthub.com/blog/2022-11-11-two-and-three-dot-diff-and-log/#two-dot-log), or |upstreamBranch|..|currentBranch|. 
 
@@ -1189,7 +1189,7 @@ select commit_hash, message from dolt_log;
 ```
 
 
-## `DOLT_REMOTE()`
+### `DOLT_REMOTE()`
 
 Adds a remote for a database at given url, or removes an existing remote with its remote-tracking branches
 and configuration settings. Similar to [`dolt remote` command](/cli-reference/cli#dolt-remote) on the CLI, with the
@@ -1246,7 +1246,7 @@ SELECT * FROM dolt_remotes;
 +---------+--------------------------------------------------------------+-----------------------------------------+--------+
 ```
 
-## `DOLT_RESET()`
+### `DOLT_RESET()`
 
 Default mode resets staged tables to their HEAD state. Can also be used to reset a database to a specific commit. Works exactly like `dolt reset` on the CLI, and takes the same arguments.
 
@@ -1313,7 +1313,7 @@ CALL DOLT_ADD('table')
 CALL DOLT_RESET('table')
 ```
 
-## `DOLT_REVERT()`
+### `DOLT_REVERT()`
 
 Reverts the changes introduced in a commit, or set of commits. Creates a new commit from the current HEAD that reverses
 the changes in all the specified commits. If multiple commits are given, they are applied in the order given.
@@ -1382,7 +1382,7 @@ SELECT from_pk, from_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=h
 +---------+--------+----------------------------------+-----------+
 ```
 
-## `DOLT_RM()`
+### `DOLT_RM()`
 
 Default mode removes tables from the staging area and working directory. Works exactly like `dolt rm` on the CLI, and takes the same arguments. When used with the `--cached` flag, removes tables only from the staging area while leaving the working directory unchanged.
 
@@ -1435,7 +1435,7 @@ CALL DOLT_RM('t1');
 SELECT * FROM DOLT_STATUS;
 Empty set (0.00 sec)
 ```
-## `DOLT_STASH()`
+### `DOLT_STASH()`
 
 Manage temporary saves of uncommitted changes. Changes can be saved, restored, or removed without affecting the commit history. 
 Similar to the [`dolt stash` command](/cli-reference/cli#dolt-stash) on the cli. An important exception is that the procedure requires a _push_ subcommand, 
@@ -1515,7 +1515,7 @@ SELECT * FROM employees;
 +----+-------+
 ```
 
-## `DOLT_TAG()`
+### `DOLT_TAG()`
 
 Creates a new tag that points at specified commit ref, or deletes an existing tag. Works exactly like
 [`dolt tag` command](/cli-reference/cli#dolt-tag) on the CLI, and takes the same arguments except for listing tags.
@@ -1565,7 +1565,7 @@ CALL DOLT_COMMIT('-am', 'committing all changes');
 CALL DOLT_TAG('v1','head','-m','creating v1 tag');
 ```
 
-## `DOLT_UNDROP()`
+### `DOLT_UNDROP()`
 
 Restores a dropped database. See the [`dolt_purge_dropped_databases()` stored procedure](#dolt_purge_dropped_databases) for info on how to permanently remove dropped databases. 
 
@@ -1602,7 +1602,7 @@ SELECT * FROM database1.t;
 
 Dropped databases are moved to the `.dolt_dropped_databases` directory in the Dolt data directory. If a database with the same name is dropped multiple times, the previous copy will be renamed to `<database_name>.backup.<timestamp>`. This enables you to restore a previously dropped database, even if it was recreated and dropped again. To restore a previous version, rename the backup directory to the original database name and then call `dolt_undrop('<database_name>')`. If you do not rename the directory and use the name with the timestamp when you call `dolt_undrop()`, then the database will be restored with the timestamp in the name.   
 
-## `DOLT_UPDATE_COLUMN_TAG()`
+### `DOLT_UPDATE_COLUMN_TAG()`
 
 Updates a column's internal identifier. Most users will never need to know about column tags, but [there are some rare cases where a column tag collision can occur during a merge](https://www.dolthub.com/blog/2025-05-15-column-tags/). In those cases, it can be useful to manually update a column's tag. This is an advanced operation, so use with caution and reach out to the Dolt team for questions or guidance on [Discord](https://discord.gg/gqr7K4VNKe) or [GitHub](https://github.com/dolthub/dolt/issues/new). 
 
@@ -1633,7 +1633,7 @@ CALL dolt_update_column_tag('myTable', 'col1', 42);
 CALL dolt_commit('-am', 'updating myTable.col1 tag');
 ```
 
-## `DOLT_VERIFY_CONSTRAINTS()`
+### `DOLT_VERIFY_CONSTRAINTS()`
 
 Verifies that working set changes (inserts, updates, and/or deletes) satisfy the
 defined table constraints. If any constraints are violated they are written to the
@@ -1807,12 +1807,12 @@ SELECT * from dolt_constraint_violations_child;
 */
 ```
 
-# Statistics Updates
+## Statistics Updates
 
 Control functions are used to start and stop background thread activity related to statistics updates.
 See [stats documentation](/sql-reference/sql-support/miscellaneous#stats-controller-functions) for more information.
 
-## `dolt_stats_restart()`
+### `dolt_stats_restart()`
 
 If no thread is active for the current database, start a new update
 thread with the current session's parameters (`dolt_stats_memory_only`, `dolt_stats_job_interval`, `dolt_stats_gc_enabled`).
@@ -1820,34 +1820,34 @@ If a thread is already active for
 this database, the thread is stopped and started with the new
 parameters.
 
-## `dolt_stats_stop()`
+### `dolt_stats_stop()`
 
 Clears the work queue and stops the thread
 (otherwise no-op).
 
-## `dolt_stats_purge()`
+### `dolt_stats_purge()`
 
 Deletes the stats cache from memory and the filesystem. Also clearing working queue and stop the update thread.
 
-## `dolt_stats_once()`:
+### `dolt_stats_once()`:
 
 This command collects statistics once. It should be used when no background thread is running
 (ex: in `dolt sql` and when we do not wish to run a background thread).
 
-## `dolt_stats_wait()`:
+### `dolt_stats_wait()`:
 
 Blocks on a full queue cycle. In practice it takes at least one cycle for stats to reflect the contents
 of the database stats in the blocking session.
 
-## `dolt_stats_gc()`:
+### `dolt_stats_gc()`:
 
 Blocks waiting for a GC signal. Garbage collection finalizes in the same cadence as new statistic updates.
 
-## `dolt_stats_flush()`:
+### `dolt_stats_flush()`:
 
 Blocks waiting on a flush signal. Flushes occur after new statistic updates.
 
-## `dolt_stats_info()`:
+### `dolt_stats_info()`:
 
 Returns the current state of the stats provider (optional `'-short'` flag).
 
@@ -1856,7 +1856,7 @@ Returns the current state of the stats provider (optional `'-short'` flag).
 {""dbCnt":1,"active":false,"storageBucketCnt":2,"cachedBucketCnt":2,"cachedBoundCnt":2,"cachedTemplateCnt":4,"statCnt":2,"backing":""repo2""}
 ```
 
-# Access Control
+## Access Control
 Dolt stored procedures are access controlled using the GRANT permissions system. MySQL database permissions trickle down to tables and procedures, someone who has Execute permission on a database would have Execute permission on all procedures related to that database. Dolt deviates moderately from this behavior for sensitive operations. See [Administrative Procedures](#administrative-procedures) below.
 
 Users who need common Dolt capability such as adding and committing to a branch will need Execute permission granted on the database in question. As a privileged user, you can grant access with the following command:

@@ -4,7 +4,7 @@ title: Audit
 
 # Audit
 
-# Problem
+## Problem
 
 * Do you need to know who changed what, when, why in your SQL database?
 * Do you want an immutable record of changes going back to the inception of your database?
@@ -12,7 +12,7 @@ title: Audit
 * Do you want to be able to query this audit log like any other table in your database?
 * Do you want the data to be efficiently stored so you can trace changes back to inception?
 
-# Dolt solves this by…
+## Dolt solves this by…
 
 Dolt provides a built-in, queryable audit log of every cell in your database. Whenever a [Dolt commit](/concepts/dolt/git/commits) is created, the user, time, and optional commit message are recorded along with the data that changed. These commits form an [immutable log of changes](/concepts/dolt/git/log) to every cell in your database going back to inception. 
 
@@ -22,7 +22,7 @@ The audit log created between commits is queryable via standard SQL using custom
 
 If you're not ready to switch your primary database to Dolt to get its audit capabilities, you can run MySQL as your primary and set Dolt up as [a versioned replica](/introduction/use-cases/versioned-replica). You lose users and commit messages but you still get a queryable log of every cell in your database.
 
-# Dolt replaces...
+## Dolt replaces...
 
 ## Soft Deletes
 
@@ -34,15 +34,15 @@ A technique to add audit capability to an existing database is to add [soft dele
 
 Moreover, if Dolt is your production database, there is no need for an additional change data capture system. The audit capability is a built-in feature of the production Dolt database.
 
-# Companies Doing This
+## Companies Doing This
 
 * [FJA](https://www.fja.com/)
 
-# Case Studies
+## Case Studies
 
 Let us know if you would like us to feature your use of Dolt for audit here.
 
-# Other Related Articles
+## Other Related Articles
 
 * [So you want an Immutable database](https://www.dolthub.com/blog/2022-03-21-immutable-database/)
 * [So you want Soft Deletes?](https://www.dolthub.com/blog/2022-11-03-soft-deletes/)

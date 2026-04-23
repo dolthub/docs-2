@@ -74,7 +74,7 @@ chmod 400 doltlab_key.pem
 
 Now let's open the required ports on our virtual machine.
 
-# Open the required ports
+## Open the required ports
 
 When the virtual machine is up and running, Azure will redirect you to the dashboard for your running virtual machine.
 
@@ -106,7 +106,7 @@ When you're finished, your ports should look like this:
 
 If they do, you've successfully provisioned your virtual machine for DoltLab and it's time to connect to it and set up the attached disk.
 
-# Configure the disk
+## Configure the disk
 
 To connect to your virtual machine, ssh into it with a command like the following:
 

@@ -11,7 +11,7 @@ How would you build a version controlled SQL database? We will start with some o
 
 ![](../.gitbook/assets/architecture-icon.png)
 
-# Requirements
+## Requirements
 
 Dolt started with the idea that data was too hard to share. "Share" is a loaded word here. Share in this context means distribute, collaborate on, change, buy, and sell.
 
@@ -57,7 +57,7 @@ Comparing and producing the differences between two versions must be fast. Displ
 
 We also wanted to mimic the Git command line interface but for data. Git is intended to be used in a decentralized manner. Every user has a copy of Git and the files Git is operating on on their local machine. We wanted to keep this model with Dolt. So, we wanted Dolt to be a single, easily installed program.
 
-# Where we Started
+## Where we Started
 
 In order to satisfy the version control requirements of storage compression and fast diff, we knew we would need our own storage engine. There was no way to adapt standard B-tree based database storage engines to the version control task.
 
@@ -65,7 +65,7 @@ Could Git be adapted to be a storage engine for a database? [Other people have t
 
 To achieve the SQL database requirements, we looked at the most popular open source options: MySQL and Postgres. Both [MySQL](https://dev.mysql.com/doc/refman/8.0/en/storage-engines.html) and [Postgres](https://www.dolthub.com/blog/2022-01-26-creating-a-postgres-foreign-data-wrapper/) have pluggable storage engines. But how would we access the version control properties of the storage engine? We needed more control over the supported SQL dialect than MySQL or Postgres exposed.
 
-# Oh God. You built a SQL database from scratch?!?
+## Oh God. You built a SQL database from scratch?!?
 
 Not really. We leveraged three existing open source packages:
 
@@ -109,7 +109,7 @@ Most other users of `go-mysql-server` use it to test their MySQL applications wi
 
 [Vitess](https://github.com/dolthub/vitess) is used by `go-mysql-server` for SQL parsing and serving. We quickly forked it to [remove 90% of the functionality we did not need](https://www.dolthub.com/blog/2020-09-23-vitess-pruning/). We've heavily modified our fork since to support much more SQL syntax.
 
-# Take a Deeper Dive
+## Take a Deeper Dive
 
 Continue reading for a deeper dive into the Dolt storage engine and SQL implementation.
 

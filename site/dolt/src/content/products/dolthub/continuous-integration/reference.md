@@ -24,27 +24,27 @@ jobs:
         expected_columns: "== 1"
 ```
 
-# name
+## name
 
 _String_. The case-insensitive name of the workflow, must be unique. Required.
 
-# on
+## on
 
 `on` identifies the events that should trigger the workflow to run. Required.
 
-# on.push
+## on.push
 
 Runs workflow whenever a `push` event occurs. Optional.
 
 A `push` event refers to a branch head update on the remote database, usually following the [dolt push](/cli-reference/cli#dolt-push) command.
 
-# on.pull_request
+## on.pull_request
 
 Runs workflow whenever a `pull_request` event occurs. Optional.
 
 A `pull_request` event refers to any "activity" or action involving a pull request on the remote database. Activities on pull request might include, but are not limited to, opening a pull request, closing a pull request, or synchronizing a pull request.
 
-# on.<push|pull_request>.branches
+## on.<push|pull_request>.branches
 
 _List_ _of_ _Strings_. The `branches` filter indicates which branch(es) should cause the workflow to run. Required.
 
@@ -52,7 +52,7 @@ For example, if the `main` branch is listed under `on.push.branches`, then only 
 
 In the case of `on.pull_request.branches`, branches listed refer to the base branch of the pull request. If `main` is specified as a branch in this case, a pull request opened with `main` as its base branch will trigger the workflow.
 
-# on.pull_request.activities
+## on.pull_request.activities
 
 _List_ _of_ _Strings_. The `activities` filter indicates which pull request activity types should trigger a workflow. Optional.
 
@@ -62,29 +62,29 @@ Supported types as of Dolt v1.45.3 are:
 - closed
 - reopened
 
-# jobs
+## jobs
 
 `jobs` specifies one or more Jobs a workflow should run when it is triggered. Required.
 
-# jobs.name
+## jobs.name
 
 _String_. The case-insensitive name of a job, must be unique. Required.
 
-# jobs.steps
+## jobs.steps
 
 `steps` are a sequence of checks or tests to execute against the database during a workflow run. Required.
 
 Steps run in the order they are defined.
 
-# jobs.steps.name
+## jobs.steps.name
 
 _String_. The case-insensitive name of a step, must be unique. Required.
 
-# jobs.steps.saved_query_name
+## jobs.steps.saved_query_name
 
 _String_. The name of the [saved query](/sql-reference/version-control/saved-queries) that should be executed during the workflow run. Required.
 
-# jobs.steps.expected_rows
+## jobs.steps.expected_rows
 
 _String_. The number of expected rows resulting from the execution of the named saved query. Optional.
 
@@ -97,7 +97,7 @@ This should be in the format: `<comparator> <number>`, for example, `!= 15`. Val
 - &lt; for less than
 - <= for less than or equal to
 
-# jobs.steps.expected_columns
+## jobs.steps.expected_columns
 
 _String_. The number of expected columns resulting from the execution of the named saved query. Optional.
 

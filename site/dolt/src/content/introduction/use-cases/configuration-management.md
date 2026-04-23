@@ -4,7 +4,7 @@ title: Configuration Management
 
 # Configuration Management
 
-# Problem
+## Problem
 
 * Is your configuration too big and complex for files? 
 * Is your configuration more like code than configuration? 
@@ -13,7 +13,7 @@ title: Configuration Management
 * Are multiple configuration changes hard to merge together when it’s time to ship?
 * Are you building a game with lots of assets and configuration?
 
-# Dolt solves this by…
+## Dolt solves this by…
 
 Configuration is generally structured and managed as large text files. YAML and JSON formatted configuration is very popular. These formats are unordered, meaning standard version control solutions like Git cannot reliably produce [diffs](/concepts/dolt/git/diff) and [merges](/concepts/dolt/git/merge). Moreover, configuration can get quite large, running up against the file size limits of tools like Git.
 
@@ -23,22 +23,22 @@ Dolt is an ideal solution for version controlling tabular configuration. Dolt al
 
 This use case is particularly popular in video games where much of the game functionality is modeled as configuration. Store the likelihood of an item drop or the strength of a particular enemy in Dolt tables. Review and manage changes. When the configuration is ready, use a build process to create whatever format your game needs.
 
-# Dolt replaces...
+## Dolt replaces...
 
 ## Files in Git
 
 Most large configuration files are stored and versioned in Git. If the files get too large they are store in cloud storage and linked to Git using [git-lfs](https://git-lfs.com/). If the files are stored in git-lfs, you lose the ability to diff the contents of the files. Dolt improves the experience by adding query capabilities and large fine-grained diffs to the data stored in configuration files. The diff and merge experience will be greatly improved in Dolt for this type of data.
 
-# Companies Doing This
+## Companies Doing This
 
 * [Scorewarrior](https://scorewarrior.com/)
 * [PhanXgames](https://www.phanxgames.com/)
 
-# Case Studies
+## Case Studies
 
 Let us know if you would like us to feature your use of Dolt for configuration management here.
 
-# Other Related Articles
+## Other Related Articles
 
 * [Version control for Video Game Development using Dolt](https://www.dolthub.com/blog/?q=game)
 * [Your config file should be a database](https://www.dolthub.com/blog/2023-05-15-your-config-file-should-be-a-database/)

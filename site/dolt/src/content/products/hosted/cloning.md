@@ -4,7 +4,7 @@ title: "Hosted Dolt: Cloning a Hosted Database"
 
 # Hosted Dolt: Cloning a Hosted Database
 
-# How it works
+## How it works
 
 In some cases you might want to clone your database from Hosted so that you can access
 Dolt's [command line interface](/cli-reference/cli). While much of the command line is
@@ -25,7 +25,7 @@ deployments with Web PKI certificates), you can simply set a `DOLT_REMOTE_PASSWO
 environment variable and provide a username to the `dolt clone` command. You'll see these
 instructions in the Connectivity tab of your deployment page.
 
-# Example
+## Example
 
 When you're using Hosted as your production database, there might be some
 performance-heavy operations or tests you want to run in isolation so you don't impact

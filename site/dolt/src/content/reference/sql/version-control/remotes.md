@@ -4,15 +4,15 @@ title: Using remotes
 
 # Using remotes
 
-# What are Remotes?
+## What are Remotes?
 
 Just like Git, Dolt supports syncing with a [remote database](/concepts/dolt/git/remotes). A remote is a copy of your database that is distinct from your local copy. It usually is stored on a separate host or service for fault tolerance. The primary use cases are disaster recovery and collaboration. More conceptual description of remotes can be found [here](/concepts/dolt/git/remotes).
 
-# Configuring Remotes
+## Configuring Remotes
 
 Remotes are configured using the [`remote` command](/cli-reference/cli#dolt-remote). You configure a remote with a name and a URL. When you want to use the remote, you refer to it by name. When you clone a remote, a remote named `origin` is automatically configured for you.
 
-<h1 id="pushing-to-remote">Pushing to a Remote</h1>
+<h2 id="pushing-to-remote">Pushing to a Remote</h2>
 
 Let's go through an example of how you can push data from a local Dolt database to a remote. In this example, we'll use the running Dolt server we created in the [Getting Started](https://docs.dolthub.com/introduction/getting-started/database) section to push a branch to [DoltHub.com](https://www.dolthub.com).
 
@@ -98,11 +98,11 @@ As a result, both the client and server were able to reference the same local di
 
 It's important to be aware of this global state directory in the event you wanted to authenticate a Dolt server running from within a container. To do so, you should run `dolt login` using a Dolt CLI client outside of the containerized environment to create new remote credentials, then mount your local `$HOME/.dolt` directory to the `DOLT_ROOT_PATH` of the container. This ensures that the Dolt server in the container has the credentials to write to your remote.
 
-# Remote Actions
+## Remote Actions
 
 Sync functionality is supported via the [`clone`](/cli-reference/cli#dolt-clone), [`fetch`](/cli-reference/cli#dolt-fetch), [`push`](/cli-reference/cli#dolt-push), and [`pull`](/cli-reference/cli#dolt-pull).
 
-# Remote Options
+## Remote Options
 
 ## DoltHub
 

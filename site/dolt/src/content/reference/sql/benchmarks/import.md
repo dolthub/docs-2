@@ -4,7 +4,7 @@ title: Import
 
 # Import
 
-# Bulk Import Benchmarking
+## Bulk Import Benchmarking
 
 Dolt supports three modes of import:
 

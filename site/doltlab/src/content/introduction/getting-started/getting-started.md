@@ -8,7 +8,7 @@ title: Getting Started
 
 This guide will walk through the simplest way to set up a basic DoltLab installation. Once complete, you'll have a DoltLab running on an internet-accessible EC2 instance that works for a single `admin` user. Some features like multiple users, HTTPS, and custom logo and colors are not enabled but links to documentation to enable those things are provided.
 
-# Get a Ubuntu Host and SSH in
+## Get a Ubuntu Host and SSH in
 
 The first thing you will need is an internet accessible Ubuntu host. We have documentation on how to get a DoltLab ready Ubuntu host on:
 
@@ -16,7 +16,7 @@ The first thing you will need is an internet accessible Ubuntu host. We have doc
 2. [Azure](/introduction/getting-started/azure)
 3. [GCP](/introduction/getting-started/gcp)
 
-# Download DoltLab and its Dependencies
+## Download DoltLab and its Dependencies
 
 Now that you're on the host, you need to get DoltLab and its [dependencies](https://docs.doltlab.com/introduction/installation#dependencies) on the host. First, you'll need `curl` and `unzip` as a basic minimum. `curl` was already on my Ubuntu host by default but `unzip` was not. So, I grabbed unzip like so:
 
@@ -107,7 +107,7 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 
 If `docker ps` works without `sudo`, you are in business.
 
-# Installer
+## Installer
 
 Now, my host is set up for DoltLab, I need to generate the configuration needed to run it. This is done with the installer as well, this time by only passing in the name of your host.
 
@@ -189,7 +189,7 @@ Now the moment of truth, I hit the IP over `http`, not `https`, http://54.191.16
 
 ![](../../.gitbook/assets/getting-started/fresh-doltlab.png)
 
-# Login as Admin
+## Login as Admin
 
 Now, your DoltLab is running but it's not very useful. Only logged in users can create databases so your DoltLab is going to stay really empty.
 
@@ -197,7 +197,7 @@ The DoltLab instance ships with a default user configured called `admin`. It has
 
 ![](../../.gitbook/assets/getting-started/admin-logged-in-fresh-doltlab.png)
 
-# Basic Configuration
+## Basic Configuration
 
 ## Single user
 
@@ -279,7 +279,7 @@ And I can now see my change on DoltLab!
 
 You're now ready to try out all the Dolt and DoltLab experiences like Pull Requests, Issues, the SQL Workbench, and Diffs. Get testing and see if DoltLab is right for you and your team.
 
-# Adding Additional Functionality
+## Adding Additional Functionality
 
 ## Create new users
 

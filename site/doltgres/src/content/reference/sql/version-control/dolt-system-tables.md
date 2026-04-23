@@ -4,7 +4,7 @@ title: Dolt System Tables
 
 # Dolt System Tables
 
-# Table of contents
+## Table of contents
 
 - [Dolt Schema](#dolt-schema)
 
@@ -74,7 +74,7 @@ title: Dolt System Tables
 
     - [dolt_ignore](#dolt_ignore)
 
-# Dolt Schema
+## Dolt Schema
 
 These are the system tables defined on the `dolt` schema. These refer to version control
 information that is not schema or table specific, like branches, logs, etc.
@@ -747,7 +747,7 @@ Or you can simply delete that row from the `dolt.rebase` table:
 delete from dolt.rebase where rebase_order = 2;
 ```
 
-# User-defined Schema
+## User-defined Schema
 
 These are the system tables that are on each user-defined schema. They refer to version control information that is schema or table specific, like table diffs, procedures, views, etc.
 

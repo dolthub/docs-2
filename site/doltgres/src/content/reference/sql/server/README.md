@@ -10,14 +10,14 @@ Start the DoltgreSQL server by running the `doltgres` command:
 % doltgres
 ```
 
-# Configuration options
+## Configuration options
 
 Like `dolt`, `doltgres` accepts several configuration options both as command line parameters or via
 a `config.yaml` file. The [docs for the `sql-server`
 command](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server) for Dolt cover most of these
 options. You can also consult `doltgres --help` for a listing of all configuration options.
 
-# Data location
+## Data location
 
 The location of any databases created depends on the setting of the `DOLTGRES_DATA_DIR` environment
 variable. For example:

@@ -108,7 +108,7 @@ The following contents on this page covers how to configure various Enterprise f
 14. [Serve DoltLab over HTTPS natively](#serve-doltlab-over-https-natively)
 15. [Automatically upgrade DoltLab](#automatically-upgrade-doltlab)
 
-# Use custom logo on DoltLab instance
+## Use custom logo on DoltLab instance
 
 DoltLab Enterprise allows administrators to customize the logo used across their DoltLab instance. At the time of this writing, custom logos custom logos must have a maximum height of `32px` and a maximum width of `240px`. They will be visible in the top navbar of every page and the footer of some pages, so therefore should work against dark backgrounds. If a custom logo is used on DoltLab, the footer of the DoltLab instance will display the text "Powered by DoltLab [version]" next to the custom logo.
 
@@ -166,7 +166,7 @@ should see my new Starbucks logo.
 
 ![](../.gitbook/assets/doltlab-starbucks-logo.png)
 
-# Customize automated emails
+## Customize automated emails
 
 DoltLab Enterprise allows administrators to customize the automated emails their DoltLab instance sends to its users.
 
@@ -309,7 +309,7 @@ If you need further assistance, please reach out to Kevin at kevin@acmeinc.com.
 
 Once we save our edits, we can restart our DoltLab instance for the changes to take affect.
 
-# Customize DoltLab colors
+## Customize DoltLab colors
 
 DoltLab Enterprise allows administrators to customize the color of certain assets across
 their DoltLab instance. This is current list of colors that you can customize and what
@@ -428,7 +428,7 @@ And now DoltLab is Starbucks branded!
 See other examples of utilizing colors to brand DoltLab for some well-known companies
 [here](https://dolthub.awsdev.ld-corp.com/blog/2024-05-23-customizing-doltlab-colors/#other-examples).
 
-# Deploy DoltLab on Kubernetes (single-host)
+## Deploy DoltLab on Kubernetes (single-host)
 
 Starting with DoltLab Enterprise >= v2.5.0, Kubernetes deployments are supported. To configure a DoltLab Enterprise instance to run on Kubernetes, the standard DoltLab `installer` tool is used to generate static Kubernetes manifests for a single-host, logical deployment. Multi-host Kubernetes deployments are not yet supported.
 
@@ -519,7 +519,7 @@ kubectl scale deploy,statefulset --replicas=0 -n doltlab
 kubectl delete -f ./k8s/all.yaml
 ```
 
-# Add Super Admins to a DoltLab instance
+## Add Super Admins to a DoltLab instance
 
 DoltLab Enterprise allows administrators to specify users who will be "super admins" on their DoltLab instance.
 
@@ -546,7 +546,7 @@ Alternatively, you can use the [installer](/reference/installer) with the argume
 --super-admin-email=you@email.com
 ```
 
-# Configure SAML Single-Sign-On
+## Configure SAML Single-Sign-On
 
 DoltLab Enterprise supports SAML single-sign-on. To configure your DoltLab instance to use SAML single-sign-on, you will first need an Identity Provider (IP) to provide you with a metadata descriptor.
 
@@ -626,7 +626,7 @@ On this tab you will see the following:
 
 Your Enterprise instance will now use single-sign-on through your IP for user login and account creation.
 
-# Configure OIDC Single-Sign-On
+## Configure OIDC Single-Sign-On
 
 DoltLab Enterprise >= v2.3.14 supports OIDC single sign on. To configure your DoltLab Enterprise instance to use OIDC single-sign-on, obtain an OIDC `client_id` and `client_secret` from your Identity Provider (IP).
 
@@ -677,7 +677,7 @@ When DoltLab comes back up, a link to sign-in with the IP will be displayed at t
 
 After signing in with the IP, they'll be redirected to your DoltLab Enterprise instance and successfully logged in!
 
-# Automated Remote Backups
+## Automated Remote Backups
 
 DoltLab Enterprise supports automated database backups for DoltLab's application Dolt server. To backup database data of all the Dolt databases hosted on your DoltLab instance, we recommend taking regular snapshots of the host's filesystem.
 
@@ -910,7 +910,7 @@ Once you start your Enterprise instance with `./start.sh`, it will now automatic
 
 ![](../.gitbook/assets/oci_remote_backup_bucket_example.png)
 
-# Deploy DoltLab across multiple hosts
+## Deploy DoltLab across multiple hosts
 
 As of DoltLab Enterprise v2.4.0, multihost deployments are deployed and managed via Docker Swarm. We recommend upgrading to this version of DoltLab minimum if you plan to run multihost deployments.
 
@@ -1193,7 +1193,7 @@ you can simply upgrade the DoltLab version on the Manager node, then rerun `./st
 
 Docker will perform an upgrade rollout across the hosts. Note, that you will have brief service interruption as DoltLab's writer services, like `doltlabdb` will stop before the new version is started.
 
-# Connect DoltLab to an SMTP server
+## Connect DoltLab to an SMTP server
 
 To enable account creation on DoltLab and enable its full suite of features, connect DoltLab to an SMTP server by editing `./installer_config.yaml` [to configure the SMTP server connection](#installer-config-reference-smtp).
 
@@ -1224,7 +1224,7 @@ Alternatively, instead of using `./installer_config.yaml`, the [installer](/refe
 `--smtp-password`, _required_ for authentication methods `plain` and `login`, the password for authenticating against the SMTP server.  
 `--smtp-oauth-token`, _required_ for authentication method `oauthbearer`,the oauth token used for authentication against the SMTP server.
 
-# Connect DoltLab to an SMTP server with implicit TLS
+## Connect DoltLab to an SMTP server with implicit TLS
 
 Edit `./installer_config.yaml` [to configure the SMTP server connection](#installer-config-reference-smtp) set `smtp.implicit_tls` as `true`.
 
@@ -1251,7 +1251,7 @@ Save these changes, then re-run the [installer](/reference/installer).
 
 Alternatively, use `--smtp-implicit-tls=true` with the [installer](/reference/installer) to use implicit TLS. Use `--smtp-insecure-tls=true` to skip TLS verification.
 
-# Troubleshoot SMTP server connection problems
+## Troubleshoot SMTP server connection problems
 
 DoltLab requires a connection to an existing SMTP server in order for users to create accounts, verify email addresses, reset forgotten passwords, and collaborate on databases.
 
@@ -1320,7 +1320,7 @@ Sending email with auth method: plain
 Successfully sent email!
 ```
 
-# Set up a SMTP Server using any Gmail address
+## Set up a SMTP Server using any Gmail address
 
 To quickly get up and running with an existing SMTP server, we recommend using [Gmail's](https://www.gmail.com). Once you've created a Gmail account, navigate to [your account page](https://myaccount.google.com/) and click the [Security](https://myaccount.google.com/security) tab. Under the section "How you sign in to Google", click `2-Step Verification`. If you have not yet setup 2-Step Verification, follow the prompts on this page to enable it. You will need to set up 2-step verification before continuing on to the remaining steps.
 
@@ -1422,7 +1422,7 @@ ubuntu@ip-10-2-0-24:~/doltlab$
 
 Running the newly generated `./start.sh` will start DoltLab connected to Gmail.
 
-# Serve DoltLab over HTTPS natively
+## Serve DoltLab over HTTPS natively
 
 First, make sure that port `443` is open on the host running DoltLab (as well as the other required ports `100`, `4321`, and `50051`) and that you have a valid TLS certificate configured for your DoltLab host. We recommend creating a TLS certificate using [certbot](https://certbot.eff.org/).
 
@@ -1454,7 +1454,7 @@ Alternatively, if you prefer to use command line flags, run the [installer](/ref
 
 You can now restart DoltLab with the `./start.sh` script, and it will be served over HTTPS.
 
-# Automatically upgrade DoltLab
+## Automatically upgrade DoltLab
 
 DoltLab >= `v2.3.0` supports automatic upgrades.
 
