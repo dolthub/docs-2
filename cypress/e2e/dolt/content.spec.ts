@@ -89,7 +89,8 @@ describe("Dolt docs — page content spot checks", () => {
       );
     });
 
-    it("System Tables page has correct heading", () => {
+    // This page has 18 DoltHub SQL console iframes that can slow loading
+    it("System Tables page has correct heading", { defaultCommandTimeout: 30000 }, () => {
       assertPageContent(
         "/sql-reference/version-control/dolt-system-tables",
         "System Tables",

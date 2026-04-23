@@ -15,7 +15,7 @@ description of remotes can be found [here](/concepts/git/remotes).
 # Configuring Remotes
 
 Remotes are configured using the [`dolt_remote`
-procedure](/reference/version-control/dolt-sql-procedures#dolt_remote). You configure a remote with a name and a
+procedure](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_remote). You configure a remote with a name and a
 URL. When you want to use the remote, you refer to it by name. When you clone a remote, a remote
 named `origin` is automatically configured for you.
 
@@ -52,9 +52,9 @@ Now the data from our local Dolt server is now available for others to clone usi
 
 # Remote Actions
 
-Sync functionality is supported via the [`clone`](/reference/version-control/dolt-sql-procedures#dolt_clone),
-[`fetch`](/reference/version-control/dolt-sql-procedures#dolt_fetch), [`push`](/reference/version-control/dolt-sql-procedures#dolt_push), and
-[`pull`](/reference/version-control/dolt-sql-procedures#dolt_pull) procedures.
+Sync functionality is supported via the [`clone`](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_clone),
+[`fetch`](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_fetch), [`push`](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_push), and
+[`pull`](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_pull) procedures.
 
 # Remote Options
 

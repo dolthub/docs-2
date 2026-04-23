@@ -1589,7 +1589,7 @@ MySQL [config_blog]> show tables;
 
 ## jwks 
 
-The `jwks` section of `config.yaml` is used to configure JSON web token (JWT) authentication. This configuration section is used to authenticate users of the Hosted Workbench to running Hosted Dolt servers. If your interested in this authentication method for your own Dolt use case, please come to [our Discord](ttps://discord.gg/gqr7K4VNKe) and let us know.
+The `jwks` section of `config.yaml` is used to configure JSON web token (JWT) authentication. This configuration section is used to authenticate users of the Hosted Workbench to running Hosted Dolt servers. If your interested in this authentication method for your own Dolt use case, please come to [our Discord](https://discord.gg/gqr7K4VNKe) and let us know.
 
 ## cluster
 
