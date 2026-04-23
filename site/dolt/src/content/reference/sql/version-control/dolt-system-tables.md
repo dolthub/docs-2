@@ -61,7 +61,7 @@ title: Dolt System Tables
 
 ## Database Metadata System Tables
 
-## `dolt_branches`
+### `dolt_branches`
 
 `dolt_branches` contains information about branches known to the database.
 
@@ -103,7 +103,7 @@ To find the current active branch use [`select active_branch()`](/sql-reference/
 branches on a remote you have fetched, see
 [`dolt_remote_branches`](#dolt_remote_branches).
 
-## `dolt_remote_branches`
+### `dolt_remote_branches`
 
 `dolt_remote_branches` contains information about branches on remotes
 you have fetched. It has a similar schema as `dolt_branches`, but the `remote`, `branch`, and `dirty` columns
@@ -145,7 +145,7 @@ SELECT * FROM dolt_remote_branches;
 +-----------------+----------------------------------+------------------+------------------------+-------------------------+----------------------------+
 ```
 
-## `dolt_docs`
+### `dolt_docs`
 
 `dolt_docs` stores the contents of Dolt docs \(`LICENSE.md`,
 `README.md`\).
@@ -170,7 +170,7 @@ Gets all docs.
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_procedures`
+### `dolt_procedures`
 
 `dolt_procedures` stores each stored procedure that has been created
 on the database.
@@ -209,7 +209,7 @@ CREATE PROCEDURE simple_proc2() SELECT name FROM category;
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_query_catalog`
+### `dolt_query_catalog`
 
 The `dolt_query_catalog` system table stores named queries for your database.
 Like all data stored in Dolt, these named queries are versioned alongside your data, so
@@ -268,7 +268,7 @@ dolt add dolt_query_catalog
 dolt commit -m "Adding new named query"
 ```
 
-## `dolt_remotes`
+### `dolt_remotes`
 
 `dolt_remotes` returns the remote subcontents of the `repo_state.json`, similar
 to running `dolt remote -v` from the command line.
@@ -305,7 +305,7 @@ WHERE name = 'origin';
 +--------+-----------------------------------------+--------------------------------------+--------+
 ```
 
-## `dolt_backups`
+### `dolt_backups`
 
 `dolt_backups` returns the backup contents of the `repo_state.json`, similar to running `dolt backup -v` from the command line.
 

@@ -34,14 +34,14 @@ title: Dolt SQL Functions
 
 ## Informational Functions
 
-## `ACTIVE_BRANCH()`
+### `ACTIVE_BRANCH()`
 
 The `ACTIVE_BRANCH()` function returns the name of the currently
 active branch for this session.
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+active_branch%28%29%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+active_branch%28%29%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+active_branch%28%29%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `DOLT_MERGE_BASE()`
+### `DOLT_MERGE_BASE()`
 
 `DOLT_MERGE_BASE()` returns the hash of the common ancestor between
 two branches.
@@ -58,13 +58,13 @@ The following would return the hash of commit `E`:
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+DOLT_MERGE_BASE%28%27feature%27%2C+%27main%27%29%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+DOLT_MERGE_BASE%28%27feature%27%2C+%27main%27%29%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+DOLT_MERGE_BASE%28%27feature%27%2C+%27main%27%29%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `DOLT_HASHOF()`
+### `DOLT_HASHOF()`
 
 The `DOLT_HASHOF()` function returns the commit hash of a branch or other commit spec.
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+dolt_hashof%28%27main%27%29%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+dolt_hashof%28%27main%27%29%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+dolt_hashof%28%27main%27%29%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `DOLT_HASHOF_TABLE()`
+### `DOLT_HASHOF_TABLE()`
 
 The `DOLT_HASHOF_TABLE()` function returns the value hash of a table. The hash is the hash of all the rows in the table,
 and is dependent on their serialization format. As such a table could have the same rows, but different hashes if the
@@ -84,7 +84,7 @@ mysql> SELECT dolt_hashof_table('color');
 1 row in set (0.01 sec)
 ```
 
-## `DOLT_HASHOF_DB()`
+### `DOLT_HASHOF_DB()`
 
 The `DOLT_HASHOF_DB()` function returns the value hash of the entire versioned database. The hash is the hash of all tables
 (schema and data) in the database, and includes additional versioned items such as stored procedures and triggers. The hash
@@ -112,7 +112,7 @@ branch 'feature' that have not been committed. Calling `dolt_hashof_db('feature'
 The general recommendation when trying to look for changes to the database is to connect to the branch you want to use, then
 call `dolt_hashof_db()` without any arguments. Any change in the hash means that the database has changed.
 
-## `DOLT_VERSION()`
+### `DOLT_VERSION()`
 
 The `DOLT_VERSION()` function returns the version string for the Dolt
 binary.
@@ -126,7 +126,7 @@ mysql> select dolt_version();
 +----------------+
 ```
 
-## `HAS_ANCESTOR()`
+### `HAS_ANCESTOR()`
 
 The `HAS_ANCESTOR(target, ancestor)` function returns a `boolean` indicating whether a
 candidate `ancestor` commit is in the commit graph of the `target` ref.
@@ -150,7 +150,7 @@ select has_ancestor('main', 'E');    -- true
 select has_ancestor('G', 'main');    -- true
 ```
 
-## `LAST_INSERT_UUID()`
+### `LAST_INSERT_UUID()`
 
 The `last_insert_uuid()` function returns the UUID of the first row inserted by the last statement executed in the current session.
 This is the UUID analogue of
@@ -198,7 +198,7 @@ functions have several restrictions in how they can be used in queries. For exam
 cannot currently alias a table function or join a table function with another table or
 table function.
 
-## `DOLT_DIFF()`
+### `DOLT_DIFF()`
 
 The `DOLT_DIFF()` table function calculates the differences in a table's data at any two commits in the database.
 Each row in the result set describes how a row in the underlying table has changed between the two commits,
@@ -357,7 +357,7 @@ Therefore, `dolt_diff('main...feature_branch')` outputs just the differences in 
 
 Learn more about two vs three dot diff [here](https://www.dolthub.com/blog/2022-11-11-two-and-three-dot-diff-and-log).
 
-## `DOLT_DIFF_STAT()`
+### `DOLT_DIFF_STAT()`
 
 _Previously `dolt_diff_summary()`_
 
@@ -497,7 +497,7 @@ With result of single row:
 +------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------+
 ```
 
-## `DOLT_DIFF_SUMMARY()`
+### `DOLT_DIFF_SUMMARY()`
 
 _The previous version of `dolt_diff_summary` was renamed to `dolt_diff_stat`._
 
@@ -640,7 +640,7 @@ With result of single row:
 +-----------------+---------------+-----------+-------------+---------------+
 ```
 
-## `DOLT_JSON_DIFF()`
+### `DOLT_JSON_DIFF()`
 
 The `DOLT_JSON_DIFF()` table function is a summary of the changes between two JSON documents.
 
@@ -758,7 +758,7 @@ Note how multiple changes in a single row of the `inventory` table are rendered 
 Arrays are diffed by considering each index of the array separately. This means that inserting or removing values
 in an array anywhere other than the end will shift the indexes of each element, and will be reported as a modification at each index where the value changed.
 
-## `DOLT_LOG()`
+### `DOLT_LOG()`
 
 The `DOLT_LOG` table function gets the commit log for all commits reachable from the
 provided revision's `HEAD` (or the current `HEAD` if no revision is provided). `DOLT_LOG()`
@@ -887,7 +887,7 @@ both return `F`, `E`, and `D`.
 
 Learn more about two vs three dot log [here](https://www.dolthub.com/blog/2022-11-11-two-and-three-dot-diff-and-log).
 
-## `DOLT_PATCH()`
+### `DOLT_PATCH()`
 
 Generate the SQL statements needed to patch a table (or all tables) from a starting revision
 to a target revision. This can be useful when you want to import data into Dolt from an external source,
@@ -1028,7 +1028,7 @@ With result of single row:
 +-----------------+------------------+----------------------------------+------------+-----------+---------------------+
 ```
 
-## `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()`
+### `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()`
 
 The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function provides a summary of merge conflicts that would occur when merging a branch. This function is useful for understanding potential conflicts before performing an actual merge operation, allowing you to identify which tables would have conflicts and how many data and schema conflicts would occur.
 
@@ -1093,7 +1093,7 @@ If there would be no conflicts, the function returns an empty result set.
 
 This information helps you understand the scope of conflicts before attempting a merge, allowing you to plan conflict resolution strategies or coordinate with other developers who may have made conflicting changes.
 
-## `DOLT_PREVIEW_MERGE_CONFLICTS()`
+### `DOLT_PREVIEW_MERGE_CONFLICTS()`
 
 The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function provides detailed information about merge conflicts that would occur when merging a branch. Unlike `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` which only provides a count of conflicts per table, this function returns the actual conflicting rows with their base, ours, and theirs values.
 
@@ -1217,7 +1217,7 @@ If there are no conflicts in the specified table, the function returns an empty 
 
 This detailed view allows you to examine the exact differences that would cause conflicts and plan appropriate resolution strategies before performing the actual merge. The results are similar to what you would see in the `dolt_conflicts_$TABLENAME` system tables after an actual merge, but without making any changes to your database.
 
-## `DOLT_REFLOG()`
+### `DOLT_REFLOG()`
 
 The `DOLT_REFLOG()` table function shows the history of named refs (e.g. branches and tags), which is useful when you want to understand how a branch or tag has changed over time to reference different commits, particularly for information that isn't surfaced through the `dolt_log` system table or `dolt_log()` table function. For example, if you use `dolt_reset()` to change the commit a branch points to, you can use `dolt_reflog()` to see what commit the branch was pointing to before it was moved to that commit. Another common use case for `dolt_reflog()` is to recreate a branch or tag that was accidentally deleted. The example section below shows how to recreate a deleted branch.
 
@@ -1282,7 +1282,7 @@ select * from dolt_reflog('prodBranch');
 call dolt_branch('prodBranch', 'v531ptpmv2tquig8v591tsjghtj84ksg');
 ```
 
-## `DOLT_SCHEMA_DIFF()`
+### `DOLT_SCHEMA_DIFF()`
 
 The `DOLT_SCHEMA_DIFF()` table function calculates the schema difference between any two commits in the database.
 Each row in the result set describes how a table was altered between the two commits, including the table's create statement at to and from commits.
@@ -1478,7 +1478,7 @@ You can try calling `DOLT_SCHEMA_DIFF()` against the [DoltHub docs_examples DB](
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?active=Tables&q=SELECT+*%0AFROM+dolt_schema_diff%28%27schema_diff_v1%27%2C+%27schema_diff_v2%27%29%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?active=Tables&q=SELECT+*%0AFROM+dolt_schema_diff%28%27schema_diff_v1%27%2C+%27schema_diff_v2%27%29%3B%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?active=Tables&q=SELECT+*%0AFROM+dolt_schema_diff%28%27schema_diff_v1%27%2C+%27schema_diff_v2%27%29%3B%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `DOLT_QUERY_DIFF()`
+### `DOLT_QUERY_DIFF()`
 
 The `DOLT_QUERY_DIFF()` table function calculates the data difference between any two queries, producing a table similar to the `DOLT_DIFF()` table function.
 
@@ -1536,7 +1536,7 @@ Query diff is performed brute force and thus, will be slow for large result sets
 The algorithm is super linear (`n^2`) on the size of the results sets.
 Over time, we will optimize this to use features of the storage engine to improve performance.
 
-## `DOLT_BRANCH_STATUS()`
+### `DOLT_BRANCH_STATUS()`
 
 The `DOLT_BRANCH_STATUS()` table function calculates the number of commits `ahead` and `behind` the target branch is from the base branch.
 In other words, this tells you the number of commits target branch has that base does not and vice versa.
@@ -1611,7 +1611,7 @@ tmp/main> SELECT * FROM DOLT_BRANCH_STATUS('main', 'other');
 
 This means that `other` has commits `"other commit 1"` and `"other commit 2"` that are missing from `main`, and `main` has commit `"main commit"` that is missing from `other`.
 
-## `DOLT_TEST_RUN()`
+### `DOLT_TEST_RUN()`
 
 The `DOLT_TEST_RUN()` table function executes tests defined in the [`dolt_tests` system table](/sql-reference/version-control/dolt-system-tables#dolt_tests) and returns the results. Tests can be run individually by name, by test group, or all at once.
 
