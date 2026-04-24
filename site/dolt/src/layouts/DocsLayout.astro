@@ -622,7 +622,14 @@ const isDev = import.meta.env.DEV;
     --pagefind-ui-font: "Source Sans Pro", sans-serif;
     overflow-y: auto;
     max-height: 75vh;
-    padding: 0.25rem;
+    padding: 0.5rem 1.25rem;
+  }
+
+  .search-container :global(mark) {
+    background: #D4E7FC;
+    color: inherit;
+    border-radius: 2px;
+    padding: 0.05em 0.15em;
   }
 
   /* Table of contents (right sidebar) */
