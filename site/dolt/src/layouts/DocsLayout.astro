@@ -625,13 +625,6 @@ const isDev = import.meta.env.DEV;
     padding: 0.5rem 1.25rem;
   }
 
-  .search-container :global(mark),
-  .search-modal :global(mark) {
-    background: #D4E7FC !important;
-    color: inherit !important;
-    border-radius: 2px;
-    padding: 0.05em 0.15em;
-  }
 
   /* Table of contents (right sidebar) */
   .toc {
@@ -694,5 +687,15 @@ const isDev = import.meta.env.DEV;
   .docs-main h3:hover .anchor-link,
   .docs-main h4:hover .anchor-link {
     @apply inline-block ml-3;
+  }
+
+  /* Override Pagefind's "all: revert" on mark which resets to browser yellow */
+  .pagefind-ui--reset mark,
+  .pagefind-ui mark {
+    all: unset;
+    background: #D4E7FC;
+    color: inherit;
+    border-radius: 2px;
+    padding: 0.05em 0.15em;
   }
 </style>
