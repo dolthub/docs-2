@@ -150,15 +150,19 @@ export function MobileSidebar({ nav, currentPath }: SidebarProps) {
       <button
         className="sidebar-mobile-toggle"
         onClick={() => setOpen(!open)}
-        aria-label="Toggle navigation"
+        aria-label="Toggle docs navigation"
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-          <path
-            fillRule="evenodd"
-            d="M3 5h14a1 1 0 010 2H3a1 1 0 010-2zm0 4h14a1 1 0 010 2H3a1 1 0 010-2zm0 4h14a1 1 0 010 2H3a1 1 0 010-2z"
-          />
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <rect x="1" y="1" width="14" height="14" rx="2" />
+          <line x1="5.5" y1="1" x2="5.5" y2="15" />
+          <line x1="8" y1="5" x2="12" y2="5" />
+          <line x1="8" y1="8" x2="12" y2="8" />
+          <line x1="8" y1="11" x2="11" y2="11" />
         </svg>
-        <span>Menu</span>
+        <span>Table of contents</span>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" className="sidebar-mobile-chevron">
+          <path d="M3 4.5l3 3 3-3" />
+        </svg>
       </button>
 
       {open && (
