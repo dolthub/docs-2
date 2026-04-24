@@ -625,9 +625,10 @@ const isDev = import.meta.env.DEV;
     padding: 0.5rem 1.25rem;
   }
 
-  .search-container :global(mark) {
-    background: #D4E7FC;
-    color: inherit;
+  .search-container :global(mark),
+  .search-modal :global(mark) {
+    background: #D4E7FC !important;
+    color: inherit !important;
     border-radius: 2px;
     padding: 0.05em 0.15em;
   }
