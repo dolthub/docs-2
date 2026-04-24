@@ -34,11 +34,10 @@ const isDev = import.meta.env.DEV;
 
       <MobileSidebar client:only="react" nav={nav} currentPath={currentPath} />
 
+      <Search client:only="react" />
+
       <div class="docs-container">
         <div class="sidebar-slot">
-          <div class="search-slot">
-            <Search client:only="react" />
-          </div>
           <Sidebar client:only="react" nav={nav} currentPath={currentPath} />
         </div>
 
@@ -75,10 +74,6 @@ const isDev = import.meta.env.DEV;
     border-right: 1px solid #D7D8DF;
   }
 
-  /* Search only shows in the desktop sidebar */
-  .search-slot {
-    @apply hidden lg:block;
-  }
 
   .docs-container {
     @apply flex w-full max-w-[1400px] mx-auto;
@@ -528,27 +523,89 @@ const isDev = import.meta.env.DEV;
     background: #f3f4f6;
   }
 
-  /* Search — only visible in desktop sidebar */
-  .search-slot {
-    padding: 0.75rem 0.75rem 0;
+  /* Search trigger button */
+  .search-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0.75rem;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid #D7D8DF;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #999;
+    width: calc(100% - 1.5rem);
+    transition: border-color 0.15s;
+  }
+
+  .search-trigger:hover {
+    border-color: #aaa;
+  }
+
+  .search-trigger-text {
+    flex: 1;
+    text-align: left;
+  }
+
+  .search-trigger-kbd {
+    display: none;
+    font-size: 0.65rem;
+    padding: 0.1rem 0.35rem;
+    border: 1px solid #D7D8DF;
+    border-radius: 4px;
+    background: #f3f4f6;
+    color: #666;
+    font-family: inherit;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 1024px) {
+    .search-trigger-kbd {
+      display: inline-block;
+    }
+  }
+
+  .search-trigger-kbd-meta {
+    font-size: 0.75rem;
+  }
+
+  /* Search modal */
+  .search-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+  }
+
+  .search-modal {
+    width: 90%;
+    max-width: 640px;
+    max-height: 70vh;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .search-container {
-    --pagefind-ui-scale: 0.8;
+    --pagefind-ui-scale: 0.9;
     --pagefind-ui-primary: #327DD2;
     --pagefind-ui-text: #333;
     --pagefind-ui-background: #fff;
     --pagefind-ui-border: #D7D8DF;
     --pagefind-ui-border-width: 1px;
-    --pagefind-ui-border-radius: 6px;
+    --pagefind-ui-border-radius: 0;
     --pagefind-ui-font: "Source Sans Pro", sans-serif;
-  }
-
-  .search-placeholder {
-    font-size: 0.75rem;
-    color: #999;
-    text-align: center;
-    padding: 0.5rem;
+    overflow-y: auto;
+    max-height: 70vh;
   }
 
   /* Table of contents (right sidebar) */
