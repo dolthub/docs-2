@@ -481,10 +481,22 @@ const isDev = import.meta.env.DEV;
 
   /* Mobile toggle button */
   .sidebar-mobile-toggle {
-    @apply flex lg:hidden items-center gap-2 px-4 py-3 text-sm font-medium border-b border-stone-300 w-full bg-white cursor-pointer;
-    color: rgba(var(--color-primary), 0.7);
+    @apply flex lg:hidden items-center gap-2 px-4 py-2 text-xs w-full bg-white cursor-pointer;
+    color: rgba(var(--color-primary), 0.5);
     border: none;
-    border-bottom: 1px solid #D7D8DF;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .sidebar-mobile-toggle:hover {
+    color: rgba(var(--color-primary), 0.8);
+    background: #f9fafb;
+  }
+
+  .sidebar-mobile-chevron {
+    margin-left: auto;
+    opacity: 0.4;
   }
 
   /* Mobile overlay */
