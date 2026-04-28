@@ -201,8 +201,8 @@ export function MobileSidebar({ nav, currentPath }: SidebarProps) {
           onClick={() => {
             setOpen(false);
             setTimeout(() => {
-              window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
-            }, 200);
+              (window as any).__openDocsSearch?.();
+            }, 250);
           }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
