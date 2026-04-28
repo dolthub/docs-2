@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Heading = {
   id: string;
@@ -51,10 +51,20 @@ export default function TableOfContents() {
     return () => observer.disconnect();
   }, [headings]);
 
+  // Scroll active ToC link into view when activeId changes
+  const tocRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!activeId || !tocRef.current) return;
+    const activeLink = tocRef.current.querySelector(".toc-link-active");
+    if (activeLink) {
+      activeLink.scrollIntoView({ block: "nearest" });
+    }
+  }, [activeId]);
+
   if (headings.length === 0) return null;
 
   return (
-    <nav className="toc" aria-label="Table of contents">
+    <nav className="toc" ref={tocRef} aria-label="Table of contents">
       <h4 className="toc-title">On this page</h4>
       <ul className="toc-list">
         {headings.map(({ id, text, level }) => (

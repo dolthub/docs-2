@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export type NavItem = {
   title: string;
@@ -123,8 +123,18 @@ function SidebarNav({ nav, currentPath }: SidebarProps) {
 
 // Desktop sidebar — rendered inside the sidebar-slot
 export default function Sidebar({ nav, currentPath }: SidebarProps) {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const active = ref.current.querySelector(".sidebar-link-active");
+    if (active) {
+      active.scrollIntoView({ block: "center" });
+    }
+  }, []);
+
   return (
-    <aside className="sidebar-desktop">
+    <aside className="sidebar-desktop" ref={ref}>
       <SidebarNav nav={nav} currentPath={currentPath} />
     </aside>
   );
