@@ -68,7 +68,7 @@ $ dolt config --global --add user.email "tim@dolthub.com"
 After running these commands you can see a file with them in your `~/.dolt` directory.
 
 ```bash
-$ ls ~/.dolt/config_global.json 
+$ ls ~/.dolt/config_global.json
 /Users/timsehn/.dolt/config_global.json
 ```
 
@@ -97,7 +97,7 @@ You now have a fresh Dolt database. It has a single entry in `dolt log`.
 
 ```bash
 $ dolt log
-commit f06jtfp6fqaak6dkm0olmv175atkbhl3 (HEAD -> main) 
+commit f06jtfp6fqaak6dkm0olmv175atkbhl3 (HEAD -> main)
 Author: timsehn <tim@dolthub.com>
 Date:  Wed Jan 18 17:02:38 -0800 2023
 
@@ -107,7 +107,7 @@ Date:  Wed Jan 18 17:02:38 -0800 2023
 
 ## Make a table
 
-Git versions files. Dolt versions tables. 
+Git versions files. Dolt versions tables.
 
 In Git, you usually use a text editor to make files. In Dolt, there a few ways to make tables. You can import a file, like a CSV. You can run SQL offline via the command line. Or you can start a SQL server and run SQL online. I'll walk through examples of each in this document as we go.
 
@@ -116,7 +116,7 @@ Let's make our table initially from a CSV. Dolt supports creating tables via the
 Here's our CSV file. We're going to use a simple list of employees here at DoltHub.
 
 ```bash
-$ cat employees.csv  
+$ cat employees.csv
 id,first_name,last_name
 0,Tim,Sehn
 1,Brian,Hendriks
@@ -146,7 +146,7 @@ Untracked files:
 We can inspect the table using SQL on the command line. Dolt allows you to run queries from the command line using `dolt sql -q`. This is often more convenient, especially in the Git for Data use case, than starting a server and opening a MySQL client. Dolt supports the MySQL flavor of SQL.
 
 ```
-$ dolt sql -q "show tables" 
+$ dolt sql -q "show tables"
 +------------------------+
 | Tables_in_git_for_data |
 +------------------------+
@@ -184,7 +184,7 @@ Changes to be committed:
   (use "dolt reset <table>..." to unstage)
 	new table:      employees
 $ dolt commit -m "Added new employees table containing the founders of DoltHub"
-commit aq86v87h1g05i5cdht6v6tptp70eibms (HEAD -> main) 
+commit aq86v87h1g05i5cdht6v6tptp70eibms (HEAD -> main)
 Author: timsehn <tim@dolthub.com>
 Date:  Thu Jan 19 14:56:13 -0800 2023
 
@@ -194,13 +194,13 @@ $ dolt status
 On branch main
 nothing to commit, working tree clean
 $ dolt log
-commit aq86v87h1g05i5cdht6v6tptp70eibms (HEAD -> main) 
+commit aq86v87h1g05i5cdht6v6tptp70eibms (HEAD -> main)
 Author: timsehn <tim@dolthub.com>
 Date:  Thu Jan 19 14:56:13 -0800 2023
 
         Added new employees table containing the founders of DoltHub
 
-commit f06jtfp6fqaak6dkm0olmv175atkbhl3 
+commit f06jtfp6fqaak6dkm0olmv175atkbhl3
 Author: timsehn <tim@dolthub.com>
 Date:  Wed Jan 18 17:02:38 -0800 2023
 
@@ -217,7 +217,7 @@ Now, I want to add an employee and change my name from "Tim" to "Timothy", you k
 ```bash
 $ dolt sql -q "insert into employees values (3, 'Daylon', 'Wilkins')"
 Query OK, 1 row affected (0.00 sec)
-$ dolt sql -q "update employees set first_name='Timothy' where last_name like 'S%'" 
+$ dolt sql -q "update employees set first_name='Timothy' where last_name like 'S%'"
 Query OK, 2 rows affected (0.00 sec)
 Rows matched: 2  Changed: 2  Warnings: 0
 $ dolt diff
@@ -243,7 +243,7 @@ Just like with Git, In Dolt I can roll back a number of ways. I can `checkout` t
 
 ```bash
 $ dolt checkout employees
-$ dolt diff 
+$ dolt diff
 $ dolt sql -q "select * from employees"
 +----+------------+-----------+
 | id | first_name | last_name |
@@ -262,7 +262,7 @@ Query OK, 1 row affected (0.00 sec)
 $ dolt sql -q "update employees set first_name='Timothy' where first_name='Tim'"
 Query OK, 1 row affected (0.00 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
-$ dolt diff                                                          
+$ dolt diff
 diff --dolt a/employees b/employees
 --- a/employees @ m3qr6lhb8ad6fc5puvsaiv5ladajfi9r
 +++ b/employees @ 72aq85jbhr83v4gmh73v550gupk4mr3k
@@ -279,7 +279,7 @@ Looks like I got it right this time. I'll make a commit.
 
 ```bash
 $ dolt commit -am "Added Daylon. Make Tim Timothy."
-commit envoh3j93s47idjmrn16r2tka3ap8s0d (HEAD -> main) 
+commit envoh3j93s47idjmrn16r2tka3ap8s0d (HEAD -> main)
 Author: timsehn <tim@dolthub.com>
 Date:  Thu Jan 19 16:55:14 -0800 2023
 
@@ -311,7 +311,7 @@ Click connect and you'll be presented with a familiar database workbench GUI.
 
 Now we want to make some changes on a branch. You can so this by running the following SQL.
 
-```SQL
+```sql
 call dolt_checkout('-b','modifications');
 insert INTO employees values (5,'Taylor', 'Bantle');
 call dolt_commit('-am', 'Modifications on a branch');
@@ -327,7 +327,7 @@ Alright, now that we've shown you that you can work in server mode, let's get ba
 
 ```bash
 $ dolt branch
-* main                                          	
+* main
   modifications
 ```
 
@@ -382,7 +382,7 @@ $ dolt sql -q "select * from employees"
 +----+------------+-----------+
 $ dolt branch -d modifications
 $ dolt branch
-* main    
+* main
 ```
 
 I got a fast-forward merge, just like Git, since there were no other changes on main.

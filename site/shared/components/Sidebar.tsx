@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export type NavItem = {
   title: string;
@@ -49,14 +49,14 @@ function NavLink({
 
   return (
     <li>
-      <div className="flex items-center">
-        {hasChildren && (
-          <button
-            onClick={() => setOpen(!open)}
-            className="sidebar-chevron"
-            aria-label={open ? "Collapse" : "Expand"}
-            style={{ marginLeft: paddingLeft }}
-          >
+      <div className={`sidebar-row ${active ? "sidebar-row-active" : ""}`} style={{ paddingLeft: paddingLeft }}>
+        <span
+          className={`sidebar-chevron ${hasChildren ? "" : "sidebar-chevron-hidden"}`}
+          onClick={hasChildren ? () => setOpen(!open) : undefined}
+          role={hasChildren ? "button" : undefined}
+          aria-label={hasChildren ? (open ? "Collapse" : "Expand") : undefined}
+        >
+          {hasChildren && (
             <svg
               width="10"
               height="10"
@@ -65,13 +65,12 @@ function NavLink({
             >
               <path d="M3 1l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" />
             </svg>
-          </button>
-        )}
+          )}
+        </span>
         {item.href ? (
           <a
             href={item.href}
-            className={`sidebar-link ${active ? "sidebar-link-active" : ""}`}
-            style={{ paddingLeft: hasChildren ? 4 : paddingLeft + 14 }}
+            className="sidebar-link"
           >
             {item.title}
           </a>
@@ -79,7 +78,6 @@ function NavLink({
           <button
             onClick={() => setOpen(!open)}
             className="sidebar-link sidebar-link-section"
-            style={{ paddingLeft: hasChildren ? 4 : paddingLeft + 14 }}
           >
             {item.title}
           </button>
@@ -125,8 +123,22 @@ function SidebarNav({ nav, currentPath }: SidebarProps) {
 
 // Desktop sidebar — rendered inside the sidebar-slot
 export default function Sidebar({ nav, currentPath }: SidebarProps) {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const active = ref.current.querySelector(".sidebar-row-active") as HTMLElement;
+    if (active && ref.current) {
+      // Scroll only the sidebar, not the page
+      const sidebar = ref.current;
+      const activeTop = active.offsetTop;
+      const sidebarHeight = sidebar.clientHeight;
+      sidebar.scrollTop = activeTop - sidebarHeight / 2;
+    }
+  }, []);
+
   return (
-    <aside className="sidebar-desktop">
+    <aside className="sidebar-desktop" ref={ref}>
       <SidebarNav nav={nav} currentPath={currentPath} />
     </aside>
   );

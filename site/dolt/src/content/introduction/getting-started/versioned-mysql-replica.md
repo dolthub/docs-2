@@ -4,7 +4,7 @@ title: Versioned MySQL Replica
 
 # Versioned MySQL Replica
 
-Dolt can be configured as a MySQL Replica. 
+Dolt can be configured as a MySQL Replica.
 
 In this mode, you set up Dolt to replicate a primary MySQL. Set up can take as as little as three commands. After set up, Dolt replicates every write to your primary to Dolt and creates a Dolt commit, giving you time travel, lineage, rollback, and other [database version control](https://www.dolthub.com/blog/2021-09-17-database-version-control/) features on your Dolt replica.
 
@@ -12,7 +12,7 @@ This document will walk you through step-by-step on how to get Dolt running as a
 
 ## Start a Local MySQL Server
 
-First, we need a running MySQL instance. We'll consider this our "primary" database. 
+First, we need a running MySQL instance. We'll consider this our "primary" database.
 
 I use homebrew on my Mac. To get MySQL and start it, I open a terminal and run:
 
@@ -52,14 +52,14 @@ Now, you have to prepare MySQL to have a replica. This requires the following co
 
 Now, for the things you have to change. First you need to turn on `ENFORCE_GTID_CONSISTENCY`. Go to the you `mysql` client we started in step one and run the following query.
 
-```SQL
-mysql> SET @@GLOBAL.ENFORCE_GTID_CONSISTENCY = ON;                              
+```sql
+mysql> SET @@GLOBAL.ENFORCE_GTID_CONSISTENCY = ON;
 Query OK, 0 rows affected (0.00 sec)
 ```
 
 Finally, you have to change `GTID_MODE` to `ON`. It is `OFF` by default and [you can't go directly from `OFF` to `ON`](https://dev.mysql.com/doc/refman/8.0/en/replication-mode-change-online-enable-gtids.html). So, step through the options up to `ON` like so.
 
-```SQL
+```sql
 mysql> SET @@GLOBAL.GTID_MODE = OFF_PERMISSIVE;
 Query OK, 0 rows affected (0.01 sec)
 
@@ -72,7 +72,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 To make sure you have everything set up right, run the following and make sure the table looks the same.
 
-```SQL
+```sql
 mysql> SHOW VARIABLES WHERE Variable_Name LIKE '%gtid_mode' OR Variable_Name LIKE '%enforce_gtid_consistency' OR Variable_Name LIKE '%binlog_format' OR Variable_Name LIKE 'server_id';
 +--------------------------+-------+
 | Variable_name            | Value |
@@ -116,7 +116,7 @@ $ cd dolt_replica
 Start a `dolt sql-server`. This is a MySQL compatible database server similar to the one you started in the first section. You need to run it on a different port than `3306` because your MySQL is running there. So, we'll start it on port `1234` using the `-P` option. I'm also going to start the server with `--loglevel` at `debug` so I can show you the queries replication is running.
 
 ```bash
-$ dolt sql-server -P 1234 --loglevel=debug                       
+$ dolt sql-server -P 1234 --loglevel=debug
 Starting server with Config HP="localhost:1234"|T="28800000"|R="false"|L="debug"|S="/tmp/mysql.sock"
 2023-03-08T13:05:06-08:00 WARN [no conn] unix socket set up failed: file already in use: /tmp/mysql.sock {}
 ```
@@ -131,7 +131,7 @@ Open a new terminal and connect a MySQL client to your running Dolt just like yo
 $ mysql -h 127.0.0.1 -P 1234 -u root
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1
-Server version: 5.7.9-Vitess 
+Server version: 5.7.9-Vitess
 
 Copyright (c) 2000, 2023, Oracle and/or its affiliates.
 
@@ -160,7 +160,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 Finally, start the replica.
 
-```SQL
+```sql
 mysql> START REPLICA;
 Query OK, 0 rows affected (0.00 sec)
 ```
@@ -223,7 +223,7 @@ You can see the queries replicating in the Dolt log:
 2023-03-13T11:34:30-07:00 DEBUG [no conn] Received binlog event: XID {connectionDb=foo}
 ```
 
-All seems to be working. 
+All seems to be working.
 
 ## Inspect the Replica
 
@@ -258,7 +258,7 @@ The new database `foo` and the table `t` along with it's single row have replica
 
 Now to show off the first new feature, the Dolt Commit log. The Dolt replica makes a Dolt commit after every transaction sent from the primary so you can see what changed and when.
 
-Dolt has a number of [system tables](/sql-reference/version-control/dolt-system-tables#database-history-system-tables), [functions](/sql-reference/version-control/dolt-sql-functions#table-functions), and [procedures](/sql-reference/version-control/dolt-sql-procedures) to expose the version control features. These tables, functions, and procedures are inspired by their Git equivalents, so `git log` becomes the `dolt_log` system table. 
+Dolt has a number of [system tables](/sql-reference/version-control/dolt-system-tables#database-history-system-tables), [functions](/sql-reference/version-control/dolt-sql-functions#table-functions), and [procedures](/sql-reference/version-control/dolt-sql-procedures) to expose the version control features. These tables, functions, and procedures are inspired by their Git equivalents, so `git log` becomes the `dolt_log` system table.
 
 ```sql
 mysql> select * from dolt_log;
@@ -304,8 +304,8 @@ remote: Enumerating objects: 120, done.
 remote: Total 120 (delta 0), reused 0 (delta 0), pack-reused 120
 Receiving objects: 100% (120/120), 74.27 MiB | 22.43 MiB/s, done.
 Resolving deltas: 100% (62/62), done.
-$ cd test_db 
-$ mysql -u root < employees.sql     
+$ cd test_db
+$ mysql -u root < employees.sql
 INFO
 CREATING DATABASE STRUCTURE
 INFO
@@ -644,4 +644,4 @@ mysql> select * from dolt_diff('main', 'revert_bad_change', 'salaries');
 Empty set (0.00 sec)
 ```
 
-Phew, that was pretty awesome. I was able to find a bad change using my Dolt replica, generate a patch to revert it on my primary, apply the patch, and make sure everything was right with the world again. With a Dolt replica, you never have to worry about bad administrator queries again! 
+Phew, that was pretty awesome. I was able to find a bad change using my Dolt replica, generate a patch to revert it on my primary, apply the patch, and make sure everything was right with the world again. With a Dolt replica, you never have to worry about bad administrator queries again!
