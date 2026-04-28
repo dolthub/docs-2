@@ -196,6 +196,21 @@ export function MobileSidebar({ nav, currentPath }: SidebarProps) {
             </svg>
           </button>
         </div>
+        <button
+          className="sidebar-mobile-search"
+          onClick={() => {
+            setOpen(false);
+            setTimeout(() => {
+              window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+            }, 200);
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <span>Search docs...</span>
+        </button>
         <SidebarNav nav={nav} currentPath={currentPath} />
       </aside>
     </>
