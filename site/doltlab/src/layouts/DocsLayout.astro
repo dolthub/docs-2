@@ -62,16 +62,28 @@ const isDev = import.meta.env.DEV;
 </html>
 
 <style>
+  /* Page background — light grey like the blog */
+  :global(html) {
+    scroll-behavior: auto;
+  }
+
+  :global(body) {
+    background: #f1f3f8;
+  }
+
   /* Reserve space for client-only components to prevent layout shift */
   .navbar-slot {
     min-height: 48px;
+    background: #f1f3f8;
+    padding-bottom: 0.5rem;
   }
 
   .sidebar-slot {
     @apply hidden lg:block;
     width: 256px;
     min-width: 256px;
-    border-right: 1px solid #D7D8DF;
+    background: #f1f3f8;
+    padding-right: 0.25rem;
   }
 
 
@@ -84,10 +96,15 @@ const isDev = import.meta.env.DEV;
     width: 200px;
     min-width: 200px;
     flex-shrink: 0;
+    background: #f1f3f8;
+    padding-left: 0.75rem;
   }
 
   .docs-main {
-    @apply flex-1 min-w-0 px-6 lg:px-12 pt-8 pb-16 min-h-[70vh];
+    @apply flex-1 min-w-0 px-6 lg:px-12 pt-6 pb-16 min-h-[70vh];
+    background: white;
+    border-radius: 12px;
+    margin-top: 0.75rem;
   }
 
   .docs-main :global(p) {
@@ -123,7 +140,8 @@ const isDev = import.meta.env.DEV;
   }
 
   .docs-main :global(code) {
-    @apply bg-stone-100 rounded px-1.5 py-0.5 text-sm font-mono;
+    @apply rounded px-1.5 py-0.5 text-sm font-mono;
+    background: #f1f3f8;
   }
 
   .docs-main :global(pre) {
@@ -441,6 +459,22 @@ const isDev = import.meta.env.DEV;
     @apply list-none p-0 m-0;
   }
 
+  .sidebar-row {
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    padding-left: 0.25rem;
+  }
+
+  .sidebar-row-active {
+    @apply bg-sky-50;
+  }
+
+  .sidebar-row-active .sidebar-link {
+    @apply font-semibold;
+    color: rgba(var(--color-primary), 1);
+  }
+
   .sidebar-link {
     @apply block w-full text-left text-sm py-1 pr-3 no-underline;
     color: rgba(var(--color-primary), 0.7);
@@ -449,13 +483,6 @@ const isDev = import.meta.env.DEV;
   .sidebar-link:hover {
     color: rgba(var(--color-primary), 1);
     @apply no-underline;
-  }
-
-  .sidebar-link-active {
-    @apply font-semibold;
-    color: rgba(var(--color-primary), 1);
-    @apply bg-sky-50;
-    @apply rounded;
   }
 
   .sidebar-link-section {
@@ -482,7 +509,26 @@ const isDev = import.meta.env.DEV;
     position: sticky;
     top: 0;
     height: 100vh;
-    padding: 1.5rem 0;
+    padding: 1.5rem 0.5rem 1.5rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: #D7D8DF transparent;
+  }
+
+  .sidebar-desktop::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .sidebar-desktop::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-desktop::-webkit-scrollbar-thumb {
+    background: #D7D8DF;
+    border-radius: 4px;
+  }
+
+  .sidebar-desktop::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
   }
 
   /* Mobile toggle button */
@@ -545,20 +591,22 @@ const isDev = import.meta.env.DEV;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 0.75rem 0.75rem 0.5rem;
-    padding: 0.4rem 0.65rem;
+    margin: 0.75rem 0 0.5rem 0;
+    padding: 0.5rem 0.75rem;
     border: 1px solid #D7D8DF;
     border-radius: 6px;
-    background: #f8f9fa;
+    background: white;
     cursor: pointer;
     font-size: 0.8rem;
     color: #999;
     transition: border-color 0.15s, background 0.15s;
+    width: 90%;
+    box-sizing: border-box;
   }
 
   .search-trigger:hover {
     border-color: #aaa;
-    background: #f0f1f3;
+    background: #f8f9fa;
   }
 
   .search-trigger svg {
@@ -636,11 +684,81 @@ const isDev = import.meta.env.DEV;
     --pagefind-ui-background: #fff;
     --pagefind-ui-border: #e5e7eb;
     --pagefind-ui-border-width: 0;
-    --pagefind-ui-border-radius: 0;
+    --pagefind-ui-border-radius: 8px;
     --pagefind-ui-font: "Source Sans Pro", sans-serif;
     overflow-y: auto;
     max-height: 75vh;
-    padding: 0.5rem 1.25rem;
+    padding: 1rem 1.5rem;
+  }
+
+  /* Search input styling */
+  .search-container :global(.pagefind-ui__search-input) {
+    border: 1px solid #D7D8DF;
+    border-radius: 8px;
+    font-weight: 400;
+    background: #f8f9fb;
+  }
+
+  .search-container :global(.pagefind-ui__search-input:focus) {
+    border-color: #327DD2;
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(50, 125, 210, 0.1);
+  }
+
+  /* Result items */
+  .search-container :global(.pagefind-ui__result) {
+    padding: 0.75rem 0;
+    border-color: #f0f1f3;
+  }
+
+  .search-container :global(.pagefind-ui__result-title) {
+    font-size: 0.95rem;
+  }
+
+  .search-container :global(.pagefind-ui__result-link) {
+    color: #327DD2;
+    font-weight: 600;
+  }
+
+  .search-container :global(.pagefind-ui__result-link:hover) {
+    text-decoration: underline;
+  }
+
+  .search-container :global(.pagefind-ui__result-excerpt) {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #666;
+  }
+
+  /* Message (e.g. "3 results for...") */
+  .search-container :global(.pagefind-ui__message) {
+    font-size: 0.8rem;
+    color: #999;
+    font-weight: 400;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f0f1f3;
+  }
+
+  /* Load more button */
+  .search-container :global(.pagefind-ui__button) {
+    border: 1px solid #D7D8DF;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #666;
+    background: #f8f9fb;
+  }
+
+  .search-container :global(.pagefind-ui__button:hover) {
+    background: #f0f1f3;
+    border-color: #aaa;
+    color: #333;
+  }
+
+  /* Clear button */
+  .search-container :global(.pagefind-ui__search-clear) {
+    color: #999;
+    font-size: 0.75rem;
   }
 
 
@@ -651,6 +769,25 @@ const isDev = import.meta.env.DEV;
     padding: 1rem 0;
     max-height: calc(100vh - 2rem);
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #D7D8DF transparent;
+  }
+
+  .toc::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .toc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc::-webkit-scrollbar-thumb {
+    background: #D7D8DF;
+    border-radius: 4px;
+  }
+
+  .toc::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
   }
 
   .toc-title {
@@ -667,7 +804,6 @@ const isDev = import.meta.env.DEV;
     list-style: none;
     padding: 0;
     margin: 0;
-    border-left: 1px solid #D7D8DF;
   }
 
   .toc-item-nested {
@@ -681,8 +817,6 @@ const isDev = import.meta.env.DEV;
     line-height: 1.4;
     color: rgba(var(--color-primary), 0.5) !important;
     text-decoration: none !important;
-    border-left: 2px solid transparent;
-    margin-left: -1px;
   }
 
   .toc-link:hover {
@@ -691,7 +825,6 @@ const isDev = import.meta.env.DEV;
 
   .toc-link-active {
     color: rgba(var(--color-primary), 1) !important;
-    border-left-color: #327DD2;
     font-weight: 600;
   }
 

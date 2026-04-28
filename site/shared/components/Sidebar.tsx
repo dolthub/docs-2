@@ -49,7 +49,7 @@ function NavLink({
 
   return (
     <li>
-      <div className="flex items-center" style={{ paddingLeft: paddingLeft }}>
+      <div className={`sidebar-row ${active ? "sidebar-row-active" : ""}`} style={{ paddingLeft: paddingLeft }}>
         <span
           className={`sidebar-chevron ${hasChildren ? "" : "sidebar-chevron-hidden"}`}
           onClick={hasChildren ? () => setOpen(!open) : undefined}
@@ -70,7 +70,7 @@ function NavLink({
         {item.href ? (
           <a
             href={item.href}
-            className={`sidebar-link ${active ? "sidebar-link-active" : ""}`}
+            className="sidebar-link"
           >
             {item.title}
           </a>
@@ -127,9 +127,13 @@ export default function Sidebar({ nav, currentPath }: SidebarProps) {
 
   useEffect(() => {
     if (!ref.current) return;
-    const active = ref.current.querySelector(".sidebar-link-active");
-    if (active) {
-      active.scrollIntoView({ block: "center" });
+    const active = ref.current.querySelector(".sidebar-row-active") as HTMLElement;
+    if (active && ref.current) {
+      // Scroll only the sidebar, not the page
+      const sidebar = ref.current;
+      const activeTop = active.offsetTop;
+      const sidebarHeight = sidebar.clientHeight;
+      sidebar.scrollTop = activeTop - sidebarHeight / 2;
     }
   }, []);
 
