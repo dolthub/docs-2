@@ -49,14 +49,14 @@ function NavLink({
 
   return (
     <li>
-      <div className="flex items-center">
-        {hasChildren && (
-          <button
-            onClick={() => setOpen(!open)}
-            className="sidebar-chevron"
-            aria-label={open ? "Collapse" : "Expand"}
-            style={{ marginLeft: paddingLeft }}
-          >
+      <div className="flex items-center" style={{ paddingLeft: paddingLeft }}>
+        <span
+          className={`sidebar-chevron ${hasChildren ? "" : "sidebar-chevron-hidden"}`}
+          onClick={hasChildren ? () => setOpen(!open) : undefined}
+          role={hasChildren ? "button" : undefined}
+          aria-label={hasChildren ? (open ? "Collapse" : "Expand") : undefined}
+        >
+          {hasChildren && (
             <svg
               width="10"
               height="10"
@@ -65,13 +65,12 @@ function NavLink({
             >
               <path d="M3 1l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" />
             </svg>
-          </button>
-        )}
+          )}
+        </span>
         {item.href ? (
           <a
             href={item.href}
             className={`sidebar-link ${active ? "sidebar-link-active" : ""}`}
-            style={{ paddingLeft: hasChildren ? 4 : paddingLeft + 14 }}
           >
             {item.title}
           </a>
@@ -79,7 +78,6 @@ function NavLink({
           <button
             onClick={() => setOpen(!open)}
             className="sidebar-link sidebar-link-section"
-            style={{ paddingLeft: hasChildren ? 4 : paddingLeft + 14 }}
           >
             {item.title}
           </button>

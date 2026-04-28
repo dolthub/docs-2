@@ -471,6 +471,11 @@ const isDev = import.meta.env.DEV;
     color: rgba(var(--color-primary), 0.8);
   }
 
+  .sidebar-chevron-hidden {
+    visibility: hidden;
+    cursor: default;
+  }
+
   /* Desktop sidebar */
   .sidebar-desktop {
     @apply hidden lg:block w-64 shrink-0 overflow-y-auto;
