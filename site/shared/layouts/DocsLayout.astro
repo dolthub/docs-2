@@ -44,9 +44,10 @@ const isDev = import.meta.env.DEV;
 
       <MobileSidebar client:only="react" nav={nav} currentPath={currentPath} />
 
+      <Search client:only="react" />
+
       <div class="docs-container">
         <div class="sidebar-slot">
-          <Search client:only="react" />
           <Sidebar client:only="react" nav={nav} currentPath={currentPath} />
         </div>
 
@@ -616,7 +617,7 @@ const isDev = import.meta.env.DEV;
 
   /* Search trigger button — lives inside the sidebar */
   .search-trigger {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 0.5rem;
     margin: 0.75rem 0 0.5rem 0;
@@ -660,6 +661,9 @@ const isDev = import.meta.env.DEV;
   }
 
   @media (min-width: 1024px) {
+    .search-trigger {
+      display: flex;
+    }
     .search-trigger-kbd {
       display: inline-block;
     }
