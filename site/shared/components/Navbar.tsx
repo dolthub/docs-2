@@ -88,7 +88,7 @@ function DocsDropdown() {
       {open && (
         <div className="docs-dropdown-menu">
           {links.map(l => (
-            <a key={l.name} href={l.href} className="docs-dropdown-item">
+            <a key={l.name} href={l.href} className="docs-dropdown-item" style={{ margin: 0, display: "block" }}>
               {l.name}
             </a>
           ))}
