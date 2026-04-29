@@ -122,7 +122,13 @@ const isDev = import.meta.env.DEV;
     background: white;
     border-radius: 12px;
     margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .docs-main {
+      margin-bottom: 2rem;
+    }
   }
 
   .docs-main :global(p) {
