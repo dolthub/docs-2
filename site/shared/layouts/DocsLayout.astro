@@ -1,6 +1,12 @@
 ---
-import { Navbar, Footer, Search, Sidebar, MobileSidebar, TableOfContents, ThemeInit } from "../components";
-import type { NavSection } from "../components";
+// Components that use @react-icons (CJS) must stay client:only
+import { Navbar, Footer, ThemeInit } from "../components";
+// Components safe for SSR — import directly to avoid pulling in react-icons via barrel
+import Search from "../components/Search";
+import Sidebar, { MobileSidebar } from "../components/Sidebar";
+import type { NavSection } from "../components/Sidebar";
+import TableOfContents from "../components/TableOfContents";
+import type { NavSection } from "../components/Sidebar";
 
 export interface Props {
   title: string;
@@ -46,8 +52,8 @@ const isDev = import.meta.env.DEV;
 
       <div class="docs-container">
         <div class="sidebar-slot">
-          <Search client:only="react" />
-          <Sidebar client:only="react" nav={nav} currentPath={currentPath} />
+          <Search client:load />
+          <Sidebar client:load nav={nav} currentPath={currentPath} />
         </div>
 
         <main class="docs-main">
@@ -57,7 +63,7 @@ const isDev = import.meta.env.DEV;
         </main>
 
         <div class="toc-slot">
-          <TableOfContents client:only="react" />
+          <TableOfContents client:load />
         </div>
       </div>
 
