@@ -6,10 +6,10 @@ title: System Variables
 
 ## What is a System Variable?
 
-System variables are server-side key-value pairs.  These variables have
+System variables are server-side key-value pairs. These variables have
 lifecycles between server restarts (`PERSIST`), between sessions within a
 single server lifetime (`GLOBAL`), and within a single client session
-(`SESSION`).  Variables for narrowing scopes are initialized
+(`SESSION`). Variables for narrowing scopes are initialized
 hierarchically: `PERSIST` -> `GLOBAL` -> `SESSION`.
 
 ## How to use System Variables
@@ -52,7 +52,7 @@ A full list of Dolt system variables and descriptions can be found
 
 ### Reading System Variables
 
-```SQL
+```sql
 -- global variables default to persisted configuration or system defaults
 mysql> select @@GLOBAL.max_connections;
 +--------------------------+
@@ -80,7 +80,7 @@ mysql> select @@max_connections;
 
 ### Writing System Variables
 
-```SQL
+```sql
 -- some variables are read only
 mysql> SET @@GLOBAL.basedir = '/';
 Error 1105: Variable 'basedir' is a read only variable
@@ -112,7 +112,7 @@ mysql> select @@max_connections;
 
 ### Persisting System Variables
 
-```SQL
+```sql
 -- persisting a variable with PERSIST affects existing GLOBAL value and outlives server restarts
 mysql> SET @@PERSIST.max_connections = 99;
 mysql> select @@GLOBAL.max_connections;
@@ -134,7 +134,7 @@ mysql> select @@GLOBAL.max_connections;
 
 ### Show Dolt Variables
 
-```SQL
+```sql
 mysql> show variables like 'dolt_%';
 +-------------------------------+-------+
 | Variable_name                 | Value |
@@ -154,7 +154,7 @@ mysql> show variables like 'dolt_%';
 
 ### Show Database Variables
 
-```SQL
+```sql
 mydb> show variables like 'mydb_%' ;
 +---------------------+----------------------------------+
 | Variable_name       | Value                            |
