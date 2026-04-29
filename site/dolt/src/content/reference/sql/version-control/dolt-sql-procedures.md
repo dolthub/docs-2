@@ -209,7 +209,7 @@ CALL DOLT_BRANCH('-m', 'currentBranchName', 'newBranchName')
 
 > **Note**
 
-### Notes
+#### Notes
 
 Branch names have a few restrictions which are similar to the constraints Git puts on branch names. Dolt's branches are a little more restrictive, as [ASCII](https://en.wikipedia.org/wiki/ASCII) characters are required. Rules are as follows:
 
@@ -308,7 +308,7 @@ CALL DOLT_CHECKOUT('my-table');
 
 > **Note**
 
-### Notes
+#### Notes
 
 `DOLT_CHECKOUT()` with a branch argument has two side effects on your session state:
 
@@ -795,7 +795,7 @@ SELECT HASHOF('origin/main');
 CALL DOLT_MERGE('origin/main');
 ```
 
-### Notes
+#### Notes
 Dropping the second argument, or passing NULL, will result is using the default refspec.
 
 
@@ -822,7 +822,7 @@ CALL DOLT_GC('--shallow');
 +--------+------+---------------------------+
 ```
 
-### Notes
+#### Notes
 
 To prevent concurrent writes potentially referencing garbage collected chunks, running 
 `call dolt_gc()` will break all open connections to the running server. In flight 
@@ -863,7 +863,7 @@ CALL DOLT_MERGE('--abort');
 
 > **Note**
 
-### Notes
+#### Notes
 
 - The `dolt_merge()` procedure implicitly commits the current transaction and begins a new one.
 
@@ -1092,7 +1092,7 @@ CALL DOLT_REBASE('--continue');
 CALL DOLT_REBASE('--abort');
 ```
 
-### Limitations
+#### Limitations
 Currently only interactive rebases are supported. Conflict resolution for data conflicts is supported through Dolt's standard conflict resolution process, but conflict resolution for schema conflicts is not supported. If a rebase encounters a schema conflict, the rebase will be automatically aborted.
 
 #### Options
@@ -1262,7 +1262,7 @@ CALL DOLT_RESET('myTable'); -- soft reset
 
 > **Note**
 
-### Notes
+#### Notes
 
 - With the `--hard` option, the `dolt_reset()` procedure implicitly commits the current transaction
   and begins a new one.
@@ -1442,7 +1442,7 @@ Similar to the [`dolt stash` command](/cli-reference/cli#dolt-stash) on the cli.
 and cannot be called without arguments to stash away changes.
 To list existing stashes, use the [`dolt_stashes` system table](/sql-reference/version-control/dolt-system-tables#dolt_stashes).
 
-### Subcommands
+#### Subcommands
 
 #### Push (Save changes)
 ```sql
@@ -1598,7 +1598,7 @@ CALL dolt_undrop('database1');
 SELECT * FROM database1.t;
 ```
 
-### Usage Notes
+#### Usage Notes
 
 Dropped databases are moved to the `.dolt_dropped_databases` directory in the Dolt data directory. If a database with the same name is dropped multiple times, the previous copy will be renamed to `<database_name>.backup.<timestamp>`. This enables you to restore a previously dropped database, even if it was recreated and dropped again. To restore a previous version, rename the backup directory to the original database name and then call `dolt_undrop('<database_name>')`. If you do not rename the directory and use the name with the timestamp when you call `dolt_undrop()`, then the database will be restored with the timestamp in the name.   
 
