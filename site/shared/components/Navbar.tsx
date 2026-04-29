@@ -107,7 +107,9 @@ function LeftLinks() {
       <a href={`${dolthubUrl}/pricing`} data-cy="navbar-pricing">
         Pricing
       </a>
-      <DocsDropdown />
+      <span className="docs-dropdown-desktop-only">
+        <DocsDropdown />
+      </span>
       <a href={blogUrl} data-cy="navbar-blog">
         Blog
       </a>

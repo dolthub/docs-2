@@ -429,6 +429,16 @@ const isDev = import.meta.env.DEV;
     color: rgba(var(--color-background-acc-1), 1);
   }
 
+  .docs-dropdown-desktop-only {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .docs-dropdown-desktop-only {
+      display: inline-block;
+    }
+  }
+
   .docs-dropdown-trigger {
     background: none;
     border: none;
