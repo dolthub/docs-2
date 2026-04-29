@@ -69,7 +69,7 @@ Because the branch information is global to all clients, not just your
 session, `dolt_branches` system table is read-only. Branches can be created
 or deleted with the [`DOLT_BRANCH()` stored procedure](/sql-reference/version-control/dolt-sql-procedures#dolt_branch).
 
-### Schema
+#### Schema
 
 ```text
 +------------------------+----------+
@@ -87,7 +87,7 @@ or deleted with the [`DOLT_BRANCH()` stored procedure](/sql-reference/version-co
 +------------------------+----------+
 ```
 
-### Example Queries
+#### Example Queries
 
 Get all the branches.
 
@@ -109,7 +109,7 @@ branches on a remote you have fetched, see
 you have fetched. It has a similar schema as `dolt_branches`, but the `remote`, `branch`, and `dirty` columns
 don't make sense in this context and are not included. Only remote branches are included in this table.
 
-### Schema
+#### Schema
 
 ```text
 +------------------------+----------+
@@ -124,7 +124,7 @@ don't make sense in this context and are not included. Only remote branches are 
 +------------------------+----------+
 ```
 
-### Example Queries
+#### Example Queries
 
 Get all local and remote branches in a single query. Remote branches
 will have the prefix `remotes/<remoteName>` in their names.
@@ -153,7 +153,7 @@ SELECT * FROM dolt_remote_branches;
 You can modify the contents of these files via SQL, but you are not
 guaranteed to see these changes reflected in the files on disk.
 
-### Schema
+#### Schema
 
 ```text
 +----------+------+
@@ -164,7 +164,7 @@ guaranteed to see these changes reflected in the files on disk.
 +----------+------+
 ```
 
-### Example
+#### Example
 
 Gets all docs.
 
@@ -180,7 +180,7 @@ the storage of stored procedures. It is recommended to use built-in
 SQL statements for examining and modifying stored procedures rather
 than using this table directly.
 
-### Schema
+#### Schema
 
 ```text
 +-------------+----------+
@@ -200,7 +200,7 @@ as a result, and manually inserting a stored procedure must also have
 a lowercase `name`. Otherwise, it will be invisible to some
 operations, such as `DROP PROCEDURE`.
 
-### Example Query
+#### Example Query
 
 ```sql
 CREATE PROCEDURE simple_proc1(x DOUBLE, y DOUBLE) SELECT x*y;
@@ -219,7 +219,7 @@ You can use the Dolt CLI to save and execute named queries or you can use the
 All named queries are displayed in the Queries tab of your database on
 [DoltHub](https://www.dolthub.com/).
 
-### Schema
+#### Schema
 
 ```text
 +---------------+-----------------+------+-----+---------+-------+
@@ -233,7 +233,7 @@ All named queries are displayed in the Queries tab of your database on
 +---------------+-----------------+------+-----+---------+-------+
 ```
 
-### Example Query
+#### Example Query
 
 Using the `dolthub/docs_examples` from DoltHub as an example, you can create a
 named query using the CLI, or by directly inserting into the `dolt_query_catalog` table.
@@ -276,7 +276,7 @@ to running `dolt remote -v` from the command line.
 The `dolt_remotes` table is currently read only. Use the CLI `dolt remote` functions or [`dolt_remote()` procedure](/sql-reference/version-control/dolt-sql-procedures#dolt_remote)
 to add, update or delete remotes.
 
-### Schema
+#### Schema
 
 ```text
 +-------------+------+------+-----+---------+-------+
@@ -289,7 +289,7 @@ to add, update or delete remotes.
 +-------------+------+------+-----+---------+-------+
 ```
 
-### Example Query
+#### Example Query
 
 ```sql
 SELECT *
@@ -311,7 +311,7 @@ WHERE name = 'origin';
 
 The `dolt_backups` table is currently read-only. Use the [`dolt_backup()` procedure](/sql-reference/version-control/dolt-sql-procedures#dolt_backup) to add, update, or delete backups.
 
-### Schema
+#### Schema
 
 ```text
 +-------------+------+------+-----+---------+-------+
@@ -322,7 +322,7 @@ The `dolt_backups` table is currently read-only. Use the [`dolt_backup()` proced
 +-------------+------+------+-----+---------+-------+
 ```
 
-### Example Query
+#### Example Query
 
 ```sql SELECT * FROM dolt_backups;```
 
@@ -336,7 +336,7 @@ The `dolt_backups` table is currently read-only. Use the [`dolt_backup()` proced
 +-------------+----------------------------------------+
 ```
 
-## `dolt_schemas`
+### `dolt_schemas`
 
 `dolt_schemas` stores SQL schema fragments for a dolt database that
 are versioned alongside the database itself. Certain DDL statements
@@ -348,7 +348,7 @@ the storage of certain schema elements. It is recommended to use
 built-in SQL statements for examining and modifying schemas, rather
 than using this table directly.
 
-### Schema
+#### Schema
 
 ```text
 +----------+----------------------------------------+------+-----+---------+-------+
@@ -370,7 +370,7 @@ for the fragment.
 
 The values in this table are partly implementation details associated with the implementation of the underlying database objects.
 
-### Example Query
+#### Example Query
 
 ```sql
 CREATE VIEW four AS SELECT 2+2 FROM dual;
@@ -382,13 +382,13 @@ CREATE EVENT monthly_gc ON SCHEDULE EVERY 1 MONTH DO CALL DOLT_GC();
 Then you can view them in `dolt_schemas`:
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_schemas%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_schemas%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_schemas%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_tags`
+### `dolt_tags`
 
 `dolt_tags` shows information for all active tags in the current database.
 
 [DOLT_TAG()](/sql-reference/version-control/dolt-sql-procedures#dolt_tag) procedure can be used to INSERT and DELETE tags on the `dolt_tags` table.
 
-### Schema
+#### Schema
 
 ```text
 +----------+----------+------+-----+---------+-------+
@@ -403,7 +403,7 @@ Then you can view them in `dolt_schemas`:
 +----------+----------+------+-----+---------+-------+
 ```
 
-### Example Query
+#### Example Query
 
 Create a tag using dolt_tag() stored procedure.
 
@@ -423,12 +423,12 @@ Get all the tags.
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_branch_activity`
+### `dolt_branch_activity`
 `dolt_branch_activity` provides insights into branch usage within the lifetime of a running `dolt sql-server`. This table helps administrators identify stale or unused branches. The data is global to the server, and it not related to the persisted data in the database. For the reason, the `system_start_time` column will always be the start time of your server, and the `last_read` and `last_write` columns should be considered in relation to that time. Activity for branches which have been deleted will not be included in this table.
 
 For performance reasons, this table is only available if you opt-in to enable it. See [server configuration](https://docs.dolthub.com/sql-reference/server/configuration#branch_activity_tracking) for details. 
 
-### Schema
+#### Schema
 
 ```text
 +-------------------+----------+------+-----+---------+-------+
@@ -442,7 +442,7 @@ For performance reasons, this table is only available if you opt-in to enable it
 +-------------------+----------+------+-----+---------+-------+
 ```
 
-### Column Descriptions
+#### Column Descriptions
 
 - `branch`: The name of the branch. All current branches are listed, even if unused.
 - `last_read`: The last time the branch was accessed in a query or checked out. `NULL` indicates no reads during the server's lifetime.
@@ -450,7 +450,7 @@ For performance reasons, this table is only available if you opt-in to enable it
 - `active_sessions`: The number of active server connections to the branch.
 - `system_start_time`: The server's start time. All `last_read` and `last_write` timestamps occur after this time.
 
-### Example Queries
+#### Example Queries
 
 Find branches with no active sessions and no activity in the last 7 days:
 
@@ -463,13 +463,13 @@ WHERE active_sessions = 0
   AND (last_write IS NULL OR last_write < NOW() - INTERVAL 7 DAY);
 ```
 
-## `dolt_statistics`
+### `dolt_statistics`
 
 `dolt_statistics` includes currently collected
 database statistics. This information is stored outside of the
 commit graph and is not subject to versioning semantics.
 
-### Schema
+#### Schema
 
 ```sql
 +-----------------+----------+------+-----+---------+-------+
@@ -496,14 +496,14 @@ commit graph and is not subject to versioning semantics.
 
 ## Database History System Tables
 
-## `dolt_blame_$tablename`
+### `dolt_blame_$tablename`
 
 For every user table that has a primary key, there is a queryable system view named `dolt_blame_$tablename`
 which can be queried to see the user and commit responsible for the current value of each row.
 This is equivalent to the [`dolt blame` CLI command](/cli-reference/cli#dolt-blame).
 Tables without primary keys will not have an associated `dolt_blame_$tablename`.
 
-### Schema
+#### Schema
 
 The `dolt_blame_$tablename` system view has the following columns:
 
@@ -523,7 +523,7 @@ The `dolt_blame_$tablename` system view has the following columns:
 The remaining columns are dependent on the schema of the user table.
 Every column from the primary key of your table will be included in the `dolt_blame_$tablename` system table.
 
-### Query Details
+#### Query Details
 
 Executing a `SELECT *` query for a `dolt_blame_$tablename` system view will show you the primary key columns
 for every row in the underlying user table and the commit metadata for the last commit that modified that row.
@@ -533,7 +533,7 @@ those will not be displayed in the `dolt_blame_$tablename` system view.
 `dolt_blame_$tablename` is only available for tables with a primary key.
 Attempting to query `dolt_blame_$tablename` for a table without a primary key will return an error message.
 
-### Example Query
+#### Example Query
 
 Consider the following example table `city`:
 
@@ -543,12 +543,12 @@ To find who set the current values, we can query the `dolt_blame_city` table:
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_commit_ancestors`
+### `dolt_commit_ancestors`
 
 The `dolt_commit_ancestors` table records the ancestors for every commit in the database. Each commit has one or two
 ancestors, two in the case of a merge commit.
 
-### Schema
+#### Schema
 
 Each commit hash has one or two entries in the table, depending on whether it has one or two parent commits. The root
 commit of the database has a `NULL` parent. For merge commits, the merge base will have `parent_index` 0, and the commit
@@ -564,7 +564,7 @@ merged will have `parent_index` 1.
 +--------------+------+------+-----+---------+-------+
 ```
 
-## `dolt_commits`
+### `dolt_commits`
 
 The `dolt_commits` system table shows _ALL_ commits in a Dolt database.
 
@@ -573,7 +573,7 @@ and the `dolt log` [CLI command](https://docs.dolthub.com/reference/cli#dolt-log
 `dolt log` shows you commit history for all commit ancestors reachable from the current `HEAD` of the
 checked out branch, whereas `dolt_commits` shows all commits from the entire database, no matter which branch is checked out.
 
-### Schema
+#### Schema
 
 ```text
 > describe dolt_commits;
@@ -588,7 +588,7 @@ checked out branch, whereas `dolt_commits` shows all commits from the entire dat
 +-------------+----------+------+-----+---------+-------+
 ```
 
-### Example Query
+#### Example Query
 
 Using the [`dolthub/first-hour-db` database from DoltHub](https://www.dolthub.com/repositories/dolthub/first-hour-db),
 we can query for the five commits before April 20th, 2022, across all commits in the database
@@ -596,12 +596,12 @@ we can query for the five commits before April 20th, 2022, across all commits in
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_commits%0Awhere+date+%3C+%222022-04-20%22%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_commits%0Awhere+date+%3C+%222022-04-20%22%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_commits%0Awhere+date+%3C+%222022-04-20%22%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_history_$TABLENAME`
+### `dolt_history_$TABLENAME`
 
 For every user table named `$TABLENAME`, there is a read-only system table named `dolt_history_$TABLENAME`
 that can be queried to find a row's value at every commit in the current branch's history.
 
-### Schema
+#### Schema
 
 Every Dolt history table contains columns for `commit_hash`, `committer`, and `commit_date`, plus every column
 from the user table's schema at the current checked out branch.
@@ -617,7 +617,7 @@ from the user table's schema at the current checked out branch.
 +-------------+----------+
 ```
 
-### Example Schema
+#### Example Schema
 
 Consider a table named `mytable` with the following schema:
 
@@ -642,7 +642,7 @@ The schema for `dolt_history_mytable` would be:
 +-------------+----------+
 ```
 
-### Example Query
+#### Example Query
 
 Assume a database with the `mytable` table above and the following commit graph:
 
@@ -657,12 +657,12 @@ the row at every ancestor commit reachable from our current branch.
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/feature?q=SELECT+*+FROM+dolt_history_mytable%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/feature?q=SELECT+*+FROM+dolt_history_mytable%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/feature?q=SELECT+*+FROM+dolt_history_mytable%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_log`
+### `dolt_log`
 
 The `dolt_log` system table contains the commit log for all commits reachable from the current `HEAD`.
 This is the same data returned by the [`dolt log` CLI command](https://docs.dolthub.com/reference/cli#dolt-log).
 
-### Schema
+#### Schema
 
 ```text
 +--------------+----------+
@@ -680,7 +680,7 @@ This is the same data returned by the [`dolt log` CLI command](https://docs.dolt
 The `commit_order` field is an integer value that indicates the order of commits in descending order from HEAD. 
 Note that `commit_order` values can be repeated for different levels of the topological sort of the commit graph.
 
-### Example Query
+#### Example Query
 
 The following query shows the commits reachable from the current checked out head and created by user `jennifersp` since April, 2022:
 
@@ -688,7 +688,7 @@ The following query shows the commits reachable from the current checked out hea
 
 ## Database Diffs
 
-## `dolt_commit_diff_$TABLENAME`
+### `dolt_commit_diff_$TABLENAME`
 
 For every user table named `$TABLENAME`, there is a read-only system table named `dolt_commit_diff_$TABLENAME`
 that can be queried to see a diff of the data in the specified table between **any** two commits in the database.
@@ -714,7 +714,7 @@ The [`DOLT_DIFF()` table function](/sql-reference/version-control/dolt-sql-funct
 commits. Consider the `DOLT_DIFF()` table function if you need to see the schema from each of those commits,
 instead of using the schema from the currently checked out branch.
 
-### Schema
+#### Schema
 
 ```text
 +------------------+----------+
@@ -734,7 +734,7 @@ For every column `X` in your table at the currently checked out branch, there ar
 `from_X` and `to_X` with the same type as `X` in the current schema.
 The `from_commit` and `to_commit` parameters must both be specified in the query, or an error is returned.
 
-### Example Schema
+#### Example Schema
 
 Consider a simple example with a table that has one column:
 
@@ -762,7 +762,7 @@ Based on the table's schema above, the schema of the `dolt_commit_diff_$TABLENAM
 +------------------+----------+
 ```
 
-### Query Details
+#### Query Details
 
 Now consider the following branch structure:
 
@@ -786,7 +786,7 @@ from our common ancestor E, without including the changes from F and G on main.
 [The `dolt_merge_base` function](/sql-reference/version-control/dolt-sql-functions#dolt_merge_base)
 computes the closest ancestor E between `main` and `feature`.
 
-### Additional Notes
+#### Additional Notes
 
 There is one special `to_commit` value `WORKING` which can be used to
 see what changes are in the working set that have yet to be committed
@@ -794,11 +794,11 @@ to HEAD. It is often useful to use [the `HASHOF()` function](/sql-reference/vers
 to get the commit hash of a branch, or an ancestor commit. The above table
 requires both `from_commit` and `to_commit` to be filled.
 
-## `dolt_diff`
+### `dolt_diff`
 
 The `dolt_diff` system table shows which tables in the current database were changed in each commit reachable from the active branch's HEAD. When multiple tables are changed in a single commit, there is one row in the `dolt_diff` system table for each table, all with the same commit hash. Any staged or unstaged changes in the working set are included with the value `WORKING` for their `commit_hash`. After identifying the tables that changed in a commit, the `dolt_diff_$TABLENAME` system tables can be used to determine the data that changed in each table.
 
-### Schema
+#### Schema
 
 The `DOLT_DIFF` system table has the following columns:
 
@@ -817,12 +817,12 @@ The `DOLT_DIFF` system table has the following columns:
 +---------------+----------+
 ```
 
-### Query Details
+#### Query Details
 
 `dolt_diff` displays the changes from the current branch HEAD, including any working set changes. If a commit did not
 make any changes to tables _(e.g. an empty commit)_, it is not included in the `dolt_diff` results.
 
-### Example Query
+#### Example Query
 
 Taking the
 [`dolthub/first-hour-db`](https://www.dolthub.com/repositories/dolthub/first-hour-db)
@@ -841,7 +841,7 @@ the `dolt_diff_$TABLE` system tables specific to each of the changed tables, lik
 
 <div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+count%28*%29+as+total_rows_changed%0AFROM+++dolt_diff_dolt_schemas%0AWHERE++to_commit%3D%27224helolb2bg6iqrf9b7befrflehqgnb%27%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+count%28*%29+as+total_rows_changed%0AFROM+++dolt_diff_dolt_schemas%0AWHERE++to_commit%3D%27224helolb2bg6iqrf9b7befrflehqgnb%27%3B%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+count%28*%29+as+total_rows_changed%0AFROM+++dolt_diff_dolt_schemas%0AWHERE++to_commit%3D%27224helolb2bg6iqrf9b7befrflehqgnb%27%3B%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
 
-## `dolt_column_diff`
+### `dolt_column_diff`
 
 The `dolt_column_diff` system table shows which columns and tables in the current database were changed in each commit
 reachable from the active branch's HEAD. When multiple columns are changed in a single commit, there is one row in the
@@ -849,7 +849,7 @@ reachable from the active branch's HEAD. When multiple columns are changed in a 
 are included with the value `STAGED` for their `commit_hash`. Any unstaged changes in the working set are included with
 the value `WORKING` for their `commit_hash`.
 
-### Schema
+#### Schema
 
 The `DOLT_COLUMN_DIFF` system table has the following columns
 
@@ -868,12 +868,12 @@ The `DOLT_COLUMN_DIFF` system table has the following columns
 +-------------+----------+
 ```
 
-### Query Details
+#### Query Details
 
 `dolt_column_diff` displays the changes from the current branch HEAD, including any working set changes. If a commit did not
 make any changes to tables _(e.g. an empty commit)_, it is not included in the `dolt_column_diff` results.
 
-### Example Query
+#### Example Query
 
 Taking the
 [`first-hour-db`](https://www.dolthub.com/repositories/dolthub/first-hour-db)
@@ -890,7 +890,7 @@ over the course of all our commits.
 From these results, we can see that fields describing the reasons an inmate is being held are being updated far more
 frequently than the fields holding demographic information about inmates.
 
-## `dolt_diff_$TABLENAME`
+### `dolt_diff_$TABLENAME`
 
 For every user table named `$TABLENAME`, there is a read-only system
 table named `dolt_diff_$TABLENAME` that returns a list of diffs showing
@@ -909,7 +909,7 @@ and returns a single combined diff for all changes to a row between those two co
 above where a row is changed 10 times, `dolt_commit_diff_$TABLENAME` would only return a single row
 showing the diff, instead of the 10 individual deltas.
 
-### Schema
+#### Schema
 
 Every Dolt diff table will have the columns
 
@@ -930,7 +930,7 @@ The remaining columns are dependent on the schema of the user
 table at the current branch. For every column `X` in your table at the current branch there will
 be columns in the result set named `from_X` and `to_X` with the same type as `X`.
 
-### Example Schema
+#### Example Schema
 
 For a table named `states` with the following schema:
 
@@ -964,7 +964,7 @@ The schema for `dolt_diff_states` would be:
 +------------------+----------+
 ```
 
-### Query Details
+#### Query Details
 
 A `SELECT *` query for a diff table will show you every change
 that has occurred to each row for every commit in this branch's
@@ -982,7 +982,7 @@ For each row the field `diff_type` will be one of the values `added`,
 result set to one or more of those `diff_type` values in order to
 limit which types of changes will be returned.
 
-### Example Query
+#### Example Query
 
 Taking the
 [`dolthub/us-jails`](https://www.dolthub.com/repositories/dolthub/us-jails)
@@ -994,7 +994,7 @@ num_inmates_rated_for have changed the most between 2 versions.
 
 ## Working Set Metadata System Tables
 
-## `dolt_conflicts`
+### `dolt_conflicts`
 
 `dolt_conflicts` is a system table that has a row for every table in the working set that has an unresolved merge
 conflict.
@@ -1011,7 +1011,7 @@ conflict.
 Query this table when resolving conflicts in a SQL session. For more information on resolving merge conflicts in SQL,
 see docs for the [dolt_conflicts\_$TABLENAME](#dolt_conflicts_usdtablename) tables.
 
-## `dolt_conflicts_$TABLENAME`
+### `dolt_conflicts_$TABLENAME`
 
 For each table `$TABLENAME` in conflict after a merge, there is a
 corresponding system table named `dolt_conflicts_$TABLENAME`. The
@@ -1087,7 +1087,7 @@ And of course you can use any combination of `ours`, `theirs` and
 
 > **Note**
 
-### Notes
+#### Notes
 
 - Updates made to the `our_` columns are applied to the original table using the
   primary key (or keyless hash). If the row does not exist, it will be inserted.
@@ -1102,7 +1102,7 @@ And of course you can use any combination of `ours`, `theirs` and
 
 
 
-## `dolt_schema_conflicts`
+### `dolt_schema_conflicts`
 
 `dolt_schema_conflicts` is a system table that has a row for every table in the working
 set that has an unresolved schema conflict.
@@ -1126,7 +1126,7 @@ set that has an unresolved schema conflict.
 Query this table when resolving schema conflicts in a SQL session. For more information on
 resolving schema conflicts during merge, see the docs on [conflicts](/sql-reference/version-control/merges#conflicts).
 
-## `dolt_merge_status`
+### `dolt_merge_status`
 
 The `dolt_merge_status` system table tells a user if a merge is active. It has the following schema:
 
@@ -1145,7 +1145,7 @@ CREATE TABLE `dolt_merge_status` (
 )
 ```
 
-### Example
+#### Example
 
 Let's create a simple conflict:
 
@@ -1178,13 +1178,13 @@ Output of `SELECT * from dolt_merge_status;`:
 +------------+--------+----------------------------------+-----------------+-----------------+
 ```
 
-## `dolt_stashes`
+### `dolt_stashes`
 
 The `dolt_stashes` system table returns information about all stashes in the current database.
 
 The `dolt_stashes` table is read-only. Use the [`dolt_stash()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stash) stored procedure or the [`dolt stash`](/cli-reference/cli#dolt-stash) cli functions to create, apply, or delete stashes.
 
-### Schema
+#### Schema
 
 ```text
 +----------------+------+------+-----+
@@ -1198,7 +1198,7 @@ The `dolt_stashes` table is read-only. Use the [`dolt_stash()`](/sql-reference/v
 +----------------+------+------+-----+
 ```
 
-### Fields
+#### Fields
 
 * `name`: The name of the stash entry 
 * `stash_id`: The unique identifier for the stash (e.g., "stash@{0}")
@@ -1206,7 +1206,7 @@ The `dolt_stashes` table is read-only. Use the [`dolt_stash()`](/sql-reference/v
 * `hash`: The commit hash of the stashed changes
 * `commit_message`: Message for the commit the stash was created on
 
-### Example Query
+#### Example Query
 
 ```sql
 SELECT * 
@@ -1221,12 +1221,12 @@ WHERE name = 'myStash';
 +---------+------------+--------+----------------------------------+------------------+
 ```
 
-## `dolt_status`
+### `dolt_status`
 
 `dolt_status` returns the status of the database session, analogous to
 running `dolt status` from the command line.
 
-### Schema
+#### Schema
 
 ```text
 +------------+---------+------+-----+
@@ -1238,7 +1238,7 @@ running `dolt status` from the command line.
 +------------+---------+------+-----+
 ```
 
-### Example Query
+#### Example Query
 
 ```sql
 SELECT *
@@ -1254,13 +1254,13 @@ WHERE staged=false;
 +------------+--------+-----------+
 ```
 
-## `dolt_status_ignored`
+### `dolt_status_ignored`
 
 `dolt_status_ignored` returns the status of the database session, including ignored tables (tables with names
 matching patterns in the `dolt_ignore` system table). Selecting from this table is analogous to
 running `dolt status --ignored` from the command line.
 
-### Schema
+#### Schema
 
 ```text
 +------------+---------+------+-----+
@@ -1273,7 +1273,7 @@ running `dolt status --ignored` from the command line.
 +------------+---------+------+-----+
 ```
 
-### Example Query
+#### Example Query
 
 ```sql
 INSERT INTO dolt_ignore VALUES ("ignored_*", true);
@@ -1290,7 +1290,7 @@ WHERE staged=false;
 +---------------+--------+-----------+---------+
 ```
 
-## `dolt_workspace_$TABLENAME`
+### `dolt_workspace_$TABLENAME`
 
 This system table shows you which rows have been changed in your workspace and if they are staged.
 It is the union of rows changed from HEAD to STAGED, and STAGED to WORKING. Any table listed in
@@ -1300,7 +1300,7 @@ listed are all relative to the HEAD of the current branch.
 These tables can be modified in order to update what changes are staged for commit.
 [Workspace review](https://www.dolthub.com/blog/2024-08-16-workspace-review/)
 
-### Schema
+#### Schema
 
 The schema of the source table is going to affect the schema of the workspace table. The first
 three column are always the same, then the schema of the source table is used to create "to\_" and
@@ -1335,7 +1335,7 @@ There are two ways you can alter the state of your workspace using these tables.
    change will be preserved and the staged change will be dropped.
 2. Any row which has `staged = FALSE` can be deleted. This will result in reverting the change to the row in the source table.
 
-### Example Query
+#### Example Query
 
 ```sql
 SELECT *
@@ -1359,14 +1359,14 @@ UPDATE dolt_workspace_mytable SET staged = TRUE WHERE to_id = 3;
 CALL dolt_commit("-m", "Added row id 3 in my table");
 ```
 
-### Notes
+#### Notes
 
 The `dolt_workspace_$TABLENAME` tables are generated based on the session state when inspected,
 so they can not be considered stable on a branch which has multiple editors.
 
 ## Constraint Violation System Tables
 
-## `dolt_constraint_violations`
+### `dolt_constraint_violations`
 
 The `dolt_constraint_violations` system table contains one row for every table that has a constraint violation
 introduced by a merge. Dolt enforces constraints (such as foreign keys) during normal SQL operations, but it's possible
@@ -1374,7 +1374,7 @@ that a merge puts one or more tables in a state where constraints no longer hold
 merge base could be referenced via a foreign key constraint by an added row in the merged commit. Use
 `dolt_constraint_violations` to discover such violations.
 
-### Schema
+#### Schema
 
 ```sql
 +----------------+-----------------+------+-----+---------+-------+
@@ -1385,14 +1385,14 @@ merge base could be referenced via a foreign key constraint by an added row in t
 +----------------+-----------------+------+-----+---------+-------+
 ```
 
-## `dolt_constraint_violations_$TABLENAME`
+### `dolt_constraint_violations_$TABLENAME`
 
 For each table `$TABLENAME` with a constraint violation after a merge, there is a corresponding system table named
 `dolt_constraint_violations_$TABLENAME`. Each row in the table represents a constraint violation that must be resolved
 via `INSERT`, `UPDATE`, or `DELETE` statements. Resolve each constraint violation before committing the result of the
 merge that introduced them.
 
-### Schema
+#### Schema
 
 For a hypothetical table `a` with the following schema:
 
@@ -1472,13 +1472,13 @@ you have resolved any such violations before committing.
 
 Configuration Tables can be staged and versioned just like user tables. They always exist, even in an empty database.
 
-## `dolt_ignore`
+### `dolt_ignore`
 
 `dolt_ignore` stores a list of "table name patterns", and a boolean flag for each pattern indicating whether tables that match the patterns should not be staged for commit.
 
 This only affects the staging of new tables. Tables that have already been staged or committed are not affected the contents of `dolt_ignore`, and changes to those tables can still be staged.
 
-### Schema
+#### Schema
 
 ```text
 +------------+---------+------+-----+
@@ -1489,7 +1489,7 @@ This only affects the staging of new tables. Tables that have already been stage
 +------------+---------+------+-----+
 ```
 
-### Notes
+#### Notes
 
 The format of patterns is a simplified version of gitignore’s patterns:
 
@@ -1503,7 +1503,7 @@ Tables that match patterns in `dolt_ignore` can be force-committed by passing th
 
 `dolt diff` won't display ignored tables, and `dolt show` won't display ignored tables unless the additional `--ignored` flag is passed.
 
-### Example Query
+#### Example Query
 
 ```sql
 INSERT INTO dolt_ignore VALUES ("generated_*", true), ("generated_exception", false);
@@ -1525,13 +1525,13 @@ WHERE staged=true;
 +---------------------+--------+-----------+
 ```
 
-## `dolt_nonlocal_tables`
+### `dolt_nonlocal_tables`
 
 `dolt_nonlocal_tables` affects how table names are resolved, allowing a table name to resolve to a table stored on a different branch.
 
 Each row in the table stores a table name (or a table name pattern, see below), as well as a target ref and target table name, which Dolt uses to locate the table data.
 
-### Schema
+#### Schema
 
 ```text
 +----------------------+------+------+-----+
@@ -1544,7 +1544,7 @@ Each row in the table stores a table name (or a table name pattern, see below), 
 +----------------------+------+------+-----+
 ```
 
-### Notes
+#### Notes
 
 `table_name` column can be a pattern. The format of patterns is a simplified version of gitignore’s patterns:
 
@@ -1558,7 +1558,7 @@ Each row in the table stores a table name (or a table name pattern, see below), 
 
 `options` is currently unused, but may be used in the future to provide configuration options. It must be set to the value "immediate".
 
-### Example Usage
+#### Example Usage
 
 ```sql
 INSERT INTO dolt_nonlocal_tables (table_name, target_ref, options) VALUES ('global_*', 'global_branch', 'immediate');
@@ -1568,11 +1568,11 @@ INSERT INTO dolt_nonlocal_tables (table_name, target_ref, ref_table, options) VA
 SELECT * FROM origin_products; -- Equivalent to SELECT * FROM `origin/main`.global_branch.products
 ```
 
-## `dolt_tests`
+### `dolt_tests`
 
 `dolt_tests` stores test definitions that can be executed using the [`DOLT_TEST_RUN()` table function](/sql-reference/version-control/dolt-sql-functions#dolt_test_run). Tests define SQL queries with assertions about their expected results, providing a way to validate database behavior and catch regressions.
 
-### Schema
+#### Schema
 
 ```text
 +----------------------+------+------+-----+
@@ -1587,7 +1587,7 @@ SELECT * FROM origin_products; -- Equivalent to SELECT * FROM `origin/main`.glob
 +----------------------+------+------+-----+
 ```
 
-### Notes
+#### Notes
 
 Test queries must be read-only (no `INSERT`, `UPDATE`, `DELETE`, or DDL statements) and can only contain a single SQL statement.
 
@@ -1599,7 +1599,7 @@ There are three types of assertions available:
 
 The `assertion_comparator` field supports the following comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`.
 
-### Example Queries
+#### Example Queries
 
 Create a test that verifies a table has the expected number of rows:
 
@@ -1617,11 +1617,11 @@ INSERT INTO dolt_tests VALUES
 
 ## Rebasing Tables
 
-## `dolt_rebase`
+### `dolt_rebase`
 
 `dolt_rebase` is only present while an interactive rebase is in progress, and only on the branch where the rebase is being executed. For example, when rebasing the `feature1` branch, the rebase will be executed on the `dolt_rebase_feature1` branch, and the `dolt_rebase` system table will exist on that branch while the rebase is in-progress. The `dolt_rebase` system table starts off with the default rebase plan, which is to `pick` all of the commits identified for the rebase. Users can adjust the rebase plan by updating the `dolt_rebase` table to change the rebase action, reword a commit message, or even add new rows with additional commits to be applied as part of the rebase. For more details about rebasing, see [the `dolt_rebase()` stored procedure](/sql-reference/version-control/dolt-sql-procedures#dolt_rebase).
 
-### Schema
+#### Schema
 
 ```text
 +----------------+---------------------------------------------------+
@@ -1642,7 +1642,7 @@ The `action` field can take one of the following rebase actions:
 - `squash` - apply a commit, but include its changes in the previous commit instead of creating a new commit. The commit message of the previous commit will be altered to include the previous commit message as well as the commit message from the squashed commit. Note that the rebase plan MUST include a `pick` or `reword` action in the plan before a `squash` action.
 - `fixup` - apply a commit, but include its changes in the previous commit instead of creating a new commit. The commit message of the previous commit will NOT be changed, and the commit message from the fixup commit will be discarded. Note that the rebase plan MUST include a `pick` or `reword` action in the plan before a `fixup` action.
 
-### Example Queries
+#### Example Queries
 
 To squash all commits into a single commit and include the commit messages from all commits, the following query can be used:
 

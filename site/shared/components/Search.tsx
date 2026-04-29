@@ -14,6 +14,12 @@ export default function Search() {
   const openModal = useCallback(() => setOpen(true), []);
   const closeModal = useCallback(() => setOpen(false), []);
 
+  // Expose openSearch globally so other components can trigger it
+  useEffect(() => {
+    (window as any).__openDocsSearch = () => setOpen(true);
+    return () => { delete (window as any).__openDocsSearch; };
+  }, []);
+
   // Keyboard shortcut: Cmd/Ctrl+K to open search
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {

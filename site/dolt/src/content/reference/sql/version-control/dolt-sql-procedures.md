@@ -83,14 +83,14 @@ CALL DOLT_ADD('.');
 CALL DOLT_ADD('table1', 'table2');
 ```
 
-### Options
+#### Options
 
 `table`: Table\(s\) to add to the list tables staged to be
 committed. The abbreviation '.' can be used to add all tables.
 
 `-A`: Stages all tables with changes.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -100,7 +100,7 @@ committed. The abbreviation '.' can be used to add all tables.
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -123,7 +123,7 @@ CALL DOLT_COMMIT('-m', 'committing all changes');
 Add or remove a configured backup, sync with a configured backup, sync a backup
 to a remote URL, restore a remote URL backup as a new database.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -159,7 +159,7 @@ To restore a backup:
 CALL DOLT_BACKUP('restore', 'https://dolthub.com/some_organization/some_dolthub_repository', 'database_name');
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -209,7 +209,7 @@ CALL DOLT_BRANCH('-m', 'currentBranchName', 'newBranchName')
 
 > **Note**
 
-### Notes
+#### Notes
 
 Branch names have a few restrictions which are similar to the constraints Git puts on branch names. Dolt's branches are a little more restrictive, as [ASCII](https://en.wikipedia.org/wiki/ASCII) characters are required. Rules are as follows:
 
@@ -230,7 +230,7 @@ The `dolt_branch()` procedure implicitly commits the current transaction and beg
 
 
 
-### Options
+#### Options
 
 `-c`, `--copy`: Create a copy of a branch. Must be followed by the name of the source branch to copy and the name of the new branch to create. Without the `--force` option, the copy will fail if the new branch already exists.
 
@@ -242,7 +242,7 @@ The `dolt_branch()` procedure implicitly commits the current transaction and beg
 
 `-D`: Shortcut for `--delete --force`.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -252,7 +252,7 @@ The `dolt_branch()` procedure implicitly commits the current transaction and beg
 +--------+------+---------------------------+
 ```
 
-### Examples
+#### Examples
 
 ```sql
 -- List the available branches
@@ -308,7 +308,7 @@ CALL DOLT_CHECKOUT('my-table');
 
 > **Note**
 
-### Notes
+#### Notes
 
 `DOLT_CHECKOUT()` with a branch argument has two side effects on your session state:
 
@@ -332,7 +332,7 @@ use mydb/branch3; -- current db is now `mydb/branch3`
 insert into mydb.t1 values (3); -- modifying the `branch2` branch
 ```
 
-### Options
+#### Options
 
 `-b`: Create a new branch with the given name.
 
@@ -340,7 +340,7 @@ insert into mydb.t1 values (3); -- modifying the `branch2` branch
 
 `-t`: When creating a new branch, set up 'upstream' configuration.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +---------+------+-----------------------------+
@@ -351,7 +351,7 @@ insert into mydb.t1 values (3); -- modifying the `branch2` branch
 +---------+------+-----------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -386,7 +386,7 @@ CALL DOLT_CHERRY_PICK('my-existing-branch~2');
 CALL DOLT_CHERRY_PICK('qj6ouhjvtrnp1rgbvajaohmthoru2772');
 ```
 
-### Options
+#### Options
 
 `--abort`:
 Abort the current conflict resolution process, and revert all changes from the in-process cherry-pick operation.
@@ -397,7 +397,7 @@ Allow empty commits to be cherry-picked. Note that use of this option only keeps
 `--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](/sql-reference/version-control/dolt-sysvars#dolt_commit_verification_groups) system variable.
 
 
-### Output Schema
+#### Output Schema
 
 ```text
 +-----------------------+------+---------------------------------+
@@ -410,7 +410,7 @@ Allow empty commits to be cherry-picked. Note that use of this option only keeps
 +-----------------------+------+---------------------------------+
 ```
 
-### Example
+#### Example
 
 For the below example consider the following set up of `main` and `mybranch` branches:
 
@@ -512,11 +512,11 @@ CALL DOLT_CLEAN('untracked-table');
 CALL DOLT_CLEAN('--dry-run');
 ```
 
-### Options
+#### Options
 
 `--dry-run`: Test removing untracked tables from working set.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -526,7 +526,7 @@ CALL DOLT_CLEAN('--dry-run');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Create three new tables
@@ -587,7 +587,7 @@ CALL DOLT_CLONE('file:///myDatabasesDir/database/.dolt/noms');
 CALL DOLT_CLONE('dolthub/us-jails', 'myCustomDbName');
 ```
 
-### Options
+#### Options
 
 `--remote`: Name of the remote to be added to the new, cloned database. The default is 'origin'.
 
@@ -595,7 +595,7 @@ CALL DOLT_CLONE('dolthub/us-jails', 'myCustomDbName');
 
 `--depth`: Clone a single branch and limit history to the given commit depth.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -605,7 +605,7 @@ CALL DOLT_CLONE('dolthub/us-jails', 'myCustomDbName');
 +--------+------+---------------------------+
 ```
 
-### Examples
+#### Examples
 
 ```sql
 -- Clone the dolthub/us-jails database from DoltHub using the <org>/<database> notation.
@@ -662,7 +662,7 @@ CALL DOLT_COMMIT('-m', 'This is a commit');
 CALL DOLT_COMMIT('-m', 'This is a commit', '--author', 'John Doe <johndoe@example.com>');
 ```
 
-### Options
+#### Options
 
 `-m`, `--message`: Use the given `<msg>` as the commit message. **Required**
 
@@ -682,7 +682,7 @@ default. This option bypasses that safety.
 
 `--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](/sql-reference/version-control/dolt-sysvars#dolt_commit_verification_groups) system variable.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +-------+------+----------------------------+
@@ -692,7 +692,7 @@ default. This option bypasses that safety.
 +-------+------+----------------------------+
 ```
 
-### Examples
+#### Examples
 
 ```sql
 -- Set the current database for the session
@@ -720,7 +720,7 @@ CALL DOLT_CONFLICTS_RESOLVE('--ours', <table>);
 CALL DOLT_CONFLICTS_RESOLVE('--theirs', <table>);
 ```
 
-### Options
+#### Options
 
 `<table>`: List of tables to be resolved. '.' can be used to resolve all tables.
 
@@ -728,7 +728,7 @@ CALL DOLT_CONFLICTS_RESOLVE('--theirs', <table>);
 
 `--theirs`: For all conflicts, take the version from their branch and resolve the conflict.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -738,7 +738,7 @@ CALL DOLT_CONFLICTS_RESOLVE('--theirs', <table>);
 +--------+------+---------------------------+
 ```
 
-### Examples
+#### Examples
 
 ```sql
 -- Set the current database for the session
@@ -768,11 +768,11 @@ CALL DOLT_FETCH('origin', NULL);
 CALL DOLT_FETCH('origin');
 ```
 
-### Options
+#### Options
 
 `--prune`, `-p`: After fetching, remove any remote-tracking references that don't exist on the remote.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -782,7 +782,7 @@ CALL DOLT_FETCH('origin');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Get remote main
@@ -795,7 +795,7 @@ SELECT HASHOF('origin/main');
 CALL DOLT_MERGE('origin/main');
 ```
 
-### Notes
+#### Notes
 Dropping the second argument, or passing NULL, will result is using the default refspec.
 
 
@@ -808,11 +808,11 @@ sql-server will block all writes while garbage collection is in progress.
 CALL DOLT_GC();
 CALL DOLT_GC('--shallow');
 ```
-### Options
+#### Options
 
 `--shallow` Performs a faster but less thorough garbage collection.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -822,7 +822,7 @@ CALL DOLT_GC('--shallow');
 +--------+------+---------------------------+
 ```
 
-### Notes
+#### Notes
 
 To prevent concurrent writes potentially referencing garbage collected chunks, running 
 `call dolt_gc()` will break all open connections to the running server. In flight 
@@ -863,13 +863,13 @@ CALL DOLT_MERGE('--abort');
 
 > **Note**
 
-### Notes
+#### Notes
 
 - The `dolt_merge()` procedure implicitly commits the current transaction and begins a new one.
 
 
 
-### Options
+#### Options
 
 `--no-ff`: Create a merge commit even when the merge resolves as a fast-forward.
 
@@ -897,7 +897,7 @@ transaction can be committed. See [Dolt system
 tables](/sql-reference/version-control/dolt-system-tables##dolt_conflicts_usdtablename) for
 details.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------------+------+--------------------------------------+
@@ -910,7 +910,7 @@ details.
 +--------------+------+--------------------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -947,7 +947,7 @@ CALL DOLT_PULL('origin', 'some-branch');
 CALL DOLT_PULL('feature-branch', '--force');
 ```
 
-### Options
+#### Options
 
 `--no-ff`: Create a merge commit even when the merge resolves as a fast-forward.
 
@@ -968,7 +968,7 @@ transaction can be committed. See [Dolt system
 tables](/sql-reference/version-control/dolt-system-tables##dolt_conflicts_usdtablename) for
 details.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------------+------+-------------------------------------+
@@ -980,7 +980,7 @@ details.
 +--------------+------+-------------------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Update local working set with remote changes
@@ -1005,7 +1005,7 @@ from those databases. This action is not reversible, so callers should be cautio
 of using this function is to reclaim disk space used by the temporary holding area. Because this is a destructive
 operation, callers must have `SUPER` privileges in order to execute it. 
 
-### Example
+#### Example
 
 ```sql
 -- Create a database and populate a table in the working set 
@@ -1032,11 +1032,11 @@ CALL DOLT_PUSH('origin', 'main');
 CALL DOLT_PUSH('--force', 'origin', 'main');
 ```
 
-### Options
+#### Options
 
 `--force`: Update the remote with local history, overwriting any conflicting history in the remote.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +---------+------+--------------------------------+
@@ -1047,7 +1047,7 @@ CALL DOLT_PUSH('--force', 'origin', 'main');
 +---------+------+--------------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Checkout new branch
@@ -1092,10 +1092,10 @@ CALL DOLT_REBASE('--continue');
 CALL DOLT_REBASE('--abort');
 ```
 
-### Limitations
+#### Limitations
 Currently only interactive rebases are supported. Conflict resolution for data conflicts is supported through Dolt's standard conflict resolution process, but conflict resolution for schema conflicts is not supported. If a rebase encounters a schema conflict, the rebase will be automatically aborted.
 
-### Options
+#### Options
 
 `--interactive` or `-i`: Start an interactive rebase. Currently only interactive rebases are supported, so this option is required.
 
@@ -1109,7 +1109,7 @@ How to handle commits that are not empty to start, but which become empty after 
 `--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](/sql-reference/version-control/dolt-sysvars#dolt_commit_verification_groups) system variable.
 
 
-### Output Schema
+#### Output Schema
 
 ```text
 +---------+------+-----------------------------+
@@ -1120,7 +1120,7 @@ How to handle commits that are not empty to start, but which become empty after 
 +---------+------+-----------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- create a simple table
@@ -1201,7 +1201,7 @@ CALL DOLT_REMOTE('add','remote_name','remote_url');
 CALL DOLT_REMOTE('remove','existing_remote_name');
 ```
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1211,7 +1211,7 @@ CALL DOLT_REMOTE('remove','existing_remote_name');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Add a HTTP remote
@@ -1262,14 +1262,14 @@ CALL DOLT_RESET('myTable'); -- soft reset
 
 > **Note**
 
-### Notes
+#### Notes
 
 - With the `--hard` option, the `dolt_reset()` procedure implicitly commits the current transaction
   and begins a new one.
 
 
 
-### Options
+#### Options
 
 `--hard`: Resets the working tables and staged tables. Any changes to
 tracked tables in the working tree since <commit> are discarded.
@@ -1277,7 +1277,7 @@ tracked tables in the working tree since <commit> are discarded.
 `--soft`: Does not touch the working tables, but removes all tables
 staged to be committed. This is the default behavior.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1287,7 +1287,7 @@ staged to be committed. This is the default behavior.
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -1324,11 +1324,11 @@ CALL DOLT_REVERT('HEAD~2');
 CALL DOLT_REVERT('HEAD', '--author=reverter@rev.ert');
 ```
 
-### Options
+#### Options
 
 `--author=<author>`: Specify an explicit author using the standard `A U Thor <author@example.com>` format.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1338,7 +1338,7 @@ CALL DOLT_REVERT('HEAD', '--author=reverter@rev.ert');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Create a table and add data in multiple commits
@@ -1392,11 +1392,11 @@ CALL DOLT_RM('table1', 'table2', 'table3');
 CALL DOLT_RM('--cached', 'table1');
 ```
 
-### Options
+#### Options
 
 `--cached`: Use this option to unstage and remove tables only from the staging area. Working tree tables, whether modified or not, will be left alone.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1406,7 +1406,7 @@ CALL DOLT_RM('--cached', 'table1');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Create and modify a table, then stage it
@@ -1442,7 +1442,7 @@ Similar to the [`dolt stash` command](/cli-reference/cli#dolt-stash) on the cli.
 and cannot be called without arguments to stash away changes.
 To list existing stashes, use the [`dolt_stashes` system table](/sql-reference/version-control/dolt-system-tables#dolt_stashes).
 
-### Subcommands
+#### Subcommands
 
 #### Push (Save changes)
 ```sql
@@ -1479,7 +1479,7 @@ CALL DOLT_STASH('clear', 'stash_name');
 
 Removes all stashes for the specified stash name.
 
-### Examples
+#### Examples
 
 ```sql
 -- Create a table and make some changes
@@ -1528,7 +1528,7 @@ CALL DOLT_TAG('-m', 'message', '--author', 'John Doe <johndoe@example.com>', 'ta
 CALL DOLT_TAG('-d', 'tag_name');
 ```
 
-### Options
+#### Options
 
 `-m`: Use the given message as the tag message.
 
@@ -1537,7 +1537,7 @@ CALL DOLT_TAG('-d', 'tag_name');
 `--author`: Specify an explicit author using the standard "A U Thor
 author@example.com" format.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1547,7 +1547,7 @@ author@example.com" format.
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -1573,12 +1573,12 @@ Restores a dropped database. See the [`dolt_purge_dropped_databases()` stored pr
 CALL DOLT_UNDROP(<database_name>);
 ```
 
-### Options
+#### Options
 
 `dolt_undrop()` takes a single argument – the name of the dropped database to restore. When called without any arguments,
 `dolt_undrop()` returns an error message that contains a list of all dropped databases that are available to be restored.
 
-### Example
+#### Example
 
 ```sql
 -- Create a database and populate a table in the working set 
@@ -1598,7 +1598,7 @@ CALL dolt_undrop('database1');
 SELECT * FROM database1.t;
 ```
 
-### Usage Notes
+#### Usage Notes
 
 Dropped databases are moved to the `.dolt_dropped_databases` directory in the Dolt data directory. If a database with the same name is dropped multiple times, the previous copy will be renamed to `<database_name>.backup.<timestamp>`. This enables you to restore a previously dropped database, even if it was recreated and dropped again. To restore a previous version, rename the backup directory to the original database name and then call `dolt_undrop('<database_name>')`. If you do not rename the directory and use the name with the timestamp when you call `dolt_undrop()`, then the database will be restored with the timestamp in the name.   
 
@@ -1608,7 +1608,7 @@ Updates a column's internal identifier. Most users will never need to know about
 
 Note that the `dolt_update_column_tag()` stored procedure updates a column's tag in the working set, so users must call `dolt_commit()` after updating the tag to commit the changes to the `HEAD` of the current branch. Column tag changes do not currently show up in working set status or diffs, so users should be careful to commit the changes immediately after updating the tag to avoid confusion around a dirty working set without a visible diff.   
 
-### Arguments and Options
+#### Arguments and Options
 
 `<table>`: The table containing the column to update.
 
@@ -1616,7 +1616,7 @@ Note that the `dolt_update_column_tag()` stored procedure updates a column's tag
 
 `<tag>`: An integer value to set for the column's new tag.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1626,7 +1626,7 @@ Note that the `dolt_update_column_tag()` stored procedure updates a column's tag
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 CALL dolt_update_column_tag('myTable', 'col1', 42);
@@ -1645,7 +1645,7 @@ wish to validate all rows in the database. If `FOREIGN_KEY_CHECKS` has been disa
 you may want to use the `--all` option to ensure that the current state is
 consistent and no violated constraints are missed.
 
-### Arguments and Options
+#### Arguments and Options
 
 `<table>`: The table(s) to check constraints on. If omitted, checks all tables.
 
@@ -1657,7 +1657,7 @@ Disables writing results to the
 [DOLT_CONSTRAINT_VIOLATIONS](/sql-reference/version-control/dolt-system-tables#doltconstraintviolations)
 system table.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +------------+------+-----------------------------------------+
@@ -1667,7 +1667,7 @@ system table.
 +------------+------+-----------------------------------------+
 ```
 
-### Example
+#### Example
 
 For the below examples consider the following schema:
 

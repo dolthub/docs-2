@@ -217,11 +217,11 @@ diffs where the schema of the underlying table has changed.
 
 Note that the `DOLT_DIFF()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_DIFF()` table function requires `SELECT` privilege on the specified table.
 
-### Options
+#### Options
 
 ```sql
 DOLT_DIFF(<from_revision>, <to_revision>, <tablename>)
@@ -242,7 +242,7 @@ In addition to required arguments listed above, `DOLT_DIFF()` also supports the 
 - `-sk`,`--skinny`: Shows only primary key columns and any columns with data changes. Always includes primary keys, commit metadata columns, and `diff_type`.
 - `-ic`,`--include-cols=<columns>`: A comma-separated list of additional columns to include in the skinny output even if they did not change.
 
-### Schema
+#### Schema
 
 ```text
 +------------------+----------+
@@ -265,7 +265,7 @@ in the result set named `to_Y`. This is the major difference between the `DOLT_D
 `from_commit` revisions to form the to and from columns of the result set, while `dolt_commit_diff_$tablename` uses
 only the table schema of the currently checked out branch to form the to and from columns of the result set.
 
-### Example
+#### Example
 
 Consider a table named `inventory` in a database with two branches: `main` and `feature_branch`. We can use the
 `DOLT_DIFF()` function to calculate a diff of the table data from the `main` branch to the `feature_branch` branch
@@ -371,12 +371,12 @@ rows and cells the table has at each commit.
 
 Note that the `DOLT_DIFF_STAT()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_DIFF_STAT()` table function requires `SELECT` privilege for all tables if no table is defined or
 for the defined table only.
 
-### Options
+#### Options
 
 ```sql
 DOLT_DIFF_STAT(<from_revision>, <to_revision>, <optional_tablename>)
@@ -392,7 +392,7 @@ The `DOLT_DIFF_STAT()` table function takes three arguments:
 - `from_revision...to_revision` — gets the three dot diff stat, or revision of table data between the `from_revision` and `to_revision`, _starting at the last common commit_.
 - `tablename` — the name of the table containing the data to diff. This argument is optional. When it's not defined, all tables with data diff will be returned.
 
-### Schema
+#### Schema
 
 ```text
 +-----------------+--------+
@@ -413,7 +413,7 @@ The `DOLT_DIFF_STAT()` table function takes three arguments:
 +-----------------+--------+
 ```
 
-### Example
+#### Example
 
 Consider we start with a table `inventory` in a database on `main` branch. When we make any changes, we can use
 the `DOLT_DIFF_STAT()` function to calculate a diff of the table data or all tables with data changes across specific
@@ -512,12 +512,12 @@ name is optional. It returns empty result if there are no tables with changes.
 
 Note that the `DOLT_DIFF()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_DIFF_SUMMARY()` table function requires `SELECT` privilege for all tables if no
 table is defined or for the defined table only.
 
-### Options
+#### Options
 
 ```sql
 DOLT_DIFF_SUMMARY(<from_revision>, <to_revision>, <optional_tablename>)
@@ -541,7 +541,7 @@ The `DOLT_DIFF_SUMMARY()` table function takes three arguments:
 - `tablename` — the name of the table containing the data to diff. This argument is
   optional. When it's not defined, all tables with data diff will be returned.
 
-### Schema
+#### Schema
 
 ```text
 +-----------------+---------+
@@ -555,7 +555,7 @@ The `DOLT_DIFF_SUMMARY()` table function takes three arguments:
 +-----------------+---------+
 ```
 
-### Example
+#### Example
 
 Consider we start with a table `inventory` in a database on `main` branch. When we make
 any changes, we can use the `DOLT_DIFF_SUMMARY()` function to calculate a diff of the
@@ -644,7 +644,7 @@ With result of single row:
 
 The `DOLT_JSON_DIFF()` table function is a summary of the changes between two JSON documents.
 
-### Options
+#### Options
 
 ```sql
 DOLT_DIFF_SUMMARY(<from_document>, <to_document>)
@@ -659,7 +659,7 @@ The `DOLT_DIFF_SUMMARY()` table function takes two arguments:
   argument is required. This may be a value from a JSON column, or a string that can
   be converted to JSON.
 
-### Schema
+#### Schema
 
 ```text
 +-----------------+---------+
@@ -672,7 +672,7 @@ The `DOLT_DIFF_SUMMARY()` table function takes two arguments:
 +-----------------+---------+
 ```
 
-### Example
+#### Example
 
 Consider we start with a table `inventory` in a database on `main` branch. 
 
@@ -766,11 +766,11 @@ works like [CLI `dolt log` command](/cli-reference/cli#dolt-log).
 
 Note that the `DOLT_LOG()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_LOG()` table function requires `SELECT` privilege for all tables.
 
-### Options
+#### Options
 
 ```sql
 DOLT_LOG([<optional_revisions>...], [--tables <tables>...])
@@ -800,7 +800,7 @@ The `DOLT_LOG()` table function takes any number of optional revision arguments:
 - `--not`: Excludes commits reachable by revision.
 - `--tables`: Limits the log to commits that affect the specified tables. Any number of comma separated tables can be specified.
 
-### Schema
+#### Schema
 
 ```text
 +--------------+----------+
@@ -820,7 +820,7 @@ The `DOLT_LOG()` table function takes any number of optional revision arguments:
 The `commit_order` field is an integer value that indicates the order of commits in descending order from HEAD.
 Note that `commit_order` values can be repeated for different levels of the topological sort of the commit graph.
 
-### Example
+#### Example
 
 Consider we have the following commit graph:
 
@@ -904,12 +904,12 @@ them returned to avoid conflicts.
 Getting SQL patch statements is only available as table function for now;
 the CLI `dolt patch` command will be supported in the future.
 
-### Privileges
+#### Privileges
 
 `DOLT_PATCH()` table function requires `SELECT` privilege for all tables if no table is defined or
 for the defined table only.
 
-### Options
+#### Options
 
 ```sql
 DOLT_PATCH(<from_revision>, <to_revision>, <optional_tablename>)
@@ -925,7 +925,7 @@ The `DOLT_PATCH()` table function takes the following arguments:
 - `from_revision...to_revision` — gets the three dot patch, or revision of table data between the `from_revision` and `to_revision`, _starting at the last common commit_.
 - `tablename` — the name of the table containing the data and/or schema to patch. This argument is optional. When it's not defined, all tables with data and/or schema patch will be returned.
 
-### Schema
+#### Schema
 
 ```text
 +------------------+--------+
@@ -940,7 +940,7 @@ The `DOLT_PATCH()` table function takes the following arguments:
 +------------------+--------+
 ```
 
-### Example
+#### Example
 
 Consider we start with a table `inventory` in a database on `main` branch. When we make any changes, we can use
 the `DOLT_PATCH()` function to get SQL patch statements of the table data or all tables with data changes across specific
@@ -1034,11 +1034,11 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function provides a summary o
 
 This function performs a "dry run" merge operation and returns information about conflicts without actually modifying the database or creating a merge commit.
 
-### Privileges
+#### Privileges
 
 `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function requires `SELECT` privilege for all tables.
 
-### Options
+#### Options
 
 ```sql
 DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY(<base_branch>, <merge_branch>)
@@ -1049,7 +1049,7 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function takes two required a
 - `base_branch` — the base branch to merge into (e.g. "main").
 - `merge_branch` — the branch to merge into the base branch (e.g. "feature_branch").
 
-### Schema
+#### Schema
 
 ```text
 +---------------------+--------+
@@ -1061,7 +1061,7 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function takes two required a
 +---------------------+--------+
 ```
 
-### Example
+#### Example
 
 Consider a scenario where you have a `main` branch and a `feature_branch` that have diverged and made conflicting changes to the same data. You can preview the conflicts that would occur when merging `feature_branch` into `main`:
 
@@ -1099,11 +1099,11 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function provides detailed informatio
 
 This function performs a "dry run" merge operation and returns detailed conflict information without actually modifying the database or creating a merge commit. The results are similar to what you would see in the `dolt_conflicts_$TABLENAME` system tables after performing an actual merge, but without making any changes to the database.
 
-### Privileges
+#### Privileges
 
 `DOLT_PREVIEW_MERGE_CONFLICTS()` table function requires `SELECT` privilege on the specified table.
 
-### Options
+#### Options
 
 ```sql
 DOLT_PREVIEW_MERGE_CONFLICTS(<base_branch>, <merge_branch>, <table_name>)
@@ -1115,7 +1115,7 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function takes three required argumen
 - `merge_branch` — the branch to merge into the base branch (e.g. "feature_branch").
 - `table_name` — the name of the table to preview conflicts for.
 
-### Schema
+#### Schema
 
 The schema of the `DOLT_PREVIEW_MERGE_CONFLICTS()` function depends on the schema of the specified table. For each column `X` in the table, the result set contains three columns:
 
@@ -1142,7 +1142,7 @@ Where:
 - `our_diff_type` and `their_diff_type` indicate whether the row was "added", "modified", or "removed" in the corresponding branch
 - `dolt_conflict_id` is a unique identifier for each conflict
 
-### Example
+#### Example
 
 Consider a table `users` with columns `id`, `name`, and `email` that has conflicts between `main` and `feature_branch`. You can preview the specific conflicts:
 
@@ -1228,11 +1228,11 @@ Dolt's reflog is similar to [Git's reflog](https://git-scm.com/docs/git-reflog),
 - The Dolt reflog currently only supports named references, such as branches and tags, and not any of Git's special refs (e.g. `HEAD`, `FETCH-HEAD`, `MERGE-HEAD`).
 - The Dolt reflog can be queried for the log of references, even after a reference has been deleted. In Git, once a branch or tag is deleted, the reflog for that ref is also deleted and to find the last commit a branch or tag pointed to you have to use Git's special `HEAD` reflog to find the commit, which can sometimes be challenging. Dolt makes this much easier by allowing you to see the history for a deleted ref so you can easily see the last commit a branch or tag pointed to before it was deleted.
 
-### Privileges
+#### Privileges
 
 There are no special privileges required to use the `dolt_reflog()` table function.
 
-### Options
+#### Options
 
 ```sql
 DOLT_REFLOG()
@@ -1243,7 +1243,7 @@ The `dolt_reflog()` table function can be called with no arguments or with one a
 
 The `dolt_reflog()` table function can also be called with the `--all` flag to show all refs, including hidden refs, such as DoltHub workspace refs.
 
-### Schema
+#### Schema
 
 ```text
 +-----------------------+-----------+
@@ -1256,7 +1256,7 @@ The `dolt_reflog()` table function can also be called with the `--all` flag to s
 +-----------------------+-----------+
 ```
 
-### Example
+#### Example
 
 The example below shows how to recreate a branch that was deleted by finding the last commit it referenced in Dolt's reflog.
 
@@ -1289,12 +1289,12 @@ Each row in the result set describes how a table was altered between the two com
 
 Note that the `DOLT_SCHEMA_DIFF()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_SCHEMA_DIFF()` table function requires `SELECT` privilege for all tables if no table is defined or
 for the defined table only.
 
-### Options
+#### Options
 
 ```sql
 DOLT_SCHEMA_DIFF(<from_commit>, <to_commit>, <optional_tablename>)
@@ -1310,7 +1310,7 @@ The `DOLT_SCHEMA_DIFF()` table function takes three arguments:
 - `from_revision...to_revision` — gets the three dot diff, or revision of table schema between the `from_revision` and `to_revision`, _starting at the last common commit_.
 - `tablename` — the name of the table to diff. This argument is optional. When it's not defined, all tables with schema diffs will be returned.
 
-### Schema
+#### Schema
 
 ```text
 +-----------------------+------+
@@ -1323,7 +1323,7 @@ The `DOLT_SCHEMA_DIFF()` table function takes three arguments:
 +-----------------------+------+
 ```
 
-### Example
+#### Example
 
 For this example, we'll consider three tables within the context of two branches: `main` and `feature_branch`.
 
@@ -1472,7 +1472,7 @@ Note the difference between this call and the previous `dolt_schema_diff('main',
 3. Third row has the `from_create_statement` and `to_create_statement` columns swapped
 4. Fourth row shows the inverse rename of `trips` to `vacations`
 
-### Example query
+#### Example query
 
 You can try calling `DOLT_SCHEMA_DIFF()` against the [DoltHub docs_examples DB](https://www.dolthub.com/repositories/dolthub/docs_examples), by getting the diff of schemas between `schema_diff_v1` and `schema_diff_v2` tags, which correspond to `main` and `feature_branch` branches from these examples.
 
@@ -1482,11 +1482,11 @@ You can try calling `DOLT_SCHEMA_DIFF()` against the [DoltHub docs_examples DB](
 
 The `DOLT_QUERY_DIFF()` table function calculates the data difference between any two queries, producing a table similar to the `DOLT_DIFF()` table function.
 
-### Privileges
+#### Privileges
 
 `DOLT_QUERY_DIFF()` table function requires `SELECT` privilege on all tables in the database (e.g. `GRANT SELECT ON mydb.*`).
 
-### Example
+#### Example
 
 For this example, we have the table `t` in two branches `main` and `other`.
 
@@ -1541,11 +1541,11 @@ Over time, we will optimize this to use features of the storage engine to improv
 The `DOLT_BRANCH_STATUS()` table function calculates the number of commits `ahead` and `behind` the target branch is from the base branch.
 In other words, this tells you the number of commits target branch has that base does not and vice versa.
 
-### Privileges
+#### Privileges
 
 `DOLT_BRANCH_STATUS()` table function requires `SELECT` privilege for all tables used in each query.
 
-### Options
+#### Options
 
 ```sql
 DOLT_BRANCH_STATUS(<base_refspec>, [<target_refspec1, target_refspec2, ...])
@@ -1553,7 +1553,7 @@ DOLT_BRANCH_STATUS(<base_refspec>, [<target_refspec1, target_refspec2, ...])
 
 The refspecs can be branch names, commit hashes, or `HEAD` (with `~` or `^`).
 
-### Schema
+#### Schema
 
 ```text
 +----------------+------+
@@ -1565,7 +1565,7 @@ The refspecs can be branch names, commit hashes, or `HEAD` (with `~` or `^`).
 +----------------+------+
 ```
 
-### Example
+#### Example
 
 Suppose you have two branches: `main` and `other`.
 
@@ -1615,11 +1615,11 @@ This means that `other` has commits `"other commit 1"` and `"other commit 2"` th
 
 The `DOLT_TEST_RUN()` table function executes tests defined in the [`dolt_tests` system table](/sql-reference/version-control/dolt-system-tables#dolt_tests) and returns the results. Tests can be run individually by name, by test group, or all at once.
 
-### Privileges
+#### Privileges
 
 `DOLT_TEST_RUN()` table function requires `SELECT` privilege for all tables used in test queries, as well as access to the `dolt_tests` system table.
 
-### Options
+#### Options
 
 ```sql
 DOLT_TEST_RUN()
@@ -1634,7 +1634,7 @@ The `DOLT_TEST_RUN()` table function will accept any number of arguments:
 - If called with no arguments, or with the wildcard `*`, it will run all tests in the `dolt_tests` table
 - One or more test names, or test group names, can be passed in.
 
-### Schema
+#### Schema
 
 ```text
 +-----------------+------+
@@ -1650,7 +1650,7 @@ The `DOLT_TEST_RUN()` table function will accept any number of arguments:
 
 The `status` field will be either `PASS` or `FAIL`. The `message` field contains information about test failures, and will be empty for passing tests.
 
-### Example
+#### Example
 
 Consider a `dolt_tests` table with the following test definitions:
 
