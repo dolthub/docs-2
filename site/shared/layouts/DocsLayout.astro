@@ -83,8 +83,14 @@ const isDev = import.meta.env.DEV;
   /* Reserve space for client-only components to prevent layout shift */
   .navbar-slot {
     min-height: 48px;
-    background: #f1f3f8;
+    background: rgba(var(--color-background-acc-1), 1);
     padding-bottom: 0.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .navbar-slot {
+      background: #f1f3f8;
+    }
   }
 
   .sidebar-slot {
@@ -397,7 +403,7 @@ const isDev = import.meta.env.DEV;
     opacity: 0.6;
     letter-spacing: 0.05em;
     white-space: nowrap;
-    color: rgba(var(--color-primary), 1);
+    color: inherit;
   }
 
   /* Icon button — matches TransparentButtonWithIcon dark variant */
