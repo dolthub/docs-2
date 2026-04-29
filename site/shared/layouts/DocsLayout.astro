@@ -388,6 +388,7 @@ const isDev = import.meta.env.DEV;
   .navbar-logo-img {
     height: 22px;
     width: auto;
+    max-width: none;
   }
 
   .navbar-logo-docs {
@@ -395,6 +396,8 @@ const isDev = import.meta.env.DEV;
     font-weight: 600;
     opacity: 0.6;
     letter-spacing: 0.05em;
+    white-space: nowrap;
+    color: inherit;
   }
 
   /* Icon button — matches TransparentButtonWithIcon dark variant */
