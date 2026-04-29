@@ -98,14 +98,14 @@ SELECT DOLT_ADD('.');
 SELECT DOLT_ADD('table1', 'table2');
 ```
 
-### Options
+#### Options
 
 `table`: Table\(s\) to add to the list tables staged to be
 committed. The abbreviation '.' can be used to add all tables.
 
 `-A`: Stages all tables with changes.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -115,7 +115,7 @@ committed. The abbreviation '.' can be used to add all tables.
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -142,7 +142,7 @@ via SQL yet.
 SELECT DOLT_BACKUP('sync', 'name');
 ```
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -152,7 +152,7 @@ SELECT DOLT_BACKUP('sync', 'name');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -222,7 +222,7 @@ The `dolt_branch()` function implicitly commits the current transaction and begi
 
 
 
-### Options
+#### Options
 
 `-c`, `--copy`: Create a copy of a branch. Must be followed by the name of the source branch to copy and the name of the new branch to create. Without the `--force` option, the copy will fail if the new branch already exists.
 
@@ -234,7 +234,7 @@ The `dolt_branch()` function implicitly commits the current transaction and begi
 
 `-D`: Shortcut for `--delete --force`.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -244,7 +244,7 @@ The `dolt_branch()` function implicitly commits the current transaction and begi
 +--------+------+---------------------------+
 ```
 
-### Examples
+#### Examples
 
 ```sql
 -- List the available branches
@@ -323,7 +323,7 @@ use mydb/branch3; -- current db is now `mydb/branch3`
 insert into mydb.t1 values (3); -- modifying the `branch2` branch
 ```
 
-### Options
+#### Options
 
 `-b`: Create a new branch with the given name and switch to it.
 
@@ -331,7 +331,7 @@ insert into mydb.t1 values (3); -- modifying the `branch2` branch
 
 `-t`: When creating a new branch, set up 'upstream' configuration.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +---------+------+-----------------------------+
@@ -342,7 +342,7 @@ insert into mydb.t1 values (3); -- modifying the `branch2` branch
 +---------+------+-----------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -374,11 +374,11 @@ SELECT DOLT_CHERRY_PICK('my-existing-branch~2');
 SELECT DOLT_CHERRY_PICK('qj6ouhjvtrnp1rgbvajaohmthoru2772');
 ```
 
-### Options
+#### Options
 
 No options for this function.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +-----------------------+------+---------------------------------+
@@ -391,7 +391,7 @@ No options for this function.
 +-----------------------+------+---------------------------------+
 ```
 
-### Example
+#### Example
 
 For the below example consider the following set up of `main` and `mybranch` branches:
 
@@ -494,11 +494,11 @@ SELECT DOLT_CLEAN('untracked-table');
 SELECT DOLT_CLEAN('--dry-run');
 ```
 
-### Options
+#### Options
 
 `--dry-run`: Test removing untracked tables from working set.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -508,7 +508,7 @@ SELECT DOLT_CLEAN('--dry-run');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Create three new tables
@@ -574,7 +574,7 @@ more details see the GitHub tracking issue,
 SELECT DOLT_CLONE('file:///myDatabasesDir/database/.dolt/noms');
 ```
 
-### Options
+#### Options
 
 `--remote`: Name of the remote to be added to the new, cloned database. The default is 'origin'.
 
@@ -582,7 +582,7 @@ SELECT DOLT_CLONE('file:///myDatabasesDir/database/.dolt/noms');
 
 `--depth`: Clone a single branch and limit history to the given commit depth.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -592,7 +592,7 @@ SELECT DOLT_CLONE('file:///myDatabasesDir/database/.dolt/noms');
 +--------+------+---------------------------+
 ```
 
-### Examples
+#### Examples
 
 ```sql
 -- Clone the us-jails database from a local remote
@@ -622,7 +622,7 @@ SELECT DOLT_COMMIT('-m', 'This is a commit');
 SELECT DOLT_COMMIT('-m', 'This is a commit', '--author', 'John Doe <johndoe@example.com>');
 ```
 
-### Options
+#### Options
 
 `-m`, `--message`: Use the given `<msg>` as the commit message. **Required**
 
@@ -644,7 +644,7 @@ author@example.com" format.
 
 `--amend`: Overwrite the commit message for the current HEAD, rather than creating a new commit.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +-------+------+----------------------------+
@@ -654,7 +654,7 @@ author@example.com" format.
 +-------+------+----------------------------+
 ```
 
-### Examples
+#### Examples
 
 ```sql
 -- Set the current database for the session
@@ -682,7 +682,7 @@ SELECT DOLT_CONFLICTS_RESOLVE('--ours', <table>);
 SELECT DOLT_CONFLICTS_RESOLVE('--theirs', <table>);
 ```
 
-### Options
+#### Options
 
 `<table>`: List of tables to be resolved. '.' can be used to resolve all tables.
 
@@ -690,7 +690,7 @@ SELECT DOLT_CONFLICTS_RESOLVE('--theirs', <table>);
 
 `--theirs`: For all conflicts, take the version from their branch and resolve the conflict.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -700,7 +700,7 @@ SELECT DOLT_CONFLICTS_RESOLVE('--theirs', <table>);
 +--------+------+---------------------------+
 ```
 
-### Examples
+#### Examples
 
 ```sql
 -- Set the current database for the session
@@ -729,11 +729,11 @@ SELECT DOLT_FETCH('origin', NULL);
 SELECT DOLT_FETCH('origin');
 ```
 
-### Options
+#### Options
 
 No options for this function.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -743,7 +743,7 @@ No options for this function.
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Get remote main
@@ -769,11 +769,11 @@ SELECT DOLT_GC();
 SELECT DOLT_GC('--shallow');
 ```
 
-### Options
+#### Options
 
 `--shallow` Performs a faster but less thorough garbage collection.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -808,7 +808,7 @@ SELECT DOLT_MERGE('--abort');
 
 
 
-### Options
+#### Options
 
 `--no-ff`: Create a merge commit even when the merge resolves as a fast-forward.
 
@@ -834,7 +834,7 @@ transaction can be committed. See [Dolt system
 tables](/reference/version-control/dolt-system-tables#dolt_conflicts_usdtablename) for
 details.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------------+------+--------------------------------------+
@@ -847,7 +847,7 @@ details.
 +--------------+------+--------------------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -883,7 +883,7 @@ SELECT DOLT_PULL('origin', 'some-branch');
 SELECT DOLT_PULL('feature-branch', '--force');
 ```
 
-### Options
+#### Options
 
 `--no-ff`: Create a merge commit even when the merge resolves as a fast-forward.
 
@@ -902,7 +902,7 @@ transaction can be committed. See [Dolt system
 tables](/reference/version-control/dolt-system-tables##dolt_conflicts_usdtablename) for
 details.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------------+------+-------------------------------------+
@@ -914,7 +914,7 @@ details.
 +--------------+------+-------------------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Update local working set with remote changes
@@ -939,7 +939,7 @@ so callers should be cautious about using it. The main benefit of using this fun
 disk space used by the temporary holding area. Because this is a destructive operation, callers must
 have `SUPER` privileges in order to execute it.
 
-### Example
+#### Example
 
 ```sql
 -- Create a database and populate a table in the working set
@@ -965,11 +965,11 @@ SELECT DOLT_PUSH('origin', 'main');
 SELECT DOLT_PUSH('--force', 'origin', 'main');
 ```
 
-### Options
+#### Options
 
 `--force`: Update the remote with local history, overwriting any conflicting history in the remote.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +---------+------+--------------------------------+
@@ -980,7 +980,7 @@ SELECT DOLT_PUSH('--force', 'origin', 'main');
 +---------+------+--------------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Checkout new branch
@@ -1034,7 +1034,7 @@ SELECT DOLT_REBASE('--abort');
 
 Currently only interactive rebases are supported, and there is no support for resolving conflicts that arise while executing a rebase plan. If applying a commit creates a conflict, the rebase will be automatically aborted.
 
-### Options
+#### Options
 
 `--interactive` or `-i`: Start an interactive rebase. Currently only interactive rebases are supported, so this option is required.
 
@@ -1042,7 +1042,7 @@ Currently only interactive rebases are supported, and there is no support for re
 
 `--abort`: Abort a rebase in progress.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +---------+------+-----------------------------+
@@ -1053,7 +1053,7 @@ Currently only interactive rebases are supported, and there is no support for re
 +---------+------+-----------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- create a simple table
@@ -1131,7 +1131,7 @@ SELECT DOLT_REMOTE('add','remote_name','remote_url');
 SELECT DOLT_REMOTE('remove','existing_remote_name');
 ```
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1141,7 +1141,7 @@ SELECT DOLT_REMOTE('remove','existing_remote_name');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Add a HTTP remote
@@ -1200,7 +1200,7 @@ SELECT DOLT_RESET('myTable'); -- soft reset
 
 
 
-### Options
+#### Options
 
 `--hard`: Resets the working tables and staged tables. Any changes to
 tracked tables in the working tree since <commit> are discarded.
@@ -1208,7 +1208,7 @@ tracked tables in the working tree since <commit> are discarded.
 `--soft`: Does not touch the working tables, but removes all tables
 staged to be committed. This is the default behavior.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1218,7 +1218,7 @@ staged to be committed. This is the default behavior.
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -1255,11 +1255,11 @@ SELECT DOLT_REVERT('HEAD~2');
 SELECT DOLT_REVERT('HEAD', '--author=reverter@rev.ert');
 ```
 
-### Options
+#### Options
 
 `--author=<author>`: Specify an explicit author using the standard `A U Thor <author@example.com>` format.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1269,7 +1269,7 @@ SELECT DOLT_REVERT('HEAD', '--author=reverter@rev.ert');
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Create a table and add data in multiple commits
@@ -1325,7 +1325,7 @@ SELECT DOLT_TAG('-m', 'message', '--author', 'John Doe <johndoe@example.com>', '
 SELECT DOLT_TAG('-d', 'tag_name');
 ```
 
-### Options
+#### Options
 
 `-m`: Use the given message as the tag message.
 
@@ -1334,7 +1334,7 @@ SELECT DOLT_TAG('-d', 'tag_name');
 `--author`: Specify an explicit author using the standard "A U Thor
 author@example.com" format.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -1344,7 +1344,7 @@ author@example.com" format.
 +--------+------+---------------------------+
 ```
 
-### Example
+#### Example
 
 ```sql
 -- Set the current database for the session
@@ -1371,13 +1371,13 @@ function](#dolt_purge_dropped_databases) for info on how to permanently remove d
 SELECT DOLT_UNDROP(<database_name>);
 ```
 
-### Options
+#### Options
 
 `dolt_undrop()` takes a single argument – the name of the dropped database to restore. When called
 without any arguments, `dolt_undrop()` returns an error message that contains a list of all dropped
 databases that are available to be restored.
 
-### Example
+#### Example
 
 ```sql
 -- Create a database and populate a table in the working set
@@ -1409,7 +1409,7 @@ wish to validate all rows in the database. If `FOREIGN_KEY_CHECKS` has been disa
 you may want to use the `--all` option to ensure that the current state is
 consistent and no violated constraints are missed.
 
-### Arguments and Options
+#### Arguments and Options
 
 `<table>`: The table(s) to check constraints on. If omitted, checks all tables.
 
@@ -1421,7 +1421,7 @@ Disables writing results to the
 [DOLT_CONSTRAINT_VIOLATIONS](/reference/version-control/dolt-system-tables#doltconstraintviolations)
 system table.
 
-### Output Schema
+#### Output Schema
 
 ```text
 +------------+------+-----------------------------------------+
@@ -1431,7 +1431,7 @@ system table.
 +------------+------+-----------------------------------------+
 ```
 
-### Example
+#### Example
 
 For the below examples consider the following schema:
 
@@ -1716,11 +1716,11 @@ diffs where the schema of the underlying table has changed.
 
 Note that the `DOLT_DIFF()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_DIFF()` table function requires `SELECT` privilege on the specified table.
 
-### Options
+#### Options
 
 ```sql
 DOLT_DIFF(<from_revision>, <to_revision>, <tablename>)
@@ -1736,7 +1736,7 @@ The `DOLT_DIFF()` table function takes either two or three required arguments:
 - `from_revision...to_revision` — gets the three dot diff, or revision of table data between the `from_revision` and `to_revision`, _starting at the last common commit_.
 - `tablename` — the name of the table containing the data to diff.
 
-### Schema
+#### Schema
 
 ```sql
 +------------------+----------+
@@ -1759,7 +1759,7 @@ in the result set named `to_Y`. This is the major difference between the `DOLT_D
 `from_commit` revisions to form the to and from columns of the result set, while `dolt_commit_diff_$tablename` uses
 only the table schema of the currently checked out branch to form the to and from columns of the result set.
 
-### Example
+#### Example
 
 Consider a table named `inventory` in a database with two branches: `main` and `feature_branch`. We can use the
 `DOLT_DIFF()` function to calculate a diff of the table data from the `main` branch to the `feature_branch` branch
@@ -1864,12 +1864,12 @@ returns empty result for tables with no data changes.
 
 Note that the `DOLT_DIFF_STAT()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_DIFF_STAT()` table function requires `SELECT` privilege for all tables if no table is defined or
 for the defined table only.
 
-### Options
+#### Options
 
 ```sql
 DOLT_DIFF_STAT(<from_revision>, <to_revision>, <optional_tablename>)
@@ -1885,7 +1885,7 @@ The `DOLT_DIFF_STAT()` table function takes three arguments:
 - `from_revision...to_revision` — gets the three dot diff stat, or revision of table data between the `from_revision` and `to_revision`, _starting at the last common commit_.
 - `tablename` — the name of the table containing the data to diff. This argument is optional. When it's not defined, all tables with data diff will be returned.
 
-### Schema
+#### Schema
 
 ```sql
 +-----------------+--------+
@@ -1906,7 +1906,7 @@ The `DOLT_DIFF_STAT()` table function takes three arguments:
 +-----------------+--------+
 ```
 
-### Example
+#### Example
 
 Consider we start with a table `inventory` in a database on `main` branch. When we make any changes, we can use
 the `DOLT_DIFF_STAT()` function to calculate a diff of the table data or all tables with data changes across specific
@@ -2001,12 +2001,12 @@ It returns empty result if there are no tables with changes.
 
 Note that the `DOLT_DIFF()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_DIFF_SUMMARY()` table function requires `SELECT` privilege for all tables if no
 table is defined or for the defined table only.
 
-### Options
+#### Options
 
 ```sql
 DOLT_DIFF_SUMMARY(<from_revision>, <to_revision>, <optional_tablename>)
@@ -2030,7 +2030,7 @@ The `DOLT_DIFF_SUMMARY()` table function takes three arguments:
 - `tablename` — the name of the table containing the data to diff. This argument is
   optional. When it's not defined, all tables with data diff will be returned.
 
-### Schema
+#### Schema
 
 ```sql
 +-----------------+---------+
@@ -2044,7 +2044,7 @@ The `DOLT_DIFF_SUMMARY()` table function takes three arguments:
 +-----------------+---------+
 ```
 
-### Example
+#### Example
 
 Consider we start with a table `inventory` in a database on `main` branch. When we make
 any changes, we can use the `DOLT_DIFF_SUMMARY()` function to calculate a diff of the
@@ -2136,11 +2136,11 @@ provided revision's `HEAD` (or the current `HEAD` if no revision is provided).
 
 Note that the `DOLT_LOG()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_LOG()` table function requires `SELECT` privilege for all tables.
 
-### Options
+#### Options
 
 ```sql
 DOLT_LOG([<optional_revisions>...], [--tables <tables>...])
@@ -2167,7 +2167,7 @@ The `DOLT_LOG()` table function takes any number of optional revision arguments:
 - `--not`: Excludes commits reachable by revision.
 - `--tables`: Limits the log to commits that affect the specified tables. Any number of comma separated tables can be specified.
 
-### Schema
+#### Schema
 
 ```sql
 +-------------+----------+
@@ -2183,7 +2183,7 @@ The `DOLT_LOG()` table function takes any number of optional revision arguments:
 +-------------+--------- +
 ```
 
-### Example
+#### Example
 
 Consider we have the following commit graph:
 
@@ -2263,12 +2263,12 @@ The order of the statements is that the schema patch comes first after the data 
 all tables, then we recommend to turn off the foreign key checks (`SET foreign_key_checks=0;`)
 before applying these patch statements in order to avoid conflicts.
 
-### Privileges
+#### Privileges
 
 `DOLT_PATCH()` table function requires `SELECT` privilege for all tables if no table is defined or
 for the defined table only.
 
-### Options
+#### Options
 
 ```sql
 DOLT_PATCH(<from_revision>, <to_revision>, <optional_tablename>)
@@ -2284,7 +2284,7 @@ The `DOLT_PATCH()` table function takes the following arguments:
 - `from_revision...to_revision` — gets the three dot patch, or revision of table data between the `from_revision` and `to_revision`, _starting at the last common commit_.
 - `tablename` — the name of the table containing the data and/or schema to patch. This argument is optional. When it's not defined, all tables with data and/or schema patch will be returned.
 
-### Schema
+#### Schema
 
 ```sql
 +------------------+--------+
@@ -2299,7 +2299,7 @@ The `DOLT_PATCH()` table function takes the following arguments:
 +------------------+--------+
 ```
 
-### Example
+#### Example
 
 Consider we start with a table `inventory` in a database on `main` branch. When we make any changes, we can use
 the `DOLT_PATCH()` function to get SQL patch statements of the table data or all tables with data changes across specific
@@ -2393,11 +2393,11 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function provides a summary o
 
 This function performs a "dry run" merge operation and returns information about conflicts without actually modifying the database or creating a merge commit.
 
-### Privileges
+#### Privileges
 
 `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function requires `SELECT` privilege for all tables.
 
-### Options
+#### Options
 
 ```sql
 DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY(<base_branch>, <merge_branch>)
@@ -2408,7 +2408,7 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function takes two required a
 - `base_branch` — the base branch to merge into (e.g. "main").
 - `merge_branch` — the branch to merge into the base branch (e.g. "feature_branch").
 
-### Schema
+#### Schema
 
 ```text
 +---------------------+--------+
@@ -2420,7 +2420,7 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function takes two required a
 +---------------------+--------+
 ```
 
-### Example
+#### Example
 
 Consider a scenario where you have a `main` branch and a `feature_branch` that have diverged and made conflicting changes to the same data. You can preview the conflicts that would occur when merging `feature_branch` into `main`:
 
@@ -2458,11 +2458,11 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function provides detailed informatio
 
 This function performs a "dry run" merge operation and returns detailed conflict information without actually modifying the database or creating a merge commit. The results are similar to what you would see in the `dolt_conflicts_$TABLENAME` system tables after performing an actual merge, but without making any changes to the database.
 
-### Privileges
+#### Privileges
 
 `DOLT_PREVIEW_MERGE_CONFLICTS()` table function requires `SELECT` privilege on the specified table.
 
-### Options
+#### Options
 
 ```sql
 DOLT_PREVIEW_MERGE_CONFLICTS(<base_branch>, <merge_branch>, <table_name>)
@@ -2474,7 +2474,7 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function takes three required argumen
 - `merge_branch` — the branch to merge into the base branch (e.g. "feature_branch").
 - `table_name` — the name of the table to preview conflicts for.
 
-### Schema
+#### Schema
 
 The schema of the `DOLT_PREVIEW_MERGE_CONFLICTS()` function depends on the schema of the specified table. For each column `X` in the table, the result set contains three columns:
 
@@ -2501,7 +2501,7 @@ Where:
 - `our_diff_type` and `their_diff_type` indicate whether the row was "added", "modified", or "removed" in the corresponding branch
 - `dolt_conflict_id` is a unique identifier for each conflict
 
-### Example
+#### Example
 
 Consider a table `users` with columns `id`, `name`, and `email` that has conflicts between `main` and `feature_branch`. You can preview the specific conflicts:
 
@@ -2587,11 +2587,11 @@ Dolt's reflog is similar to [Git's reflog](https://git-scm.com/docs/git-reflog),
 - The Dolt reflog currently only supports named references, such as branches and tags, and not any of Git's special refs (e.g. `HEAD`, `FETCH-HEAD`, `MERGE-HEAD`).
 - The Dolt reflog can be queried for the log of references, even after a reference has been deleted. In Git, once a branch or tag is deleted, the reflog for that ref is also deleted and to find the last commit a branch or tag pointed to you have to use Git's special `HEAD` reflog to find the commit, which can sometimes be challenging. Dolt makes this much easier by allowing you to see the history for a deleted ref so you can easily see the last commit a branch or tag pointed to before it was deleted.
 
-### Privileges
+#### Privileges
 
 There are no special privileges required to use the `dolt_reflog()` table function.
 
-### Options
+#### Options
 
 ```sql
 DOLT_REFLOG()
@@ -2602,7 +2602,7 @@ The `dolt_reflog()` table function can be called with no arguments or with one a
 
 The `dolt_reflog()` table function can also be called with the `--all` flag to show all refs, including hidden refs, such as DoltHub workspace refs.
 
-### Schema
+#### Schema
 
 ```sql
 +-----------------------+-----------+
@@ -2615,7 +2615,7 @@ The `dolt_reflog()` table function can also be called with the `--all` flag to s
 +-----------------------+-----------+
 ```
 
-### Example
+#### Example
 
 The example below shows how to recreate a branch that was deleted by finding the last commit it referenced in Dolt's reflog.
 
@@ -2648,12 +2648,12 @@ Each row in the result set describes how a table was altered between the two com
 
 Note that the `DOLT_SCHEMA_DIFF()` table function currently requires that argument values be literal values.
 
-### Privileges
+#### Privileges
 
 `DOLT_SCHEMA_DIFF()` table function requires `SELECT` privilege for all tables if no table is defined or
 for the defined table only.
 
-### Options
+#### Options
 
 ```sql
 DOLT_SCHEMA_DIFF(<from_commit>, <to_commit>, <optional_tablename>)
@@ -2669,7 +2669,7 @@ The `DOLT_SCHEMA_DIFF()` table function takes three arguments:
 - `from_revision...to_revision` — gets the three dot diff, or revision of table schema between the `from_revision` and `to_revision`, _starting at the last common commit_.
 - `tablename` — the name of the table to diff. This argument is optional. When it's not defined, all tables with schema diffs will be returned.
 
-### Schema
+#### Schema
 
 ```sql
 +-----------------------+------+
@@ -2682,7 +2682,7 @@ The `DOLT_SCHEMA_DIFF()` table function takes three arguments:
 +-----------------------+------+
 ```
 
-### Example
+#### Example
 
 For this example, we'll consider three tables within the context of two branches: `main` and `feature_branch`.
 
@@ -2831,7 +2831,7 @@ Note the difference between this select and the previous `dolt_schema_diff('main
 3. Third row has the `from_create_statement` and `to_create_statement` columns swapped
 4. Fourth row shows the inverse rename of `trips` to `vacations`
 
-### Example query
+#### Example query
 
 You can try calling `DOLT_SCHEMA_DIFF()` against the [DoltHub docs_examples DB](https://www.dolthub.com/repositories/dolthub/docs_examples), by getting the diff of schemas between `schema_diff_v1` and `schema_diff_v2` tags, which correspond to `main` and `feature_branch` branches from these examples.
 
@@ -2841,11 +2841,11 @@ You can try calling `DOLT_SCHEMA_DIFF()` against the [DoltHub docs_examples DB](
 
 The `DOLT_QUERY_DIFF()` table function calculates the data difference between any two queries, producing a table similar to the `DOLT_DIFF()` table function.
 
-### Privileges
+#### Privileges
 
 `DOLT_QUERY_DIFF()` table function requires `SELECT` privilege on all tables in the database (e.g. `GRANT SELECT ON mydb.*`).
 
-### Example
+#### Example
 
 For this example, we have the table `t` in two branches `main` and `other`.
 

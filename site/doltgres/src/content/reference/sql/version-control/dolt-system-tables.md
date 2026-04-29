@@ -623,7 +623,7 @@ The `dolt.merge_status` system table tells a user if a merge is active.
  unmerged_tables | text    | YES  |     |         |
 ```
 
-### Example Query
+#### Example Query
 
 Let's create a simple conflict:
 
