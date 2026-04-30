@@ -101,7 +101,7 @@
                       "description": "Database name of source branch.",
                       "example":"museum-collections"
                     },
-                    "from_branch_name":{
+                    "from_branch":{
                       "type": "string",
                       "description": "Name of the source branch.",
                       "example":"feature"
@@ -116,7 +116,7 @@
                       "description": "Database name of destination branch.",
                       "example":"museum-collections"
                     },
-                    "to_branch_name":{
+                    "to_branch":{
                       "type": "string",
                       "description": "Name of the destination branch.",
                       "example":"main"
