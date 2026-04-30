@@ -96,8 +96,8 @@ describe("Dolt docs — page content spot checks", () => {
   });
 
   context("CLI Reference", () => {
-    it("Commands page has correct heading", () => {
-      assertPageContent("/cli-reference/cli", "CLI");
+    it("CLI page has correct heading", () => {
+      assertPageContent("/cli-reference/cli", "Command Line Interface Reference");
     });
 
     it("Git Comparison page loads with content", () => {
