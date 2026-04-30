@@ -59,7 +59,7 @@ Valid commands for dolt are
                   rm - Drops a table and removes it from tracking
 ```
 
-## Global Arguments
+### Global Arguments
 
 Dolt subcommands are in transition to using the flags listed below as global flags.
 Not all subcommands use these flags. If your command accepts these flags without error, then they are supported.
@@ -354,6 +354,12 @@ If there is any changes in working set, the force flag will wipe out the current
 `-t`, `--track`:
 When creating a new branch, set up 'upstream' configuration.
 
+`--overwrite-ignore`:
+Silently overwrite ignored tables when switching branches (default behavior).
+
+`--no-overwrite-ignore`:
+Abort the operation when ignored tables in the working set would be overwritten by the checkout.
+
 
 
 ### `dolt cherry-pick`
@@ -381,8 +387,14 @@ If any data conflicts, schema conflicts, or constraint violations are detected d
 `--abort`:
 Abort the current conflict resolution process, and revert all changes from the in-process cherry-pick operation.
 
+`--continue`:
+Continue the current cherry-pick operation after conflicts have been resolved.
+
 `--allow-empty`:
 Allow empty commits to be cherry-picked. Note that use of this option only keeps commits that were initially empty. Commits which become empty, due to a previous commit, will cause cherry-pick to fail.
+
+`--skip-verification`:
+Skip commit verification before cherry-pick
 
 
 
@@ -708,6 +720,9 @@ Amend previous commit
 
 `-S`, `--gpg-sign`:
 Sign the commit using GPG. If no key-id is provided the key-id is taken from 'user.signingkey' the in the configuration
+
+`--skip-verification`:
+Skip commit verification
 
 
 
@@ -1392,6 +1407,9 @@ perform a full garbage collection, including the old generation
 `--archive-level`:
 Specify the archive compression level garbage collection results. Default is 1, Disable with 0
 
+`--incremental-file-size`:
+max size in bytes of incremental GC table files
+
 
 
 ### `dolt init`
@@ -1613,6 +1631,9 @@ Use an auto-generated commit message when creating a merge commit. The default f
 `--author`:
 Specify an explicit author using the standard A U Thor `<author@example.com>` format.
 
+`--skip-verification`:
+Skip commit verification before merge
+
 
 
 ### `dolt merge-base`
@@ -1713,6 +1734,8 @@ Incorporates changes from a remote repository into the current branch. In its de
 
 More precisely, dolt pull runs `dolt fetch` with the given parameters and calls `dolt merge` to merge the retrieved branch `HEAD` into the current branch.
 
+With `--rebase`, it runs `dolt rebase` instead of `dolt merge` after fetching. If the rebase encounters data conflicts, it will pause and allow you to resolve them, then continue with `dolt rebase --continue`.
+
 
 **Arguments and options**
 
@@ -1747,8 +1770,14 @@ User name to use when authenticating with the remote. Gets password from the env
 `-p`, `--prune`:
 After fetching, remove any remote-tracking references that don't exist on the remote.
 
+`-r`, `--rebase`:
+After fetching, rebase the current branch on top of the upstream branch instead of merging.
+
 `--silent`:
 Suppress progress information.
+
+`--skip-verification`:
+Skip commit verification before merge
 
 
 
@@ -1888,6 +1917,9 @@ Continue an interactive rebase after adjusting the rebase plan
 
 `-i`, `--interactive`:
 Start an interactive rebase
+
+`--skip-verification`:
+Skip commit verification before rebase
 
 
 
@@ -2030,13 +2062,15 @@ Undo the changes introduced in a commit
 
 ```bash
 dolt revert <revision>...
+dolt revert --continue
+dolt revert --abort
 ```
 
 **Description**
 
-Removes the changes made in a commit (or series of commits) from the working set, and then automatically commits the result. This is done by way of a three-way merge. Given a specific commit (e.g. `HEAD\~1`), this is similar to applying the patch from `HEAD\~1..HEAD\~2`, giving us a patch of what to remove to effectively remove the influence of the specified commit. If multiple commits are specified, then this process is repeated for each commit in the order specified. This requires a clean working set.
+Removes the changes made in a commit (or series of commits) from the working set, and then automatically commits the result. This is done by way of a three-way merge. Given a specific commit (e.g. `HEAD\~1`), this is similar to applying the patch from `HEAD\~1..HEAD\~2`, giving us a patch of what to remove to effectively remove the influence of the specified commit. If multiple commits are specified, then each is reverted in the order given, creating a separate commit for each revert. This requires a clean working set.
 
-Any conflicts or constraint violations caused by the merge cause the command to fail.
+If conflicts or constraint violations are encountered during a revert, the operation pauses and leaves the conflicting state in the working set. Resolve the conflicts, stage the resolved tables with `dolt add`, and then run `dolt revert --continue` to complete the revert. To abandon the revert entirely, run `dolt revert --abort`.
 
 **Arguments and options**
 
@@ -2044,6 +2078,12 @@ Any conflicts or constraint violations caused by the merge cause the command to 
 
 `--author`:
 Specify an explicit author using the standard A U Thor `<author@example.com>` format.
+
+`--abort`:
+Abort the current revert operation and return the working set to the pre-revert state.
+
+`--continue`:
+Continue the current revert operation after resolving conflicts.
 
 
 
@@ -2422,9 +2462,9 @@ This is an example yaml configuration file showing all supported items and their
 	
 	cfg_dir: .doltcfg
 	
-	privilege_file: .doltcfg\privileges.db
+	privilege_file: .doltcfg/privileges.db
 	
-	branch_control_file: .doltcfg\branch_control.db
+	branch_control_file: .doltcfg/branch_control.db
 	
 	user_session_vars: []
 	
@@ -2617,16 +2657,21 @@ Stash the changes in a dirty workspace away.
 ```bash
 dolt stash 
 dolt stash list
-dolt stash pop <stash>
+dolt stash pop [<stash>]
+dolt stash apply [<stash>]
+dolt stash drop [<stash>]
 dolt stash clear
-dolt stash drop <stash>
 ```
 
 **Description**
 
-Use dolt stash when you want to record the current state of the workspace and the index, but want to go back to a clean workspace. 
+Use dolt stash when you want to record the current state of the workspace and the index, but want to go back to a clean workspace.
 
-The command saves your local modifications away and reverts the workspace to match the HEAD commit. The stash entries that are saved away can be listed with 'dolt stash list'.
+The command saves your local modifications away and reverts the workspace to match the HEAD commit. The stash entries that are saved away can be listed with `dolt stash list`.
+
+With `pop`, the stash entry is applied to the working set and then removed. With `apply`, the stash entry is applied but kept. Both default to `stash@{0}` if no stash is specified. If there are conflicting local changes, the operation fails and the stash entry is preserved.
+
+Stash entries are shared across branches, so you can stash on one branch and pop or apply on another.
 
 
 **Arguments and options**
@@ -2704,6 +2749,12 @@ dolt table export [-f] [-pk <field>] [-schema <file>] [-map <file>] [-continue] 
 
 `dolt table export` will export the contents of `<table>` to `<|file>`
 
+The output format is inferred from the file extension, or can be set explicitly with `--file-type`.
+
+Supported file types: `csv`, `psv`, `json`, `jsonl`, `sql`, `parquet`.
+
+`.json` exports a single JSON object containing a `rows` array; `.jsonl` exports one JSON object per line.
+
 See the help for `dolt table import` as the options are the same.
 
 
@@ -2738,11 +2789,11 @@ dolt table import -r [--map <file>] [--file-type <type>] [--no-header] [--column
 
 If `--create-table | -c` is given the operation will create `<table>` and import the contents of file into it.  If a table already exists at this location then the operation will fail, unless the `--force | -f` flag is provided. The force flag forces the existing table to be overwritten.
 
-The schema for the new table can be specified explicitly by providing a SQL schema definition file, or will be inferred from the imported file.  All schemas, inferred or explicitly defined must define a primary key.  If the file format being imported does not support defining a primary key, then the `--pk` parameter must supply the name of the field that should be used as the primary key. If no primary key is explicitly defined, the first column in the import file will be used as the primary key.
+The schema for the new table can be specified explicitly by providing a SQL schema definition file, or may be inferred from the imported file (depending on file type). All schemas, inferred or explicitly defined must define a primary key. If the file format being imported does not support defining a primary key, then the `--pk` parameter must supply the name of the field that should be used as the primary key. If no primary key is explicitly defined, the first column in the import file will be used as the primary key. For `json`, `jsonl`, and `parquet` create operations, a schema file must be provided with `--schema`.
 
 If `--update-table | -u` is given the operation will update `<table>` with the contents of file. The table's existing schema will be used, and field names will be used to match file fields with table fields unless a mapping file is specified.
 
-If `--append-table | -a` is given the operation will add the contents of the file to `<table>`, without modifying any of the rows of `<table>`. If the file contains a row that matches the primary key of a row already in the table, the import will be aborted unless the --continue flag is used (in which case that row will not be imported.) The table's existing schema will be used, and field names will be used to match file fields with table fields unless a mapping file is specified.
+If `--append-table | -a` is given the operation will add the contents of the file to `<table>`, without modifying any of the rows of `<table>`. If the file contains a row that matches the primary key of a row already in the table, the import will be aborted unless the --continue flag is used. The table's existing schema will be used, and field names will be used to match file fields with table fields unless a mapping file is specified.
 
 If `--replace-table | -r` is given the operation will replace `<table>` with the contents of the file. The table's existing schema will be used, and field names will be used to match file fields with table fields unless a mapping file is specified.
 
@@ -2750,7 +2801,7 @@ If the schema for the existing table does not match the schema for the new file,
 
 A mapping file can be used to map fields between the file being imported and the table being written to. This can be used when creating a new table, or updating or replacing an existing table.
 
-During import, if there is an error importing any row, the import will be aborted by default. Use the `--continue` flag to continue importing when an error is encountered. You can add the `--quiet` flag to prevent the import utility from printing all the skipped rows. 
+During import, if there is an error importing any row, the import will be aborted by default. Use the `--continue` flag to continue importing when an error is encountered. You can add the `--quiet` flag to prevent the import utility from printing all warnings.
 
 A mapping file is json in the format:
 
@@ -2774,7 +2825,15 @@ The expected JSON input file format is:
 
 where column_name is the name of a column of the table being imported and value is the data for that column in the table.
 
-In create, update, and replace scenarios the file's extension is used to infer the type of the file.  If a file does not have the expected extension then the `--file-type` parameter should be used to explicitly define the format of the file in one of the supported formats (csv, psv, json, xlsx).  For files separated by a delimiter other than a ',' (type csv) or a '|' (type psv), the --delim parameter can be used to specify a delimiter
+The expected JSONL input file format is:
+
+	{"column_name":"value", ...}
+	{"column_name":"value", ...}
+	...
+
+where each line is a JSON object representing a row.
+
+ In create, update, and replace scenarios the file's extension is used to infer the type of the file. If a file does not have the expected extension then the `--file-type` parameter should be used to explicitly define the format of the file in one of the supported formats (csv, psv, json, jsonl, xlsx, parquet). For files separated by a delimiter other than a ',' (type csv) or a '|' (type psv), the --delim parameter can be used to specify a delimiter
 
 **Arguments and options**
 
