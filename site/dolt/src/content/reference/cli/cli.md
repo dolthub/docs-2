@@ -2,9 +2,7 @@
 title: CLI
 ---
 
-# CLI
-
-## Command Line Interface Reference
+# Commands
 
 ```
 $ dolt
@@ -59,7 +57,7 @@ Valid commands for dolt are
                   rm - Drops a table and removes it from tracking
 ```
 
-### Global Arguments
+## Global Arguments
 
 Dolt subcommands are in transition to using the flags listed below as global flags.
 Not all subcommands use these flags. If your command accepts these flags without error, then they are supported.
@@ -107,7 +105,7 @@ The name of the database to use when executing SQL queries. Defaults the databas
 Name of the branch to be selected
 
 
-### `dolt add`
+## `dolt add`
 
 Add table contents to the list of staged tables
 
@@ -138,7 +136,7 @@ Allow adding otherwise ignored tables.
 
 
 
-### `dolt backup`
+## `dolt backup`
 
 Manage database backups, including creation, sync, and restore.
 
@@ -217,7 +215,7 @@ AWS profile to use
 
 
 
-### `dolt blame`
+## `dolt blame`
 
 Show what revision and author last modified each row of a table
 
@@ -235,7 +233,7 @@ Annotates each row in the given table with information from the revision which l
 
 No options for this command.
 
-### `dolt branch`
+## `dolt branch`
 
 List, create, or delete branches
 
@@ -308,7 +306,7 @@ Print the name of the current branch
 
 
 
-### `dolt checkout`
+## `dolt checkout`
 
 Switch branches or restore working tree tables
 
@@ -362,7 +360,7 @@ Abort the operation when ignored tables in the working set would be overwritten 
 
 
 
-### `dolt cherry-pick`
+## `dolt cherry-pick`
 
 Apply the changes introduced by an existing commit.
 
@@ -398,7 +396,7 @@ Skip commit verification before cherry-pick
 
 
 
-### `dolt ci destroy`
+## `dolt ci destroy`
 
 Drops all database tables used to store continuous integration configuration
 
@@ -416,7 +414,7 @@ Drops all database tables used to store continuous integration configuration and
 
 No options for this command.
 
-### `dolt ci export`
+## `dolt ci export`
 
 Export a Dolt continuous integration workflow by name
 
@@ -434,7 +432,7 @@ Export a Dolt continuous integration workflow by name
 
 No options for this command.
 
-### `dolt ci import`
+## `dolt ci import`
 
 Import a Dolt continuous integration workflow file into the database
 
@@ -480,7 +478,7 @@ Workflow YAML Specification:
 
 No options for this command.
 
-### `dolt ci init`
+## `dolt ci init`
 
 Creates database tables used to store continuous integration configuration
 
@@ -498,7 +496,7 @@ Creates database tables used to store continuous integration configuration and c
 
 No options for this command.
 
-### `dolt ci ls`
+## `dolt ci ls`
 
 List Dolt continuous integration workflows
 
@@ -516,7 +514,7 @@ List Dolt continuous integration workflows
 
 No options for this command.
 
-### `dolt ci remove`
+## `dolt ci remove`
 
 Removes a Dolt continuous integration workflow by name
 
@@ -534,7 +532,7 @@ Removes a Dolt continuous integration workflow by name and creates a Dolt commit
 
 No options for this command.
 
-### `dolt ci run`
+## `dolt ci run`
 
 Run a Dolt CI workflow
 
@@ -552,7 +550,7 @@ Run a Dolt CI workflow by executing all saved queries and validating their resul
 
 No options for this command.
 
-### `dolt ci view`
+## `dolt ci view`
 
 View details of a specific Dolt CI workflow
 
@@ -574,7 +572,7 @@ View workflow details for the given `<job name>`
 
 
 
-### `dolt clean`
+## `dolt clean`
 
 Deletes untracked working tables
 
@@ -611,7 +609,7 @@ Do not respect dolt_ignore; remove untracked tables that match dolt_ignore. dolt
 
 
 
-### `dolt clone`
+## `dolt clone`
 
 Clone a data repository into a new directory
 
@@ -668,7 +666,7 @@ Clone only the history leading to the tip of a single branch, either specified b
 
 
 
-### `dolt commit`
+## `dolt commit`
 
 Record changes to the database
 
@@ -726,7 +724,7 @@ Skip commit verification
 
 
 
-### `dolt config`
+## `dolt config`
 
 Get and set repository or global options
 
@@ -798,7 +796,7 @@ Unset the value of one or more config parameters.
 
 
 
-### `dolt conflicts cat`
+## `dolt conflicts cat`
 
 print conflicts
 
@@ -818,7 +816,7 @@ The dolt conflicts cat command reads table conflicts from the working set and wr
 
 
 
-### `dolt conflicts resolve`
+## `dolt conflicts resolve`
 
 Automatically resolves all conflicts taking either ours or theirs for the given tables
 
@@ -848,7 +846,7 @@ For all conflicts, take the version from their branch and resolve the conflict
 
 
 
-### `dolt constraints verify`
+## `dolt constraints verify`
 
 Verifies that working set changes satisfy table constraints
 
@@ -876,7 +874,7 @@ Disables writing violated constraints to the constraint violations table.
 
 
 
-### `dolt creds check`
+## `dolt creds check`
 
 Check authenticating with a credential keypair against a doltremoteapi.
 
@@ -900,7 +898,7 @@ Public Key ID or Public Key for credentials, otherwise taken from config.
 
 
 
-### `dolt creds import`
+## `dolt creds import`
 
 Import a dolt credential from an existing .jwk file.
 
@@ -934,7 +932,7 @@ If provided, no attempt will be made to contact doltremoteapi and update user.na
 
 
 
-### `dolt creds ls`
+## `dolt creds ls`
 
 List keypairs available for authenticating with doltremoteapi.
 
@@ -957,7 +955,7 @@ Verbose output, including key id.
 
 
 
-### `dolt creds new`
+## `dolt creds new`
 
 Create a new public/private keypair for authenticating with doltremoteapi.
 
@@ -975,7 +973,7 @@ Prints the public portion of the keypair, which can entered into the credentials
 
 No options for this command.
 
-### `dolt creds rm`
+## `dolt creds rm`
 
 Remove a stored public/private keypair.
 
@@ -993,7 +991,7 @@ Removes an existing keypair from dolt's credential storage.
 
 No options for this command.
 
-### `dolt creds use`
+## `dolt creds use`
 
 Select an existing dolt credential for authenticating with doltremoteapi.
 
@@ -1016,7 +1014,7 @@ You can see your available credentials with 'dolt creds ls'.
 
 No options for this command.
 
-### `dolt debug`
+## `dolt debug`
 
 Runs a SQL query
 
@@ -1062,7 +1060,7 @@ Result directory (Defaults to temporary director)
 
 
 
-### `dolt diff`
+## `dolt diff`
 
 Show changes between commits, commit and working tree, etc
 
@@ -1157,7 +1155,7 @@ Show system tables in addition to user tables
 
 
 
-### `dolt docs diff`
+## `dolt docs diff`
 
 Diffs Dolt Docs
 
@@ -1177,7 +1175,7 @@ Diffs Dolt Docs
 
 
 
-### `dolt docs print`
+## `dolt docs print`
 
 Prints Dolt Docs to stdout
 
@@ -1197,7 +1195,7 @@ Prints Dolt Docs to stdout
 
 
 
-### `dolt docs upload`
+## `dolt docs upload`
 
 Uploads Dolt Docs from the file system into the database
 
@@ -1219,7 +1217,7 @@ Uploads Dolt Docs from the file system into the database
 
 
 
-### `dolt dump`
+## `dolt dump`
 
 Export all tables.
 
@@ -1269,7 +1267,7 @@ Do not write `CREATE DATABASE` statements in SQL files.
 
 
 
-### `dolt fetch`
+## `dolt fetch`
 
 Download objects and refs from another repository
 
@@ -1301,7 +1299,7 @@ Suppress progress information.
 
 
 
-### `dolt filter-branch`
+## `dolt filter-branch`
 
 Edits the commit history using the provided query
 
@@ -1344,7 +1342,7 @@ Queries to run, separated by semicolons. If not provided, queries are read from 
 
 
 
-### `dolt fsck`
+## `dolt fsck`
 
 Verifies the contents of the database are not corrupted.
 
@@ -1372,7 +1370,7 @@ the ability to use your Dolt database. Please contact Dolt (https://github.com/d
 
 
 
-### `dolt gc`
+## `dolt gc`
 
 Cleans up unreferenced data from the repository.
 
@@ -1412,7 +1410,7 @@ max size in bytes of incremental GC table files
 
 
 
-### `dolt init`
+## `dolt init`
 
 Create an empty Dolt data repository
 
@@ -1447,7 +1445,7 @@ The branch name used to initialize this database. If not provided will be taken 
 
 
 
-### `dolt log`
+## `dolt log`
 
 Show commit logs
 
@@ -1518,7 +1516,7 @@ Shows the commit graph.
 
 
 
-### `dolt login`
+## `dolt login`
 
 Login to DoltHub or DoltLab
 
@@ -1548,7 +1546,7 @@ If set, makes insecure connection to remote authentication server
 
 
 
-### `dolt ls`
+## `dolt ls`
 
 List tables
 
@@ -1580,7 +1578,7 @@ show user and system tables
 
 
 
-### `dolt merge`
+## `dolt merge`
 
 Join two or more development histories together
 
@@ -1636,7 +1634,7 @@ Skip commit verification before merge
 
 
 
-### `dolt merge-base`
+## `dolt merge-base`
 
 Find the common ancestor of two commits.
 
@@ -1654,7 +1652,7 @@ Find the common ancestor of two commits, and return the ancestor's commit hash.'
 
 No options for this command.
 
-### `dolt profile`
+## `dolt profile`
 
 Manage dolt profiles for CLI global options.
 
@@ -1718,7 +1716,7 @@ Includes full details when printing list of profiles.
 
 
 
-### `dolt pull`
+## `dolt pull`
 
 Fetch from and integrate with another repository or a local branch
 
@@ -1781,7 +1779,7 @@ Skip commit verification before merge
 
 
 
-### `dolt push`
+## `dolt push`
 
 Update remote refs along with associated objects
 
@@ -1823,7 +1821,7 @@ Suppress progress information.
 
 
 
-### `dolt query-diff`
+## `dolt query-diff`
 
 Calculates table diff between two queries
 
@@ -1851,7 +1849,7 @@ Over time, we will optimize this to use features of the storage engine to improv
 
 No options for this command.
 
-### `dolt read-tables`
+## `dolt read-tables`
 
 Fetch table(s) at a specific commit into a new dolt repo
 
@@ -1881,7 +1879,7 @@ Git ref to use as the Dolt data ref for git remotes (default: refs/dolt/data).
 
 
 
-### `dolt rebase`
+## `dolt rebase`
 
 Reapplies commits on top of another base tip
 
@@ -1923,7 +1921,7 @@ Skip commit verification before rebase
 
 
 
-### `dolt reflog`
+## `dolt reflog`
 
 Shows a history of named refs
 
@@ -1951,7 +1949,7 @@ Show all refs, including hidden refs, such as DoltHub workspace refs
 
 
 
-### `dolt remote`
+## `dolt remote`
 
 Manage set of tracked repositories
 
@@ -2015,7 +2013,7 @@ OSS profile to use
 
 
 
-### `dolt reset`
+## `dolt reset`
 
 Resets staged or working tables to HEAD or a specified commit
 
@@ -2054,7 +2052,7 @@ Does not touch the working tables, but removes all tables staged to be committed
 
 
 
-### `dolt revert`
+## `dolt revert`
 
 Undo the changes introduced in a commit
 
@@ -2087,7 +2085,7 @@ Continue the current revert operation after resolving conflicts.
 
 
 
-### `dolt rm`
+## `dolt rm`
 
 Drops a table and removes it from tracking
 
@@ -2115,7 +2113,7 @@ Use this option to unstage and remove tables only from the index. Working tree t
 
 
 
-### `dolt schema export`
+## `dolt schema export`
 
 Exports table schemas as SQL DDL statements.
 
@@ -2141,7 +2139,7 @@ If `file` is given, the exported schemas will be written to that file, otherwise
 
 
 
-### `dolt schema import`
+## `dolt schema import`
 
 Creates or updates a table by inferring a schema from a file containing sample data.
 
@@ -2216,7 +2214,7 @@ Specify a delimiter for a csv style file with a non-comma delimiter.
 
 
 
-### `dolt schema show`
+## `dolt schema show`
 
 Shows the schema of one or more tables.
 
@@ -2240,7 +2238,7 @@ A list of tables can optionally be provided.  If it is omitted all table schemas
 
 
 
-### `dolt schema tags`
+## `dolt schema tags`
 
 Shows the column tags of one or more tables.
 
@@ -2265,7 +2263,7 @@ How to format result output. Valid values are tabular, csv, json. Defaults to ta
 
 
 
-### `dolt schema update-tag`
+## `dolt schema update-tag`
 
 Update the tag of the specified column
 
@@ -2293,7 +2291,7 @@ schema tag conflict.
 
 
 
-### `dolt show`
+## `dolt show`
 
 Show information about a specific commit
 
@@ -2353,7 +2351,7 @@ Determines how to display modified rows with tabular output. Valid values are ro
 
 
 
-### `dolt sql`
+## `dolt sql`
 
 Runs a SQL query
 
@@ -2417,7 +2415,7 @@ Disable automatically running GC.
 
 
 
-### `dolt sql-server`
+## `dolt sql-server`
 
 Start a MySQL-compatible server.
 
@@ -2648,7 +2646,7 @@ Optional SQL database name MCP should connect to (requires --mcp-port and --mcp-
 
 
 
-### `dolt stash`
+## `dolt stash`
 
 Stash the changes in a dirty workspace away.
 
@@ -2684,7 +2682,7 @@ All tables are stashed, including untracked and ignored tables.
 
 
 
-### `dolt status`
+## `dolt status`
 
 Show the working status
 
@@ -2705,7 +2703,7 @@ Show tables that are ignored (according to dolt_ignore)
 
 
 
-### `dolt table cp`
+## `dolt table cp`
 
 Makes a copy of a table
 
@@ -2735,7 +2733,7 @@ If data already exists in the destination, the force flag will allow the target 
 
 
 
-### `dolt table export`
+## `dolt table export`
 
 Export the contents of a table to a file.
 
@@ -2772,7 +2770,7 @@ Explicitly define the type of the file if it can't be inferred from the file ext
 
 
 
-### `dolt table import`
+## `dolt table import`
 
 Imports data into a dolt table
 
@@ -2891,7 +2889,7 @@ Comma-separated list of column names. If used with --no-header, defines column n
 
 
 
-### `dolt table mv`
+## `dolt table mv`
 
 Renames a table
 
@@ -2923,7 +2921,7 @@ If data already exists in the destination, the force flag will allow the target 
 
 
 
-### `dolt table rm`
+## `dolt table rm`
 
 Removes table(s) from the working set of tables.
 
@@ -2943,7 +2941,7 @@ dolt table rm <table>...
 
 
 
-### `dolt tag`
+## `dolt tag`
 
 Create, list, delete tags.
 
@@ -2981,7 +2979,7 @@ Specify an explicit author using the standard A U Thor `<author@example.com>` fo
 
 
 
-### `dolt version`
+## `dolt version`
 
 Displays the version for the Dolt binary.
 
