@@ -152,6 +152,8 @@ It's important to note that a directory-based remote is not the same as a worksp
 
 Dolt can also use a **Git repository** as a remote (for example, GitHub, GitLab, or any SSH/HTTPS Git server). Dolt stores its remote data inside the Git repo under a Git ref. By default Dolt uses `refs/dolt/data`, but you can override this with `--ref`.
 
+> **Note:** Bitbucket is not supported as a Git remote.
+
 ### Requirements and caveats
 
 - `git` must be installed and on your `PATH`.
