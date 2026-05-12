@@ -68,6 +68,8 @@ const nav: NavSection[] = [
         title: "Release Notes",
         href: "/reference/release-notes",
         children: [
+          { title: "v2.6.0", href: "/reference/release-notes/v2.6.0" },
+          { title: "v2.5.5", href: "/reference/release-notes/v2.5.5" },
           { title: "v2.5.4", href: "/reference/release-notes/v2.5.4" },
           { title: "v2.5.3", href: "/reference/release-notes/v2.5.3" },
           { title: "v2.5.2", href: "/reference/release-notes/v2.5.2" },
