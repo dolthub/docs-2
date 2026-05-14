@@ -273,6 +273,7 @@ export const productsPages: DocPage[] = [
   { path: "/products/dolthub/api/csv", title: "CSV" },
   { path: "/products/dolthub/api/database", title: "Database" },
   { path: "/products/dolthub/api/hooks", title: "Hooks" },
+  { path: "/products/dolthub/api/user", title: "User" },
   {
     path: "/products/dolthub/continuous-integration",
     title: "Continuous Integration",

@@ -257,6 +257,7 @@ const nav: NavSection[] = [
               { title: "CSV", href: "/products/dolthub/api/csv" },
               { title: "Database", href: "/products/dolthub/api/database" },
               { title: "Hooks", href: "/products/dolthub/api/hooks" },
+              { title: "User", href: "/products/dolthub/api/user" },
             ],
           },
           {

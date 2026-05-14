@@ -1,0 +1,128 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "DoltHub API - Get current user",
+        "description": "API to get information about the authenticated user",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://www.dolthub.com/api/v1alpha1"
+        }
+    ],
+    "paths": {
+        "/user": {
+            "get": {
+                "summary": "Get current user",
+                "description": "Returns information about the authenticated user, including their username, display name, profile picture, and email addresses.",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "Status of the request.",
+                                            "example": "Success"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "description": "The user's unique handle.",
+                                            "example": "jdoe"
+                                        },
+                                        "display_name": {
+                                            "type": "string",
+                                            "description": "The user's display name, or empty string if not set.",
+                                            "example": "Jane Doe"
+                                        },
+                                        "bio": {
+                                            "type": "string",
+                                            "description": "The user's bio, or empty string if not set.",
+                                            "example": ""
+                                        },
+                                        "location": {
+                                            "type": "string",
+                                            "description": "The user's location, or empty string if not set.",
+                                            "example": "San Francisco, CA"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "description": "The user's website URL, or empty string if not set.",
+                                            "example": "https://example.com"
+                                        },
+                                        "profile_picture_url": {
+                                            "type": "string",
+                                            "description": "URL of the user's profile picture.",
+                                            "example": "https://dolthubapi.../profilePictures/users/jdoe/profilePic"
+                                        },
+                                        "email_addresses": {
+                                            "type": "array",
+                                            "description": "Email addresses associated with the user. At least one will be primary.",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "address": {
+                                                        "type": "string",
+                                                        "description": "The email address.",
+                                                        "example": "jdoe@dolthub.com"
+                                                    },
+                                                    "is_primary": {
+                                                        "type": "boolean",
+                                                        "description": "True if this is the primary email used for notifications.",
+                                                        "example": true
+                                                    },
+                                                    "is_verified": {
+                                                        "type": "boolean",
+                                                        "description": "True if the user has verified ownership of this email address.",
+                                                        "example": true
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authenticated. The request did not include a valid API token.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "Error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not authenticated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "APIKeyHeader": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "authorization"
+            }
+        }
+    }
+}
