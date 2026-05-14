@@ -153,7 +153,7 @@ def process_file(src_path: str, dest_path: str):
 
 
 def main():
-    api_files = ["sql.md", "database.md", "csv.md", "hooks.md", "authentication.md", "README.md"]
+    api_files = ["sql.md", "database.md", "csv.md", "hooks.md", "authentication.md", "user.md", "README.md"]
 
     for filename in api_files:
         src = os.path.join(API_DIR, filename)
