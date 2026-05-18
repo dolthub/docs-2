@@ -2,7 +2,6 @@
 title: Why Doltgres?
 ---
 
-
 # Why Doltgres?
 
 Doltgres brings the features of Git-style distributed version control to the SQL database.
@@ -44,12 +43,12 @@ best we could, we tried to keep things as similar as possible.
 We built Doltgres using the following axioms:
 
 1. Git versions files. Doltgres versions table schema and table data.
-2. Doltgres will be PosgreSQL compatible.
+2. Doltgres will be PostgreSQL compatible.
 3. Git features in SQL will extend SQL. Write operations will be system functions. Read operations
    will be system tables.
 
 In order to achieve the above at scale, we needed to start at the bottom; the storage engine of the
-database. Doltgres is built from the storage engine up to offer
+database. [Doltgres is built from the storage engine up](https://dolthub.com/docs/architecture/architecture) to offer
 you the Git experience in a SQL database.
 
 In this section of the documentation, we will explain [Git](/concepts/git/),
