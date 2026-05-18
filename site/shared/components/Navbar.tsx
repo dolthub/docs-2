@@ -48,11 +48,14 @@ type NavbarProps = {
   siteName?: "dolt" | "doltlab" | "doltgres";
 };
 
+// "" (no base) or e.g. "/docs" — the site may be served under a base path.
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+
 function Logo({ siteName = "dolt" }: NavbarProps) {
   const config = siteConfig[siteName] || siteConfig.dolt;
   return (
-    <a href="/" aria-label="logo home link" data-cy="navbar-logo" className="navbar-logo-link">
-      <img src="/images/logo.png" alt={config.alt} className="navbar-logo-img" />
+    <a href={`${BASE}/`} aria-label="logo home link" data-cy="navbar-logo" className="navbar-logo-link">
+      <img src={`${BASE}/images/logo.png`} alt={config.alt} className="navbar-logo-img" />
       <span className="navbar-logo-docs">Docs</span>
     </a>
   );

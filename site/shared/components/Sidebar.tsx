@@ -16,10 +16,22 @@ type SidebarProps = {
   currentPath: string;
 };
 
+// The site may be served under a base path (e.g. /docs). Astro rewrites its
+// own page routes for `base`, but nav hrefs in nav.ts are authored as plain
+// "/foo" — prefix the base so links and active-state matching line up with
+// the base-prefixed pathname Astro reports.
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+
+function withBase(href: string | undefined): string | undefined {
+  if (!href || !href.startsWith("/") || href.startsWith("//")) return href;
+  if (BASE && (href === BASE || href.startsWith(BASE + "/"))) return href;
+  return BASE + href;
+}
+
 function isActive(href: string | undefined, currentPath: string): boolean {
   if (!href) return false;
   const clean = (p: string) => p.replace(/\/$/, "") || "/";
-  return clean(href) === clean(currentPath);
+  return clean(withBase(href)!) === clean(currentPath);
 }
 
 function hasActiveChild(item: NavItem, currentPath: string): boolean {
@@ -69,7 +81,7 @@ function NavLink({
         </span>
         {item.href ? (
           <a
-            href={item.href}
+            href={withBase(item.href)}
             className="sidebar-link"
           >
             {item.title}

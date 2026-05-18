@@ -10,15 +10,19 @@ import {
   shikiConfig,
   buildViteConfig,
 } from "../shared/config/astro.mjs";
+import rehypeBasePath from "../shared/config/rehype-base.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const base = "/docs";
 
 export default defineConfig({
-  site: "https://docs.doltgres.com",
+  site: "https://doltgres.com",
+  base,
   integrations: [tailwind(), react()],
   markdown: {
     shikiConfig,
     rehypePlugins: [
+      [rehypeBasePath, { base }],
       rehypeSlug,
       [rehypeAutolinkHeadings, autolinkHeadingsOptions],
     ],
