@@ -6,19 +6,24 @@ import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
 import React, { useState, useRef, useEffect } from "react";
 
+// "" (no base) or e.g. "/docs" — every docs site is served under this base
+// path. All three sites share the same base, so the current site's
+// import.meta.env.BASE_URL also applies to the cross-product docs links.
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+
 const dolthubUrl = "https://www.dolthub.com";
 const blogUrl = `${dolthubUrl}/blog`;
 
 const prodDocsLinks = [
-  { name: "Dolt", href: "https://docs.dolthub.com" },
-  { name: "DoltLab", href: "https://docs.doltlab.com" },
-  { name: "Doltgres", href: "https://docs.doltgres.com" },
+  { name: "Dolt", href: `https://dolthub.com${BASE}` },
+  { name: "DoltLab", href: `https://doltlab.com${BASE}` },
+  { name: "Doltgres", href: `https://doltgres.com${BASE}` },
 ];
 
 const localDocsLinks = [
-  { name: "Dolt", href: "http://localhost:4321" },
-  { name: "DoltLab", href: "http://localhost:4322" },
-  { name: "Doltgres", href: "http://localhost:4323" },
+  { name: "Dolt", href: `http://localhost:4321${BASE}` },
+  { name: "DoltLab", href: `http://localhost:4322${BASE}` },
+  { name: "Doltgres", href: `http://localhost:4323${BASE}` },
 ];
 
 function useDocsLinks() {
@@ -47,9 +52,6 @@ const siteConfig: Record<string, { alt: string }> = {
 type NavbarProps = {
   siteName?: "dolt" | "doltlab" | "doltgres";
 };
-
-// "" (no base) or e.g. "/docs" — the site may be served under a base path.
-const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 
 function Logo({ siteName = "dolt" }: NavbarProps) {
   const config = siteConfig[siteName] || siteConfig.dolt;
