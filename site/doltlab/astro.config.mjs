@@ -10,15 +10,24 @@ import {
   shikiConfig,
   buildViteConfig,
 } from "../shared/config/astro.mjs";
+import rehypeBasePath from "../shared/config/rehype-base.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const base = "/docs";
 
 export default defineConfig({
-  site: "https://docs.doltlab.com",
+  site: "https://doltlab.com",
+  base,
+  // Astro's `base` only rewrites URLs, not the on-disk output layout, and
+  // Cloudflare Pages serves the build dir at the project root. Nest the
+  // output under the base segment so `dist/docs/_astro/*` lines up with the
+  // `/docs/_astro/*` asset URLs in the HTML.
+  outDir: `./dist${base}`,
   integrations: [tailwind(), react()],
   markdown: {
     shikiConfig,
     rehypePlugins: [
+      [rehypeBasePath, { base }],
       rehypeSlug,
       [rehypeAutolinkHeadings, autolinkHeadingsOptions],
     ],

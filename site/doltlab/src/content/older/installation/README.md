@@ -8,7 +8,7 @@ You must have a host(s) running a supported operating system, hardware that meet
 
 # Supported operating systems
 
-- [Linux](/older/installation/installation/pre-installer-linux)
+- [Linux](/older/installation/pre-installer-linux)
 
 ## Minimum recommended hardware
 

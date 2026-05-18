@@ -15,7 +15,7 @@
     "cy:run:doltlab": "cypress run --config-file cypress.doltlab.config.ts",
     "cy:open:doltgres": "cypress open --config-file cypress.doltgres.config.ts",
     "cy:run:doltgres": "cypress run --config-file cypress.doltgres.config.ts",
-    "cy:run:live": "cypress run --config baseUrl=https://docs.dolthub.com",
+    "cy:run:live": "cypress run --config baseUrl=https://docs.dolthub.com --env basePath=",
     "compile": "tsc --noEmit"
   },
   "devDependencies": {

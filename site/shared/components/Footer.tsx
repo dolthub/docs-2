@@ -6,8 +6,10 @@ import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
 import React from "react";
 
+// "" (no base) or e.g. "/docs" — docs are served under this base path.
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 const dolthubUrl = "https://www.dolthub.com";
-const docsUrl = "https://docs.dolthub.com";
+const docsUrl = `https://dolthub.com${BASE}`;
 const blogUrl = `${dolthubUrl}/blog`;
 const doltGithub = "https://github.com/dolthub/dolt";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
