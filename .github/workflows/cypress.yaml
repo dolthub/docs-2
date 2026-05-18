@@ -45,7 +45,7 @@ jobs:
           install: false
           browser: chrome
           start: npm run preview:dolt
-          wait-on: "http://localhost:4321"
+          wait-on: "http://localhost:4321/docs/"
           wait-on-timeout: 30
       - name: Upload screenshots on failure
         uses: actions/upload-artifact@v4
@@ -78,7 +78,7 @@ jobs:
           browser: chrome
           config-file: cypress.doltlab.config.ts
           start: npm run preview:doltlab
-          wait-on: "http://localhost:4322"
+          wait-on: "http://localhost:4322/docs/"
           wait-on-timeout: 30
       - name: Upload screenshots on failure
         uses: actions/upload-artifact@v4
@@ -111,7 +111,7 @@ jobs:
           browser: chrome
           config-file: cypress.doltgres.config.ts
           start: npm run preview:doltgres
-          wait-on: "http://localhost:4323"
+          wait-on: "http://localhost:4323/docs/"
           wait-on-timeout: 30
       - name: Upload screenshots on failure
         uses: actions/upload-artifact@v4
