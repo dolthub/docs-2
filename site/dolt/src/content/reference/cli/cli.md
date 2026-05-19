@@ -1943,7 +1943,7 @@ This form resets `all` staged tables to their values at HEAD. It is the opposite
 Resets the working tables and staged tables. Any changes to tracked tables in the working tree since `<commit>` are discarded.
 
 `--soft`:
-Does not touch the working tables, but removes all tables staged to be committed.
+Resets HEAD to the specified revision without touching the index or the working tables.
 
 ## `dolt revert`
 
@@ -2331,9 +2331,9 @@ This is an example yaml configuration file showing all supported items and their
 	
 	cfg_dir: .doltcfg
 	
-	privilege_file: .doltcfg/privileges.db
+	privilege_file: .doltcfg\privileges.db
 	
-	branch_control_file: .doltcfg/branch_control.db
+	branch_control_file: .doltcfg\branch_control.db
 	
 	user_session_vars: []
 	
