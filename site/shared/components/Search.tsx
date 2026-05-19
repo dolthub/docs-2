@@ -9,7 +9,6 @@ declare global {
 export default function Search() {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const initialized = useRef(false);
 
   const openModal = useCallback(() => setOpen(true), []);
   const closeModal = useCallback(() => setOpen(false), []);
@@ -41,9 +40,13 @@ export default function Search() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Initialize Pagefind UI when modal opens
+  // (Re)initialize Pagefind UI every time the modal opens. The modal subtree
+  // unmounts on close, destroying the Pagefind-injected DOM, so each open gets
+  // a fresh container that needs a fresh PagefindUI instance.
   useEffect(() => {
-    if (!open || initialized.current || !containerRef.current) return;
+    if (!open) return;
+
+    let interval: ReturnType<typeof setInterval> | undefined;
 
     function tryInit() {
       if (window.PagefindUI && containerRef.current) {
@@ -53,7 +56,6 @@ export default function Search() {
           showImages: false,
           autofocus: true,
         });
-        initialized.current = true;
         return true;
       }
       return false;
@@ -61,12 +63,18 @@ export default function Search() {
 
     if (!tryInit()) {
       let attempts = 0;
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         if (tryInit() || ++attempts > 20) {
           clearInterval(interval);
         }
       }, 200);
     }
+
+    // Clear a pending poll if the modal closes (or unmounts) before Pagefind
+    // loads — avoids a leaked interval and init into a stale container.
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [open]);
 
   // Focus search input when modal opens
