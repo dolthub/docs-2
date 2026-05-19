@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects. Copied to the served build-output root
+# (dist/_redirects) by the build script; Astro's outDir is dist/docs, so
+# public/ can't be used for this. Gives a true 301 for the docs root.
+/docs/ /docs/introduction/what-is-dolt 301
+/docs /docs/introduction/what-is-dolt 301

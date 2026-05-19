@@ -16,8 +16,12 @@ function assertPageLoads(path: string) {
 
 describe("Doltgres docs — page content spot checks", () => {
   context("Homepage", () => {
-    it("homepage loads and has content", () => {
+    it("docs root redirects to the Doltgres intro page", () => {
       cy.visit("/");
+      cy.location("pathname", { timeout }).should(
+        "match",
+        /\/introduction\/?$/,
+      );
       cy.get("body", { timeout }).invoke("text").should("have.length.above", 200);
     });
   });

@@ -5,9 +5,13 @@ const timeout = 10000;
 
 describe("Dolt docs — navigation and structure", () => {
   context("Homepage", () => {
-    it("homepage loads and has content", () => {
+    it("docs root redirects to What Is Dolt?", () => {
       cy.visit("/");
-      cy.get("h1", { timeout }).should("be.visible");
+      cy.location("pathname", { timeout }).should(
+        "match",
+        /\/introduction\/what-is-dolt\/?$/,
+      );
+      cy.get("h1", { timeout }).should("be.visible").and("contain", "What is Dolt");
       cy.get("body").invoke("text").should("have.length.above", 200);
     });
   });
