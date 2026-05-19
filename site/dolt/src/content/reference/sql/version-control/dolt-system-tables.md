@@ -84,8 +84,13 @@ or deleted with the [`DOLT_BRANCH()` stored procedure](/sql-reference/version-co
 | remote                 | TEXT     |
 | branch                 | TEXT     |
 | dirty                  | BOOLEAN  |
+| latest_author          | TEXT     |
+| latest_author_email    | TEXT     |
+| latest_author_date     | DATETIME |
 +------------------------+----------+
 ```
+
+The `latest_author*` columns reflect the original author of the branch's HEAD commit, which can differ from the committer. See [commit identity variables](/sql-reference/version-control/dolt-sysvars#commit-identity-variables).
 
 #### Example Queries
 
@@ -121,6 +126,9 @@ don't make sense in this context and are not included. Only remote branches are 
 | latest_committer_email | TEXT     |
 | latest_commit_date     | DATETIME |
 | latest_commit_message  | TEXT     |
+| latest_author          | TEXT     |
+| latest_author_email    | TEXT     |
+| latest_author_date     | DATETIME |
 +------------------------+----------+
 ```
 
@@ -577,16 +585,21 @@ checked out branch, whereas `dolt_commits` shows all commits from the entire dat
 
 ```text
 > describe dolt_commits;
-+-------------+----------+------+-----+---------+-------+
-| Field       | Type     | Null | Key | Default | Extra |
-+-------------+----------+------+-----+---------+-------+
-| commit_hash | text     | NO   | PRI |         |       |
-| committer   | text     | NO   |     |         |       |
-| email       | text     | NO   |     |         |       |
-| date        | datetime | NO   |     |         |       |
-| message     | text     | NO   |     |         |       |
-+-------------+----------+------+-----+---------+-------+
++--------------+----------+------+-----+---------+-------+
+| Field        | Type     | Null | Key | Default | Extra |
++--------------+----------+------+-----+---------+-------+
+| commit_hash  | text     | NO   | PRI |         |       |
+| committer    | text     | NO   |     |         |       |
+| email        | text     | NO   |     |         |       |
+| date         | datetime | NO   |     |         |       |
+| message      | text     | NO   |     |         |       |
+| author       | text     | NO   |     |         |       |
+| author_email | text     | NO   |     |         |       |
+| author_date  | datetime | NO   |     |         |       |
++--------------+----------+------+-----+---------+-------+
 ```
+
+See [`dolt_log`](#dolt_log) for `author*` column semantics.
 
 #### Example Query
 
@@ -665,20 +678,30 @@ This is the same data returned by the [`dolt log` CLI command](https://docs.dolt
 #### Schema
 
 ```text
-+--------------+----------+
-| field        | type     |
-+--------------+--------- +
-| commit_hash  | text     |
-| committer    | text     |
-| email        | text     |
-| date         | datetime |
-| message      | text     |
-| commit_order | int      |
-+--------------+--------- +
++--------------+-----------------+
+| field        | type            |
++--------------+-----------------+
+| commit_hash  | text            |
+| committer    | text            |
+| email        | text            |
+| date         | datetime        |
+| message      | text            |
+| commit_order | bigint unsigned |
+| parents      | text            |
+| refs         | text            |
+| signature    | text            |
+| author       | text            |
+| author_email | text            |
+| author_date  | datetime        |
++--------------+-----------------+
 ```
 
-The `commit_order` field is an integer value that indicates the order of commits in descending order from HEAD. 
+The `commit_order` field is an unsigned integer value that indicates the order of commits in descending order from HEAD.
 Note that `commit_order` values can be repeated for different levels of the topological sort of the commit graph.
+
+The `parents` and `signature` columns are populated only when explicitly projected by the query. `parents` is a comma-separated list of parent commit hashes. `refs` lists branches and tags that point to the commit. `signature` contains the commit's GPG signature when present.
+
+The `author*` columns capture the original commit author, which can differ from the committer (e.g. after `dolt cherry-pick`). They mirror `committer`, `email`, and `date` when no separate author identity is recorded. See [commit identity variables](/sql-reference/version-control/dolt-sysvars#commit-identity-variables).
 
 #### Example Query
 
@@ -814,8 +837,13 @@ The `DOLT_DIFF` system table has the following columns:
 | message       | text     |
 | data_change   | boolean  |
 | schema_change | boolean  |
+| author        | text     |
+| author_email  | text     |
+| author_date   | datetime |
 +---------------+----------+
 ```
+
+See [`dolt_log`](#dolt_log) for `author*` column semantics.
 
 #### Query Details
 
@@ -854,19 +882,24 @@ the value `WORKING` for their `commit_hash`.
 The `DOLT_COLUMN_DIFF` system table has the following columns
 
 ```text
-+-------------+----------+
-| field       | Type     |
-+-------------+----------+
-| commit_hash | text     |
-| table_name  | text     |
-| column_name | text     |
-| committer   | text     |
-| email       | text     |
-| date        | datetime |
-| message     | text     |
-| diff_type   | text     |
-+-------------+----------+
++--------------+----------+
+| field        | Type     |
++--------------+----------+
+| commit_hash  | text     |
+| table_name   | text     |
+| column_name  | text     |
+| committer    | text     |
+| email        | text     |
+| date         | datetime |
+| message      | text     |
+| diff_type    | text     |
+| author       | text     |
+| author_email | text     |
+| author_date  | datetime |
++--------------+----------+
 ```
+
+See [`dolt_log`](#dolt_log) for `author*` column semantics.
 
 #### Query Details
 
@@ -1309,17 +1342,17 @@ three column are always the same, then the schema of the source table is used to
 Each row in the `dolt_workspace_$TABLENAME` corresponds to a single row update in the table.
 
 ```sql
-+------------------+----------+
-| field            | type     |
-+------------------+----------+
-| id               | int      |
-| staged           | bool     |
-| diff_type        | varchar  |
-| to_x             | ...      |
-| to_y             | ...      |
-| from_x           | ...      |
-| from_y           | ...      |
-+------------------+----------+
++------------------+-----------------+
+| field            | type            |
++------------------+-----------------+
+| id               | bigint unsigned |
+| staged           | bool            |
+| diff_type        | varchar(1023)   |
+| to_x             | ...             |
+| to_y             | ...             |
+| from_x           | ...             |
+| from_y           | ...             |
++------------------+-----------------+
 ```
 
 The `staged` column will be `TRUE` when the changes are going to be committed on the next

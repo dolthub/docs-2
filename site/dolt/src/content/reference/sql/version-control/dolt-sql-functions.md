@@ -510,7 +510,7 @@ data and schema changes.
 but two commits are required to use the `DOLT_DIFF_SUMMARY()` table function and the table
 name is optional. It returns empty result if there are no tables with changes.
 
-Note that the `DOLT_DIFF()` table function currently requires that argument values be literal values.
+Note that the `DOLT_DIFF_SUMMARY()` table function currently requires that argument values be literal values.
 
 #### Privileges
 
@@ -647,10 +647,10 @@ The `DOLT_JSON_DIFF()` table function is a summary of the changes between two JS
 #### Options
 
 ```sql
-DOLT_DIFF_SUMMARY(<from_document>, <to_document>)
+DOLT_JSON_DIFF(<from_document>, <to_document>)
 ```
 
-The `DOLT_DIFF_SUMMARY()` table function takes two arguments:
+The `DOLT_JSON_DIFF()` table function takes two arguments:
 
 - `from_document` — the document for the start of the diff. This
   argument is required. This may be a value from a JSON column, or a string that can
@@ -794,31 +794,37 @@ The `DOLT_LOG()` table function takes any number of optional revision arguments:
 - `--merges`: Equivalent to min-parents == 2, this will limit the log to commits with 2 or
   more parents.
 - `--parents`: Shows all parents of each commit in the log.
-- `--decorate`: Shows refs next to commits. Valid options are short, full, no, and auto.
-  Note: the CLI `dolt log` command defaults to "short", while this table function defaults
-  to "no".
+- `--decorate`: Shows refs next to commits. Valid options are `short`, `full`, `no`, and `auto`.
+  Defaults to `short`. The `auto` value has no defined meaning in SQL contexts and is downgraded to `short` with a warning.
+- `--show-signature`: Populates the `signature` column with the commit's GPG signature, if any.
 - `--not`: Excludes commits reachable by revision.
 - `--tables`: Limits the log to commits that affect the specified tables. Any number of comma separated tables can be specified.
 
 #### Schema
 
 ```text
-+--------------+----------+
-| field        | type     |
-+--------------+--------- +
-| commit_hash  | text     |
-| committer    | text     |
-| email        | text     |
-| date         | datetime |
-| message      | text     |
-| commit_order | int      |
-| parents      | text     | -- column hidden unless `--parents` flag provided
-| refs         | text     | -- column hidden unless `--decorate` is "short" or "full"
-+--------------+--------- +
++--------------+-----------------+
+| field        | type            |
++--------------+-----------------+
+| commit_hash  | text            |
+| committer    | text            |
+| email        | text            |
+| date         | datetime        |
+| message      | text            |
+| commit_order | bigint unsigned |
+| parents      | text            |
+| refs         | text            |
+| signature    | text            |
+| author       | text            |
+| author_email | text            |
+| author_date  | datetime        |
++--------------+-----------------+
 ```
 
 The `commit_order` field is an integer value that indicates the order of commits in descending order from HEAD.
 Note that `commit_order` values can be repeated for different levels of the topological sort of the commit graph.
+
+All columns are always present in the result schema. `parents` is populated only when `--parents` is provided. `refs` is populated when `--decorate` is `short` or `full`. `signature` is populated only when `--show-signature` is provided. The `author*` columns capture the original commit author and equal the committer fields when no separate author identity is recorded. See [`dolt_log`](/sql-reference/version-control/dolt-system-tables#dolt_log) for `author*` column semantics.
 
 #### Example
 
@@ -928,16 +934,16 @@ The `DOLT_PATCH()` table function takes the following arguments:
 #### Schema
 
 ```text
-+------------------+--------+
-| field            | type   |
-+------------------+--------+
-| statement_order  | BIGINT |
-| from_commit_hash | TEXT   |
-| to_commit_hash   | TEXT   |
-| table_name       | TEXT   |
-| diff_type        | TEXT   |
-| statement        | TEXT   |
-+------------------+--------+
++------------------+-----------------+
+| field            | type            |
++------------------+-----------------+
+| statement_order  | BIGINT UNSIGNED |
+| from_commit_hash | TEXT            |
+| to_commit_hash   | TEXT            |
+| table_name       | TEXT            |
+| diff_type        | TEXT            |
+| statement        | TEXT            |
++------------------+-----------------+
 ```
 
 #### Example
@@ -1052,13 +1058,13 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function takes two required a
 #### Schema
 
 ```text
-+---------------------+--------+
-| field               | type   |
-+---------------------+--------+
-| table               | TEXT   |
-| num_data_conflicts  | BIGINT |
-| num_schema_conflicts| BIGINT |
-+---------------------+--------+
++----------------------+-----------------+
+| field                | type            |
++----------------------+-----------------+
+| table                | TEXT            |
+| num_data_conflicts   | BIGINT UNSIGNED |
+| num_schema_conflicts | BIGINT UNSIGNED |
++----------------------+-----------------+
 ```
 
 #### Example
@@ -1556,13 +1562,13 @@ The refspecs can be branch names, commit hashes, or `HEAD` (with `~` or `^`).
 #### Schema
 
 ```text
-+----------------+------+
-| field          | type |
-+----------------+------+
-| branch         | TEXT |
-| commits_ahead  | INT  |
-| commits_behind | INT  |
-+----------------+------+
++----------------+-----------------+
+| field          | type            |
++----------------+-----------------+
+| branch         | TEXT            |
+| commits_ahead  | BIGINT UNSIGNED |
+| commits_behind | BIGINT UNSIGNED |
++----------------+-----------------+
 ```
 
 #### Example
