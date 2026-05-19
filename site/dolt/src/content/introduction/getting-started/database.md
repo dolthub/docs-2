@@ -65,7 +65,7 @@ mysql>
 
 To ensure the client actually connected, you should see the following in the `dolt sql-server` terminal
 
-```
+```text
 2022-06-06T13:26:55-07:00 INFO [conn 2] NewConnection {DisableClientMultiStatements=false}
 ```
 

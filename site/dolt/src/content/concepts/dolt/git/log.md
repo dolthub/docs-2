@@ -57,7 +57,7 @@ docs $ dolt sql -q "select * from dolt_log"
 
 ### Cell History
 
-```
+```bash
 $ dolt sql -q "select * from dolt_history_employees where id=0 order by commit_date";
 +------+-----------+------------+------------+----------------------------------+-----------+-------------------------+
 | id   | last_name | first_name | start_date | commit_hash                      | committer | commit_date             |

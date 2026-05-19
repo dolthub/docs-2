@@ -30,7 +30,7 @@ You can use the fork button on the top right of any database to fork the databas
 
 There is now a fork of `us-schools` in our namespace called `taylor/us-schools`. We can either edit directly on DoltHub or clone and edit using Dolt.
 
-```
+```bash
 % dolt clone taylor/us-schools
 cloning https://doltremoteapi.dolthub.com/taylor/us-schools
 141,350 of 141,350 chunks complete. 0 chunks being downloaded currently.

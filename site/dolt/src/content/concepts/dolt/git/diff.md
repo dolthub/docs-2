@@ -57,7 +57,7 @@ The Git diff command supports many more file specific options. Dolt diffs can be
 
 ### Schema
 
-```
+```bash
 docs $ dolt sql -q "alter table docs add column c1 int"
 docs $ dolt diff
 diff --dolt a/docs b/docs
@@ -79,7 +79,7 @@ diff --dolt a/docs b/docs
 
 #### Addition/deletion
 
-```
+```bash
 docs $ dolt sql -q "insert into docs values (1,0),(2,1)"
 Query OK, 2 rows affected
 docs $ dolt diff
@@ -109,7 +109,7 @@ diff --dolt a/docs b/docs
 
 #### Update
 
-```
+```bash
 docs $ dolt sql -q "update docs set c1=1 where pk=1"
 Query OK, 1 row affected
 Rows matched: 1  Changed: 1  Warnings: 0
@@ -129,7 +129,7 @@ diff --dolt a/docs b/docs
 
 #### Addition/Deletion
 
-```
+```bash
 docs $ dolt sql -q "insert into no_pk values (0,0,0),(1,1,1),(2,2,2)"
 Query OK, 3 rows affected
 docs $ dolt diff
@@ -165,7 +165,7 @@ diff --dolt a/no_pk b/no_pk
 
 #### Update
 
-```
+```bash
 docs $ dolt sql -q "update no_pk set c1=0 where c1=1"
 Query OK, 1 row affected
 Rows matched: 1  Changed: 1  Warnings: 0
@@ -183,7 +183,7 @@ diff --dolt a/no_pk b/no_pk
 
 ### SQL
 
-```
+```bash
 docs $ dolt sql -q "select * from dolt_diff_docs"
 +-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------+
 | to_c1 | to_pk | to_commit                        | to_commit_date                    | from_c1 | from_pk | from_commit                      | from_commit_date                  | diff_type |

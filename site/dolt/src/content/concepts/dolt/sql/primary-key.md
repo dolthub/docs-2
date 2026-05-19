@@ -30,7 +30,7 @@ In Dolt, primary keys are used to produce modifications between rows across vers
 ## Example
 
 ### Create a table with a primary key
-```
+```sql
 mysql> create table keyed (c1 int, c2 int, c3 int, c4 int, primary key(c1, c2));
 mysql> show create table keyed;
 +-------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -47,7 +47,7 @@ mysql> show create table keyed;
 ```
 
 ### Alter a table's primary keys
-```
+```sql
 mysql> alter table keyed drop primary key;
 mysql> alter table keyed add primary key(c1);
 mysql> show create table keyed;
@@ -66,7 +66,7 @@ mysql> show create table keyed;
 
 ### Create a keyless table
 
-```
+```sql
 mysql> create table keyless (c1 int, c2 int, c3 int, c4 int);
 mysql> show create table keyless;
 +---------+-------------------------------------------------------------------------------------------------------------------------------------+
@@ -82,7 +82,7 @@ mysql> show create table keyless;
 ```
 
 ### Diff for keyed and keyless table
-```
+```sql
 mysql> insert into keyed values (0,0,0,0), (1,1,1,1), (2,2,2,2);
 mysql> insert into keyless values (0,0,0,0), (1,1,1,1), (2,2,2,2);
 mysql> call dolt_commit('-am', "Inserted values");

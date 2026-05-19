@@ -107,7 +107,7 @@ In the case of foreign keys, Dolt can produce invalid merges even after conflict
 
 ### Generating a Conflict
 
-```
+```bash
 docs $ dolt sql -q "select * from docs"
 +----+----+
 | pk | c1 |
@@ -184,7 +184,7 @@ docs $ dolt conflicts cat docs
 
 ### Resolving a Conflict
 
-```
+```bash
 docs $ dolt conflicts cat docs
 +-----+--------+----+----+
 |     |        | pk | c1 |

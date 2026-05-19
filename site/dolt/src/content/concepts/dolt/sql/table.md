@@ -27,7 +27,7 @@ Dolt versions table schema and data. A table in Dolt is akin to a file in Git, i
 
 ## Example
 
-```
+```sql
 mysql> show tables;
 +----------------+
 | Tables_in_docs |

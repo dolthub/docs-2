@@ -36,18 +36,18 @@ Interestingly, you can trigger backups from your application using the `dolt_bac
 ## Example
 
 ### Create a new backup
-```
+```bash
 %% dolt backup add backup1 file://../backups/backup1
 / Tree Level: 1, Percent Buffered: 0.00% Files Written: 0, Files Uploaded: 1
 ```
 
 ### Updating a backup
-```
+```bash
 $ dolt backup sync backup1
 ```
 
 ### Restoring from a backup
-```
+```bash
 $ dolt backup restore file://./backups/backup1 repo2
 $ dolt branch -a
 * main

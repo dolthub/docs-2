@@ -8,7 +8,7 @@ Dolt ships with a built in MySQL compatible server. To start the server for your
 
 Once a server is running, any MySQL client should be able to connect to Dolt SQL Server in the exact same way it connects to a standard MySQL database. For instance, if you are running a Dolt sql-server locally, you can connect to it with the MySQL client `mysql` like so:
 
-```
+```sql
 $ mysql -u root
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2

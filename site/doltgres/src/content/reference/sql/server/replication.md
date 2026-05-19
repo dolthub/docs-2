@@ -108,7 +108,7 @@ After a `DOLT_COMMIT()`, changes are pushed to the configured remote.
 
 To stop replication unset the configuration variable.
 
-```
+```sql
 ALTER SYSTEM SET dolt_replicate_to_remote '';
 ```
 

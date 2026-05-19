@@ -146,7 +146,7 @@ Head over to the [MySQL Getting Started documentation](https://dev.mysql.com/doc
 
 MySQL comes with a MySQL server called `mysqld` and a MySQL client called `mysql`. You're only interested in the client. After following the instructions from MySQL's documentation and opening a terminal, make sure you have a copy of the mysql client on your path:
 
-```
+```bash
 % mysql --version
 mysql  Ver 8.0.29 for macos12.2 on x86_64 (Homebrew)
 ```

@@ -833,7 +833,7 @@ At the end of the run, the connection which ran call dolt_gc() will be left open
 to deliver the results of the operation itself. The connection will be left in a terminally 
 broken state where any attempt to run a query on it will result in the following error:
 
-```
+```text
 ERROR 1105 (HY000): this connection was established when this server performed an online 
 garbage collection. this connection can no longer be used. please reconnect.
 ```

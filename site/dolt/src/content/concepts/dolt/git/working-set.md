@@ -23,7 +23,7 @@ On the command line, working set changes do follow to the newly checked out bran
 ## Example
 
 ### Make changes in a working set
-```
+```bash
 $ dolt sql -q "insert into docs values (3,0)";
 Query OK, 1 row affected
 $ dolt status
@@ -35,7 +35,7 @@ Changes not staged for commit:
 ```
 
 ### See what's changed in your working set
-```
+```bash
 $ dolt diff
 diff --dolt a/docs b/docs
 --- a/docs @ c341qjl0eholuiu1k4pvujre7mc75qtc
@@ -54,7 +54,7 @@ docs $ dolt sql -q "select * from dolt_diff_docs where to_commit='WORKING'"
 ```
 
 ### Reset a change to your working set
-```
+```bash
 docs $ dolt status
 On branch main
 Changes not staged for commit:
@@ -76,7 +76,7 @@ docs $ dolt sql -q "select * from docs"
 ```
 
 ### Checkout on the Command Line
-```
+```bash
 docs $ dolt sql -q "select * from docs"
 +----+----+
 | pk | c1 |
@@ -119,7 +119,7 @@ diff --dolt a/docs b/docs
 ```
 
 ### Checkout in SQL server
-```
+```sql
 mysql> insert into docs values (4,4);
 mysql> select * from docs ;
 +----+----+

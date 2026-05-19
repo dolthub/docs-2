@@ -737,7 +737,7 @@ WHERE row_diff.diff_type = 'modified' and row_diff.staged = false;
 
 The results of the query provide a summary of only the parts of the JSON documents that have changed between the staged version and the working set:
 
-```
+```text
 +----+-------+----------------+----------------------------------------------------------+------------------------------------------------------+-------------+------------------+--------------------+
 | pk | name  | json_diff_type | from_metadata                                            | to_metadata                                          | path        | from_value       | to_value           |
 +----+-------+----------------+----------------------------------------------------------+------------------------------------------------------+-------------+------------------+--------------------+

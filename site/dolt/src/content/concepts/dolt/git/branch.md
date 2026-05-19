@@ -33,7 +33,7 @@ In Dolt, branches become a slightly more important concept in server mode. In Gi
 
 ## Example
 
-```
+```bash
 docs $ dolt branch new-branch
 docs $ dolt branch
 * main                                          	

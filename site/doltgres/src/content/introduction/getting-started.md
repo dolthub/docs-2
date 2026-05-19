@@ -19,7 +19,7 @@ Starting server with Config HP="localhost:5432"|T="28800000"|R="false"|L="info"|
    This requires I manually add `/opt/homebrew/opt/postgresql@15/bin` to my path. On Postgres version 14 or lower,
    `\` commands (i.e. `\d`, `\l`) do not yet work with Doltgres.
 
-```
+```bash
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 ```
 
@@ -111,7 +111,7 @@ getting_started=> select dolt_commit('-m', 'Created initial schema');
 
 8. View the Dolt log.
 
-```
+```sql
 getting_started=> select * from dolt_log;
            commit_hash            | committer |       email        |        date         |          message
 ----------------------------------+-----------+--------------------+---------------------+----------------------------

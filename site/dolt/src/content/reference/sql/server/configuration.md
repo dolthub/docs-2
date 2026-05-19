@@ -627,7 +627,7 @@ Query OK, 1 row affected (3,52 sec)
 
 We will see a log line from the server like:
 
-```
+```text
 INFO[0257] sqle/auto_gc: Successfully completed auto GC of database auto_gc_test in 3.508769959s
 ```
 
@@ -1481,7 +1481,7 @@ Dolt features a number of [custom system variables](https://docs.dolthub.com/sql
 
 I will enable [the `dolt_show_system_tables` system variable](https://docs.dolthub.com/sql-reference/version-control/dolt-sysvars#dolt_show_system_tables) which changes the behavior of `show tables` to include Dolt system tables. 
 
-```
+```bash
 $ grep system_variables config.yaml 
 system_variables: {"dolt_show_system_tables": 1}
 ```
