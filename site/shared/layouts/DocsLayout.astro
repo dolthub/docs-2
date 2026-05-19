@@ -20,13 +20,30 @@ const siteLabels: Record<string, string> = {
   doltgres: "Doltgres Docs",
 };
 
+// Display name used in the social-preview title suffix ("| <App> Documentation").
+const appNames: Record<string, string> = {
+  dolt: "Dolt",
+  doltlab: "DoltLab",
+  doltgres: "Doltgres",
+};
+
 const { title, nav, siteName } = Astro.props;
 const siteLabel = siteLabels[siteName] || "Docs";
+const appName = appNames[siteName] || "Docs";
 const currentPath = Astro.url.pathname;
 const isDev = import.meta.env.DEV;
 // BASE_URL is "/" (no base) or e.g. "/docs" — normalize to "" or "/docs"
 // so paths can be built as `${base}/asset` uniformly.
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// Social-preview metadata. The og:image is each site's "what is <app>" hero
+// (copied to public/og-image.png by build setup). Astro.site is configured
+// per site (https://dolthub.com / doltlab.com / doltgres.com) so URLs are
+// fully qualified for social scrapers. Falls back gracefully if unset.
+const siteOrigin = Astro.site ? Astro.site.origin : "";
+const socialTitle = `${title} | ${appName} Documentation`;
+const ogImage = `${siteOrigin}${base}/og-image.png`;
+const pageUrl = `${siteOrigin}${currentPath}`;
 ---
 
 <!doctype html>
@@ -35,6 +52,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} | {siteLabel}</title>
+
+    {/* Social preview metadata (Open Graph + Twitter Card) */}
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={`${appName} Documentation`} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:image" content={ogImage} />
+
     <link rel="icon" type="image/png" href={`${base}/favicon.png`} />
     <link rel="icon" type="image/x-icon" href={`${base}/favicon.ico`} />
     <link
