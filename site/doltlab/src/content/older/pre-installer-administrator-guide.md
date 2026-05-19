@@ -797,7 +797,7 @@ Aug 18 20:51:50 ip-10-2-3-125 systemd[1]: Started nginx - high performance web s
 
 Then, edit the `nginx` configuration file located at `/etc/nginx/nginx.conf` to be the following:
 
-```
+```bash
 user  nginx;
 worker_processes  auto;
 

@@ -25,7 +25,7 @@ We will use our [`dolthub/us-schools`](https://www.dolthub.com/repositories/dolt
 
 First, we [fork](/concepts/dolthub/forks) the database and clone our fork.
 
-```
+```bash
 % dolt clone taylor/us-schools
 cloning https://doltremoteapi.dolthub.com/taylor/us-schools
 141,350 of 141,350 chunks complete. 0 chunks being downloaded currently
@@ -35,7 +35,7 @@ cloning https://doltremoteapi.dolthub.com/taylor/us-schools
 
 We check out a new branch for our change, and then use the SQL shell to make some changes to the data. In this case, we'll fill in some missing school websites.
 
-```
+```bash
 % dolt checkout -b taylor/add-missing-websites
 Switched to branch 'taylor/add-missing-websites'
 
@@ -58,7 +58,7 @@ Bye
 
 We can look at the [diff](/concepts/dolt/git/diff) of our changes. If they look good we add and [commit](/concepts/dolt/git/commits) the changed table and push our branch to DoltHub.
 
-```
+```bash
 % dolt diff
 diff --dolt a/schools b/schools
 --- a/schools @ ml65mjlsqpd45htsq1oc741nj4ns64fe

@@ -38,6 +38,6 @@ to a branch or offline clone.
 
 ## Example
 
-```
+```sql
 create index index1 on complex(c1);
 ```

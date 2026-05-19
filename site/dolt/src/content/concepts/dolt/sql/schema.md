@@ -34,7 +34,7 @@ Dolt versions your schema and data. So, if you want to see the difference betwee
 
 ## Example
 
-```
+```sql
 mysql> create table complex (pk1 int, pk2 varchar(47), c1 tinyint not null, c2 datetime, c3 json, primary key(pk1, pk2));
 mysql> show create table complex;
 +---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

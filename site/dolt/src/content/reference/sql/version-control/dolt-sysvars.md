@@ -39,6 +39,15 @@ title: Dolt System Variables
   - [dbname_working](#dbname_working)
   - [dbname_staged](#dbname_staged)
 
+- [Commit identity variables](#commit-identity-variables)
+
+  - [dolt_author_name](#dolt_author_name)
+  - [dolt_author_email](#dolt_author_email)
+  - [dolt_author_date](#dolt_author_date)
+  - [dolt_committer_name](#dolt_committer_name)
+  - [dolt_committer_email](#dolt_committer_email)
+  - [dolt_committer_date](#dolt_committer_date)
+
 - [Persisting System Variables](#persisting-system-variables)
 
 ## General system setting variables
@@ -135,8 +144,9 @@ message ("Transaction commit"), unless `@@dolt_transaction_commit_message` has b
 ### `dolt_transaction_commit_message`
 
 When `@@dolt_transaction_commit` is enabled, if this system variable is set to a
-string, it will be used as the message for the automatic Dolt commit. Defaults to `NULL`,
-which means automatic Dolt commits will use their standard commit message ("Transaction commit").
+non-empty string, it will be used as the message for the automatic Dolt commit. Defaults to the
+empty string, which means automatic Dolt commits will use their standard commit message
+("Transaction commit"). Scope: both global and session.
 
 ### `strict_mysql_compatibility`
 
@@ -340,6 +350,61 @@ hash. Selecting it is useful for diagnostics. It is read-only.
 This system variable reflects the current staged root value's hash. For a database called `mydb`,
 this variable will be called `@@mydb_staged` Selecting it is useful for diagnostics. It is
 read-only.
+
+## Commit identity variables
+
+These session variables override the author and committer identity for new commits in the current
+session. When you open a SQL connection, Dolt reads the matching `DOLT_AUTHOR_*` and
+`DOLT_COMMITTER_*` environment variables and uses them as the initial values. Unset variables
+fall back to `user.name` and `user.email` from `dolt config`. When no committer identity is set,
+an explicit `--author` argument also sets the committer, matching older Dolt versions where
+author and committer were a single identity.
+
+### `dolt_author_name`
+
+Overrides the author name on new commits.
+
+### `dolt_author_email`
+
+Overrides the author email on new commits.
+
+### `dolt_author_date`
+
+Overrides the author date on new commits. Accepts an RFC 3339-style subset:
+`2006-01-02`, `2006-01-02T15:04:05`, or `2006-01-02T15:04:05Z07:00` (e.g. `2026-01-15T12:00:00Z`).
+
+### `dolt_committer_name`
+
+Overrides the committer name on new commits.
+
+### `dolt_committer_email`
+
+Overrides the committer email on new commits.
+
+### `dolt_committer_date`
+
+Overrides the committer date on new commits. This is also the way to control the timestamp on a merge commit produced by [`DOLT_MERGE()`](/sql-reference/version-control/dolt-sql-procedures#dolt_merge), which does not accept a `--date` argument:
+
+```sql
+SET @@dolt_committer_date = '2023-01-15T10:00:00';
+CALL DOLT_MERGE('feature-branch', '--no-ff', '-m', 'my merge commit');
+```
+
+#### Examples
+
+Set the committer identity from the shell before running a CLI commit:
+
+```bash
+DOLT_COMMITTER_NAME="CI Bot" DOLT_COMMITTER_EMAIL="ci@example.com" dolt commit -m "release tag"
+```
+
+Or set the same variables in a SQL session before calling a commit procedure:
+
+```sql
+SET @@dolt_committer_name = 'CI Bot';
+SET @@dolt_committer_email = 'ci@example.com';
+CALL DOLT_COMMIT('-m', 'release tag');
+```
 
 ## Persisting System Variables
 

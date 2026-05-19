@@ -311,7 +311,7 @@ This example simply shows how an entry in each system table is scoped to a datab
 Our pre-existing database is `example`, as Doltgres uses the directory's name for its database name.
 Therefore, we create another database named `newdb`, which the user `root` will not have any permissions on.
 
-```
+```bash
 psql --user=root
 CREATE TABLE test (pk BIGINT PRIMARY KEY);
 Error 1105: `root`@`%` does not have the correct permissions on branch `main`

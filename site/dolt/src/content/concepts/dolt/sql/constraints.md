@@ -39,7 +39,7 @@ Another case is foreign key constraints that trigger changes on other tables lik
 
 ## Example
 
-```
+```sql
 mysql> create table employees (
     id int, 
     last_name varchar(100), 
@@ -79,7 +79,7 @@ mysql> show create table pay;
 
 ### Inconsistent state after merge
 
-```
+```sql
 mysql> insert into employees values (0, 'Smith', 'Ella', 34), (1, 'Baker', 'Jack', 27);
 mysql> insert into pay values (0, 50000);
 mysql> call dolt_commit('-am', "Data for foreign key doc");

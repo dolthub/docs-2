@@ -26,7 +26,7 @@ Procedures are versioned in the `dolt_procedures` table. You add and commit that
 
 ## Example
 
-```
+```sql
 mysql> CREATE PROCEDURE example(x INT) SELECT x + 1;
 mysql> call example(1);
 +---------+
@@ -38,7 +38,7 @@ mysql> call example(1);
 
 ### `dolt_procedures` table
 
-```
+```sql
 mysql> select * from dolt_status;
 +-----------------+--------+----------+
 | table_name      | staged | status   |

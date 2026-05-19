@@ -139,7 +139,7 @@ Doltgres supports remotes which use the protocol `http://` and `https://`. Remot
 
 Doltgres provides a [sample remote server](https://github.com/dolthub/dolt/tree/master/go/utils/remotesrv) that we use for integration testing which could be deployed to serve your remotes as well, though you would want to extend the sample functionality to support things like auth. In our integration tests we install and run the remote server locally:
 
-```
+```bash
 remotesrv --http-port 1234 --dir ./remote_storage
 ```
 
@@ -176,7 +176,7 @@ on it, and then cloning that database from a Dolt client.
 
 We configure the remotesapi to run on the `sql-server` and run the sql-server process:
 
-```
+```bash
 $ cat config.yaml
 remotesapi:
   port: 8080

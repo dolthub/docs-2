@@ -46,7 +46,7 @@ Import completed successfully.
 
 We can query the table and see the new schema and data:
 
-```
+```text
 > dolt sql -q "describe mytable"
 +-------+--------------+------+-----+---------+-------+
 | Field | Type         | Null | Key | Default | Extra |
@@ -134,7 +134,7 @@ LOAD DATA INFILE '/Users/vinairachakonda/misc/test/file.csv' INTO table test FIE
 
 Selecting from above you get
 
-```
+```text
 test> select * from test;
 +----+-----+
 | pk | val |
@@ -158,7 +158,7 @@ database: test
 
 You can dump the database `test` as follows:
 
-```
+```bash
 mysqldump --databases test -P 3306 -h 0.0.0.0 -u root -p > dump.sql
 ```
 
@@ -166,7 +166,7 @@ mysqldump --databases test -P 3306 -h 0.0.0.0 -u root -p > dump.sql
 
 To load into dolt:
 
-```
+```bash
 dolt sql < dump.sql
 ```
 
@@ -184,7 +184,7 @@ New Hosted deployments will have these correct server configuration settings by 
 
 With the above settings in place, you can import the SQL dump using a standard MySQL client or database tool:
 
-```
+```bash
 mysql -h my-deployment.dbs.hosted.doltdb.com -u <user name> -p<password> database < dump.sql
 ```
 
@@ -195,13 +195,13 @@ a postgres database you can export a postgres dump file with the [pg_dump](https
 
 With a postgres dump file of `file.pgdump` you can convert it into a mysql dump as follows.
 
-```
+```bash
 ./pg2mysql.pl < file.pgdump > mysql.sql
 ```
 
 Finally, you can load the mysql file into dolt.
 
-```
+```bash
 dolt sql < mysql.sql
 ```
 

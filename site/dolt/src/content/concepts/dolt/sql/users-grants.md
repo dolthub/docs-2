@@ -26,7 +26,7 @@ Grants can only apply to traditional SQL access to Dolt tables as of now. Our ro
 ## Example
 
 ### Create a user and grant permissions
-```
+```bash
 $ dolt sql
 # Welcome to the DoltSQL shell.
 # Statements must be terminated with ';'.
@@ -39,7 +39,7 @@ dolt> exit;
 ```
 
 ### Access data as a user
-```
+```bash
 $ dolt --user="testuser" --password="password123" sql
 # Welcome to the DoltSQL shell.
 # Statements must be terminated with ';'.

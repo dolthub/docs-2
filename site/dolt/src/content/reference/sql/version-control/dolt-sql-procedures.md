@@ -242,6 +242,12 @@ The `dolt_branch()` procedure implicitly commits the current transaction and beg
 
 `-D`: Shortcut for `--delete --force`.
 
+`-t`, `--track`: Set up upstream configuration for a new branch. Uses the current branch as the default start point.
+
+`-u`, `--set-upstream-to`: Set the upstream configuration for the named branch to the given upstream.
+
+`-r`: When used with `--delete`, deletes a remote-tracking branch.
+
 #### Output Schema
 
 ```text
@@ -340,6 +346,8 @@ insert into mydb.t1 values (3); -- modifying the `branch2` branch
 
 `-t`: When creating a new branch, set up 'upstream' configuration.
 
+`-f`, `--force`: If there are any changes in the working set, force will discard the current changes and check out the new branch.
+
 #### Output Schema
 
 ```text
@@ -380,6 +388,9 @@ Apply changes from existing commit and creates a new commit from the current HEA
 
 Works exactly like [`dolt cherry-pick` command](/cli-reference/cli#dolt-cherry-pick) on the CLI,
 and has the same notes and limitations.
+
+`DOLT_CHERRY_PICK()` preserves the original commit's author identity. The committer is the
+SQL user running this session.
 
 ```sql
 CALL DOLT_CHERRY_PICK('my-existing-branch~2');
@@ -516,6 +527,8 @@ CALL DOLT_CLEAN('--dry-run');
 
 `--dry-run`: Test removing untracked tables from working set.
 
+`-x`: Do not respect `dolt_ignore`; remove untracked tables that match `dolt_ignore`. `dolt_nonlocal_tables` is always respected.
+
 #### Output Schema
 
 ```text
@@ -594,6 +607,10 @@ CALL DOLT_CLONE('dolthub/us-jails', 'myCustomDbName');
 `-b`, `--branch`: The branch to be cloned. If not specified all branches will be cloned.
 
 `--depth`: Clone a single branch and limit history to the given commit depth.
+
+`--single-branch`: Clone only the history leading to the tip of a single branch, either specified by `--branch` or the remote's HEAD (the default).
+
+`-u`, `--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable.
 
 #### Output Schema
 
@@ -678,7 +695,13 @@ default. This option bypasses that safety.
 
 `--date`: Specify the date used in the commit. If not specified, the current system time is used.
 
-`--author`: Specify an explicit author using the standard "A U Thor author@example.com" format. Note that unlike `dolt commit` on the CLI, when invoking the `dolt_commit()` stored procedure, the default commit author is the authenticated SQL user (e.g. `root@localhost`).
+`--author`: Specify an explicit author using the standard "A U Thor author@example.com" format. Note that unlike `dolt commit` on the CLI, when invoking the `dolt_commit()` stored procedure, the default commit author is the authenticated SQL user (e.g. `root@localhost`). See [commit identity variables](/sql-reference/version-control/dolt-sysvars#commit-identity-variables) to override identity per session.
+
+`-f`, `--force`: Ignores any foreign key warnings and proceeds with the commit.
+
+`--amend`: Amend the previous commit.
+
+`-S`, `--sign[=<key-id>]`: Sign the commit using GPG. If no `key-id` is provided, the value of `user.signingkey` from configuration is used.
 
 `--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](/sql-reference/version-control/dolt-sysvars#dolt_commit_verification_groups) system variable.
 
@@ -772,6 +795,10 @@ CALL DOLT_FETCH('origin');
 
 `--prune`, `-p`: After fetching, remove any remote-tracking references that don't exist on the remote.
 
+`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable.
+
+`--silent`: Suppress progress information.
+
 #### Output Schema
 
 ```text
@@ -810,7 +837,13 @@ CALL DOLT_GC('--shallow');
 ```
 #### Options
 
-`--shallow` Performs a faster but less thorough garbage collection.
+`-s`, `--shallow`: Perform a fast, but incomplete garbage collection pass.
+
+`-f`, `--full`: Perform a full garbage collection, including the old generation.
+
+`--archive-level`: Specify the archive compression level for the garbage collection results. Default is `1`. Disable archive compression with `0`.
+
+`--incremental-file-size`: Maximum size in bytes of incremental GC table files.
 
 #### Output Schema
 
@@ -833,7 +866,7 @@ At the end of the run, the connection which ran call dolt_gc() will be left open
 to deliver the results of the operation itself. The connection will be left in a terminally 
 broken state where any attempt to run a query on it will result in the following error:
 
-```
+```text
 ERROR 1105 (HY000): this connection was established when this server performed an online 
 garbage collection. this connection can no longer be used. please reconnect.
 ```
@@ -873,6 +906,8 @@ CALL DOLT_MERGE('--abort');
 
 `--no-ff`: Create a merge commit even when the merge resolves as a fast-forward.
 
+`--ff-only`: Refuse to merge unless the current HEAD is already up to date or the merge can be resolved as a fast-forward.
+
 `--squash`: Merges changes to the working set without updating the
 commit history
 
@@ -882,10 +917,18 @@ is only useful for --non-ff commits.
 `--abort`: Abort the current conflict resolution process, and try to
 reconstruct the pre-merge state.
 
+`--commit`: Perform the merge and commit the result. This is the default. Can be overridden with `--no-commit`. Has no effect on fast-forward merges, and no commit is attempted if conflicts or constraint violations are detected.
+
+`--no-commit`: Perform the merge and stop just before creating a merge commit. This does not prevent a fast-forward merge; combine with `--no-ff` to prevent both.
+
+`--no-edit`: Use an auto-generated commit message when creating a merge commit.
+
 `--author`: Specify an explicit author using the standard `A U Thor
 <author@example.com>` format.
 
 `--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](/sql-reference/version-control/dolt-sysvars#dolt_commit_verification_groups) system variable.
+
+`DOLT_MERGE()` does not accept `--date`. To set a deterministic merge commit date, set `@@dolt_committer_date` (see [commit identity variables](/sql-reference/version-control/dolt-sysvars#commit-identity-variables)).
 
 When merging a branch, your session state must be clean. `COMMIT`
 or`ROLLBACK` any changes, then `DOLT_COMMIT()` to create a new dolt
@@ -951,12 +994,28 @@ CALL DOLT_PULL('feature-branch', '--force');
 
 `--no-ff`: Create a merge commit even when the merge resolves as a fast-forward.
 
+`--ff-only`: Refuse to merge unless the current HEAD is already up to date or the merge can be resolved as a fast-forward.
+
 `--squash`: Merges changes to the working set without updating the
 commit history
 
-`--force`: Ignores any foreign key warnings and proceeds with the commit.
+`-f`, `--force`: Update from the remote HEAD even if there are errors.
 
 `--prune`, `-p`: After fetching, remove any remote-tracking references that don't exist on the remote.
+
+`--commit`: Perform the merge and commit the result. This is the default. Can be overridden with `--no-commit`.
+
+`--no-commit`: Perform the merge and stop just before creating a merge commit. Combine with `--no-ff` to also prevent fast-forwards.
+
+`--no-edit`: Use an auto-generated commit message when creating a merge commit.
+
+`-r`, `--rebase`: After fetching, rebase the current branch on top of the upstream branch instead of merging. Cannot be combined with `--squash`, `--no-ff`, `--ff-only`, or `--no-commit`.
+
+`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable.
+
+`--silent`: Suppress progress information.
+
+`--skip-verification`: Skip commit verification tests configured by the [`dolt_commit_verification_groups`](/sql-reference/version-control/dolt-sysvars#dolt_commit_verification_groups) system variable.
 
 When merging a branch, your session state must be clean. `COMMIT`
 or`ROLLBACK` any changes, then `DOLT_COMMIT()` to create a new dolt
@@ -1034,7 +1093,15 @@ CALL DOLT_PUSH('--force', 'origin', 'main');
 
 #### Options
 
-`--force`: Update the remote with local history, overwriting any conflicting history in the remote.
+`-f`, `--force`: Update the remote with local history, overwriting any conflicting history in the remote.
+
+`-u`, `--set-upstream`: For every branch that is up to date or successfully pushed, add upstream (tracking) reference, used by argument-less `dolt pull` and other commands.
+
+`--all`: Push all branches.
+
+`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable.
+
+`--silent`: Suppress progress information.
 
 #### Output Schema
 
@@ -1530,9 +1597,11 @@ CALL DOLT_TAG('-d', 'tag_name');
 
 #### Options
 
-`-m`: Use the given message as the tag message.
+`-m`, `--message`: Use the given message as the tag message.
 
-`-d`: Delete a tag.
+`-d`, `--delete`: Delete a tag.
+
+`-v`, `--verbose`: List tags along with their metadata.
 
 `--author`: Specify an explicit author using the standard "A U Thor
 author@example.com" format.

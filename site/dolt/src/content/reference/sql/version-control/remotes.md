@@ -26,7 +26,7 @@ Next, we're going to create a database on DoltHub.com that will serve as the rem
 
 Next, we can run the command [dolt login](https://docs.dolthub.com/cli-reference/cli#dolt-login) from our local Dolt CLI client. This command will help us authenticate our local client to DoltHub.com, associating our client with our DoltHub identity.
 
-```
+```bash
 dolt login
 Credentials created successfully.
 pub key: l5bfb43fmqu8u8b59m8fp5cb8o1jcpt8281u94t80us35u6fgavg
@@ -46,13 +46,13 @@ On the credentials page, we just need to provide a description for our new key a
 
 Our local Dolt client (and running Dolt server) are now successfully authenticated to push to DoltHub databases where we have write access. The final output of `dolt login` will read:
 
-```
+```text
 Key successfully associated with user: coffeegoddd email dustin@dolthub.com
 ```
 
 Using a MySQL client connected to the running Dolt server, let's give pushing to DoltHub.com a try. We're going to push our `main` branch, so first we check it out:
 
-```
+```sql
 mysql> call dolt_checkout('main');
 +--------+---------------------------+
 | status | message                   |
@@ -64,7 +64,7 @@ mysql> call dolt_checkout('main');
 
 Now, we need to add the remote address for the DoltHub database we created to the Dolt server:
 
-```
+```sql
 mysql> call dolt_remote('add', 'origin', 'coffeegoddd/getting_started');
 +--------+
 | status |
@@ -76,7 +76,7 @@ mysql> call dolt_remote('add', 'origin', 'coffeegoddd/getting_started');
 
 And then we can push:
 
-```
+```sql
 mysql> call dolt_push('origin', 'main');
 +--------+
 | status |
@@ -122,13 +122,13 @@ Filesystem based remotes allow you to push/pull data from any location that can 
 
 - Adding a remote
 
-```
+```bash
 dolt remote add origin file:///Users/brian/datasets/menus
 ```
 
 - Cloning
 
-```
+```bash
 dolt clone file:///Users/brian/datasets/menus
 ```
 
@@ -136,13 +136,13 @@ dolt clone file:///Users/brian/datasets/menus
 
 - Adding a remote
 
-```
+```bash
 dolt remote add origin file:///c:/Users/brian/datasets/menus
 ```
 
 - Cloning
 
-```
+```bash
 dolt clone file:///c:/Users/brian/datasets/menus
 ```
 
@@ -173,7 +173,7 @@ Git remotes are recognized when the URL is explicitly `git+...` or when it ends 
 
 Add a Git remote and push:
 
-```
+```bash
 # Add a git remote (local path, ssh, or https all work as long as it ends in .git)
 dolt remote add origin ../remote.git
 
@@ -186,7 +186,7 @@ dolt push --set-upstream origin main
 
 GitHub examples:
 
-```
+```bash
 # SSH
 dolt remote add origin git@github.com:ORG/REPO.git
 dolt push --set-upstream origin main
@@ -198,7 +198,7 @@ dolt push --set-upstream origin main
 
 Clone from a Git remote:
 
-```
+```bash
 dolt clone ../remote.git
 
 # Or with a non-default ref
@@ -226,25 +226,25 @@ key with the name "db".
 
 This single DynamoDB table can be used for multiple unrelated remote repositories. Once you have a DynamoDB table, and an S3 bucket setup you can add an AWS remote using a URL with the protocol `aws://`. To add a remote named "origin" to my "menus" repository using an S3 bucket named `dolt_remotes_s3_storage` and a DynamoDB table named `dolt_dynamo_table` you would run:
 
-```
+```bash
 dolt remote add origin aws://[dolt_dynamo_table:dolt_remotes_s3_storage]/menus
 ```
 
 This same URL can then be used to clone this database by another user.
 
-```
+```bash
 dolt clone aws://[dolt_remotes:dolt_remotes_storage]/menus
 ```
 
 In order to initialize your system to be able to connect to your AWS cloud resources see [Amazon's documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) on configuring your credential file. [Dolt](https://doltdb.com) also provides additional parameters you may need to provide when adding an AWS remote such as `aws-creds-profile`, and `aws-region`.`aws-creds-profile` allows you to select a profile from your credential file. If it is not provided then the default profile is used. `aws-region` allows you to specify the region in which your DynamoDB table and S3 bucket are located. If not provided, it will use the default region from the current profile.
 
-```
+```bash
 dolt remote add --aws-creds-profile prod-profile --aws-region us-west-2 origin aws://[dolt_dynamo_table:dolt_remotes_s3_storage]/menus
 ```
 
 or
 
-```
+```bash
 dolt clone --aws-creds-profile prod-profile --aws-region us-west-2 origin aws://[dolt_dynamo_table:dolt_remotes_s3_storage]/menus
 ```
 
@@ -252,7 +252,7 @@ dolt clone --aws-creds-profile prod-profile --aws-region us-west-2 origin aws://
 
 Google Cloud Platform remotes use Google Cloud Storage (GCS). You can create or use an existing GCS bucket to host one or more [Dolt](https://doltdb.com) remotes. To add a GCP remote provide a URL with the `gs://` protocol like so:
 
-```
+```bash
 dolt remote add origin gs://BUCKET/path/for/remote
 ```
 
@@ -262,7 +262,7 @@ In order to initialize [Dolt](https://doltdb.com) to use your GCP credentials yo
 
 Oracle Cloud Infrastructure (OCI) remotes use Oracle Cloud Object Storage. You can create or use an existing OCI bucket to host one or more [Dolt](https://doltdb.com) remotes. To add an OCI remote provide a URL with the `oci://` protocol like so:
 
-```
+```bash
 dolt remote add origin oci://BUCKET/path/for/remote
 ```
 
@@ -284,20 +284,20 @@ The path is the absolute path to a Dolt data directory on the remote host.
 
 - Cloning
 
-```
+```bash
 dolt clone ssh://user@myhost.com/opt/dolt/databases/mydb
 ```
 
 - Adding a remote and pushing
 
-```
+```bash
 dolt remote add origin ssh://user@myhost.com/opt/dolt/databases/mydb
 dolt push origin main
 ```
 
 - Using a non-standard port
 
-```
+```bash
 dolt clone ssh://user@myhost.com:2222/opt/dolt/databases/mydb
 ```
 
@@ -310,13 +310,13 @@ dolt clone ssh://user@myhost.com:2222/opt/dolt/databases/mydb
 
 For example, to use a specific SSH key:
 
-```
+```bash
 DOLT_SSH_COMMAND="ssh -i ~/.ssh/my_key" dolt clone ssh://user@myhost.com/opt/dolt/databases/mydb
 ```
 
 Or if `dolt` is not on the remote host's default PATH:
 
-```
+```bash
 DOLT_SSH_EXEC_PATH="/usr/local/bin/dolt" dolt clone ssh://user@myhost.com/opt/dolt/databases/mydb
 ```
 
@@ -344,7 +344,7 @@ Given these constraints, enabling SSH remotes on multi-user systems should be do
 
 [Dolt](https://doltdb.com) supports remotes which use the protocol `http://` and `https://`. Remote servers must implement the GRPC methods defined by the [ChunkStoreService interface](https://github.com/dolthub/dolt/blob/master/proto/dolt/services/remotesapi/v1alpha1/chunkstore.proto#L23). This is the way by which [DoltHub](https://dolthub.com) itself provides remote functionality. When you add a [DoltHub](https://dolthub.com) remote via `dolt remote add origin owner/repository` or do a `dolt clone owner/repository` [Dolt](https://doltdb.com) is just providing shorthand notation for the URL. When you run `dolt remote -v` you can see that [Dolt](https://doltdb.com) adds an `https://` URL with the host `doltremoteapi.dolthub.com` as can be seen here:
 
-```
+```bash
 $dolt remote add origin Dolthub/menus
 
 $dolt remote -v
@@ -353,7 +353,7 @@ origin https://doltremoteapi.dolthub.com/Dolthub/menus
 
 [Dolt](https://doltdb.com) provides a [sample remote server](https://github.com/dolthub/dolt/tree/master/go/utils/remotesrv) that we use for integration testing which could be deployed to serve your remotes as well, though you would want to extend the sample functionality to support things like auth. In our integration tests we install and run the remote server locally:
 
-```
+```bash
 remotesrv --http-port 1234 --dir ./remote_storage
 ```
 
@@ -370,7 +370,7 @@ The `clone`,`fetch`, and `pull` operations require the SQL user must have a gran
 
 We configure the remotesapi to run on the `sql-server` and run the sql-server process:
 
-```
+```bash
 $ cat config.yaml
 remotesapi:
   port: 8080
@@ -382,7 +382,7 @@ $ dolt sql-server --config config.yaml &
 
 At this point, `dolt sql-server` is running on port `:3306` and its remotesapi endpoint is running on port `:8080`. We can clone `exampledb` from it:
 
-```
+```bash
 $ DOLT_REMOTE_PASSWORD=examplepassword dolt clone --user exampleuser https://localhost:8080/exampledb exampledb
 $ cd exampledb
 $ dolt log --oneline
@@ -394,12 +394,12 @@ The `--user` and `DOLT_REMOTE_PASSWORD` settings are not stored in the local sta
 ### Writing to sql-server
 The `push` operation require the SQL user must have super user privileges to push the the server. Super user access is granted with the following command:
 
-```
+```bash
 $ dolt sql -q "GRANT ALL PRIVILEGES ON exampledb.* TO 'exampleuser'@'%' WITH GRANT OPTION"
 ```
 
 Similar to the read case described above, the `DOLT_REMOTE_PASSWORD` environment variable and the `--user` argument are used to authenticate:
 
-```
+```bash
 $ DOLT_REMOTE_PASSWORD=examplepassword dolt push origin --user exampleuser HEAD:main
 ```

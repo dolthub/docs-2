@@ -28,7 +28,7 @@ Dolt supports [all MYSQL types](/sql-reference/sql-support/data-description#data
 A type change in Dolt is versioned and can cause conflicts when merged. Dolt can diff across some type changes and will make a best effort to do so.
 
 ## Example
-```
+```sql
 mysql> create table complex (pk1 int, pk2 varchar(47), c1 tinyint not null, c2 datetime, c3 json, primary key(pk1, pk2));
 mysql> show create table complex;
 +---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

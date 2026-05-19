@@ -4,7 +4,7 @@ title: CLI
 
 # Command Line Interface Reference
 
-```
+```bash
 $ dolt
 Valid commands for dolt are
                 init - Create an empty Dolt data repository.
@@ -1943,7 +1943,7 @@ This form resets `all` staged tables to their values at HEAD. It is the opposite
 Resets the working tables and staged tables. Any changes to tracked tables in the working tree since `<commit>` are discarded.
 
 `--soft`:
-Does not touch the working tables, but removes all tables staged to be committed.
+Resets HEAD to the specified revision without touching the index or the working tables.
 
 ## `dolt revert`
 
@@ -2849,4 +2849,3 @@ display the feature version of this repository.
 
 `-v`, `--verbose`:
 display verbose details, including the storage format of this repository.
-

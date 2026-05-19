@@ -5,7 +5,7 @@ title: Metrics
 # Metrics
 
 Dolt's SQL server can optionally expose metrics through a [Prometheus](https://prometheus.io/) HTTP endpoint. You can enable the Prometheus HTTP endpoint by defining a `metrics` section in your [YAML configuration](https://docs.dolthub.com/sql-reference/server/configuration). The following YAML configuration file shows a complete configuration file that enables Prometheus metrics on port 11228:
-```
+```yaml
 log_level: info
 
 listener:
@@ -37,7 +37,7 @@ Once you start a Dolt SQL server with the configuration above, you'll be able to
 
 ### Scraping with Prometheus
 After you've inspected the metrics by manually looking the `/metrics` page, you can configure a Prometheus server to scrape that data so you can use the Prometheus web UI to explore your metrics. Here's an example Prometheus server configuration file showing how to configure metrics scraping for a Dolt SQL server with metrics exposed on port 11228:
-```
+```yaml
 global:
   scrape_interval: 15s
 

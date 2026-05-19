@@ -24,14 +24,14 @@ Dolt allows users to connect to multiple branches using a connection string. All
 
 ### Start a Server
 
-```
+```bash
 dolt sql-server
 Starting server with Config HP="localhost:3306"|T="28800000"|R="false"|L="info"
 ```
 
 ### Connect a client
 
-```
+```sql
 % mysql --host 127.0.0.1 --port 3306 -uroot
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
