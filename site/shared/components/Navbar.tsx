@@ -79,7 +79,7 @@ function DocsDropdown() {
   }, []);
 
   return (
-    <div ref={ref} className="docs-dropdown" style={{ position: "relative", display: "inline-block", marginLeft: "0.5rem", marginRight: "2.5rem" }}>
+    <div ref={ref} className="docs-dropdown" style={{ position: "relative", display: "inline-block" }}>
       <button
         onClick={() => setOpen(!open)}
         data-cy="navbar-documentation"
@@ -135,7 +135,7 @@ function RightLinks() {
       <a
         href={`${dolthubUrl}/signin`}
         data-cy="navbar-signin-button"
-        className="flex items-center border rounded-[0.25rem] px-8 py-[0.2rem] border-[#333C50]/20"
+        className="flex items-center border rounded-[0.25rem] px-3 py-[0.2rem] border-[#333C50]/20"
         aria-label="desktop-signin"
       >
         Sign In
