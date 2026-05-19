@@ -2331,9 +2331,9 @@ This is an example yaml configuration file showing all supported items and their
 	
 	cfg_dir: .doltcfg
 	
-	privilege_file: .doltcfg\privileges.db
+	privilege_file: .doltcfg/privileges.db
 	
-	branch_control_file: .doltcfg\branch_control.db
+	branch_control_file: .doltcfg/branch_control.db
 	
 	user_session_vars: []
 	
@@ -2849,4 +2849,3 @@ display the feature version of this repository.
 
 `-v`, `--verbose`:
 display verbose details, including the storage format of this repository.
-
