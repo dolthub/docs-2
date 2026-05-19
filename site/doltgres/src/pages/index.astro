@@ -1,18 +1,26 @@
 ---
-import DocsLayout from "../layouts/DocsLayout.astro";
-
+// The docs root (e.g. https://www.doltgres.com/docs/) redirects to the
+// "What is Doltgres?" intro page. Static site (no SSR), so this is a
+// client/meta redirect: location.replace for browsers/Cypress, a meta refresh
+// fallback for no-JS, and a canonical link for crawlers. Production
+// additionally gets a true 301 via the _redirects file (see package.json
+// build).
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const target = `${base}/introduction`;
 ---
 
-<DocsLayout title="Doltgres Documentation">
-  <h1>Doltgres Documentation</h1>
-  <p>
-    DoltgreSQL is a Postgres-compatible version of Dolt — the world's first
-    version controlled SQL database.
-  </p>
-
-  <h2>Introduction</h2>
-  <ul>
-    <li><a href={`${base}/introduction`}>What is Doltgres?</a></li>
-  </ul>
-</DocsLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Doltgres Documentation</title>
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <script define:vars={{ target }}>
+      window.location.replace(target);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href={target}>What is Doltgres?</a>…</p>
+  </body>
+</html>

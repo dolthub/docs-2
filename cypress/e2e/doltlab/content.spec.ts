@@ -16,9 +16,16 @@ function assertPageLoads(path: string) {
 
 describe("DoltLab docs — page content spot checks", () => {
   context("Homepage", () => {
-    it("homepage loads and has content", () => {
+    it("docs root redirects to What is DoltLab?", () => {
       cy.visit("/");
-      cy.get("h1", { timeout }).should("be.visible");
+      cy.location("pathname", { timeout }).should(
+        "match",
+        /\/introduction\/what-is-doltlab\/?$/,
+      );
+      cy.get("h1", { timeout })
+        .should("be.visible")
+        .and("contain", "What is DoltLab");
+      cy.get("body").invoke("text").should("have.length.above", 200);
     });
   });
 
