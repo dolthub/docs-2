@@ -27,7 +27,7 @@ automatically rolled back and any merged tables will be reset.
 The two errors that merge can produce are conflicts and constraint-violations.
 If either error exists post-merge, the `conflicts` column will be set to `1`:
 
-```
+```text
 +--------------+-----------+
 | fast_forward | conflicts |
 +--------------+-----------+
@@ -39,7 +39,7 @@ If no conflicts/constraint-violations were encountered, the current transaction
 will be completed, and a commit will be made. You can check the status of a
 merge using the [dolt_merge_status](/sql-reference/version-control/dolt-system-tables#doltmergestatus) system table:
 
-```
+```text
 > SELECT * from DOLT_MERGE_STATUS;
 +------------+--------+---------------+--------+-----------------+
 | is_merging | source | source_commit | target | unmerged_tables |

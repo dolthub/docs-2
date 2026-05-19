@@ -18,7 +18,7 @@ See an interesting database you'd like to make changes to? Get the database loca
 
 We are going to use the [`dolthub/corona-virus`](https://www.dolthub.com/repositories/dolthub/corona-virus) database as an example
 
-```
+```bash
 % dolt clone dolthub/corona-virus
 cloning https://doltremoteapi.dolthub.com/dolthub/corona-virus
 16,690 of 16,690 chunks complete. 0 chunks being downloaded currently.
@@ -30,7 +30,7 @@ cloning https://doltremoteapi.dolthub.com/dolthub/corona-virus
 
 Once you've cloned a database from DoltHub, you can use the SQL shell to make a change to the data. We're going to add a row to the `cases` table on a new branch:
 
-```
+```bash
 % dolt checkout -b add-new-case
 Switched to branch 'add-new-case'
 
@@ -46,7 +46,7 @@ Bye
 
 You can see how the insert query changed the `cases` table by viewing the [diff](/concepts/dolt/git/diff):
 
-```
+```bash
 % dolt diff
 diff --dolt a/cases b/cases
 --- a/cases @ ullgt5s1i14g1vgndmuhek3269fjsvbc
@@ -60,7 +60,7 @@ diff --dolt a/cases b/cases
 
 If the change looks good we add the table and commit:
 
-```
+```bash
 % dolt add cases && dolt commit -m "Add new case for today"
 commit pk9fei8l35php871j2gptaaa92v0e324
 Author: Taylor Bantle <taylor@liquidata.co>
@@ -84,7 +84,7 @@ Now we have a database in our namespace that we can write to (`taylor/corona-vir
 
 Now that we have a fork of the original database, we need to add a remote to our locally cloned database.
 
-```
+```bash
 % dolt remote add taylor taylor/corona-virus
 % dolt remote
 origin
@@ -97,7 +97,7 @@ We now have two remotes: `origin` which refers to the `dolthub/corona-virus` dat
 
 Before we can push changes to our remote, we need to log in to Dolt so that it can recognize DoltHub as the remote database. First, run the `dolt login` command:
 
-```
+```bash
 % dolt login
 Credentials created successfully.
 pub key: <some hash>
@@ -114,7 +114,7 @@ This will open your browser to the credentials settings page with the hash from 
 
 You should see this message if it was successful:
 
-```
+```text
 Key successfully associated with user: taylor email taylor@dolthub.com
 ```
 
@@ -124,7 +124,7 @@ You are now logged in and can push data to DoltHub.
 
 We want to push the new branch we made changes to locally to the remote fork.
 
-```
+```bash
 % dolt push taylor add-new-case
 | Tree Level: 1, Percent Buffered: 0.00%, Files Written: 0, Files Uploaded: 1, Current Upload Speed: 22 kB/s
 ```

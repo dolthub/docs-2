@@ -32,7 +32,7 @@ Note, you can make every transaction `COMMIT` a Dolt commit by setting the [syst
 
 ## Example
 
-```
+```sql
 SET AUTOCOMMIT = 0;
 mysql> select * from docs;
 +----+----+

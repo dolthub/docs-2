@@ -100,7 +100,7 @@ ubuntu@ip-10-2-0-124:~/doltlab$ newgrp docker
 
 And then ran `docker ps` to test.
 
-```
+```bash
 ubuntu@ip-10-2-0-124:~/doltlab$ docker ps
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 ```

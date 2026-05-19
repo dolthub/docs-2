@@ -27,7 +27,7 @@ $ dolt init
 ```
 
 Create a config file named `config.yml` and put this in it:
-```
+```yaml
 log_level: debug
 listener:
   host: "0.0.0.0"
@@ -82,7 +82,7 @@ sqlEngine, err := engine.NewSqlEngine(ctx, mrEnv, engine.FormatTabular, "", serv
 
 For some reason, the `NewSqlEngine` constructor creates a new authenticator using `auth.None`, which always gives users full permissions.
 Instead, we should be passing in the authenticator already created that is based on permissions specified in the config file.
-```
+```go
 // NewSqlEngine returns a SqlEngine
 func NewSqlEngine(
 	ctx context.Context,
@@ -113,7 +113,7 @@ $ npm install -g bats
 ```
 
 This test basically creates a config file (with the read-only flag set to true), starts a dolt sql-server using the config file, sends a query to create a table, and checks to see if that table was created. So, it's an automated way to do everything we did earlier.
-```
+```bash
 @test "sql-server: read-only flag prevents modification" {
     skiponwindows "Has dependencies that are missing on the Jenkins Windows installation."
     cd repo1

@@ -852,7 +852,7 @@ $ ./installer
 
 After you've generated the static assets, it's time to load the service images. `cd` into the directory with the service images zip file. Unzip this file to a directory called `service-images`.
 
-```
+```bash
 $ cd ../
 $ unzip doltlab-service-images-v2.3.3.zip -d service-images
 Archive:  doltlab-service-images-v2.3.3.zip

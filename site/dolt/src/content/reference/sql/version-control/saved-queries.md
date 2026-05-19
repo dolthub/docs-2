@@ -8,7 +8,7 @@ Dolt is a database designed for sharing. Dolt ships with a feature called "Saved
 
 To create a saved query, you can use the Dolt CLI to save a SQL query for future use by yourself or others. You can also execute saved queries by name in using the command line.
 
-```
+```text
 us-businesses $ dolt sql --save "Example saved query" -q "show tables"
 +----------------+
 | Table          |
@@ -33,7 +33,7 @@ show tables
 
 This query is written to a special Dolt system table `dolt_query_catalog`. You can add, modify, or delete saved queries by changing that system table.
 
-```
+```text
 us-businesses $ dolt sql -q "select * from dolt_query_catalog"
 +---------------------+---------------+---------------------+-------------+-------------+
 | id                  | display_order | name                | query       | description |

@@ -31,7 +31,7 @@ The only SQL statement not versioned in Dolt is `DROP DATABASE`. This statement 
 
 ## Example
 
-```
+```sql
 mysql> show databases;
 +--------------------+
 | Database           |

@@ -707,7 +707,7 @@ It's now time to update our DoltLab instance configuration to automatically back
 
 First, ensure that the AWS credentials on the DoltLab host can be used to assume the role `DoltLabBackuper`. Create a AWS config file that contains:
 
-```
+```ini
 [profile doltlab_backuper]
 role_arn = arn:aws:iam::<aws account number>:role/DoltLabBackuper
 region = <aws region>
@@ -716,7 +716,7 @@ source_profile = default
 
 Then use the AWS CLI to confirm this profile can be used on your DoltLab host:
 
-```
+```bash
 AWS_SDK_LOAD_CONFIG=1 \
 AWS_REGION=<aws region> \
 AWS_CONFIG_FILE=<path to config file> \
@@ -860,7 +860,7 @@ Next, install the `oci` CLI tool on your DoltLab host, and run `oci setup config
 
 First, edit the generated config file so that the `key_file` field contains the absolute path of where the generate key file will be mounted in the `doltlabdb` container.
 
-```
+```ini
 [DEFAULT]
 user=ocid1.user.oc1..<unique_ID>
 fingerprint=<your_fingerprint>

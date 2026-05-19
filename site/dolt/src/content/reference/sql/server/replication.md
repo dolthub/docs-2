@@ -114,7 +114,7 @@ execution.
 
 To stop replication unset the configuration variable.
 
-```
+```bash
 dolt sql -q "set @@persist.dolt_replicate_to_remote = ''"
 ```
 

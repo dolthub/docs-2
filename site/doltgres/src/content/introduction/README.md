@@ -35,7 +35,7 @@ Check back often for progress. We are investing heavily in Doltgres. You can als
 Unlike Dolt, Doltgres does not implement version control features via the command line and must be
 run as a server. For example, the Dolt CLI command to pull from a remote:
 
-```
+```bash
 % dolt pull
 ```
 

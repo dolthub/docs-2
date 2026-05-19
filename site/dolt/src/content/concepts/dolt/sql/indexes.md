@@ -29,7 +29,7 @@ Dolt indexes are versioned along with the core table they reference. Practically
 Dolt will merge indexes as part of a Dolt merge. This can be used to offload index creation to a branch or offline clone.
 
 ## Example
-```
+```sql
 mysql> create index index1 on complex(c1);
 mysql> show create table complex;
 +---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

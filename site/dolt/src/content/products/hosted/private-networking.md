@@ -84,7 +84,7 @@ Information" on your Deployment's Database page, you copy the Service Name for w
 Then you create the endpoint through whatever mechanism you want: AWS CLI, AWS Console, Terraform, etc. Using AWS CLI, 
 creating the endpoint looks like:
 
-```
+```bash
 aws ec2 create-vpc-endpoint \
   --vpc-endpoint-type Interface \
   --vpc-id [VPC_ID] \

@@ -42,7 +42,7 @@ In Dolt, you can create a commit via the SQL interface. There is no analogue in 
 
 #### CLI
 
-```
+```bash
 docs $ dolt sql -q "create table docs (pk int, primary key(pk))"
 docs $ dolt add .
 docs $ dolt status
@@ -61,7 +61,7 @@ Date:   Mon Dec 06 13:25:55 -0800 2021
 
 #### SQL
 
-```
+```bash
 docs $ dolt sql -q "create table docs_sql (pk int, primary key(pk))"
 docs $ dolt sql -q "call dolt_commit('-a', '-m', 'Added docs_sql example table. Use -a to stage all changes for commit ie. skip dolt add')"
 +-------------------------------------------------------------------------------------------------------------------+
@@ -73,7 +73,7 @@ docs $ dolt sql -q "call dolt_commit('-a', '-m', 'Added docs_sql example table. 
 
 ### Creating an empty commit
 
-```
+```bash
 docs $ dolt commit --allow-empty -m "This is a commit"
 commit bo318l76dq3bdvu1ie84d4nmv4hpi4km
 Author: Tim Sehn <tim@dolthub.com>

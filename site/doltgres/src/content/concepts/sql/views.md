@@ -46,7 +46,7 @@ select * from monthly_salaries order by monthly_pay asc;
 
 ### Using `as of` with Views
 
-```
+```text
 select dolt_add('-A');
 select dolt_commit('-am', 'Created table and view');
 +----------------------------------+

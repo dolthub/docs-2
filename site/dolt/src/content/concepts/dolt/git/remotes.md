@@ -43,7 +43,7 @@ For example, you can use GitHub via SSH (`git@github.com:ORG/REPO.git`) or HTTPS
 
 ## Example
 
-```
+```bash
 dolt $ dolt clone timsehn/docs
 cloning https://doltremoteapi.dolthub.com/timsehn/docs
 29 of 29 chunks complete. 0 chunks being downloaded currently.

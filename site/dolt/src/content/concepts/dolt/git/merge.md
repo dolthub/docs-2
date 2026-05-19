@@ -31,7 +31,7 @@ Conceptually merges in Git and Dolt are the same. Practically, Dolt merges can o
 
 ## Example
 
-```
+```bash
 docs $ dolt sql -q "insert into docs values (10,10)"
 Query OK, 1 row affected
 docs $ dolt diff

@@ -145,7 +145,7 @@ Untracked files:
 
 We can inspect the table using SQL on the command line. Dolt allows you to run queries from the command line using `dolt sql -q`. This is often more convenient, especially in the Git for Data use case, than starting a server and opening a MySQL client. Dolt supports the MySQL flavor of SQL.
 
-```
+```bash
 $ dolt sql -q "show tables"
 +------------------------+
 | Tables_in_git_for_data |

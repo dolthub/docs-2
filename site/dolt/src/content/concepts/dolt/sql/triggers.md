@@ -25,7 +25,7 @@ Triggers are versioned in the `dolt_schemas` table just like [views](/concepts/d
 
 ## Example
 
-```
+```sql
 mysql> create table a (x int primary key);
 mysql> create table b (y int primary key);
 mysql> create trigger adds_one before insert on a for each row set new.x = new.x + 1;
@@ -56,7 +56,7 @@ mysql> select * from b;
 ```
 
 ### `dolt_schemas` table
-```
+```sql
 mysql> select * from dolt_status;
 +--------------+--------+-----------+
 | table_name   | staged | status    |
