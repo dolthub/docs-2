@@ -91,7 +91,7 @@ or deleted with the [`DOLT_BRANCH()` stored procedure](/sql-reference/version-co
 
 Get all the branches.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_branches%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_branches%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_branches%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_branches%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_branches%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 `remote` and `branch` show the remote host and branch that each branch is tracking.
 
@@ -168,7 +168,7 @@ guaranteed to see these changes reflected in the files on disk.
 
 Gets all docs.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ### `dolt_procedures`
 
@@ -207,7 +207,7 @@ CREATE PROCEDURE simple_proc1(x DOUBLE, y DOUBLE) SELECT x*y;
 CREATE PROCEDURE simple_proc2() SELECT name FROM category;
 ```
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_procedures%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ### `dolt_query_catalog`
 
@@ -244,7 +244,7 @@ named query using the CLI, or by directly inserting into the `dolt_query_catalog
 
 After creating a named query, you can view it in the `dolt_query_catalog` table:
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_query_catalog%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_query_catalog%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_query_catalog%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_query_catalog%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_query_catalog%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 Then you can use the dolt CLI to execute it:
 
@@ -380,7 +380,7 @@ CREATE EVENT monthly_gc ON SCHEDULE EVERY 1 MONTH DO CALL DOLT_GC();
 ```
 
 Then you can view them in `dolt_schemas`:
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_schemas%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_schemas%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_schemas%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_schemas%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=select+*+from+dolt_schemas%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ### `dolt_tags`
 
@@ -421,7 +421,7 @@ CALL DOLT_TAG('_migrationtest','head','-m','savepoint for migration testing');
 
 Get all the tags.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ### `dolt_branch_activity`
 `dolt_branch_activity` provides insights into branch usage within the lifetime of a running `dolt sql-server`. This table helps administrators identify stale or unused branches. The data is global to the server, and it not related to the persisted data in the database. For the reason, the `system_start_time` column will always be the start time of your server, and the `last_read` and `last_write` columns should be considered in relation to that time. Activity for branches which have been deleted will not be included in this table.
@@ -537,11 +537,11 @@ Attempting to query `dolt_blame_$tablename` for a table without a primary key wi
 
 Consider the following example table `city`:
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=describe+city%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=describe+city%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=describe+city%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=describe+city%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=describe+city%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 To find who set the current values, we can query the `dolt_blame_city` table:
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ### `dolt_commit_ancestors`
 
@@ -594,7 +594,7 @@ Using the [`dolthub/first-hour-db` database from DoltHub](https://www.dolthub.co
 we can query for the five commits before April 20th, 2022, across all commits in the database
 (regardless of what is checked out to `HEAD`) with this query:
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_commits%0Awhere+date+%3C+%222022-04-20%22%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_commits%0Awhere+date+%3C+%222022-04-20%22%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_commits%0Awhere+date+%3C+%222022-04-20%22%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_commits%0Awhere+date+%3C+%222022-04-20%22%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_commits%0Awhere+date+%3C+%222022-04-20%22%0A" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ### `dolt_history_$TABLENAME`
 
@@ -655,7 +655,7 @@ Assume a database with the `mytable` table above and the following commit graph:
 When the `feature` branch is checked out, the following query returns the results below, showing
 the row at every ancestor commit reachable from our current branch.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/feature?q=SELECT+*+FROM+dolt_history_mytable%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/feature?q=SELECT+*+FROM+dolt_history_mytable%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/feature?q=SELECT+*+FROM+dolt_history_mytable%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/feature?q=SELECT+*+FROM+dolt_history_mytable%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/feature?q=SELECT+*+FROM+dolt_history_mytable%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ### `dolt_log`
 
@@ -684,7 +684,7 @@ Note that `commit_order` values can be repeated for different levels of the topo
 
 The following query shows the commits reachable from the current checked out head and created by user `jennifersp` since April, 2022:
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_log%0AWHERE+committer+%3D+%22jennifersp%22+and+date+%3E+%222022-04-01%22%0AORDER+BY+date%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_log%0AWHERE+committer+%3D+%22jennifersp%22+and+date+%3E+%222022-04-01%22%0AORDER+BY+date%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_log%0AWHERE+committer+%3D+%22jennifersp%22+and+date+%3E+%222022-04-01%22%0AORDER+BY+date%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_log%0AWHERE+committer+%3D+%22jennifersp%22+and+date+%3E+%222022-04-01%22%0AORDER+BY+date%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*%0AFROM+dolt_log%0AWHERE+committer+%3D+%22jennifersp%22+and+date+%3E+%222022-04-01%22%0AORDER+BY+date%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ## Database Diffs
 
@@ -775,13 +775,13 @@ D---E---F---G main
 We can use the above table to represent two types of diffs: a two-point diff and a three-point diff.
 In a two-point diff we want to see the difference in rows between Point C and Point G.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit+%3D+HASHOF%28%27main%27%29%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit+%3D+HASHOF%28%27main%27%29%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit+%3D+HASHOF%28%27main%27%29%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit+%3D+HASHOF%28%27main%27%29%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit+%3D+HASHOF%28%27main%27%29%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 We can also compute a three-point diff using this table.
 In a three-point diff we want to see how our feature branch has diverged
 from our common ancestor E, without including the changes from F and G on main.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit%3Ddolt_merge_base%28%27main%27%2C+%27feature%27%29%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit%3Ddolt_merge_base%28%27main%27%2C+%27feature%27%29%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit%3Ddolt_merge_base%28%27main%27%2C+%27feature%27%29%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit%3Ddolt_merge_base%28%27main%27%2C+%27feature%27%29%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+*+from+dolt_commit_diff_mytable+where+to_commit%3DHASHOF%28%27feature%27%29+and+from_commit%3Ddolt_merge_base%28%27main%27%2C+%27feature%27%29%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 [The `dolt_merge_base` function](/sql-reference/version-control/dolt-sql-functions#dolt_merge_base)
 computes the closest ancestor E between `main` and `feature`.
@@ -830,7 +830,7 @@ database from [DoltHub](https://www.dolthub.com/) as our
 example, the following query uses the `dolt_diff` system table to find all commits, and the tables they changed,
 from the month of April 2022.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+table_name%2C+schema_change%0AFROM+++dolt_diff%0AWHERE++date+BETWEEN+%222022-04-01%22+AND+%222022-04-30%22%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+table_name%2C+schema_change%0AFROM+++dolt_diff%0AWHERE++date+BETWEEN+%222022-04-01%22+AND+%222022-04-30%22%3B%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+table_name%2C+schema_change%0AFROM+++dolt_diff%0AWHERE++date+BETWEEN+%222022-04-01%22+AND+%222022-04-30%22%3B%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+table_name%2C+schema_change%0AFROM+++dolt_diff%0AWHERE++date+BETWEEN+%222022-04-01%22+AND+%222022-04-30%22%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+table_name%2C+schema_change%0AFROM+++dolt_diff%0AWHERE++date+BETWEEN+%222022-04-01%22+AND+%222022-04-30%22%3B%0A" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 From these results, we can see there were four commits to this database in April 2022. Commits
 `	224helo` only changed the `dolt_schemas` table, commit `7jrvg1a` changed the `dolt_docs`
@@ -839,7 +839,7 @@ table, and commit `5jpgb0f` made changes to two tables. We can also see which of
 To dig deeper into these changes, we can query
 the `dolt_diff_$TABLE` system tables specific to each of the changed tables, like this:
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+count%28*%29+as+total_rows_changed%0AFROM+++dolt_diff_dolt_schemas%0AWHERE++to_commit%3D%27224helolb2bg6iqrf9b7befrflehqgnb%27%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+count%28*%29+as+total_rows_changed%0AFROM+++dolt_diff_dolt_schemas%0AWHERE++to_commit%3D%27224helolb2bg6iqrf9b7befrflehqgnb%27%3B%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+count%28*%29+as+total_rows_changed%0AFROM+++dolt_diff_dolt_schemas%0AWHERE++to_commit%3D%27224helolb2bg6iqrf9b7befrflehqgnb%27%3B%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+count%28*%29+as+total_rows_changed%0AFROM+++dolt_diff_dolt_schemas%0AWHERE++to_commit%3D%27224helolb2bg6iqrf9b7befrflehqgnb%27%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+count%28*%29+as+total_rows_changed%0AFROM+++dolt_diff_dolt_schemas%0AWHERE++to_commit%3D%27224helolb2bg6iqrf9b7befrflehqgnb%27%3B%0A" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ### `dolt_column_diff`
 
@@ -880,12 +880,12 @@ Taking the
 database from [DoltHub](https://www.dolthub.com/) as our
 example, the following query uses the `dolt_column_diff` system table to find commits and tables where the column `name` was updated.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+date%0AFROM+dolt_column_diff+where+column_name+%3D+%27name%27%0A%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+date%0AFROM+dolt_column_diff+where+column_name+%3D+%27name%27%0A%3B%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+date%0AFROM+dolt_column_diff+where+column_name+%3D+%27name%27%0A%3B%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+date%0AFROM+dolt_column_diff+where+column_name+%3D+%27name%27%0A%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+date%0AFROM+dolt_column_diff+where+column_name+%3D+%27name%27%0A%3B%0A" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 If we narrow in on the `dolt_schemas` table we can count the number of commits that updated each column
 over the course of all our commits.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+column_name%2C+count%28commit_hash%29+as+total_column_changes%0AFROM+dolt_column_diff%0AWHERE+table_name+%3D+%27dolt_schemas%27%0AGROUP+BY+column_name%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+column_name%2C+count%28commit_hash%29+as+total_column_changes%0AFROM+dolt_column_diff%0AWHERE+table_name+%3D+%27dolt_schemas%27%0AGROUP+BY+column_name%3B" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+column_name%2C+count%28commit_hash%29+as+total_column_changes%0AFROM+dolt_column_diff%0AWHERE+table_name+%3D+%27dolt_schemas%27%0AGROUP+BY+column_name%3B" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+column_name%2C+count%28commit_hash%29+as+total_column_changes%0AFROM+dolt_column_diff%0AWHERE+table_name+%3D+%27dolt_schemas%27%0AGROUP+BY+column_name%3B" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+column_name%2C+count%28commit_hash%29+as+total_column_changes%0AFROM+dolt_column_diff%0AWHERE+table_name+%3D+%27dolt_schemas%27%0AGROUP+BY+column_name%3B" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 From these results, we can see that fields describing the reasons an inmate is being held are being updated far more
 frequently than the fields holding demographic information about inmates.
@@ -990,7 +990,7 @@ database from [DoltHub](https://www.dolthub.com/) as our
 example, the following query will retrieve the jails whose total
 num_inmates_rated_for have changed the most between 2 versions.
 
-<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/us-jails/embed/main?q=SELECT+to_county%2C+from_county%2Cto_num_inmates_rated_for%2Cfrom_num_inmates_rated_for%2C++abs%28to_num_inmates_rated_for+-+from_num_inmates_rated_for%29+AS+delta%0AFROM+dolt_diff_jails%0AWHERE+from_commit+%3D+HASHOF%28%22HEAD~3%22%29+AND+diff_type+%3D+%22modified%22%0AORDER+BY+delta+DESC%0ALIMIT+10%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/us-jails/embed/main?q=SELECT+to_county%2C+from_county%2Cto_num_inmates_rated_for%2Cfrom_num_inmates_rated_for%2C++abs%28to_num_inmates_rated_for+-+from_num_inmates_rated_for%29+AS+delta%0AFROM+dolt_diff_jails%0AWHERE+from_commit+%3D+HASHOF%28%22HEAD~3%22%29+AND+diff_type+%3D+%22modified%22%0AORDER+BY+delta+DESC%0ALIMIT+10%3B%0A" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console <iframe src="https://www.dolthub.com/repositories/dolthub/us-jails/embed/main?q=SELECT+to_county%2C+from_county%2Cto_num_inmates_rated_for%2Cfrom_num_inmates_rated_for%2C++abs%28to_num_inmates_rated_for+-+from_num_inmates_rated_for%29+AS+delta%0AFROM+dolt_diff_jails%0AWHERE+from_commit+%3D+HASHOF%28%22HEAD~3%22%29+AND+diff_type+%3D+%22modified%22%0AORDER+BY+delta+DESC%0ALIMIT+10%3B%0A" class="dolthub-embed"></iframe>#x2197;</a></div>
+<div class="dolthub-embed-wrapper"><iframe src="https://www.dolthub.com/repositories/dolthub/us-jails/embed/main?q=SELECT+to_county%2C+from_county%2Cto_num_inmates_rated_for%2Cfrom_num_inmates_rated_for%2C++abs%28to_num_inmates_rated_for+-+from_num_inmates_rated_for%29+AS+delta%0AFROM+dolt_diff_jails%0AWHERE+from_commit+%3D+HASHOF%28%22HEAD~3%22%29+AND+diff_type+%3D+%22modified%22%0AORDER+BY+delta+DESC%0ALIMIT+10%3B%0A" class="dolthub-embed" loading="lazy"></iframe><a href="https://www.dolthub.com/repositories/dolthub/us-jails/embed/main?q=SELECT+to_county%2C+from_county%2Cto_num_inmates_rated_for%2Cfrom_num_inmates_rated_for%2C++abs%28to_num_inmates_rated_for+-+from_num_inmates_rated_for%29+AS+delta%0AFROM+dolt_diff_jails%0AWHERE+from_commit+%3D+HASHOF%28%22HEAD~3%22%29+AND+diff_type+%3D+%22modified%22%0AORDER+BY+delta+DESC%0ALIMIT+10%3B%0A" class="dolthub-embed-fallback" target="_blank" rel="noopener noreferrer">Open in DoltHub SQL console &#x2197;</a></div>
 
 ## Working Set Metadata System Tables
 
