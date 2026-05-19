@@ -1,18 +1,25 @@
 ---
-import DocsLayout from "../layouts/DocsLayout.astro";
-
+// The docs root (e.g. https://www.doltlab.com/docs/) redirects to the
+// "What is DoltLab?" page. Static site (no SSR), so this is a client/meta
+// redirect: location.replace for browsers/Cypress, a meta refresh fallback
+// for no-JS, and a canonical link for crawlers. Production additionally gets
+// a true 301 via the _redirects file (see package.json build).
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const target = `${base}/introduction/what-is-doltlab`;
 ---
 
-<DocsLayout title="DoltLab Documentation">
-  <h1>DoltLab Documentation</h1>
-  <p>
-    DoltLab is the self-hosted version of DoltHub — host your own Dolt database
-    remote with a web-based GUI.
-  </p>
-
-  <h2>Introduction</h2>
-  <ul>
-    <li><a href={`${base}/introduction/what-is-doltlab`}>What is DoltLab?</a></li>
-  </ul>
-</DocsLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>DoltLab Documentation</title>
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <script define:vars={{ target }}>
+      window.location.replace(target);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href={target}>What is DoltLab?</a>…</p>
+  </body>
+</html>
