@@ -99,7 +99,7 @@ describe("DoltLab docs — page content spot checks", () => {
     it("renders the custom 404 page", () => {
       cy.visit("/this-page-does-not-exist", { failOnStatusCode: false });
       cy.get("h1", { timeout }).should("be.visible").and("contain", "Page not found");
-      cy.contains("a", "Back to the DoltLab documentation home").should("be.visible");
+      cy.contains("a", "Back to DoltLab documentation home").should("be.visible");
     });
   });
 });
