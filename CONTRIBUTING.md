@@ -65,6 +65,7 @@ npm run dev                       # http://localhost:432x/docs
 ## Caveats
 
 - **`cli.md` is generated**, not hand-edited. To update it, run `dolt dump-docs --file=site/dolt/src/content/reference/cli/cli.md` from a Dolt binary at the right version, then `chmod 644`.
+- **DoltHub API docs are generated.** Don't hand-edit `site/dolt/src/content/products/dolthub/api/*.md` — regenerate instead. To update an endpoint, edit either the Swagger JSON in `site/dolt/src/content/.gitbook/assets/dolthub-api/<name>.json` or the per-page markdown template in `scripts/api-source/<page>.md`, then run `python3 scripts/generate-api-docs.py`.
 - **Internal links** are site-absolute with no `.md` extension. Use the URL form: `/sql-reference/version-control/dolt-sql-procedures#dolt_merge`, `/cli-reference/cli#dolt-status`, etc. A rehype plugin prepends the `/docs` base at build time, so write links *without* `/docs/`. Same-page anchors stay as `#anchor`.
 - **Images** must use *relative* paths (e.g. `../../.gitbook/assets/foo.png`) so Astro's asset pipeline can fingerprint them. Don't use absolute `/…` for images.
 - **Code blocks need a language** for syntax highlighting. Common: `sql` (incl. `mysql>` sessions — `mysql` isn't a Shiki grammar, use `sql`), `bash` (shell sessions), `text` (plain output / `+---+` result tables), `yaml`, `go`, `python`, `json`, `diff`, `ini`. Leave bare only when nothing fits.
