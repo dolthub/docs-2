@@ -317,7 +317,7 @@ insert INTO employees values (5,'Taylor', 'Bantle');
 call dolt_commit('-am', 'Modifications on a branch');
 ```
 
-Notice how the Git command line is implemented as [SQL stored procedures](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures). Write operations like `checkout` and `commit` are implemented as [stored procedures](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures) and read operations like `diff` and `log` are implemented as [system tables](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables).
+Notice how the Git command line is implemented as [SQL stored procedures](/sql-reference/version-control/dolt-sql-procedures). Write operations like `checkout` and `commit` are implemented as [stored procedures](/sql-reference/version-control/dolt-sql-procedures) and read operations like `diff` and `log` are implemented as [system tables](/sql-reference/version-control/dolt-system-tables).
 
 In TablePlus, you click SQL, enter the SQL and the "Run Current" which should generate something that looks the following output.
 

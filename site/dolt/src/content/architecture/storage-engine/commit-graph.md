@@ -4,13 +4,13 @@ title: Commit Graph
 
 # Commit Graph
 
-Dolt's unique [storage engine](https://docs.dolthub.com/architecture/storage-engine) implements a Git-style commit graph of [Prolly Trees](https://docs.dolthub.com/architecture/storage-engine/prolly-tree). Dolt's commit graph facilitates common version control operations like log, diff, branch and merge on database tables instead of files.
+Dolt's unique [storage engine](/architecture/storage-engine) implements a Git-style commit graph of [Prolly Trees](/architecture/storage-engine/prolly-tree). Dolt's commit graph facilitates common version control operations like log, diff, branch and merge on database tables instead of files.
 
 ![Dolt commit graph](../../.gitbook/assets/commit-graph-featured.png)
 
 ## Git vs Dolt
 
-Git and Dolt share the same [version control conceptual underpinnings](https://docs.dolthub.com/concepts/dolt/git). In Git and Dolt, the commit graph concepts are the same. In Git and Dolt, the commands to modify the commit graph are the same. The only difference is what Git and Dolt version. Git versions files. Dolt versions tables. Thus, if you know how the Git commit graph works, you know how the Dolt commit graph works. If not, read on.
+Git and Dolt share the same [version control conceptual underpinnings](/concepts/dolt/git). In Git and Dolt, the commit graph concepts are the same. In Git and Dolt, the commands to modify the commit graph are the same. The only difference is what Git and Dolt version. Git versions files. Dolt versions tables. Thus, if you know how the Git commit graph works, you know how the Dolt commit graph works. If not, read on.
 
 ## What is a Commit?
 
@@ -18,7 +18,7 @@ A commit is a marker in your version history that stores all the relevant inform
 
 A commit contains two sets of information: the content and the metadata.
 
-In Git, the content is the set of files as they existed at that point in time, identified by a content address. In Dolt, the content is the set of tables in the database at that point in time, identified by a content address. In Dolt, content addresses are created using a novel data structure called a [Prolly Tree](https://docs.dolthub.com/architecture/storage-engine/prolly-tree), that allows for structural sharing, efficient diff, and fast querying of table data.
+In Git, the content is the set of files as they existed at that point in time, identified by a content address. In Dolt, the content is the set of tables in the database at that point in time, identified by a content address. In Dolt, content addresses are created using a novel data structure called a [Prolly Tree](/architecture/storage-engine/prolly-tree), that allows for structural sharing, efficient diff, and fast querying of table data.
 
 Additionally, commit metadata like author, date, and message are stored so it is easier to identify the commit you are looking for in the version history. This metadata is considered when creating the content address that you see in the commit log. So, even if two commits have the exact same content but are committed at different times or by different authors, they will have different commit hashes. 
 

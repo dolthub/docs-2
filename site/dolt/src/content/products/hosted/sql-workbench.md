@@ -123,7 +123,7 @@ source code in the same way you'd use Git. Or you can run Dolt online, like you 
 similar to GitHub, is for collaborating offline on Dolt databases, while Hosted is for
 running online production databases.
 
-DoltHub is a hosted Dolt [remote](https://docs.dolthub.com/concepts/dolt/git/remotes). It
+DoltHub is a hosted Dolt [remote](/concepts/dolt/git/remotes). It
 uses `doltremoteapi`, a service that wraps Dolt's storage layer's interface, which allows
 the website to interact with Dolt databases that are stored in AWS S3. When you view a
 page on DoltHub, its API asks `doltremoteapi` for its storage layer interface, and uses
@@ -135,7 +135,7 @@ Hosted is a cloud-hosted, running Dolt database that you can connect to with any
 client over the internet. The SQL workbench on Hosted uses a [Node.js MySQL
 client](https://github.com/sidorares/node-mysql2) to connect to a deployment's running SQL
 server, utilizing Dolt's [SQL version control
-features](https://docs.dolthub.com/sql-reference/version-control) to display data in a
+features](/sql-reference/version-control) to display data in a
 similar to way to DoltHub. But unlike DoltHub, changes you make from a connected client
 are reflected immediately in other clients without any manual syncing.
 
@@ -193,8 +193,8 @@ returned objects would be mostly identical, the rest of logic for the UI needed 
 rewritten. The Hosted GraphQL server needed a new service that could manage multiple
 database connections and the database metadata query logic needed to be written in SQL
 using [Dolt system
-tables](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables) and
-[functions](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-functions).
+tables](/sql-reference/version-control/dolt-system-tables) and
+[functions](/sql-reference/version-control/dolt-sql-functions).
 
 You can learn more about the architecture of the Hosted workbench and how we use the RGD
 (React + GraphQL + Dolt) stack in [this
@@ -259,7 +259,7 @@ Since we need to communicate directly with the SQL server to list the branches f
 Hosted SQL workbench, the resolver looks different (we use [typeorm](https://typeorm.io/)
 with Apollo in Hosted GraphQL server). We need to first get the correct database connection,
 grab a connection from the connection pool, and then use the [`dolt_branches` system
-table](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables#dolt_branches)
+table](/sql-reference/version-control/dolt-system-tables#dolt_branches)
 to get the branch names.
 
 ```ts
@@ -282,7 +282,7 @@ to get the branch names.
 ```
 
 This process is similar for querying other database metadata, but unlike branches which are not revision-dependent, metadata like tables and commits need to be queried at a certain point in the commit history. We make heavy use of [revision
-databases](https://docs.dolthub.com/sql-reference/version-control/querying-history) to
+databases](/sql-reference/version-control/querying-history) to
 make this work.
 
 For example, to list tables for a branch, we can use an `AS OF` clause: `SHOW TABLES AS OF 'feature_branch'`. Or for user-run SQL queries we can use a `USE` statement to specify the branch before the query is run, like:

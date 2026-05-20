@@ -534,7 +534,7 @@ Then use `GET` to poll the operation to check if the import operation is done.
 </div>
 
 
-Here is an example of uploading a CSV file to create a table through this api endpoint in Javascript, you can reference the [`dolt table import`](https://docs.dolthub.com/cli-reference/cli#dolt-table-import) documentation for additional information.:
+Here is an example of uploading a CSV file to create a table through this api endpoint in Javascript, you can reference the [`dolt table import`](/cli-reference/cli#dolt-table-import) documentation for additional information.:
 
 > **Note**
 Please make sure to send your requests to `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/upload` instead of `https://www.dolthub.com/api/v1alpha1/{owner}/{database}/upload/`, do not need the last `/`.
@@ -796,9 +796,43 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createRelease.json" path="/{owner}/{database}/releases" method="post" %  }
-[createRelease.json](../../../.gitbook/assets/dolthub-api/createRelease.json)
-{% endswagger %}
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#6DB0FC">POST</span>
+<code class="api-path">/{owner}/{database}/releases</code>
+</div>
+<p class="api-summary">Create Release</p>
+<p class="api-description">This API endpoint allows you to create a new release in your database.</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/releases</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the owner of the database. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Request Body</h5>
+<p>Content-Type: <code>application/json</code></p>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>title</code></td><td>string</td><td>Yes</td><td>The title of the release.</td></tr>
+<tr><td><code>commitSha</code></td><td>string</td><td>Yes</td><td>The commit SHA or branch name of the release.</td></tr>
+<tr><td><code>tag</code></td><td>string</td><td>Yes</td><td>The name of the tag.</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>No</td><td>The description of the tag.</td></tr>
+<tr><td><code>createTagIfNotExists</code></td><td>boolean</td><td>No</td><td>Whether to create a tag if it doesn't exist.</td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
+
 
 ## List releases
 

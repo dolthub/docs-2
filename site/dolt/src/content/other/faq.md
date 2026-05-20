@@ -98,8 +98,8 @@ initiate garbage collection by calling [`dolt_gc()`](/sql-reference/version-cont
 
 ## How do I squash the history of a Dolt database? I only want the latest.
 
-You can perform a shallow [clone](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_clone) of a database by using the `--depth` flag. If you only want
-the latest change, specify a depth of 1. The [CLI](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_clone) also supports this:
+You can perform a shallow [clone](/sql-reference/version-control/dolt-sql-procedures#dolt_clone) of a database by using the `--depth` flag. If you only want
+the latest change, specify a depth of 1. The [CLI](/sql-reference/version-control/dolt-sql-procedures#dolt_clone) also supports this:
 
 ```bash
 dolt clone --depth 1 <database>

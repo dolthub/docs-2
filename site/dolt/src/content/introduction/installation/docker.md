@@ -64,7 +64,7 @@ If we run the command above with -d or switch to a separate window we can connec
 ### Define configuration for the server
 
 You can either define server configuration as command line arguments, or you can use yaml configuration file.
-For the command line argument definition you can simply define arguments at the end of the docker command. See [the Dolt server configuration documentation](https://docs.dolthub.com/sql-reference/server/configuration) for more details and available options. 
+For the command line argument definition you can simply define arguments at the end of the docker command. See [the Dolt server configuration documentation](/sql-reference/server/configuration) for more details and available options. 
 
 ```bash
 > docker run -p 3307:3306 dolthub/dolt-sql-server:latest -l debug --no-auto-commit

@@ -683,7 +683,7 @@ DoltLab Enterprise supports automated database backups for DoltLab's application
 
 To configure your DoltLab instance to automatically back up its Dolt database server, first, provision either a GCP bucket or and AWS S3 bucket and Dynamo DB table. You will need these to resources to create a remote backup. Oracle Cloud Infrastucture (OCI) storage buckets may be used as well.
 
-Dolt supports a [backup](https://docs.dolthub.com/sql-reference/server/backups#dolt-backup-command) command which can be used to create backups of a Dolt instance.
+Dolt supports a [backup](https://dolthub.com/docs/sql-reference/server/backups#dolt-backup-command) command which can be used to create backups of a Dolt instance.
 
 Let's walk through setting up automated backups using an AWS remote backup first.
 

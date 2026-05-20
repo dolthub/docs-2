@@ -403,7 +403,7 @@ Command line equivalent [doltlabdb-server-config-file](/reference/installer/cli#
 
 #### auto_gc_enabled
 
-_Boolean_. If true, [auto GC](https://docs.dolthub.com/sql-reference/server/garbage-collection#automated-gc) will be enabled on `doltlabdb`. _Optional_. This
+_Boolean_. If true, [auto GC](https://dolthub.com/docs/sql-reference/server/garbage-collection#automated-gc) will be enabled on `doltlabdb`. _Optional_. This
 will not be active if `server_config` is provided. In this case, enable auto GC on the config being supplied in `server_config`.
 
 ```yaml

@@ -18,7 +18,7 @@ We support several commands for this including:
 
 1. [`dolt table import`](https://pandas.pydata.org/docs/reference/api/pandas.read_sql.html)
 2. [`LOAD DATA`](https://dev.mysql.com/doc/refman/8.0/en/load-data.html)
-3. [`dolt sql`](https://docs.dolthub.com/cli-reference/cli#dolt-sql)
+3. [`dolt sql`](/cli-reference/cli#dolt-sql)
 
 ## CSV, JSON, and Parquet Files
 
@@ -64,7 +64,7 @@ We can query the table and see the new schema and data:
 +----+-----+
 ```
 
-You can reference the [`dolt table import`](https://docs.dolthub.com/cli-reference/cli#dolt-table-import) documentation for additional ways to modify your database such as updating or replacing your existing data.
+You can reference the [`dolt table import`](/cli-reference/cli#dolt-table-import) documentation for additional ways to modify your database such as updating or replacing your existing data.
 
 2. Importing with a schema
 
@@ -284,7 +284,7 @@ There are some best practices to keep in mind in order to make importing externa
 
 - Avoid adding foreign keys or unique indexes until after the import is completed. These substantially increase import time.
 - Minimize your use of blob types. These are expensive to create.
-- If running multiple import jobs back to back, be sure to [garbage collect](https://docs.dolthub.com/cli-reference/cli#dolt-gc) the database. Imports can generate a substantial amount of garbage.
+- If running multiple import jobs back to back, be sure to [garbage collect](/cli-reference/cli#dolt-gc) the database. Imports can generate a substantial amount of garbage.
 - If you're writing your own `.sql` file instead of using `mysqldump`, consider the following:
   - Import one table at a time.
   - Prefer fewer INSERT statements that each insert multiple values over more, shorter statements that only insert a single value each.

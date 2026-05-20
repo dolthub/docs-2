@@ -102,7 +102,7 @@ I finish up by subsequently running the last two create table queries.
 
 ## Create a Dolt Commit
 
-Now time to use my first Dolt feature! I'm going to create a [Dolt Commit](https://docs.dolthub.com/concepts/dolt/git/commits). Make a Dolt commit when you want to preserve the state of the Dolt database permanently for future reference.
+Now time to use my first Dolt feature! I'm going to create a [Dolt Commit](/concepts/dolt/git/commits). Make a Dolt commit when you want to preserve the state of the Dolt database permanently for future reference.
 
 To make a Dolt Commit I click the Create Commit Button and am prompted to enter a commit message.
 
@@ -183,9 +183,9 @@ This MySQL client is connected to your Hosted Dolt instance. Any changes you mak
 
 ## Create a branch
 
-So let's be safe and make our changes on a [branch](https://docs.dolthub.com/concepts/dolt/git/branch). A branch in Dolt is a lightweight way of isolating your changes from the "main" copy of the database. Since our goal is to make a Pull Request in the SQL Workbench, making a branch is necessary as pull requests are done between two branches, in this case "main" and our new branch.
+So let's be safe and make our changes on a [branch](/concepts/dolt/git/branch). A branch in Dolt is a lightweight way of isolating your changes from the "main" copy of the database. Since our goal is to make a Pull Request in the SQL Workbench, making a branch is necessary as pull requests are done between two branches, in this case "main" and our new branch.
 
-In Dolt SQL, version control read operations are exposed as [system tables](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables) or [functions](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-functions). Version control write operations are exposed as [procedures](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures).
+In Dolt SQL, version control read operations are exposed as [system tables](/sql-reference/version-control/dolt-system-tables) or [functions](/sql-reference/version-control/dolt-sql-functions). Version control write operations are exposed as [procedures](/sql-reference/version-control/dolt-sql-procedures).
 
 If you are familiar with the Git command line, finding the appropriate system table, function, or procedure is easy. In our case, we want to create a branch called `inserts` and switch to it to make our changes. We know in Git we can create a new branch with `git checkout -b` or `git branch`. Checkout will switch to that branch after Git creates it. This is a write operation so it must be a procedure in Dolt SQL. The convention in Dolt SQL is the Git equivalent commands are prefixed with `dolt_` and arguments are passed in the command line fashion. So, in our case, we want to checkout a new branch called `inserts` we run `call dolt_checkout('-b', 'inserts');`. If you know Git and SQL, you already know how to use Dolt.
 

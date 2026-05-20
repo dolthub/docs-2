@@ -434,7 +434,7 @@ Get all the tags.
 ### `dolt_branch_activity`
 `dolt_branch_activity` provides insights into branch usage within the lifetime of a running `dolt sql-server`. This table helps administrators identify stale or unused branches. The data is global to the server, and it not related to the persisted data in the database. For the reason, the `system_start_time` column will always be the start time of your server, and the `last_read` and `last_write` columns should be considered in relation to that time. Activity for branches which have been deleted will not be included in this table.
 
-For performance reasons, this table is only available if you opt-in to enable it. See [server configuration](https://docs.dolthub.com/sql-reference/server/configuration#branch_activity_tracking) for details. 
+For performance reasons, this table is only available if you opt-in to enable it. See [server configuration](/sql-reference/server/configuration#branch_activity_tracking) for details. 
 
 #### Schema
 
@@ -576,8 +576,8 @@ merged will have `parent_index` 1.
 
 The `dolt_commits` system table shows _ALL_ commits in a Dolt database.
 
-This is similar, but different from the `dolt_log` [system table](https://docs.dolthub.com/sql-reference/dolt-system-tables#dolt_log)
-and the `dolt log` [CLI command](https://docs.dolthub.com/reference/cli#dolt-log).
+This is similar, but different from the `dolt_log` [system table](/sql-reference/version-control/dolt-system-tables#dolt_log)
+and the `dolt log` [CLI command](/cli-reference/cli#dolt-log).
 `dolt log` shows you commit history for all commit ancestors reachable from the current `HEAD` of the
 checked out branch, whereas `dolt_commits` shows all commits from the entire database, no matter which branch is checked out.
 
@@ -673,7 +673,7 @@ the row at every ancestor commit reachable from our current branch.
 ### `dolt_log`
 
 The `dolt_log` system table contains the commit log for all commits reachable from the current `HEAD`.
-This is the same data returned by the [`dolt log` CLI command](https://docs.dolthub.com/reference/cli#dolt-log).
+This is the same data returned by the [`dolt log` CLI command](/cli-reference/cli#dolt-log).
 
 #### Schema
 

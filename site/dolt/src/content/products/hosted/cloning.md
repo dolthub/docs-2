@@ -84,8 +84,8 @@ cloning https://dolthub-us-housing.dbs.hosted.doltdb.com/us-housing-prices
 
 Now we can run whatever queries or schema migrations we want without affecting production.
 If there are updates to the database, easily sync your local copy using [`dolt
-fetch`](https://docs.dolthub.com/cli-reference/cli#dolt-fetch) or [`dolt
-pull`](https://docs.dolthub.com/cli-reference/cli#dolt-pull).
+fetch`](/cli-reference/cli#dolt-fetch) or [`dolt
+pull`](/cli-reference/cli#dolt-pull).
 
 Assuming your password environment variable is still set, you can authenticate these
 commands to your remotesapi endpoint in the same way by passing the `--user` flag:
@@ -98,7 +98,7 @@ commands to your remotesapi endpoint in the same way by passing the `--user` fla
 ## 4. Sync your upstream with changes from local copy
 
 If you make any changes on your local copy, you can push them to your upstream using
-[`dolt push`](https://docs.dolthub.com/cli-reference/cli#dolt-push).
+[`dolt push`](/cli-reference/cli#dolt-push).
 
 ```shell
 % dolt push origin --user "[username]" HEAD:main

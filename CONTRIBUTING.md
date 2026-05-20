@@ -1,242 +1,118 @@
-# Contributing to Docs
+# Contributing
 
-This guide explains how to edit existing docs pages and add new ones.
+How to edit, review, and ship docs changes.
 
-## Repository structure
+## Where content lives
 
-```
-site/
-  shared/              # Shared components (Navbar, Footer, Sidebar, Search)
-  dolt/                # docs.dolthub.com
-  doltlab/             # docs.doltlab.com
-  doltgres/            # docs.doltgres.com
-```
+Each site is an independent Astro app under `site/`. Page content is plain markdown:
 
-Each site has the same structure:
+| Site     | Content                      | Sidebar nav                | Page wrappers             |
+|----------|------------------------------|----------------------------|---------------------------|
+| Dolt     | `site/dolt/src/content/`     | `site/dolt/src/nav.ts`     | `site/dolt/src/pages/`     |
+| DoltLab  | `site/doltlab/src/content/`  | `site/doltlab/src/nav.ts`  | `site/doltlab/src/pages/`  |
+| Doltgres | `site/doltgres/src/content/` | `site/doltgres/src/nav.ts` | `site/doltgres/src/pages/` |
 
-```
-site/<product>/
-  src/
-    content/           # Markdown files (the actual docs content)
-    pages/             # Astro page files (thin wrappers that render content)
-    layouts/           # DocsLayout.astro (shared layout with navbar/sidebar/footer)
-    nav.ts             # Sidebar navigation tree
-  public/              # Static assets (images, favicon)
-  astro.config.mjs     # Astro config
-  tailwind.config.mjs  # Tailwind config
-  package.json
-```
-
-## Setup
-
-```sh
-cd site
-npm run install:all    # Install dependencies for all three sites
-npm run dev            # Start all three dev servers
-```
-
-Dev server ports:
-- Dolt: http://localhost:4321
-- DoltLab: http://localhost:4322
-- Doltgres: http://localhost:4323
-
-To run a single site:
-
-```sh
-cd site/dolt
-npm run dev
-```
+The content file path mirrors the URL path (`introduction/installation.md` → `/docs/introduction/installation`), with two URL remappings: `reference/sql/…` is served at `/sql-reference/…`, and `reference/cli/…` at `/cli-reference/…`. Shared layout and components live in `site/shared/`.
 
 ## Editing an existing page
 
-1. Find the markdown file in `site/<product>/src/content/`. The file path matches the URL path. For example, `/introduction/what-is-dolt` is at `src/content/introduction/what-is-dolt.md`.
+Edit the markdown file under `site/<site>/src/content/…` and preview locally:
 
-2. Edit the markdown file. It uses standard markdown with:
-   - Frontmatter at the top (`---` delimited) with a `title` field
-   - Standard markdown headings, links, code blocks, tables, images
-   - HTML is supported for things like DoltHub SQL console embeds
+```sh
+cd site/<site>
+npm install --legacy-peer-deps    # first time only
+npm run dev                       # http://localhost:432x/docs
+```
 
-3. The dev server hot-reloads changes automatically.
+(Ports: dolt `4321`, doltlab `4322`, doltgres `4323`.)
 
 ## Adding a new page
 
-Adding a new page requires three changes:
+1. **Markdown** — create `site/<site>/src/content/<section>/<slug>.md` with frontmatter:
 
-### 1. Create the markdown file
+   ```md
+   ---
+   title: My Page
+   ---
 
-Create a new `.md` file in `src/content/` at the path you want. For example, to add a page at `/guides/my-new-guide`:
+   # My Page
 
-```md
----
-title: "My New Guide"
----
+   …content…
+   ```
 
-# My New Guide
+2. **Page wrapper** — create `site/<site>/src/pages/<section>/<slug>.astro` that renders the markdown through `DocsLayout`. Copy a sibling page as a template.
+3. **Sidebar** — add the page to `site/<site>/src/nav.ts`.
+4. **Tests** — add the route to `cypress/fixtures/<site>-pages.ts` so the page-existence / single-h1 tests cover it.
 
-Your content here...
-```
+## Workflow
 
-Every page must have:
-- Frontmatter with a `title` field
-- An `# h1` heading in the body
+| Branch          | What happens on merge |
+|-----------------|----------------------|
+| feature branch  | CI runs Cypress + builds on the PR |
+| `dev`           | Cloudflare Pages auto-deploys to each site's **preview** environment |
+| `prod`          | Cloudflare Pages auto-deploys to **production** (the URLs in [`README.md`](README.md)) |
 
-### 2. Create the Astro page file
+1. Branch off `dev`, make changes, open a PR into `dev`.
+2. Get a review; CI must pass.
+3. Merge to `dev` → preview deploys. Verify on the dev sites:
+   - Dolt — https://dolthub.awsdev.ld-corp.com/docs/
+   - DoltLab — https://doltlab.awsdev.ld-corp.com/docs/
+   - Doltgres — https://doltgres.awsdev.ld-corp.com/docs/
+4. When ready to ship, open a PR `dev` → `prod` and merge. Cloudflare auto-deploys to production.
 
-Create a corresponding `.astro` file in `src/pages/` at the same path. For `/guides/my-new-guide`:
+> `dev` is the repo's default/integration branch — there is no `main`.
 
-**`src/pages/guides/my-new-guide.astro`**:
+## Caveats
 
-```astro
----
-import DocsLayout from "../../layouts/DocsLayout.astro";
+- **`cli.md` is generated**, not hand-edited. To update it, run `dolt dump-docs --file=site/dolt/src/content/reference/cli/cli.md` from a Dolt binary at the right version, then `chmod 644`.
+- **DoltHub API docs are generated.** Don't hand-edit `site/dolt/src/content/products/dolthub/api/*.md` — regenerate instead. To update an endpoint, edit either the Swagger JSON in `site/dolt/src/content/.gitbook/assets/dolthub-api/<name>.json` or the per-page markdown template in `scripts/api-source/<page>.md`, then run `python3 scripts/generate-api-docs.py`.
+- **Internal links** are site-absolute with no `.md` extension. Use the URL form: `/sql-reference/version-control/dolt-sql-procedures#dolt_merge`, `/cli-reference/cli#dolt-status`, etc. A rehype plugin prepends the `/docs` base at build time, so write links *without* `/docs/`. Same-page anchors stay as `#anchor`.
+- **Images** must use *relative* paths (e.g. `../../.gitbook/assets/foo.png`) so Astro's asset pipeline can fingerprint them. Don't use absolute `/…` for images.
+- **Code blocks need a language** for syntax highlighting. Common: `sql` (incl. `mysql>` sessions — `mysql` isn't a Shiki grammar, use `sql`), `bash` (shell sessions), `text` (plain output / `+---+` result tables), `yaml`, `go`, `python`, `json`, `diff`, `ini`. Leave bare only when nothing fits.
+- **Each page has exactly one `# H1`** matching the frontmatter `title`. Demote any extra upstream H1s to `##` (and shift downstream levels accordingly). The `single-h1.spec.ts` Cypress check enforces this.
 
-const post = await import("../../content/guides/my-new-guide.md");
-const Content = post.Content;
----
+## Cypress tests
 
-<DocsLayout title="My New Guide">
-  <Content />
-</DocsLayout>
-```
+Each docs site has spec files exercising the built Astro site:
 
-The import path is relative from the page file to the content file. Count the directory depth to get the right number of `../` prefixes.
+| Spec | What it checks |
+|------|---------------|
+| `page-existence.spec.ts` | Every known page returns HTTP 200 (uses `cy.request()` — fast) |
+| `content.spec.ts` | Representative pages load with the correct `h1` heading and non-empty body |
+| `navigation.spec.ts` | Docs root redirects to the intro, unknown URLs return 404 *(dolt only)* |
+| `dead-links.spec.ts` | In-content links resolve |
+| `single-h1.spec.ts` | Each page has exactly one `<h1>` |
 
-### 3. Add to sidebar navigation
+### Running the tests
 
-Edit `src/nav.ts` to add your page to the sidebar. Find the appropriate section and add an entry:
-
-```ts
-{
-  section: "Guides",
-  items: [
-    { title: "Cheat Sheet", href: "/guides/cheat-sheet" },
-    { title: "My New Guide", href: "/guides/my-new-guide" },  // ← add here
-  ],
-},
-```
-
-For nested pages with children:
-
-```ts
-{
-  title: "Parent Page",
-  href: "/guides/parent",
-  children: [
-    { title: "Child Page", href: "/guides/parent/child" },
-  ],
-},
-```
-
-## Adding a section index page
-
-For a new section like `/guides/my-section/` with child pages, create a `README.md` in a directory:
-
-1. **Content**: `src/content/guides/my-section/README.md`
-2. **Page**: `src/pages/guides/my-section.astro` (note: not `my-section/index.astro`)
-3. **Child pages**: `src/content/guides/my-section/child.md` etc.
-
-The page file for a README.md section index:
-
-```astro
----
-import DocsLayout from "../../../layouts/DocsLayout.astro";
-
-const post = await import("../../../content/guides/my-section/README.md");
-const Content = post.Content;
----
-
-<DocsLayout title="My Section">
-  <Content />
-</DocsLayout>
-```
-
-## Internal links
-
-Use absolute paths for internal links:
-
-```md
-See the [installation guide](/introduction/installation) for details.
-```
-
-Do **not** use:
-- Relative paths (`./foo` or `../bar`) — these break due to URL vs filesystem path differences
-- `.md` extensions (`/introduction/installation.md`) — Astro doesn't strip them
-
-## Images
-
-Place images in `src/content/.gitbook/assets/` (legacy path from the GitBook migration) and reference them with relative paths from the markdown file:
-
-```md
-![Screenshot](../../.gitbook/assets/my-screenshot.png)
-```
-
-## Embedding DoltHub SQL console
-
-Use an iframe with the `dolthub-embed` class:
-
-```html
-<div class="dolthub-embed-wrapper">
-  <iframe src="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+1" class="dolthub-embed" loading="lazy"></iframe>
-  <a href="https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+1" class="dolthub-embed-fallback" target="_blank">Open in DoltHub SQL console &#x2197;</a>
-</div>
-```
-
-## Embedding YouTube videos
-
-Use an iframe with the `youtube-embed` class:
-
-```html
-<iframe src="https://www.youtube.com/embed/VIDEO_ID" class="youtube-embed" allowfullscreen></iframe>
-```
-
-## API docs (DoltHub API only)
-
-The DoltHub API documentation is generated from OpenAPI spec files by `scripts/generate-api-docs.py`. To update API docs:
-
-1. Edit the OpenAPI spec JSON files in the [dolthub/docs](https://github.com/dolthub/docs) repo at `packages/dolt/content/.gitbook/assets/dolthub-api/`
-2. Run `python3 scripts/generate-api-docs.py`
-
-## Re-importing from dolthub/docs
-
-If the source markdown in [dolthub/docs](https://github.com/dolthub/docs) has been updated, re-import with:
+The suites run against a local `astro preview` server by default. Build the site, start preview, then run Cypress:
 
 ```sh
-bash scripts/import-dolt-docs.sh      # Dolt
-bash scripts/import-doltlab-docs.sh   # DoltLab
-bash scripts/import-doltgres-docs.sh  # Doltgres
-```
+npm install
 
-These scripts copy markdown, convert GitBook syntax, fix links, add missing headings, and generate Astro page files. **Warning**: this overwrites all content and pages — commit any manual changes first.
-
-## Building for production
-
-```sh
-cd site
-npm run build          # Builds all three sites (includes Pagefind search index)
-npm run preview        # Preview all three built sites
-```
-
-To build a single site:
-
-```sh
-cd site/dolt
-npm run build          # Runs astro build + pagefind indexing
-npm run preview        # Serves the built site
-```
-
-## Running tests
-
-From the repo root:
-
-```sh
-# Build the site first
+# Dolt — build, start preview (port 4321), run Cypress
 npm run build:dolt
-
-# Start preview server and run Cypress tests
 npm run preview:dolt &
-npm run cy:run
+npx cypress run
+npx cypress open                              # interactive mode
 
-# DoltLab / Doltgres
-npm run build:doltlab && npm run preview:doltlab &
-npm run cy:run:doltlab
+# DoltLab (port 4322)
+npm run build:doltlab
+npm run preview:doltlab &
+npx cypress run --config-file cypress.doltlab.config.ts
+
+# Doltgres (port 4323)
+npm run build:doltgres
+npm run preview:doltgres &
+npx cypress run --config-file cypress.doltgres.config.ts
 ```
+
+To test the legacy GitBook sites (the original migration baseline) instead, point at the live URL and disable our `/docs` base prefix:
+
+```sh
+npx cypress run --config baseUrl=https://docs.dolthub.com --env basePath=
+```
+
+### CI
+
+GitHub Actions runs the full suite on every pull request. Three jobs run in parallel — one per docs site — so a failure in one doesn't block the others. See [`.github/workflows/cypress.yaml`](.github/workflows/cypress.yaml).
