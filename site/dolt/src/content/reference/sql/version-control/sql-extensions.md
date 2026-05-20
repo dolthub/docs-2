@@ -41,6 +41,7 @@ Full details: [Procedures](/sql-reference/version-control/dolt-sql-procedures).
 | [`DOLT_CLEAN()`](/sql-reference/version-control/dolt-sql-procedures#dolt_clean) | Discard untracked tables in the working set. |
 | [`DOLT_CLONE()`](/sql-reference/version-control/dolt-sql-procedures#dolt_clone) | Clone a remote database into the current Dolt environment. |
 | [`DOLT_COMMIT()`](/sql-reference/version-control/dolt-sql-procedures#dolt_commit) | Create a new commit from staged changes. |
+| [`DOLT_COMMIT_HASH_OUT()`](/sql-reference/version-control/dolt-sql-procedures#dolt_commit_hash_out) | Like `DOLT_COMMIT()`, but writes the new commit hash to an OUT parameter — handy from scripts that need the hash without re-querying. |
 | [`DOLT_CONFLICTS_RESOLVE()`](/sql-reference/version-control/dolt-sql-procedures#dolt_conflicts_resolve) | Resolve a merge conflict by taking the `--ours` or `--theirs` side. |
 | [`DOLT_FETCH()`](/sql-reference/version-control/dolt-sql-procedures#dolt_fetch) | Update remote-tracking refs without merging. |
 | [`DOLT_GC()`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc) | Reclaim disk space by removing unreferenced chunks. |
