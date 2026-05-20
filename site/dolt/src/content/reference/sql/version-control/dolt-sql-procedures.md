@@ -14,6 +14,7 @@ title: Dolt SQL Procedures
   - [dolt_clean()](#dolt_clean)
   - [dolt_clone()](#dolt_clone)
   - [dolt_commit()](#dolt_commit)
+  - [dolt_commit_hash_out()](#dolt_commit_hash_out)
   - [dolt_conflicts_resolve()](#dolt_conflicts_resolve)
   - [dolt_fetch()](#dolt_fetch)
   - [dolt_gc()](#dolt_gc)
@@ -728,6 +729,57 @@ WHERE pk = "key";
 
 -- Stage all changes and commit.
 CALL DOLT_COMMIT('-a', '-m', 'This is a commit', '--author', 'John Doe <johndoe@example.com>');
+```
+
+### `DOLT_COMMIT_HASH_OUT()`
+
+Identical to [`DOLT_COMMIT()`](#dolt_commit), except the first argument is a
+user variable that receives the hash of the new commit. Useful inside
+scripts and stored procedures that need to reference the commit they just
+created without immediately re-querying it.
+
+The first argument must be a session variable (e.g. `@hash`); all remaining
+arguments are the same flags and values accepted by
+[`DOLT_COMMIT()`](#dolt_commit).
+
+```sql
+CALL DOLT_COMMIT_HASH_OUT(@out_hash, '-am', 'This is a commit');
+```
+
+If the commit is skipped (for example, `--skip-empty` with no staged
+changes), the out variable is left unchanged.
+
+#### Output Schema
+
+```text
++-------+------+----------------------------+
+| Field | Type | Description                |
++-------+------+----------------------------+
+| hash  | text | hash of the commit created |
++-------+------+----------------------------+
+```
+
+The hash is returned both in the result set (for parity with `DOLT_COMMIT()`)
+and via the out variable.
+
+#### Example
+
+```sql
+USE mydb;
+
+CREATE TABLE t (pk INT PRIMARY KEY, c1 INT);
+CALL DOLT_ADD('.');
+
+-- Capture the commit hash for later reference.
+SET @c1 = '';
+CALL DOLT_COMMIT_HASH_OUT(@c1, '-am', 'creating table t');
+
+INSERT INTO t VALUES (1, 1), (2, 2);
+SET @c2 = '';
+CALL DOLT_COMMIT_HASH_OUT(@c2, '-am', 'inserting rows');
+
+-- Diff between the two commits without re-querying for their hashes.
+SELECT * FROM dolt_diff(@c1, @c2, 't');
 ```
 
 ### `DOLT_CONFLICTS_RESOLVE()`
