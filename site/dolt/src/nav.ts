@@ -120,6 +120,7 @@ const nav: NavSection[] = [
           { title: "Garbage Collection", href: "/sql-reference/server/garbage-collection" },
           { title: "Metrics", href: "/sql-reference/server/metrics" },
           { title: "Replication", href: "/sql-reference/server/replication" },
+          { title: "Hardware Requirements", href: "/sql-reference/server/hardware-requirements" },
           { title: "Troubleshooting", href: "/sql-reference/server/troubleshooting" },
         ],
       },
