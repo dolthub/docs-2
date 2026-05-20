@@ -33,19 +33,9 @@ describe("Dolt docs — navigation and structure", () => {
     });
   });
 
-  // Legacy redirects from the GitBook site. These are not yet implemented
-  // on the new Astro site — uncomment and add Astro redirect config as needed.
-  // context("Redirects", () => {
-  //   const redirects = [
-  //     { from: "/tutorials/installation", description: "→ /introduction/installation" },
-  //     { from: "/reference/sql/configuration", description: "→ /sql-reference/server/configuration" },
-  //   ];
-  //   redirects.forEach(({ from, description }) => {
-  //     it(`redirect works: ${description}`, () => {
-  //       cy.request({ url: from, failOnStatusCode: false }).then(response => {
-  //         expect(response.status).to.eq(200);
-  //       });
-  //     });
-  //   });
-  // });
+  // Legacy redirects from the old GitBook site live in `site/dolt/_redirects`
+  // and 301 at the Cloudflare layer (e.g. `/docs/reference/sql/configuration`
+  // → `/docs/sql-reference/server/configuration`). They can't be exercised
+  // against `astro preview` because `_redirects` is a Cloudflare-only
+  // directive; verify them post-deploy.
 });
