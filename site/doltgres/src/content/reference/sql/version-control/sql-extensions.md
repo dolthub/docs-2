@@ -101,6 +101,8 @@ table's name for `$TABLENAME`. Full details:
 | Name | Description |
 |------|-------------|
 | [`dolt_blame_$tablename`](/reference/version-control/dolt-system-tables#dolt_blame_usdtablename) | Last-modifying commit for each row of a user table. |
+| [`dolt_branch_control`](/reference/server/branch-permissions#dolt_branch_control) | Per-user branch-modification permission rules. |
+| [`dolt_branch_namespace_control`](/reference/server/branch-permissions#dolt_branch_namespace_control) | Per-user rules for which branch names a user may create. |
 | [`dolt_commit_diff_$TABLENAME`](/reference/version-control/dolt-system-tables#dolt_commit_diff_usdtablename) | Row-level diff for a user table between two specific commits. |
 | [`dolt_conflicts_$TABLENAME`](/reference/version-control/dolt-system-tables#dolt_conflicts_usdtablename) | Row-level conflicts for a single user table during an active merge. |
 | [`dolt_constraint_violations_$TABLENAME`](/reference/version-control/dolt-system-tables#dolt_constraint_violations_usdtablename) | Row-level constraint violations for a single user table. |

@@ -54,6 +54,14 @@ Full details: [Procedures](/sql-reference/version-control/dolt-sql-procedures).
 | [`DOLT_REVERT()`](/sql-reference/version-control/dolt-sql-procedures#dolt_revert) | Create a new commit that undoes a prior commit. |
 | [`DOLT_RM()`](/sql-reference/version-control/dolt-sql-procedures#dolt_rm) | Remove a table from the working set. |
 | [`DOLT_STASH()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stash) | Save working-set changes to a side stack and restore HEAD. |
+| [`dolt_stats_flush()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stats_flush) | Block until in-progress statistics writes have flushed. |
+| [`dolt_stats_gc()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stats_gc) | Block until a statistics garbage-collection signal completes. |
+| [`dolt_stats_info()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stats_info) | Print the current state of the statistics provider. |
+| [`dolt_stats_once()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stats_once) | Run a single statistics collection cycle. |
+| [`dolt_stats_purge()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stats_purge) | Clear the stats queue and cache and disable the collector. |
+| [`dolt_stats_restart()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stats_restart) | Restart the statistics collector thread. |
+| [`dolt_stats_stop()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stats_stop) | Clear the stats queue and stop the collector thread. |
+| [`dolt_stats_wait()`](/sql-reference/version-control/dolt-sql-procedures#dolt_stats_wait) | Block on a full statistics queue cycle. |
 | [`DOLT_TAG()`](/sql-reference/version-control/dolt-sql-procedures#dolt_tag) | Create, list, or delete a tag at a commit. |
 | [`DOLT_UNDROP()`](/sql-reference/version-control/dolt-sql-procedures#dolt_undrop) | Restore a recently dropped database from the recovery area. |
 | [`DOLT_UPDATE_COLUMN_TAG()`](/sql-reference/version-control/dolt-sql-procedures#dolt_update_column_tag) | Reassign the internal tag identifier of a column. |
@@ -103,6 +111,8 @@ table's name for `$TABLENAME`. Full details:
 | [`dolt_backups`](/sql-reference/version-control/dolt-system-tables#dolt_backups) | Configured backup remotes. |
 | [`dolt_blame_$tablename`](/sql-reference/version-control/dolt-system-tables#dolt_blame_usdtablename) | Last-modifying commit for each row of a user table. |
 | [`dolt_branch_activity`](/sql-reference/version-control/dolt-system-tables#dolt_branch_activity) | Recent activity timestamps for each branch. |
+| [`dolt_branch_control`](/sql-reference/server/branch-permissions#dolt_branch_control) | Per-user branch-modification permission rules. |
+| [`dolt_branch_namespace_control`](/sql-reference/server/branch-permissions#dolt_branch_namespace_control) | Per-user rules for which branch names a user may create. |
 | [`dolt_branches`](/sql-reference/version-control/dolt-system-tables#dolt_branches) | All local branches with their HEAD hash and commit metadata. |
 | [`dolt_column_diff`](/sql-reference/version-control/dolt-system-tables#dolt_column_diff) | Per-column history of which commits touched which column. |
 | [`dolt_commit_ancestors`](/sql-reference/version-control/dolt-system-tables#dolt_commit_ancestors) | Parent-commit relationships across the commit graph. |
@@ -165,6 +175,13 @@ either commit/transaction semantics or replication. Full details:
 | [`dolt_show_branch_databases`](/sql-reference/version-control/dolt-sysvars#dolt_show_branch_databases) | List one virtual database per branch in `SHOW DATABASES`. |
 | [`dolt_show_system_tables`](/sql-reference/version-control/dolt-sysvars#dolt_show_system_tables) | Include `dolt_*` system tables in `SHOW TABLES`. |
 | [`dolt_skip_replication_errors`](/sql-reference/version-control/dolt-sysvars#dolt_skip_replication_errors) | Don't fail commits when replication to the remote fails. |
+| [`dolt_stats_branches`](/sql-reference/sql-support/miscellaneous#auto-refresh) | Branches whose statistics get auto-collected. |
+| [`dolt_stats_enabled`](/sql-reference/sql-support/miscellaneous#disable) | Enable or disable statistics collection. |
+| [`dolt_stats_gc_enabled`](/sql-reference/sql-support/miscellaneous#stats-garbage-collection) | Enable or disable the statistics garbage collector. |
+| [`dolt_stats_gc_interval`](/sql-reference/sql-support/miscellaneous#stats-garbage-collection) | Interval between statistics GC cycles (default 1 hour). |
+| [`dolt_stats_job_interval`](/sql-reference/sql-support/miscellaneous#auto-refresh) | Delay between statistics collection processing steps. |
+| [`dolt_stats_memory_only`](/sql-reference/sql-support/miscellaneous#auto-refresh) | Run statistics collection in memory only (no on-disk persistence). |
+| [`dolt_stats_paused`](/sql-reference/sql-support/miscellaneous#disable) | Pause the statistics collector without disabling it. |
 | [`dolt_transaction_commit`](/sql-reference/version-control/dolt-sysvars#dolt_transaction_commit) | Automatically create a Dolt commit at the end of each SQL transaction. |
 | [`dolt_transaction_commit_message`](/sql-reference/version-control/dolt-sysvars#dolt_transaction_commit_message) | Message used for auto-generated transaction commits. |
 
