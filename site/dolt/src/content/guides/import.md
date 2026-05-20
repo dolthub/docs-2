@@ -4,30 +4,165 @@ title: Importing Data
 
 # Importing Data
 
-## Get data into Dolt
+This guide covers the ways to load existing data into a Dolt database. Jump
+to your source format or use case:
 
-You can load the following data formats into Dolt:
+- [CSV, JSON, Parquet files](#csv-json-and-parquet-files) — `dolt table import` and `LOAD DATA`
+- [MySQL databases](#mysql-databases) — `mysqldump` + `dolt sql`
+- [Postgres databases](#postgres) — `pg_dump` + `pg2mysql` + `dolt sql`
+- [Spreadsheets](#spreadsheets) — Excel files via `dolt table import`, or DoltHub's spreadsheet UI
+- [Pandas DataFrames](#pandas-dataframe) — `to_sql` over SQLAlchemy
+- [Hosted Dolt deployments](#hosted-dolt-deployments) — server settings to flip for bulk imports
 
-- CSV, JSON, Parquet
-- MySQL databases
-- Postgres
-- Spreadsheets
-- Pandas dataframes
+Before starting a large import (anything on the order of tens of gigabytes
+or above) read [Import best practices](#import-best-practices) first — most
+of the perf complaints we hear come down to one of the items in that
+section.
 
-We support several commands for this including:
+## Import best practices
 
-1. [`dolt table import`](https://pandas.pydata.org/docs/reference/api/pandas.read_sql.html)
-2. [`LOAD DATA`](https://dev.mysql.com/doc/refman/8.0/en/load-data.html)
-3. [`dolt sql`](/cli-reference/cli#dolt-sql)
+The following apply across every import path. They get more important as
+the database gets larger; for a ~50 GB+ import they're effectively
+required, not optional.
+
+### Defer foreign keys, unique indexes, and secondary indexes
+
+The single biggest perf lever on a large import is to land the rows first
+and constrain them after. Adding indexes and foreign keys to a table that
+already holds 100 M rows is much faster than maintaining them while those
+rows stream in.
+
+If you control the schema, define the table with just its primary key and
+column definitions, run the import, and then add the foreign keys, unique
+indexes, and secondary indexes with `ALTER TABLE`:
+
+```sql
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    sku VARCHAR(64) NOT NULL,
+    placed_at DATETIME NOT NULL,
+    total_cents BIGINT NOT NULL
+);
+
+-- ... import the rows ...
+
+ALTER TABLE orders ADD INDEX idx_user (user_id);
+ALTER TABLE orders ADD INDEX idx_placed (placed_at);
+ALTER TABLE orders ADD CONSTRAINT fk_user
+    FOREIGN KEY (user_id) REFERENCES users (id);
+```
+
+### Disable foreign key checks during the import
+
+If you can't drop the foreign keys (for example, because you're loading a
+dump file that creates the schema and inserts rows in the same script),
+disable foreign key checks for the session that runs the import. Dolt
+honors the standard MySQL session variable:
+
+```sql
+SET FOREIGN_KEY_CHECKS=0;
+-- ... INSERT / LOAD DATA / source dump.sql ...
+SET FOREIGN_KEY_CHECKS=1;
+```
+
+`mysqldump` already wraps its output in `SET FOREIGN_KEY_CHECKS=0;` /
+`SET FOREIGN_KEY_CHECKS=1;`, so importing a `mysqldump` file with
+`dolt sql < dump.sql` gets this behavior automatically.
+
+Note that `SET UNIQUE_CHECKS=0;` is currently a no-op in Dolt — unique
+constraints are always enforced as rows are inserted. The only way to
+defer unique-constraint checking is to defer the unique index itself, per
+the section above.
+
+### Re-verify constraints once checks are back on
+
+`SET FOREIGN_KEY_CHECKS=1` only re-enables the check for subsequent
+statements — it doesn't retroactively validate rows you inserted while
+checks were off. After the import, ask Dolt to walk the working set and
+flag any rows that don't satisfy the constraints. From the CLI:
+
+```bash
+dolt constraints verify --all
+```
+
+`--all` is important here: without it, only rows changed since the last
+commit are checked, which misses everything if you committed mid-import.
+See [`dolt constraints verify`](/cli-reference/cli#dolt-constraints-verify)
+for the full option list.
+
+The SQL equivalent is the `DOLT_VERIFY_CONSTRAINTS()` procedure:
+
+```sql
+CALL DOLT_VERIFY_CONSTRAINTS('--all');
+```
+
+Either way, violations land in the
+[`dolt_constraint_violations`](/sql-reference/version-control/dolt-system-tables#dolt_constraint_violations)
+system table. The query returns the count of violations; **a successful
+import returns 0**. If it returns a non-zero count, inspect:
+
+```sql
+SELECT * FROM dolt_constraint_violations;
+```
+
+and fix the offending rows (or roll back) before committing. Dolt will
+refuse to create a commit while `dolt_constraint_violations` has rows.
+
+### Garbage-collect between back-to-back imports
+
+Each large import generates a lot of unreferenced chunks. If you're running
+multiple imports against the same database, garbage-collect in between:
+
+```bash
+dolt gc
+```
+
+or from a SQL session:
+
+```sql
+CALL DOLT_GC();
+```
+
+This is otherwise harmless to run any time, and Dolt will eventually GC on
+its own — running it explicitly just keeps the working set lean between
+import jobs. See [`dolt gc`](/cli-reference/cli#dolt-gc).
+
+### Hand-written `.sql` import files
+
+If you're generating an `.sql` file yourself rather than producing it with
+`mysqldump`, three things matter for import speed:
+
+- **Import one table at a time.** Don't interleave `INSERT`s across
+  tables; finish one before starting the next.
+- **Prefer multi-row `INSERT`s.** One statement that inserts 1,000 rows is
+  meaningfully faster than 1,000 single-row statements. A few thousand
+  rows per statement is a good batch size.
+- **Sort `INSERT`s by primary key.** Dolt stores data in a B-tree keyed
+  on the primary key; inserting in key order avoids rebalancing work. If a
+  table doesn't have a primary key, add one.
+
+### On large `TEXT`, `JSON`, and `BLOB` columns
+
+Older guidance recommended minimizing the use of blob types because of an
+import perf penalty. **That's no longer the case as of Dolt 2.0**, which
+turns on _adaptive encoding_ by default: short values in `TEXT` / `JSON` /
+`BLOB` columns are stored inline with the rest of the row, and only values
+that push the row past a size threshold are stored out-of-band. You don't
+need to avoid these types for perf reasons anymore. If you're importing
+into a table that uses very large blob values per row (multiple MB each),
+expect import throughput to be dominated by the cost of writing those
+values to disk regardless of the database technology.
 
 ## CSV, JSON, and Parquet Files
 
-The easiest sources of data to work with are CSV, JSON, and Parquet files. These pair best with the custom `dolt table import`
-command.
+The easiest sources of data to work with are CSV, JSON, and Parquet files.
+These pair best with the custom `dolt table import` command.
 
-1. Importing with no schema
+### Importing with no schema
 
-Dolt supports importing `csv` files without a defined SQL schema. Consider the following csv file:
+Dolt supports importing `csv` files without a defined SQL schema. Consider
+the following csv file:
 
 ```csv
 pk,val
@@ -66,7 +201,7 @@ We can query the table and see the new schema and data:
 
 You can reference the [`dolt table import`](/cli-reference/cli#dolt-table-import) documentation for additional ways to modify your database such as updating or replacing your existing data.
 
-2. Importing with a schema
+### Importing with a schema
 
 In the case of JSON or Parquet files we require you provide a schema in the form of a `CREATE TABLE` SQL statement. You can also specify a schema for a csv file. Let's walk through the following file.
 
@@ -124,8 +259,9 @@ Import completed successfully.
 +----+------------+-----------+---------+
 ```
 
-3. You can also use the MySQL `LOAD DATA` command to work with data that is compatible with the [LOAD DATA api](https://dev.mysql.com/doc/refman/8.0/en/load-data.html). For example
-   you can load the above `file.csv` as follows:
+### Using `LOAD DATA`
+
+You can also use the MySQL `LOAD DATA` command to work with data that is compatible with the [LOAD DATA api](https://dev.mysql.com/doc/refman/8.0/en/load-data.html). For example you can load the above `file.csv` as follows:
 
 ```sql
 create table test(pk int, val int);
@@ -169,6 +305,13 @@ To load into dolt:
 ```bash
 dolt sql < dump.sql
 ```
+
+`mysqldump` files already disable foreign key checks for the duration of
+the import, so the [foreign-key best practice](#disable-foreign-key-checks-during-the-import)
+is handled automatically. Once the import completes, run
+`dolt constraints verify --all` (see [Re-verify constraints once checks
+are back on](#re-verify-constraints-once-checks-are-back-on)) before
+creating your first commit.
 
 ## Hosted Dolt Deployments
 
@@ -277,15 +420,3 @@ The second way to do this is by exporting your pandas dataframe as a csv file wh
 ...                    'weapon': ['sai', 'bo staff']})
 >>> df.to_csv('out.csv', index=False)
 ```
-
-## Import Best Practices
-
-There are some best practices to keep in mind in order to make importing external data into Dolt as fast as possible. These performance differences are especially relevant with large databases (~50GB+).
-
-- Avoid adding foreign keys or unique indexes until after the import is completed. These substantially increase import time.
-- Minimize your use of blob types. These are expensive to create.
-- If running multiple import jobs back to back, be sure to [garbage collect](/cli-reference/cli#dolt-gc) the database. Imports can generate a substantial amount of garbage.
-- If you're writing your own `.sql` file instead of using `mysqldump`, consider the following:
-  - Import one table at a time.
-  - Prefer fewer INSERT statements that each insert multiple values over more, shorter statements that only insert a single value each.
-  - Sort your inserts by primary key. If a table doesn't have a primary key, consider adding one.
