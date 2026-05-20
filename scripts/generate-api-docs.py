@@ -1,8 +1,18 @@
 #!/usr/bin/env python3
 """
-Reads the original GitBook markdown files for the DoltHub API docs,
-parses {% swagger %} tags, loads the referenced OpenAPI spec files,
-and generates markdown with inline API endpoint documentation.
+Generates the DoltHub API docs from in-repo sources.
+
+Inputs (all in this repo):
+  - Markdown templates with {% swagger %} tags:
+        scripts/api-source/*.md
+  - OpenAPI / swagger JSON specs referenced by the templates:
+        site/dolt/src/content/.gitbook/assets/dolthub-api/*.json
+
+Output:
+        site/dolt/src/content/products/dolthub/api/*.md  (rendered)
+
+Override the defaults with env vars TEMPLATES_DIR / ASSETS_DIR / OUT_DIR
+if you ever need to. No upstream dolthub/docs checkout required.
 """
 
 import json
@@ -19,17 +29,21 @@ def _resolve_path(env_var: str, *default_parts: str) -> str:
     return str(repo_root.joinpath(*default_parts))
 
 
-DOCS_ROOT = _resolve_path(
-    "DOCS_ROOT", "docs", "packages", "dolt", "content"
+TEMPLATES_DIR = _resolve_path("TEMPLATES_DIR", "scripts", "api-source")
+ASSETS_DIR = _resolve_path(
+    "ASSETS_DIR", "site", "dolt", "src", "content", ".gitbook", "assets", "dolthub-api"
 )
-SITE_CONTENT = _resolve_path(
-    "SITE_CONTENT", "docs-2", "site", "dolt", "src", "content"
+OUT_DIR = _resolve_path(
+    "OUT_DIR", "site", "dolt", "src", "content", "products", "dolthub", "api"
 )
-API_DIR = os.path.join(DOCS_ROOT, "products/dolthub/api")
 
 
 def load_spec(spec_path: str) -> dict:
-    full_path = os.path.normpath(os.path.join(API_DIR, spec_path))
+    # Templates carry legacy relative paths like
+    # "../../../.gitbook/assets/dolthub-api/<name>.json"; we only need the
+    # filename and look it up under ASSETS_DIR (the in-repo JSON dir).
+    name = os.path.basename(spec_path)
+    full_path = os.path.join(ASSETS_DIR, name)
     with open(full_path) as f:
         return json.load(f)
 
@@ -156,8 +170,8 @@ def main():
     api_files = ["sql.md", "database.md", "csv.md", "hooks.md", "authentication.md", "user.md", "README.md"]
 
     for filename in api_files:
-        src = os.path.join(API_DIR, filename)
-        dest = os.path.join(SITE_CONTENT, "products/dolthub/api", filename)
+        src = os.path.join(TEMPLATES_DIR, filename)
+        dest = os.path.join(OUT_DIR, filename)
 
         if not os.path.exists(src):
             continue
