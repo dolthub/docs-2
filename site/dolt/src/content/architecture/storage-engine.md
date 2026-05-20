@@ -71,7 +71,7 @@ Also, writes to B-trees are not history independent, the order of the writes int
 
 A Prolly Tree, or Probabilistic B-tree, is a content-addressed B-tree. 
 
-Similarly to B-trees, a map of primary keys to values are used to represent tables. Keys form the intermediary nodes and values are stored in the leaf nodes. Because of their similarity to B-trees, Prolly trees [approximate B-tree performance](https://docs.dolthub.com/sql-reference/benchmarks/latency) of basic SQL database read and write operations like select, insert, update, and delete. Content-addressing allows for fast comparison (ie. diff) and [structural sharing](https://www.dolthub.com/blog/2020-05-13-dolt-commit-graph-and-structural-sharing/) of versions.
+Similarly to B-trees, a map of primary keys to values are used to represent tables. Keys form the intermediary nodes and values are stored in the leaf nodes. Because of their similarity to B-trees, Prolly trees [approximate B-tree performance](/sql-reference/benchmarks/latency) of basic SQL database read and write operations like select, insert, update, and delete. Content-addressing allows for fast comparison (ie. diff) and [structural sharing](https://www.dolthub.com/blog/2020-05-13-dolt-commit-graph-and-structural-sharing/) of versions.
 
 ![Prolly Tree Example](../.gitbook/assets/tim-prolly-tree-example.png)
 

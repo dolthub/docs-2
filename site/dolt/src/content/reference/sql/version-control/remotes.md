@@ -14,7 +14,7 @@ Remotes are configured using the [`remote` command](/cli-reference/cli#dolt-remo
 
 <h2 id="pushing-to-remote">Pushing to a Remote</h2>
 
-Let's go through an example of how you can push data from a local Dolt database to a remote. In this example, we'll use the running Dolt server we created in the [Getting Started](https://docs.dolthub.com/introduction/getting-started/database) section to push a branch to [DoltHub.com](https://www.dolthub.com).
+Let's go through an example of how you can push data from a local Dolt database to a remote. In this example, we'll use the running Dolt server we created in the [Getting Started](/introduction/getting-started/database) section to push a branch to [DoltHub.com](https://www.dolthub.com).
 
 To do this, we'll need to authenticate our Dolt server against the remote so that it can perform writes.
 
@@ -24,7 +24,7 @@ Next, we're going to create a database on DoltHub.com that will serve as the rem
 
 ![Empty database as remote](../../../../content/.gitbook/assets/empty_database_as_remote.png)
 
-Next, we can run the command [dolt login](https://docs.dolthub.com/cli-reference/cli#dolt-login) from our local Dolt CLI client. This command will help us authenticate our local client to DoltHub.com, associating our client with our DoltHub identity.
+Next, we can run the command [dolt login](/cli-reference/cli#dolt-login) from our local Dolt CLI client. This command will help us authenticate our local client to DoltHub.com, associating our client with our DoltHub identity.
 
 ```bash
 dolt login
@@ -112,7 +112,7 @@ See the [Getting Started Guide for DoltHub](/products/dolthub/data-sharing) on h
 
 ## DoltLab
 
-[DoltLab](https://www.doltlab.com) is a version of [DoltHub](https://www.dolthub.com) you can deploy in your own network. It looks very similar to DoltHub. See the [DoltLab Guide](https://docs.doltlab.com/installation) if you are interested in using DoltLab as a remote.
+[DoltLab](https://www.doltlab.com) is a version of [DoltHub](https://www.dolthub.com) you can deploy in your own network. It looks very similar to DoltHub. See the [DoltLab Guide](https://doltlab.com/docs/installation) if you are interested in using DoltLab as a remote.
 
 ## Filesystem
 

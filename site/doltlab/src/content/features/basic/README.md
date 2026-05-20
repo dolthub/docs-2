@@ -9,9 +9,9 @@ DoltLab has all the features you know and love of [DoltHub](https://www.dolthub.
 
 You kind find more information about some of these features in the DoltHub documentation:
 
-- [Permissions](https://docs.dolthub.com/concepts/dolthub/permissions)
-- [Pull Requests](https://docs.dolthub.com/concepts/dolthub/prs)
-- [Issues](https://docs.dolthub.com/concepts/dolthub/issues)
-- [Forks](https://docs.dolthub.com/concepts/dolthub/forks)
+- [Permissions](https://dolthub.com/docs/concepts/dolthub/permissions)
+- [Pull Requests](https://dolthub.com/docs/concepts/dolthub/prs)
+- [Issues](https://dolthub.com/docs/concepts/dolthub/issues)
+- [Forks](https://dolthub.com/docs/concepts/dolthub/forks)
 
 See [here](/features/advanced/) for more advanced DoltLab features.

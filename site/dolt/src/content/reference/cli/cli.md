@@ -363,7 +363,7 @@ Applies the changes from an existing commit and creates a new commit from the cu
 
 Cherry-picking merge commits or commits with table drops/renames is not currently supported. 
 
-If any data conflicts, schema conflicts, or constraint violations are detected during cherry-picking, you can use Dolt's conflict resolution features to resolve them. For more information on resolving conflicts, see: https://docs.dolthub.com/concepts/dolt/git/conflicts.
+If any data conflicts, schema conflicts, or constraint violations are detected during cherry-picking, you can use Dolt's conflict resolution features to resolve them. For more information on resolving conflicts, see: /concepts/dolt/git/conflicts.
 
 **Arguments and options**
 
@@ -2414,7 +2414,7 @@ SUPPORTED CONFIG FILE FIELDS:
 
 `user_session_vars`: A map of user name to a map of session variables to set on connection for each session.
 
-`cluster`: Settings related to running this server in a replicated cluster. For information on setting these values, see https://docs.dolthub.com/sql-reference/server/replication
+`cluster`: Settings related to running this server in a replicated cluster. For information on setting these values, see /sql-reference/server/replication
 
 If a config file is not provided many of these settings may be configured on the command line.
 

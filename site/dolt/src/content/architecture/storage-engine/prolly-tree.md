@@ -8,7 +8,7 @@ title: Prolly Tree
 
 ![Prolly Tree](../../.gitbook/assets/tim-prolly-tree-example.png)
 
-A Prolly Tree is a data structure closely related to a [B-tree](https://en.wikipedia.org/wiki/B-tree). Prolly Trees are generally useful but have proven particularly effective as the basis of [the storage engine](https://docs.dolthub.com/architecture/storage-engine) for [version controlled databases](https://www.dolthub.com/blog/2022-08-04-database-versioning/).
+A Prolly Tree is a data structure closely related to a [B-tree](https://en.wikipedia.org/wiki/B-tree). Prolly Trees are generally useful but have proven particularly effective as the basis of [the storage engine](/architecture/storage-engine) for [version controlled databases](https://www.dolthub.com/blog/2022-08-04-database-versioning/).
 
 ## Motivation
 
@@ -224,13 +224,13 @@ We now understand what `n`, `k`, and `w` are in the context of B-Trees and Proll
 
 ## How Prolly Trees are used in Dolt
 
-In Dolt, [all data in the database is stored in Prolly Trees](https://docs.dolthub.com/architecture/storage-engine#commit-graph). 
+In Dolt, [all data in the database is stored in Prolly Trees](/architecture/storage-engine#commit-graph). 
 
 For table data, a map of primary key to data columns is stored in a Prolly Tree. Similarly, secondary indexes are maps of index values to the primary key identifying each row. Schemas are stored as Prolly trees to make calculating the root of the database easy. Keyless tables are implemented as every column is a primary key with a count of the number of duplicate rows as the value.
 
 ## Prolly Trees In Practice
 
-This all looks good on paper. How do Prolly Trees work in practice? On a standard suite of `sysbench` performance tests, Dolt is approximately [as fast as MySQL](https://docs.dolthub.com/sql-reference/benchmarks/latency). 
+This all looks good on paper. How do Prolly Trees work in practice? On a standard suite of `sysbench` performance tests, Dolt is approximately [as fast as MySQL](/sql-reference/benchmarks/latency). 
 
 Upon profiling, we find any performance differences to be unrelated to Prolly Trees. Performance differences come from:
 

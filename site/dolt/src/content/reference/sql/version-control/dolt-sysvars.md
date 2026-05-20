@@ -167,7 +167,7 @@ transaction. Defaults to `0`.
 
 ### `dolt_commit_verification_groups`
 
-When set, this system variable enables commit verification by running tests from the [`dolt_tests`](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables#dolt_tests) system table before allowing [commits](/sql-reference/version-control/dolt-sql-procedures#dolt_commit), [merges](/sql-reference/version-control/dolt-sql-procedures#dolt_merge), [cherry-picks](/sql-reference/version-control/dolt-sql-procedures#dolt_cherry_pick), and [rebase](/sql-reference/version-control/dolt-sql-procedures#dolt_rebase) operations. The variable specifies which test groups to run:
+When set, this system variable enables commit verification by running tests from the [`dolt_tests`](/sql-reference/version-control/dolt-system-tables#dolt_tests) system table before allowing [commits](/sql-reference/version-control/dolt-sql-procedures#dolt_commit), [merges](/sql-reference/version-control/dolt-sql-procedures#dolt_merge), [cherry-picks](/sql-reference/version-control/dolt-sql-procedures#dolt_cherry_pick), and [rebase](/sql-reference/version-control/dolt-sql-procedures#dolt_rebase) operations. The variable specifies which test groups to run:
 
 - `"*"` - Run all tests in the `dolt_tests` table
 - `"group1,group2,group3"` - Run tests from specific test groups (comma-separated)

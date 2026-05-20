@@ -16,7 +16,7 @@ For instructions on how to install and run DoltgreSQL, checkout our [installatio
 
 ## Differences from Dolt
 
-Dolt and Doltgres share the same [storage engine](https://docs.dolthub.com/architecture/storage-engine) and implement the same version control interfaces in SQL. Only the SQL dialect/implementation is different. Thus, you can refer to the [documentation for the Dolt SQL server](https://docs.dolthub.com/sql-reference/server) to understand how to run and use DoltgreSQL and its features. Just connect with a Postgres-compatible client instead of a MySQL-compatible client.
+Dolt and Doltgres share the same [storage engine](https://dolthub.com/docs/architecture/storage-engine) and implement the same version control interfaces in SQL. Only the SQL dialect/implementation is different. Thus, you can refer to the [documentation for the Dolt SQL server](https://dolthub.com/docs/sql-reference/server) to understand how to run and use DoltgreSQL and its features. Just connect with a Postgres-compatible client instead of a MySQL-compatible client.
 
 So, what is different?
 

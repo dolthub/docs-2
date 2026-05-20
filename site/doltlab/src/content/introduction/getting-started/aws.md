@@ -23,7 +23,7 @@ This will create a `.pem` file and download it locally.
 
 ![](../../.gitbook/assets/getting-started/doltlab-aws-ec2-pub-ip.png)
 
-4. Add security group rules for ports 22 (SSH), 80 (HTTP), 443 (HTTPS), 100 (CUSTOM), 4321 (CUSTOM), 50051 (CUSTOM) that allow ingress from anywhere. Specifics [here](https://docs.doltlab.com/introduction/installation#networking-requirements). You also may need to create a new VPC and Subnet here. Just use the defaults.
+4. Add security group rules for ports 22 (SSH), 80 (HTTP), 443 (HTTPS), 100 (CUSTOM), 4321 (CUSTOM), 50051 (CUSTOM) that allow ingress from anywhere. Specifics [here](/introduction/installation#networking-requirements). You also may need to create a new VPC and Subnet here. Just use the defaults.
 
 ![](../../.gitbook/assets/getting-started/doltlab-aws-ec2-security-rules.png)
 
