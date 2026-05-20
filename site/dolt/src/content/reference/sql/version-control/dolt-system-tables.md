@@ -576,7 +576,7 @@ merged will have `parent_index` 1.
 
 The `dolt_commits` system table shows _ALL_ commits in a Dolt database.
 
-This is similar, but different from the `dolt_log` [system table](/sql-reference/dolt-system-tables#dolt_log)
+This is similar, but different from the `dolt_log` [system table](/sql-reference/version-control/dolt-system-tables#dolt_log)
 and the `dolt log` [CLI command](/cli-reference/cli#dolt-log).
 `dolt log` shows you commit history for all commit ancestors reachable from the current `HEAD` of the
 checked out branch, whereas `dolt_commits` shows all commits from the entire database, no matter which branch is checked out.
