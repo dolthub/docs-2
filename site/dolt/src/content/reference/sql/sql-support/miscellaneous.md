@@ -28,44 +28,90 @@ Some MySQL features are client features, not server features. Dolt ships with a 
 
 ## Join hints
 
-Dolt supports the following join hints:
-
-| name                     | supported | detail                                                                                          |
-|--------------------------|-----------|-------------------------------------------------------------------------------------------------|
-| JOIN_ORDER(<table1>,...) | ✅         | Join tree in scope should use the following join execution order. Must include all table names. |
-| LOOKUP_JOIN(<t1>,<t2>)   | ✅         | Use LOOKUP strategy joining two tables.                                                         |
-| MERGE_JOIN(<t1>,<t2>)    | ✅         | Use MERGE strategy joining two tables.                                                          |
-| HASH_JOIN(<t1>,<t2>)     | ✅         | Use HASH strategy joining two tables.                                                           |
-| INNER_JOIN(<t1>,<t2>)    | ✅         | Use INNER strategy joining two tables.                                                          |
-| SEMI_JOIN(<t1>,<t2>)     | ✅         | Use SEMI strategy joining two tables (for `EXISTS` or `IN` queries).                            |
-| ANTI_JOIN(<t1>,<t2>)     | ✅         | Use ANTI strategy joining two tables (for `NOT EXISTS` or `NOT IN` queries).                    |
-| JOIN_FIXED_ORDER         | ❌         | Join tree uses in-place table order for execution.                                              |
-| NO_ICP                   | ❌         | Disable indexed range scans on index using filters.                                             |
-
-Join hints are indicated immediately after a `SELECT` token in a special
-comment format `/*+ */`. Multiple hints should be separated by spaces:
+Join hints let you override the planner's cost-based choice of join
+order and join strategy for a single query. They use the Oracle-style
+`/*+ ... */` comment syntax placed immediately after the `SELECT`
+keyword:
 
 ```sql
-SELECT /*+ JOIN_ORDER(arg1,arg2) */ 1
-SELECT /*+ JOIN_ORDER(arg1,arg2) NO_ICP */ 1
+SELECT /*+ JOIN_ORDER(pa, p, ib, obj, o, ik, ki) */ count(*)
+FROM pa
+JOIN p ON pa.id = p.pa_id
+JOIN ib ON ib.p_id = p.id
+...;
 ```
 
-Join hints currently require a full set of valid hints for all to be
-applied. For example, if we have a three table join we can enforce
-JOIN_ORDER on its own, join strategies on their own, or both order
-and strategy:
+Hint names are case-insensitive, and arguments inside the parentheses
+may be separated by commas, spaces, or both.
+
+### Supported hints
+
+| Hint                              | Args      | What it does                                                                                                                       |
+|-----------------------------------|-----------|------------------------------------------------------------------------------------------------------------------------------------|
+| `JOIN_ORDER(t1, t2, ...)`         | all tables in the join | Forces the planner to join the listed tables in that order. Must include every table named in the join scope.        |
+| `LOOKUP_JOIN(t1, t2)`             | 2 tables  | Force a lookup join between `t1` and `t2`.                                                                                          |
+| `LEFT_OUTER_LOOKUP_JOIN(t1, t2)`  | 2 tables  | Force a left-outer lookup join between `t1` and `t2`.                                                                               |
+| `MERGE_JOIN(t1, t2)`              | 2 tables  | Force a merge join between `t1` and `t2`.                                                                                           |
+| `NO_MERGE_JOIN`                   | none      | Disable merge joins for the entire query.                                                                                           |
+| `HASH_JOIN(t1, t2)`               | 2 tables  | Force a hash join between `t1` and `t2`.                                                                                            |
+| `INNER_JOIN(t1, t2)`              | 2 tables  | Force a non-physical inner join (lets the planner pick the physical operator but locks the inner-join shape) between `t1` and `t2`. |
+| `SEMI_JOIN(t1, t2)`               | 2 tables  | Force a semi join (for `EXISTS` / `IN` rewrites) between `t1` and `t2`.                                                             |
+| `ANTI_JOIN(t1, t2)`               | 2 tables  | Force an anti join (for `NOT EXISTS` / `NOT IN` rewrites) between `t1` and `t2`.                                                    |
+| `LEFT_DEEP`                       | none      | Restrict the planner to left-deep join trees (the right child of every join is a single table).                                     |
+
+Two hints are recognized by the parser but currently no-ops while
+their implementations are pending: `JOIN_FIXED_ORDER` (would lock the
+join order to the order tables appear in the `FROM` clause) and
+`NO_ICP` (would disable index condition pushdown).
+
+### Combining hints
+
+Multiple hints are separated by whitespace inside the same comment.
+You can use `JOIN_ORDER` alone, individual operator hints alone, or
+combine the two — for example, to fix both the order and the strategy
+at each join in a three-table query:
 
 ```sql
-SELECT /*+ JOIN_ORDER(xy,uv,ab) LOOKUP_JOIN(xy,uv) HASH_JOIN(uv,ab) */ 1
+SELECT /*+ JOIN_ORDER(xy, uv, ab) LOOKUP_JOIN(xy, uv) HASH_JOIN(uv, ab) */ 1
 FROM xy
-JOIN uv on x = u
-JOIN ab on a = u;
+JOIN uv ON x = u
+JOIN ab ON a = u;
 ```
 
-Additional notes:
-- If one hint is invalid given the execution options, no hints are applied and the engine falls back to default costing.
-- Join operator hints are order-insensitive
-- Join operator hints apply as long as the indicated tables are subsets of the join left/right.
+Join operator hints (`LOOKUP_JOIN`, `MERGE_JOIN`, etc.) match as long
+as the two named tables are subsets of the join's left and right
+inputs respectively, and the order of the two arguments doesn't
+matter.
+
+### Verifying a hint took effect
+
+Hints are advisory: the planner applies them when it can and silently
+falls back to default cost-based planning otherwise. The two ways a
+hint gets ignored:
+
+- **One of the hints in the comment is invalid.** Hints are applied as
+  a set — if any one of them can't be satisfied (for example, a
+  `JOIN_ORDER` that names a table not in the query, or a
+  `MERGE_JOIN(a, b)` between two tables that don't have a usable
+  equi-join predicate and indexes), **none of the hints in that
+  comment are applied** and the engine falls back to default costing.
+- **The hint contradicts a physical requirement.** A `MERGE_JOIN`
+  needs sorted inputs (typically backed by indexes); a `LOOKUP_JOIN`
+  needs an index on the right-side join key; etc. If those aren't
+  available, the planner can't honor the hint.
+
+Confirm a hint took effect with `EXPLAIN`:
+
+```sql
+EXPLAIN SELECT /*+ JOIN_ORDER(pa, p, ib) HASH_JOIN(p, ib) */ count(*)
+FROM pa
+JOIN p ON pa.id = p.pa_id
+JOIN ib ON ib.p_id = p.id;
+```
+
+The plan output names the chosen operator at each join node
+(`HashJoin`, `MergeJoin`, `LookupJoin`, etc.) and the table on each
+side, so you can read off whether the planner followed the hint.
 
 ## Table Statistics
 
