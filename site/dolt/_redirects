@@ -3,3 +3,14 @@
 # public/ can't be used for this. Gives a true 301 for the docs root.
 /docs/ /docs/introduction/what-is-dolt 301
 /docs /docs/introduction/what-is-dolt 301
+
+# Legacy paths from the old GitBook site. External links (the marketing
+# site, blog posts, third-party pages) still point at these; redirect to
+# their current locations instead of 404ing.
+/docs/installation                       /docs/introduction/installation                          301
+/docs/reference/sql/configuration        /docs/sql-reference/server/configuration                 301
+/docs/reference/sql/backups              /docs/sql-reference/server/backups                       301
+/docs/reference/sql/replication          /docs/sql-reference/server/replication                   301
+/docs/reference/sql/dolt-sql-procedures  /docs/sql-reference/version-control/dolt-sql-procedures  301
+/docs/reference/sql/dolt-sysvars         /docs/sql-reference/version-control/dolt-sysvars         301
+/docs/reference/sql/dolt-system-tables   /docs/sql-reference/version-control/dolt-system-tables   301
