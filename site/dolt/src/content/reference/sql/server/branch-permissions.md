@@ -10,7 +10,10 @@ title: Branch Permissions
 Branch permissions are a way of managing how users may interact with branches when running Dolt as a server (via `dolt sql-server`).
 The branch permissions model is composed of two system tables: `dolt_branch_control` and `dolt_branch_namespace_control`.
 The former table handles branch modification, while the latter table handles branch creation.
-All operations that are not explicitly done as a client connected to a server (such as locally using the CLI) will bypass branch permissions.
+
+**These permissions are only enforced for clients that connect to a running `dolt sql-server` with a username and password** — for example, the `mysql` CLI or any MySQL-compatible driver from your application code.
+Anything that runs outside of an authenticated SQL session bypasses branch permissions entirely.
+That includes the local Dolt CLI: `dolt commit`, `dolt branch`, `dolt push`, the interactive `dolt sql` REPL (and `dolt sql -q '...'`), and so on — they all go straight at the on-disk database without an authenticated session, so the permissions checks don't apply.
 
 ## System Tables
 
