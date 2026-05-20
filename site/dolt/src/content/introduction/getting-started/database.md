@@ -117,9 +117,9 @@ Dolt supports foreign keys, secondary indexes, triggers, check constraints, and 
 
 ## Make a Dolt commit
 
-It's time to use your first Dolt feature. We're going to make a Dolt [commit](https://docs.dolthub.com/concepts/dolt/commits). A Dolt commit allows you to time travel and see lineage. Make a Dolt commit whenever you want to restore or compare to this point in time.
+It's time to use your first Dolt feature. We're going to make a Dolt [commit](/concepts/dolt/git/commits). A Dolt commit allows you to time travel and see lineage. Make a Dolt commit whenever you want to restore or compare to this point in time.
 
-Dolt exposes version control functionality through a Git-style interface. On the command line, Dolt commands map exactly to their Git equivalent with the targets being tables instead of files. In SQL, Dolt exposes version control read operations as [system tables](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables) and version control write operations as [stored procedures](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures).
+Dolt exposes version control functionality through a Git-style interface. On the command line, Dolt commands map exactly to their Git equivalent with the targets being tables instead of files. In SQL, Dolt exposes version control read operations as [system tables](/sql-reference/version-control/dolt-system-tables) and version control write operations as [stored procedures](/sql-reference/version-control/dolt-sql-procedures).
 
 The naming of the system tables and stored procedures follows the `dolt_<command>` pattern. So `dolt add` on the CLI becomes `dolt_add` as a stored procedure. Passing options also follows the command line model. For instance, to specify tables to add, send the table names in as options to the `dolt_add` procedure. For named arguments like sending a message into the `dolt_commit` command use two arguments in sequence like `('-m', 'This is a message')`. If you know Git, the version control procedures and system tables should feel familiar.
 
@@ -154,7 +154,7 @@ mysql> select * from dolt_log;
 
 There you have it. Your schema is created and you have a Dolt commit tracking the creation, as seen in the `dolt_log` system table.
 
-Note, a Dolt commit is different than a standard SQL transaction `COMMIT`. In this case, I am running the database with [`AUTOCOMMIT`](https://dev.mysql.com/doc/refman/5.6/en/innodb-autocommit-commit-rollback.html) on, so each SQL statement is automatically generating a transaction `COMMIT`. If you want a system to generate a Dolt commit for every transaction use the system variable,[`@@dolt_transaction_commit`](https://docs.dolthub.com/sql-reference/version-control/dolt-sysvars#dolt_transaction_commit).
+Note, a Dolt commit is different than a standard SQL transaction `COMMIT`. In this case, I am running the database with [`AUTOCOMMIT`](https://dev.mysql.com/doc/refman/5.6/en/innodb-autocommit-commit-rollback.html) on, so each SQL statement is automatically generating a transaction `COMMIT`. If you want a system to generate a Dolt commit for every transaction use the system variable,[`@@dolt_transaction_commit`](/sql-reference/version-control/dolt-sysvars#dolt_transaction_commit).
 
 ## Insert some data
 
@@ -326,9 +326,9 @@ mysql> show tables;
 3 rows in set (0.01 sec)
 ```
 
-Dolt makes operating databases less error prone. You can always back out changes you have in progress or rewind to a known good state. You also have the ability to undo specific commits using [`dolt_revert()`](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_revert).
+Dolt makes operating databases less error prone. You can always back out changes you have in progress or rewind to a known good state. You also have the ability to undo specific commits using [`dolt_revert()`](/sql-reference/version-control/dolt-sql-procedures#dolt_revert).
 
-Note, undoing changes from a `drop database` statement requires a special SQL procedure, [`dolt_undrop()`](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_undrop).
+Note, undoing changes from a `drop database` statement requires a special SQL procedure, [`dolt_undrop()`](/sql-reference/version-control/dolt-sql-procedures#dolt_undrop).
 
 ## See the data in a SQL Workbench
 
@@ -607,9 +607,9 @@ That should be enough to get you started. We covered installation, starting a SQ
 
 Want to dive even deeper? Here are some links to advanced topics:
 
-- [Permissions](https://docs.dolthub.com/sql-reference/server/access-management)
-- [Connecting from application code](https://docs.dolthub.com/sql-reference/supported-clients/clients)
+- [Permissions](/sql-reference/server/access-management)
+- [Connecting from application code](/sql-reference/supported-clients/clients)
 - [Backups](https://www.dolthub.com/blog/2021-10-08-backups/)
 - [Replication](https://www.dolthub.com/blog/2021-10-20-read-replication/)
-- [Conflicts](https://docs.dolthub.com/concepts/dolt/conflicts)
-- [Using a Remote with your Server](https://docs.dolthub.com/sql-reference/version-control/remotes#pushing-to-remote)
+- [Conflicts](/concepts/dolt/git/conflicts)
+- [Using a Remote with your Server](/sql-reference/version-control/remotes#pushing-to-remote)

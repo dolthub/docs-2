@@ -49,7 +49,7 @@ To warm the replica with the state of the source database before starting replic
 
 **Export databases**: With the server running, use [the `mysqldump` utility](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html) to export the data from all databases on your source MySQL server. Make sure to use the `--single-transaction` flag as well as the `--all-databases` flag (if you want all databases exported). The `--single-transaction` flag is important for safely exporting data while the database is running, and ensures that exported table data is consistent. Note that `--single-transaction` only works with InnoDB databases (the default engine for MySQL since 5.5.5). For example: `mysqldump -uroot --single-transaction --protocol TCP --port 54322 --all-databases > mysql_dump.sql`
 
-**Load databases**: Transfer the dump file from the previous step to the new Dolt replica server, start the Dolt sql-server (e.g. `dolt sql-server --port 11223`), and load the data into the replica server by running `mysql -uroot --protocol TCP --port 111223 < myDumpFile`. See the [Dolt Data Import Guide](https://docs.dolthub.com/guides/import#mysql-databases) for more details. 
+**Load databases**: Transfer the dump file from the previous step to the new Dolt replica server, start the Dolt sql-server (e.g. `dolt sql-server --port 11223`), and load the data into the replica server by running `mysql -uroot --protocol TCP --port 111223 < myDumpFile`. See the [Dolt Data Import Guide](/guides/import#mysql-databases) for more details. 
 
 > **Note**
 #### Note

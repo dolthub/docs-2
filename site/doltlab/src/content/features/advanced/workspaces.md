@@ -7,4 +7,4 @@ title: "Workspaces"
 
 DoltHub and DoltLab use the same "workspaces".
 
-Consult the [DoltHub workspaces documentation](https://docs.dolthub.com/products/dolthub/workspaces) for more information.
+Consult the [DoltHub workspaces documentation](https://dolthub.com/docs/products/dolthub/workspaces) for more information.

@@ -28,7 +28,7 @@ same on both.
 Dolt and Postgres are [row major](https://en.wikipedia.org/wiki/Row-_and_column-major_order),
 meaning row values are stored next to each other. However, Postgres stores data in a binary tree
 structure while Dolt stores table data on disk using a content-addressed binary tree called a
-[prolly tree](https://docs.dolthub.com/architecture/storage-engine/prolly-tree). This setup makes Dolt [fairly
+[prolly tree](https://dolthub.com/docs/architecture/storage-engine/prolly-tree). This setup makes Dolt [fairly
 comparable in query performance to Postgres](/reference/benchmarks/latency) while also
 providing history-independence and fast `diff` between versions. Fast `diff` powers Dolt's version
 control capabilities.

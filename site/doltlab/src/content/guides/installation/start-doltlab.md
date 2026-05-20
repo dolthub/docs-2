@@ -35,7 +35,7 @@ default_user:
   email: "admin@localhost"
 ## "SMTP" is used to configure a connection to an existing SMTP server. Optional.
 ## For more information on connecting your instance to an SMTP server,
-## see https://docs.doltlab.com/guides/administrator#connect-smtp-server.
+## see https://doltlab.com/docs/guides/administrator#connect-smtp-server.
 #smtp:
 #  auth_method: "plain"
 #  host: ""

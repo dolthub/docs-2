@@ -89,7 +89,7 @@ create table t (
 
 This configuration value is used to increase or decease the log level of your Dolt SQL server. Logs by default are printed to `STDERR` and `STDOUT`.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 >  Level of logging provided. Options are: trace, debug, info, warning, error, and fatal.
 
@@ -192,7 +192,7 @@ The `behavior` section of `config.yaml` defines configuration that determines th
 
 This configuration value is used to turn your SQL server into read only mode, preventing any write queries from succeeding and logging an error.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > If true database modification is disabled. Defaults to false.
 
@@ -254,7 +254,7 @@ ERROR 1105 (HY000): database server is set to read only mode
 
 `autocommit` is a standard SQL database setting where every SQL statement triggers a transaction `COMMIT`. Without `autocommit`, the user is responsible for managing their own concurrency by issuing `BEGIN` statements at the start of transactions and `COMMIT` or `ROLLBACK` statements at the end of transactions. Most databases (ie. MySQL, Postgres) and clients (ie. ODBC, JDBC) have `autocommit` on by default with [the notable exception of the Python client](https://www.dolthub.com/blog/2023-09-25-python-autocommit/).
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > If true every statement is committed automatically. Defaults to true. @@autocommit can also be specified in each session.
 
@@ -429,9 +429,9 @@ ERROR 1105 (HY000): syntax error at position 33 near 'update'
 
 ### `dolt_transaction_commit`
 
-Dolt offers a setting where every transaction commit also becomes a Dolt commit. That setting can be controlled using `dolt_transaction_commit` in `config.yaml`. By default, Dolt commits are user controlled and triggered via the [`dolt_commit()` procedure](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_commit). In some cases, like when you have an existing application that is built against standard MySQL, you may want Dolt commits generated automatically. This setting enables that behavior.
+Dolt offers a setting where every transaction commit also becomes a Dolt commit. That setting can be controlled using `dolt_transaction_commit` in `config.yaml`. By default, Dolt commits are user controlled and triggered via the [`dolt_commit()` procedure](/sql-reference/version-control/dolt-sql-procedures#dolt_commit). In some cases, like when you have an existing application that is built against standard MySQL, you may want Dolt commits generated automatically. This setting enables that behavior.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > If true all SQL transaction commits will automatically create a Dolt commit, with a generated commit message. This is useful when a system working with Dolt wants to create versioned data, but doesn't want to directly use Dolt features such as dolt_commit()
 
@@ -661,7 +661,7 @@ behavior: { auto_gc_behavior: { enable: true, archive_level: 1 } }
 
 **Values**: true, false, null
 
-This flag is used to enable the `dolt_branch_activity` [system table](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables#dolt_branch_activity). This feature can impact performance on high-throughput servers, so it is disabled by default.
+This flag is used to enable the `dolt_branch_activity` [system table](/sql-reference/version-control/dolt-system-tables#dolt_branch_activity). This feature can impact performance on high-throughput servers, so it is disabled by default.
 
 **Example**:
 ```sh
@@ -678,7 +678,7 @@ The listener section of `config.yaml` is configuration for the SQL server transp
 
 The host defines the address of the server that Dolt is running on.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The host address that the server will run on. This may be localhost or an IPv4 or IPv6 address
 
@@ -705,7 +705,7 @@ You notice the starting server message now says `127.0.0.1` instead of `localhos
 
 The port on the server used to accept connections. The default is 3306. Be careful because that is also the MySQL and MariaDB default port so you either need to stop your MySQL server to run Dolt, or change the Dolt port to something else. 
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The port that the server should listen on
 
@@ -732,7 +732,7 @@ Starting server with Config HP="localhost:3310"|T="28800000"|R="false"|L="debug"
 The maximum number of simultaneous connections the server will accept. Connections over the limit queue until 
 an existing connection is terminated. Setting this to `0` will allow for unlimited connections.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The number of simultaneous connections that the server will accept
 
@@ -802,7 +802,7 @@ MySQL [(none)]>
 This setting controls the number of client connections that can be blocked waiting. If the queue is full, new connection attempts will be refused until a slot becomes available. If
 set to `0`, new connections will be immediately rejected if `max_connections` has been reached. `back_log` is only meaningful if `max_connections` is set to a non-zero value.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The number of simultaneous connections that the server will allow to block waiting for a connection before new connections result in immediate rejection.
 
@@ -834,7 +834,7 @@ waits for 7 seconds will be closed. To test, see the [`max_connections`](#max_co
 This setting controls the maximum amount of time, in milliseconds, that a client connection attempt will block waiting for a connection. This configuration
 is only meaningful if `back_log` is a non-zero value.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The maximum amount of time that a connection will block waiting for a connection before being rejected.
 
@@ -850,7 +850,7 @@ See [`back_log`](#back_log)
 
 This setting controls when the server will time out a connection where no packets are sent. The value is defined in milliseconds. If the server does not read a packet from the connected client for the listed number of milliseconds a timeout error is returned and the connection is killed. The option is equivalent to `net_read_timeout` in MySQL. Most MySQL clients send keep alive packets to avoid this timeout. Use this to control bad client connections.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The number of milliseconds that the server will wait for a read operation
 
@@ -898,7 +898,7 @@ The query fails and the connection is killed.
 
 This setting controls when the server will time out a connection where it cannot send packets. The value is defined in milliseconds. If the server does not write a packet to the connected client for the listed number of milliseconds a timeout error is returned and the connection is killed. The option is equivalent to `net_write_timeout` in MySQL. Use this to control bad client connections.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The number of milliseconds that the server will wait for a write operation
 
@@ -922,7 +922,7 @@ We were a bit confused how to trigger this timeout and could only do it within D
 
 `tls_key`, `tls_cert`, and `require_secure_transport` are used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_key` is the path to the key file to use for secure transport.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The path to the TLS key used for secure transport
 
@@ -934,7 +934,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 `tls_key`, `tls_cert`, and `require_secure_transport` are used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_cert` is the path to the cert file to use for secure transport.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > The path to the TLS certificate used for secure transport
 
@@ -946,7 +946,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 `tls_key`, `tls_cert`, and `require_secure_transport` as used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). Setting `require_secure_transport` enables TLS using the listed `tls_key` and `tls_cert` files.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > Boolean flag to turn on TLS/SSL transport
 
@@ -1037,7 +1037,7 @@ This is a bit of an advanced option. `allow_cleartext_passwords` only affects th
 
 `max_logged_query_len` sets the maximum amount of characters Dolt will log in the server logs. We had an issue where very long queries, like seen in dumps would overflow buffers in some log monitoring utilities. This setting allows the user to truncate log lines at a maximum length to avoid such failure modes. This only effects queries so you must also set the log level to debug or above to see an effect.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > If greater than zero, truncates query strings in logging to the number of characters given.
 
@@ -1068,7 +1068,7 @@ DEBU[0020] Starting query                                connectTime="2024-12-06
 
 The `data_dir`, `config_dir`, `privilege_file` and `branch_control_file` work in conjunction to tell Dolt where to create and load various artifacts needed for the running of the database. `data dir` defaults to the current working directory. `data_dir` configures the root directory and is used by `config_dir`, `privilege_file` and `branch_control_file`.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > A directory where the server will load dolt databases to serve, and create new ones. Defaults to the current directory.
 
@@ -1080,7 +1080,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 `config_dir` is a directory where Dolt will load and store configuration used by the database. Configuration includes the `privilege_file` and `branch_control_file` used to store users/grants and branch permissions configuration respectively. This defaults to the `$data_dir/doltcfg` directory. 
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > A directory where the server will load and store non-database configuration data, such as permission information. Defaults `$data_dir/.doltcfg`
 
@@ -1092,7 +1092,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 The `privilege_file` is a file used to store and load users/grants configuration.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > Path to a file to load and store users and grants. Defaults to $doltcfg-dir/privileges.db. Will be created as needed.
 
@@ -1104,7 +1104,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 The `branch_control_file` is a file used to store and load users/grants configuration.
 
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+From the [`dolt sql-server` help documentation](/cli-reference/cli#dolt-sql-server):
 
 > Path to a file to load and store branch control permissions. Defaults to $doltcfg-dir/branch_control.db. Will be created as needed.
 
@@ -1167,7 +1167,7 @@ drwxr-xr-x  7 timsehn  wheel  224 Dec  6 14:26 .dolt
 
 ## metrics
 
-This set of configuration values configures a [Dolt metrics HTTP endpoint](https://docs.dolthub.com/sql-reference/server/metrics). Dolt emits metrics in [Prometheus](https://prometheus.io/) format.
+This set of configuration values configures a [Dolt metrics HTTP endpoint](/sql-reference/server/metrics). Dolt emits metrics in [Prometheus](https://prometheus.io/) format.
 
 ### host
 
@@ -1222,7 +1222,7 @@ dss_connects 0
 # HELP dss_disconnects Count of server disconnects
 ```
 
-For more information on how to scrape the metrics from this endpoint consult [our metrics documentation](https://docs.dolthub.com/sql-reference/server/metrics).
+For more information on how to scrape the metrics from this endpoint consult [our metrics documentation](/sql-reference/server/metrics).
 
 ### labels
 
@@ -1271,7 +1271,7 @@ dss_connects{process="dolt-sql-server"} 0
 
 ## remotesapi
 
-A running Dolt SQL server can serve as a [Dolt remote](https://docs.dolthub.com/concepts/dolt/git/remotes) by enabling these configuration values. With a remote endpoint enabled, you can `clone`, `push`, `pull`, and `fetch` from a running Dolt SQL Server by connecting with a user with the appropriate permissions. Additional documentation on how to push can be found in [this blog article](https://www.dolthub.com/blog/2023-12-29-sql-server-push-support/) where we announced `push` support.
+A running Dolt SQL server can serve as a [Dolt remote](/concepts/dolt/git/remotes) by enabling these configuration values. With a remote endpoint enabled, you can `clone`, `push`, `pull`, and `fetch` from a running Dolt SQL Server by connecting with a user with the appropriate permissions. Additional documentation on how to push can be found in [this blog article](https://www.dolthub.com/blog/2023-12-29-sql-server-push-support/) where we announced `push` support.
   
 ### port 
 
@@ -1471,7 +1471,7 @@ I now have a Dolt SQL server on port `3306` and a Dolt MCP server on port `7007`
 
 ## system_variables
 
-Dolt features a number of [custom system variables](https://docs.dolthub.com/sql-reference/version-control/dolt-sysvars) and [supports many of MySQL's system variables](https://docs.dolthub.com/sql-reference/sql-support/system-variables). These variables can be set for a running server using a map of system variable to value in this section of the configuration.
+Dolt features a number of [custom system variables](/sql-reference/version-control/dolt-sysvars) and [supports many of MySQL's system variables](/sql-reference/sql-support/system-variables). These variables can be set for a running server using a map of system variable to value in this section of the configuration.
 
 **Default**: `{}`
 
@@ -1479,7 +1479,7 @@ Dolt features a number of [custom system variables](https://docs.dolthub.com/sql
 
 **Example:**
 
-I will enable [the `dolt_show_system_tables` system variable](https://docs.dolthub.com/sql-reference/version-control/dolt-sysvars#dolt_show_system_tables) which changes the behavior of `show tables` to include Dolt system tables. 
+I will enable [the `dolt_show_system_tables` system variable](/sql-reference/version-control/dolt-sysvars#dolt_show_system_tables) which changes the behavior of `show tables` to include Dolt system tables. 
 
 ```bash
 $ grep system_variables config.yaml 
@@ -1593,7 +1593,7 @@ The `jwks` section of `config.yaml` is used to configure JSON web token (JWT) au
 
 ## cluster
 
-This section of `config.yaml` is used to configure "Direct to Standby" or cluster replication. Refer to [the documentation for replication](https://docs.dolthub.com/sql-reference/server/replication#direct-to-standby-replication) for this section of `config.yaml`. This configuration requires multiple Dolt instances configured so it is out of scope for this article.
+This section of `config.yaml` is used to configure "Direct to Standby" or cluster replication. Refer to [the documentation for replication](/sql-reference/server/replication#direct-to-standby-replication) for this section of `config.yaml`. This configuration requires multiple Dolt instances configured so it is out of scope for this article.
 
 ## System Variables
 

@@ -28,7 +28,7 @@ These features are on our DoltHub roadmap.
 
 We will use our [`dolthub/us-president-precinct-results`](https://www.dolthub.com/repositories/dolthub/us-president-precinct-results) database as an example.
 
-One of the bounty participants noticed some inconsistencies with one of the columns in the `vote_tallies` table. They decided to create an issue to document work that could be done to fix this issue. You can create an issue using the new issue form on any database page.
+A contributor noticed some inconsistencies with one of the columns in the `vote_tallies` table. They decided to create an issue to document work that could be done to fix this issue. You can create an issue using the new issue form on any database page.
 
 ![](../../.gitbook/assets/new-issue-form.png)
 

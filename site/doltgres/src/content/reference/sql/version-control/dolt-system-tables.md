@@ -365,7 +365,7 @@ postgres=> SELECT * FROM dolt.commit_ancestors WHERE commit_hash=HASHOF('HEAD');
 The `dolt.commits` (also usable as `dolt_commits`) system table shows _ALL_ commits in a Dolt database.
 
 This is similar, but different from the `dolt.log` [system table](#doltlog)
-and the `dolt log` [CLI command](https://docs.dolthub.com/reference/cli#dolt-log).
+and the `dolt log` [CLI command](https://dolthub.com/docs/cli-reference/cli#dolt-log).
 `dolt.log` shows you commit history for all commit ancestors reachable from the current `HEAD` of the
 checked out branch, whereas `dolt.commits` shows all commits from the entire database, no matter which branch is checked out.
 
@@ -398,7 +398,7 @@ postgres=> SELECT * FROM dolt.commits WHERE date < '2024-12-02' ORDER BY date;
 ### `dolt.log`
 
 The `dolt.log` (also usable as `dolt_log`) system table contains the commit log for all commits reachable from the current `HEAD`.
-This is the same data returned by the [`dolt log` CLI command](https://docs.dolthub.com/reference/cli#dolt-log).
+This is the same data returned by the [`dolt log` CLI command](https://dolthub.com/docs/cli-reference/cli#dolt-log).
 
 #### Schema
 
@@ -840,7 +840,7 @@ commit graph and is not subject to versioning semantics.
 
 For every user table that has a primary key, there is a queryable system view named `dolt_blame_$tablename`
 which can be queried to see the user and commit responsible for the current value of each row.
-This is equivalent to the [`dolt blame` CLI command](https://docs.dolthub.com/cli-reference/cli#dolt-blame).
+This is equivalent to the [`dolt blame` CLI command](https://dolthub.com/docs/cli-reference/cli#dolt-blame).
 Tables without primary keys will not have an associated `dolt_blame_$tablename`.
 
 #### Schema

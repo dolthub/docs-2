@@ -7,7 +7,7 @@ title: "Get A Ubuntu Host on Azure"
 
 The first step for setting up DoltLab in Microsoft Azure Cloud is provisioning a [virtual machine](https://azure.microsoft.com/en-us/products/virtual-machines). A virtual machine in Azure is Microsoft's equivalent to [EC2](https://aws.amazon.com/pm/ec2) in AWS.
 
-Referencing the [recommended minimum hardware for DoltLab](https://docs.doltlab.com/administrator-guides/installation#minimum-recommended-hardware), we'll provision a virtual machine with at least 4 CPU and 16 GB of RAM. We'll also need to ensure our host has at least 300 GB of disk.
+Referencing the [recommended minimum hardware for DoltLab](/guides/installation#minimum-recommended-hardware), we'll provision a virtual machine with at least 4 CPU and 16 GB of RAM. We'll also need to ensure our host has at least 300 GB of disk.
 
 From the Azure Cloud console, we'll select "Virtual machines" from the list of services.
 
@@ -84,7 +84,7 @@ From the menu on the left, under the "Networking" section, choose "Network setti
 
 ![Network settings](../../.gitbook/assets/doltlab_azure_network_settings.png)
 
-We can see that our ssh inbound rule is already configured. Now we need open ports `80`, `100`, `4321`, and `50051` [which are required for DoltLab](https://docs.doltlab.com/administrator-guides/installation#networking-requirements).
+We can see that our ssh inbound rule is already configured. Now we need open ports `80`, `100`, `4321`, and `50051` [which are required for DoltLab](/guides/installation#networking-requirements).
 
 Click "Create port rule".
 

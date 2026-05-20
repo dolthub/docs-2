@@ -15,7 +15,7 @@ dolt version 1.45.3
 
 Now, let's clone a database that's hosted on DoltHub that we want to run CI tests on. 
 
-I've created the [fork](https://docs.dolthub.com/concepts/dolthub/forks), [dolthub/options](https://www.dolthub.com/repositories/dolthub/options), of the popular DoltHub database[post-no-preference/options](https://www.dolthub.com/repositories/post-no-preference/options), and cloned a copy of my fork locally.
+I've created the [fork](/concepts/dolthub/forks), [dolthub/options](https://www.dolthub.com/repositories/dolthub/options), of the popular DoltHub database[post-no-preference/options](https://www.dolthub.com/repositories/post-no-preference/options), and cloned a copy of my fork locally.
 
 ```bash
 % dolt clone dolthub/options
@@ -76,7 +76,7 @@ The `on` field defines when the workflow should run, or rather, what [Events]() 
 
 In GitHub Actions, a workflow step, or action step, can be the running of an arbitrary binary or snippet of code that is executed as part of a Job. For Dolt CI though, at least in its current form, a job step can _only_ execute a Saved Query, which must be identified by name in the `saved_query_name` field.
 
-A [Saved Query](https://docs.dolthub.com/sql-reference/version-control/saved-queries) in Dolt, is an arbitrary SQL query stored in the database for execution at a later time. By specifying the name of the saved query in the `workflow.yaml` file, we are configuring CI to execute the "show tables" saved query against the `master` branch, whenever a push to `master` occurs.
+A [Saved Query](/sql-reference/version-control/saved-queries) in Dolt, is an arbitrary SQL query stored in the database for execution at a later time. By specifying the name of the saved query in the `workflow.yaml` file, we are configuring CI to execute the "show tables" saved query against the `master` branch, whenever a push to `master` occurs.
 
 Additionally, each "step" optionally allows an `expected_rows` or `expected_columns` field to be defined, which can be used to assert the number of rows or columns in the resulting output of the saved query. 
 

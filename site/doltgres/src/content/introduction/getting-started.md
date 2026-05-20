@@ -120,5 +120,5 @@ getting_started=> select * from dolt_log;
 (2 rows)
 ```
 
-9. Continue with [Dolt Getting Started](https://docs.dolthub.com/introduction/getting-started/database#insert-some-data)
+9. Continue with [Dolt Getting Started](https://dolthub.com/docs/introduction/getting-started/database#insert-some-data)
    to test out more Doltgres versioning functionality.

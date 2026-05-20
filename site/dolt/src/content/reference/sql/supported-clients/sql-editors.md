@@ -46,7 +46,7 @@ Dolt's sql server can be started with one command.
 Starting server with Config HP="0.0.0.0:3306"|U="root"|P=""|T="28800000"|R="false"|L="info"
 ```
 
-The default configuration for our server uses a username of `root` and an empty password. You can configure access settings, logging, and timeouts by following additional documentation [here](https://docs.dolthub.com/reference/cli#dolt-sql-server).
+The default configuration for our server uses a username of `root` and an empty password. You can configure access settings, logging, and timeouts by following additional documentation [here](/cli-reference/cli#dolt-sql-server).
 
 ### Step 3: Connecting our server with Tableplus
 

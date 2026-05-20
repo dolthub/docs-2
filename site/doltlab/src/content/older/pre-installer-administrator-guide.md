@@ -249,7 +249,7 @@ dolthubapi
 root:/var/lib/dolt# rm -rf dolthubapi/
 ```
 
-Doing this removes the existing Dolt server database. Now, use [dolt backup restore](https://docs.dolthub.com/cli-reference/cli#dolt-backup) to restore the database from the backup located at `/backups/dolthubapi/2023/06/01`:
+Doing this removes the existing Dolt server database. Now, use [dolt backup restore](https://dolthub.com/docs/cli-reference/cli#dolt-backup) to restore the database from the backup located at `/backups/dolthubapi/2023/06/01`:
 
 ```bash
 root:/var/lib/dolt# dolt backup restore file:///backups/dolthubapi/2023/06/01 dolthubapi
@@ -262,7 +262,7 @@ The database has now been successfully restored, and you can now restart DoltLab
 
 ## Authenticate a Dolt client to use a DoltLab account
 
-As of Dolt `v0.39.0`, the [dolt login](https://docs.dolthub.com/cli-reference/cli#dolt-login) command can be used to authenticate against DoltLab instances.
+As of Dolt `v0.39.0`, the [dolt login](https://dolthub.com/docs/cli-reference/cli#dolt-login) command can be used to authenticate against DoltLab instances.
 
 To authenticate a client against DoltLab with this command, use the `--auth-endpoint`, `--login-url`, and `--insecure` arguments to point your Dolt client at the DoltLab instance you want to authenticate against.
 
@@ -292,7 +292,7 @@ requesting update
 Key successfully associated with user: <user> email <email>
 ```
 
-For Dolt clients < `v0.39.0`, or to authenticate without using the `dolt login` command, first run the [dolt creds new](https://docs.dolthub.com/cli-reference/cli#dolt-creds-new) command, which will output a new public key:
+For Dolt clients < `v0.39.0`, or to authenticate without using the `dolt login` command, first run the [dolt creds new](https://dolthub.com/docs/cli-reference/cli#dolt-creds-new) command, which will output a new public key:
 
 ```bash
 dolt creds new
@@ -300,7 +300,7 @@ Credentials created successfully.
 pub key: fef0kj7ia389i5atv8mcb31ksg9h3i6cji7aunm4jea9tccdl2cg
 ```
 
-Copy the generated public key and run the [dolt creds use](https://docs.dolthub.com/cli-reference/cli#dolt-creds-use) command:
+Copy the generated public key and run the [dolt creds use](https://dolthub.com/docs/cli-reference/cli#dolt-creds-use) command:
 
 ```bash
 dolt creds use fef0kj7ia389i5atv8mcb31ksg9h3i6cji7aunm4jea9tccdl2cg
