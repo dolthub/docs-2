@@ -1,0 +1,10 @@
+---
+import DocsLayout from "../../../layouts/DocsLayout.astro";
+
+const post = await import("../../../content/reference/sql/version-control/sql-extensions.md");
+const Content = post.Content;
+---
+
+<DocsLayout title="All SQL Extensions">
+  <Content />
+</DocsLayout>
