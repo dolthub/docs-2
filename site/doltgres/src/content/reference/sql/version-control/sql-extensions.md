@@ -11,22 +11,22 @@ the feature you're looking for.
 
 The list is grouped by extension kind:
 
-- [Version-control functions](#version-control-functions) — write-side
+- [Version-Control Functions](#version-control-functions) — write-side
   operations equivalent to Dolt CLI commands (`dolt_commit`,
   `dolt_merge`, `dolt_push`, …). Invoke with `SELECT`.
-- [Informational functions](#informational-functions) — scalar functions
+- [Informational Functions](#informational-functions) — scalar functions
   that return repository state (active branch, ref hashes, version, …).
-- [Table functions](#table-functions) — used in a `FROM` clause to
+- [Table Functions](#table-functions) — used in a `FROM` clause to
   expose diff / log / conflict views as virtual tables.
-- [System tables](#system-tables) — queryable tables that expose
+- [System Tables](#system-tables) — queryable tables that expose
   repository state.
-- [System variables](#system-variables) — session and global settings
+- [System Variables](#system-variables) — session and global settings
   that change Doltgres's behavior.
 
 If you'd rather browse by use case, see the [Doltgres cheat
 sheet](/guides/cheat-sheet).
 
-## Version-control functions
+## Version-Control Functions
 
 Function equivalents of `dolt` CLI commands. These modify state — call
 each with `SELECT … FROM` (Doltgres-style) for the same effect that
@@ -58,7 +58,7 @@ each with `SELECT … FROM` (Doltgres-style) for the same effect that
 | [`DOLT_UNDROP()`](/reference/version-control/dolt-sql-functions#dolt_undrop) | Restore a recently dropped database from the recovery area. |
 | [`DOLT_VERIFY_CONSTRAINTS()`](/reference/version-control/dolt-sql-functions#dolt_verify_constraints) | Walk the working set and record any constraint violations. |
 
-## Informational functions
+## Informational Functions
 
 Scalar functions that return repository state without modifying it.
 
@@ -72,7 +72,7 @@ Scalar functions that return repository state without modifying it.
 | [`DOLT_VERSION()`](/reference/version-control/dolt-sql-functions#dolt_version) | Version string of the running `doltgres` binary. |
 | [`HAS_ANCESTOR()`](/reference/version-control/dolt-sql-functions#has_ancestor) | True if one ref is an ancestor of another. |
 
-## Table functions
+## Table Functions
 
 Used in a `FROM` clause to expose diff, log, and conflict views as
 virtual tables.
@@ -90,13 +90,13 @@ virtual tables.
 | [`DOLT_REFLOG()`](/reference/version-control/dolt-sql-functions#dolt_reflog) | Local history of ref updates (the `dolt reflog` equivalent). |
 | [`DOLT_SCHEMA_DIFF()`](/reference/version-control/dolt-sql-functions#dolt_schema_diff) | Schema-only diff between two commits. |
 
-## System tables
+## System Tables
 
 System tables expose repository state — commits, branches, diffs,
 conflicts, status — as ordinary tables you can `SELECT` and `JOIN`.
 Per-user-table tables (e.g. `dolt_diff_$TABLENAME`) substitute the user
 table's name for `$TABLENAME`. Full details:
-[System tables](/reference/version-control/dolt-system-tables).
+[System Tables](/reference/version-control/dolt-system-tables).
 
 | Name | Description |
 |------|-------------|
@@ -113,11 +113,11 @@ table's name for `$TABLENAME`. Full details:
 | [`dolt_statistics`](/reference/version-control/dolt-system-tables#dolt_statistics) | Index histograms used by the query planner. |
 | [`dolt_workspace_$TABLENAME`](/reference/version-control/dolt-system-tables#dolt_workspace_usdtablename) | Per-user-table view of pending modifications in the working set. |
 
-## System variables
+## System Variables
 
 Session and global settings that change Doltgres's behavior. Full
 details: [System
-variables](/reference/version-control/dolt-sysvars).
+Variables](/reference/version-control/dolt-sysvars).
 
 | Name | Description |
 |------|-------------|
