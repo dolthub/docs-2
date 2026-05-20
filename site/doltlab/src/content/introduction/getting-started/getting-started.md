@@ -18,7 +18,7 @@ The first thing you will need is an internet accessible Ubuntu host. We have doc
 
 ## Download DoltLab and its Dependencies
 
-Now that you're on the host, you need to get DoltLab and its [dependencies](/introduction/installation#dependencies) on the host. First, you'll need `curl` and `unzip` as a basic minimum. `curl` was already on my Ubuntu host by default but `unzip` was not. So, I grabbed unzip like so:
+Now that you're on the host, you need to get DoltLab and its [dependencies](/guides/installation#dependencies) on the host. First, you'll need `curl` and `unzip` as a basic minimum. `curl` was already on my Ubuntu host by default but `unzip` was not. So, I grabbed unzip like so:
 
 ```sh
 ubuntu@ip-10-2-0-24:~$ sudo apt install unzip
