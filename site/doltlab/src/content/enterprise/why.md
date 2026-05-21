@@ -1,5 +1,5 @@
 ---
-Title: Why Enterprise?
+title: Why Enterprise?
 ---
 
 # Why Enterprise?
