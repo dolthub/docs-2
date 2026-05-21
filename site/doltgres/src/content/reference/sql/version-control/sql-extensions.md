@@ -1,8 +1,8 @@
 ---
-title: All SQL Extensions
+title: SQL Extensions Index
 ---
 
-# All SQL Extensions
+# SQL Extensions Index
 
 A flat index of every Doltgres-specific SQL extension — every function,
 system table, and system variable — on a single page. Press ⌘F / Ctrl-F
