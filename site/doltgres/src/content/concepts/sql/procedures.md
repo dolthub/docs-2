@@ -2,8 +2,6 @@
 title: Stored Procedures
 ---
 
-# Stored Procedures
-
 ## What is a Stored Procedure?
 
 A stored procedure is SQL code that can be accessed using the SQL `CALL` syntax. Much like a

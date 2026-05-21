@@ -3,8 +3,6 @@ title: Replication
 ---
 
 
-# Replication
-
 Doltgres can [replicate data](/concepts/rdbms/replication) between two or more
 Doltgres servers, or can be a read-replica for a Postgres server. This page describes the two supported
 replication modes between a Doltgres primary server and Doltgres replica servers. See the [Postgres

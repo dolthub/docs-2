@@ -11,6 +11,7 @@ import {
   buildViteConfig,
 } from "../shared/config/astro.mjs";
 import rehypeBasePath from "../shared/config/rehype-base.mjs";
+import remarkInjectTitleH1 from "../shared/config/remark-inject-title-h1.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const base = "/docs";
@@ -26,6 +27,7 @@ export default defineConfig({
   integrations: [tailwind(), react()],
   markdown: {
     shikiConfig,
+    remarkPlugins: [remarkInjectTitleH1],
     rehypePlugins: [
       [rehypeBasePath, { base }],
       rehypeSlug,

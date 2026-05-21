@@ -2,8 +2,6 @@
 title: Dolt System Variables
 ---
 
-# Dolt System Variables
-
 ## Table of contents
 
 - [General system setting variables](#general-system-setting-variables)

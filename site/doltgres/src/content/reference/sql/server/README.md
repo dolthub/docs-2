@@ -2,8 +2,6 @@
 title: Running the DoltgreSQL Server
 ---
 
-# Running the DoltgreSQL Server
-
 Start the DoltgreSQL server by running the `doltgres` command:
 
 ```bash

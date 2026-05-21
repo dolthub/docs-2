@@ -2,8 +2,6 @@
 title: Hooks
 ---
 
-# Hooks
-
 ## What is a hook?
 
 Hooks allow you to build or set up integrations that subscribe to certain events on

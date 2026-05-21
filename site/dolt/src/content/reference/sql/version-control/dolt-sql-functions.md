@@ -2,8 +2,6 @@
 title: Dolt SQL Functions
 ---
 
-# Dolt SQL Functions
-
 ## Table of Contents
 
 - [Informational Functions](#informational-functions)

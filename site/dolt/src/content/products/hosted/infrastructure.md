@@ -2,8 +2,6 @@
 title: "Hosted Dolt: Infrastructure"
 ---
 
-# Hosted Dolt: Infrastructure
-
 Before Hosted Dolt, if you wanted to run [Dolt](https://doltdb.com) as your OLTP database
 you had to stand up your own instances deployed with the Dolt binary, and then handle all
 your own monitoring, alerting, and upgrades. This page will go through the infrastructure

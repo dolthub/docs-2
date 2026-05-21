@@ -2,8 +2,6 @@
 title: Using remotes
 ---
 
-# Using remotes
-
 ## What are Remotes?
 
 Just like Git, Doltgres supports syncing with a [remote

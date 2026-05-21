@@ -2,8 +2,6 @@
 title: Commit Graph
 ---
 
-# Commit Graph
-
 Dolt's unique [storage engine](/architecture/storage-engine) implements a Git-style commit graph of [Prolly Trees](/architecture/storage-engine/prolly-tree). Dolt's commit graph facilitates common version control operations like log, diff, branch and merge on database tables instead of files.
 
 ![Dolt commit graph](../../.gitbook/assets/commit-graph-featured.png)

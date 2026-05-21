@@ -3,8 +3,6 @@ title: Branch Permissions
 ---
 
 
-# Branch Permissions
-
 ## What are Branch Permissions?
 
 Branch permissions are a way of managing how users may interact with branches when running Doltgres

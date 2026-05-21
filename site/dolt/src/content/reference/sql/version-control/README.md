@@ -2,8 +2,6 @@
 title: Version Control in Dolt
 ---
 
-# Version Control in Dolt
-
 Unlike other relational databases, Dolt has multiple branches and
 stores all data in a commit graph, like git. This makes it possible to
 efficiently diff any two commits, as well as merge one branch into

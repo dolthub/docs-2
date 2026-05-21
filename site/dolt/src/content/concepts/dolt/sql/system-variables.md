@@ -2,8 +2,6 @@
 title: System Variables
 ---
 
-# System Variables
-
 ## What is a System Variable?
 
 System variables are server-side key-value pairs. These variables have

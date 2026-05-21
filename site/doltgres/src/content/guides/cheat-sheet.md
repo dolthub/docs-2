@@ -2,8 +2,6 @@
 title: Doltgres Cheat Sheet
 ---
 
-# Doltgres Cheat Sheet
-
 This cheat sheet briefly summarizes the main version-control features of Doltgres with simple
 examples.
 

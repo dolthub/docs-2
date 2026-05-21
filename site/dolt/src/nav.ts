@@ -128,6 +128,7 @@ const nav: NavSection[] = [
         title: "Version Control Features",
         href: "/sql-reference/version-control",
         children: [
+          { title: "SQL Extensions Index", href: "/sql-reference/version-control/sql-extensions" },
           { title: "Using Branches", href: "/sql-reference/version-control/branches" },
           { title: "Merges", href: "/sql-reference/version-control/merges" },
           { title: "Querying History", href: "/sql-reference/version-control/querying-history" },

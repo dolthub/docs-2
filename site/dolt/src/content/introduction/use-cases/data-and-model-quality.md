@@ -2,8 +2,6 @@
 title: Data and Model Quality Control
 ---
 
-# Data and Model Quality Control
-
 ## Problem
 
 * Are you in the business of creating data and models? 

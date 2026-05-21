@@ -2,8 +2,6 @@
 title: A Full-featured SQL Database
 ---
 
-# A Full-featured SQL Database
-
 Dolt is a full-featured SQL database, akin to [Postgres](https://www.postgresql.org/) or [MySQL](https://www.mysql.com/).
 
 Dolt implements the MySQL SQL dialect. You connect to Dolt using a MySQL client. The goal is for Dolt to be a drop in replacement for MySQL.

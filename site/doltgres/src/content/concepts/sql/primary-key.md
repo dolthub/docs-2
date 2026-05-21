@@ -3,8 +3,6 @@ title: Primary Key
 ---
 
 
-# Primary Key
-
 ## What is a Primary Key?
 
 A primary key is a column or set of columns that defines a unique row in a table. Often the primary

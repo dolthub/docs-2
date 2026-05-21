@@ -2,8 +2,6 @@
 title: Data Sharing on DoltHub
 ---
 
-# Data Sharing on DoltHub
-
 ## Find data on DoltHub
 
 Our [discover page](https://www.dolthub.com/discover) on DoltHub lets you find public databases created by users in our community. You can easily share these databases and adopt them for your own use cases.

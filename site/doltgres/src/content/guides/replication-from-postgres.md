@@ -2,8 +2,6 @@
 title: Replicating from a Postgres instance
 ---
 
-# Replicating from a Postgres instance
-
 Doltgres has the capability to replicate from a running Postgres server via Postgres's logical
 replication feature. This is useful when you want to continue serving production traffic with your
 existing Postgres server, but want to add auditing and diff capability via a live DoltgreSQL backup.

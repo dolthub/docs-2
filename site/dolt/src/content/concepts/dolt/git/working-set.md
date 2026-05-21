@@ -2,8 +2,6 @@
 title: Working Set
 ---
 
-# Working Set
-
 ## What is a Working Set?
 
 Dolt has three kinds of changes: committed, staged and working. The working set is the set of changes that has not been staged or committed. To stage a change in a table you `add` it to the staging set. The staging set is committed by issuing a `commit` command and supplying the appropriate metadata. 

@@ -3,8 +3,6 @@ title: Merge
 ---
 
 
-# Merge
-
 ## What is a merge?
 
 A merge is an operation that takes two branches and assembles a reasonable combination of the two databases represented by those branches. The merge may or may not generate [conflicts](/concepts/dolt/git/conflicts). Merges happen at the Dolt storage layer. No SQL is used to merge.

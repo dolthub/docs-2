@@ -2,8 +2,6 @@
 title: Hardware Requirements
 ---
 
-# Hardware Requirements
-
 Right-sizing the host matters more for a Dolt server than for a typical
 MySQL deployment because Dolt stores version history alongside the
 working data. The headline numbers:

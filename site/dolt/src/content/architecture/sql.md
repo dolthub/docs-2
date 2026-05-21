@@ -2,8 +2,6 @@
 title: SQL Architecture
 ---
 
-# SQL Architecture
-
 Dolt's SQL engine is built as a layer on top of its storage
 engine. This allows us to implement non-SQL operations, such as the
 CLI commands, directly against the storage layer. It also leaves the
