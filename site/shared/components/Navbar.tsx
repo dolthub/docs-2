@@ -20,19 +20,34 @@ const prodDocsLinks = [
   { name: "Doltgres", href: `https://doltgres.com${BASE}` },
 ];
 
+// awsdev deploy: each product's docs live on its own *.awsdev.ld-corp.com host.
+const devDocsLinks = [
+  { name: "Dolt", href: `https://dolthub.awsdev.ld-corp.com${BASE}` },
+  { name: "DoltLab", href: `https://doltlab.awsdev.ld-corp.com${BASE}` },
+  { name: "Doltgres", href: `https://doltgres.awsdev.ld-corp.com${BASE}` },
+];
+
 const localDocsLinks = [
   { name: "Dolt", href: `http://localhost:4321${BASE}` },
   { name: "DoltLab", href: `http://localhost:4322${BASE}` },
   { name: "Doltgres", href: `http://localhost:4323${BASE}` },
 ];
 
+// The cross-product docs links must point at the same environment the
+// current page is served from. The three sites ship one static build that's
+// deployed to prod, awsdev, and the local dev servers alike, so the
+// environment can only be known at runtime — pick the link set by hostname.
+function docsLinksForHost(hostname: string) {
+  if (hostname === "localhost" || hostname === "127.0.0.1") return localDocsLinks;
+  if (hostname.endsWith(".awsdev.ld-corp.com")) return devDocsLinks;
+  return prodDocsLinks;
+}
+
 function useDocsLinks() {
+  // Default to prod for SSR / first paint; correct it once we know the host.
   const [links, setLinks] = useState(prodDocsLinks);
   useEffect(() => {
-    const host = window.location.hostname;
-    if (host === "localhost" || host === "127.0.0.1") {
-      setLinks(localDocsLinks);
-    }
+    setLinks(docsLinksForHost(window.location.hostname));
   }, []);
   return links;
 }
