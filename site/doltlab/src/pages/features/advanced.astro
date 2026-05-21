@@ -5,6 +5,6 @@ const post = await import("../../content/features/advanced/README.md");
 const Content = post.Content;
 ---
 
-<DocsLayout title="Advanced Features">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

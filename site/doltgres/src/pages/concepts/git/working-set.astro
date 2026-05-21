@@ -5,6 +5,6 @@ const post = await import("../../../content/concepts/git/working-set.md");
 const Content = post.Content;
 ---
 
-<DocsLayout title="Working Set">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

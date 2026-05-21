@@ -2,8 +2,6 @@
 title: "Hosted Dolt: Cloning a Hosted Database"
 ---
 
-# Hosted Dolt: Cloning a Hosted Database
-
 ## How it works
 
 In some cases you might want to clone your database from Hosted so that you can access

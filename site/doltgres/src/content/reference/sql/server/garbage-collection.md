@@ -2,8 +2,6 @@
 title: Garbage Collection
 ---
 
-# Garbage Collection
-
 ## How garbage is created
 
 Doltgres creates on disk garbage. Doltgres transactions that do not have a corresponding Doltgres commit create on disk garbage. This garbage is most noticeable after large data imports.

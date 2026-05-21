@@ -3,8 +3,6 @@ title: Configuration
 ---
 
 
-# Configuration
-
 A Doltgres SQL server can be configured at server start time, or by
 setting system variables in the SQL session. The simplest way to
 configure server behavior is to provide a config file with the

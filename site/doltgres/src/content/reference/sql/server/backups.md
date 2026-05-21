@@ -3,8 +3,6 @@ title: Backups
 ---
 
 
-# Backups
-
 There are several ways to safely backup Doltgres databases. If you are using [Hosted
 Doltgres(https://hosted.doltdb.com), then you get automatic backups without having to configure
 anything. If you are running your own Doltgres SQL server, then you need to handle your own backups

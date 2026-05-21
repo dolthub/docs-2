@@ -1,8 +1,6 @@
 ---
-title: Mac 
+title: Mac
 ---
-
-# Mac
 
 ## Install Script
 

@@ -2,8 +2,6 @@
 title: SQL Editors
 ---
 
-# SQL Editors
-
 Dolt comes with a built-in MySQL compatible server, making it easy to connect to your Dolt databases with existing SQL tooling. Here are a list of notable MySQL Editors and our compatibility status.
 | Editor | Supported | Notes and limitations |
 | :--- | :--- | :--- |

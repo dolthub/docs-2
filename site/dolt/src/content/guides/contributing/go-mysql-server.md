@@ -2,8 +2,6 @@
 title: "Contributing to Go MySQL Server"
 ---
 
-# Contributing to Go MySQL Server
-
 This is a short tutorial about how to make and test
 changes in Dolt and its Go MySQL engine. 
 We're going to work through fixing and

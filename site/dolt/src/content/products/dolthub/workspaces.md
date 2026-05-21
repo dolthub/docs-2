@@ -2,8 +2,6 @@
 title: DoltHub Workspaces
 ---
 
-# DoltHub Workspaces
-
 ## What are workspaces?
 
 Workspaces are a concept we invented for editing data on DoltHub. There is not a GitHub

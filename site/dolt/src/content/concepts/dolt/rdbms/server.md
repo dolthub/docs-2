@@ -2,8 +2,6 @@
 title: Server
 ---
 
-# Server
-
 ## What is a database server?
 
 A database server allows multiple local or remote clients to connect to the same database. You start a database server process on a host. The database server process opens a port or socket and then clients connect with a compatible client. The database server handles authentication. 

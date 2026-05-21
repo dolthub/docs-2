@@ -2,8 +2,6 @@
 title: Versioned MySQL Replica
 ---
 
-# Versioned MySQL Replica
-
 Dolt can be configured as a MySQL Replica.
 
 In this mode, you set up Dolt to replicate a primary MySQL. Set up can take as as little as three commands. After set up, Dolt replicates every write to your primary to Dolt and creates a Dolt commit, giving you time travel, lineage, rollback, and other [database version control](https://www.dolthub.com/blog/2021-09-17-database-version-control/) features on your Dolt replica.

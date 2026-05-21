@@ -3,8 +3,6 @@ title: Windows
 ---
 
 
-# Windows
-
 ## winget
 
 ```powershell

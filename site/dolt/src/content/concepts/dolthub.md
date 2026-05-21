@@ -3,8 +3,6 @@ title: Why DoltHub?
 ---
 
 
-# Why DoltHub?
-
 DoltHub is a web-based interface to share, discover, and collaborate on [Dolt](/concepts/dolt) databases. Similar to GitHub, DoltHub let's multiple users easily collaborate on the same database at the same time. It lowers the barrier to entry for users who may want version control for their data without knowing SQL or Git or being comfortable using the command line.
 
 Emailing around CSVs is a way of the past. Have you ever tried to have more than one person collaborate on a CSV at the same time and ended up with multiple versions of the same file without knowing which one has the most up-to-date information? DoltHub solves this problem.

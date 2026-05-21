@@ -2,8 +2,6 @@
 title: Secondary Indexes
 ---
 
-# Secondary Indexes
-
 ## What is a Secondary Index?
 
 A secondary index can be added to any column or set of columns to convert lookup queries involving

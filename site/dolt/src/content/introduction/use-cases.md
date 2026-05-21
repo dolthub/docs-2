@@ -2,8 +2,6 @@
 title: Use Cases
 ---
 
-# Use Cases
-
 We built Dolt as a better way to [share data](/introduction/use-cases/data-sharing). Along the way, customers wanted an OLTP SQL database with Git features, so that is what Dolt became. Dolt is still a great way to share data but it's also [a great SQL database](https://www.dolthub.com/blog/2023-05-05-dolt-1-dot-0/).
 
 Anything you can build with MySQL or Postgres you can build with Dolt.

@@ -3,8 +3,6 @@ title: Replication
 ---
 
 
-# Replication
-
 Dolt can [replicate data](/concepts/dolt/rdbms/replication) between two or more Dolt servers, or between Dolt and a MySQL server. This page describes the two supported replication modes between a Dolt primary server and Dolt replica servers. See the [MySQL to Dolt Replication guide](/guides/binlog-replication) for more information on setting up a Dolt server as a read-replica for a MySQL server, and [our blog post on Dolt-to-MySQL replication](https://www.dolthub.com/blog/2023-02-17-binlog-replication-preview/) for instructions on running a MySQL server as a replica of a Dolt primary.
 
 In **Remote-Based Replication**, Dolt uses a remote as a middleman to facilitate replication between the

@@ -2,8 +2,6 @@
 title: Latency
 ---
 
-# Latency
-
 ## Latency and Throughput
 
 Our approach to SQL performance benchmarking is to use `sysbench`, an

@@ -2,8 +2,6 @@
 title: Supported Statements
 ---
 
-# Supported Statements
-
 ## Data manipulation statements
 
 | Statement           | Supported | Notes and limitations                                                             |

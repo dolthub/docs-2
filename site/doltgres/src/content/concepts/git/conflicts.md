@@ -3,8 +3,6 @@ title: Conflicts
 ---
 
 
-# Conflicts
-
 ## What is a Conflict?
 
 A conflict is a signal to a user that a [merge](/concepts/git/merge) has produced a database that requires

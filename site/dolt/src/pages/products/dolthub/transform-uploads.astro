@@ -5,6 +5,6 @@ const post = await import("../../../content/products/dolthub/transform-uploads.m
 const Content = post.Content;
 ---
 
-<DocsLayout title="Transforming File Uploads">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

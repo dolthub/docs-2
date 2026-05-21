@@ -1,8 +1,6 @@
 ---
-Title: Why Enterprise?
+title: Why Enterprise?
 ---
-
-# Why Enterprise?
 
 ![DoltLab Feature Summary](../../content/.gitbook/assets/doltlab_feature_summary.svg)
 

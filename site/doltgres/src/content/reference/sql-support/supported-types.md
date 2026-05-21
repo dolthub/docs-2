@@ -2,8 +2,6 @@
 title: Supported Types
 ---
 
-# Supported Types
-
 ## Standard Types
 
 Most of the standard types with partial support are missing functionality regarding their parameters.

@@ -5,6 +5,6 @@ const post = await import("../../../content/introduction/getting-started/git-for
 const Content = post.Content;
 ---
 
-<DocsLayout title="Git for Data">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

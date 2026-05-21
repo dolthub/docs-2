@@ -5,6 +5,6 @@ const post = await import("../../../content/architecture/sql/go-mysql-server.md"
 const Content = post.Content;
 ---
 
-<DocsLayout title="Go MySQL Server">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>
