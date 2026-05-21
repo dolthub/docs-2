@@ -83,6 +83,7 @@ diffs, and looking up identifiers. Invoke scalar functions with
 | [`DOLT_HASHOF()`](/sql-reference/version-control/dolt-sql-functions#dolt_hashof) | scalar | Commit hash of a ref. |
 | [`DOLT_HASHOF_DB()`](/sql-reference/version-control/dolt-sql-functions#dolt_hashof_db) | scalar | Hash representing the entire database's working set. |
 | [`DOLT_HASHOF_TABLE()`](/sql-reference/version-control/dolt-sql-functions#dolt_hashof_table) | scalar | Hash of a single table's current contents. |
+| [`DOLT_JOIN_COST()`](/sql-reference/version-control/dolt-sql-functions#dolt_join_cost) | scalar | Planner diagnostic: returns the join memo (candidate plans + costs) for a query. |
 | [`DOLT_JSON_DIFF()`](/sql-reference/version-control/dolt-sql-functions#dolt_json_diff) | scalar | JSON-formatted diff between two JSON values. |
 | [`DOLT_LOG()`](/sql-reference/version-control/dolt-sql-functions#dolt_log) | table | Filtered commit log, the function equivalent of `dolt log`. |
 | [`DOLT_MERGE_BASE()`](/sql-reference/version-control/dolt-sql-functions#dolt_merge_base) | scalar | Commit hash of the merge base between two refs. |

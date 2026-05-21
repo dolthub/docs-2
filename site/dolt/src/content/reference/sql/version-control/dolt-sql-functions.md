@@ -14,6 +14,7 @@ title: Dolt SQL Functions
   - [dolt_version()](#dolt_version)
   - [has_ancestor()](#has_ancestor)
   - [last_insert_uuid()](#last_insert_uuid)
+  - [dolt_join_cost()](#dolt_join_cost)
 
 - [Table Functions](#table-functions)
 
@@ -187,6 +188,38 @@ Query OK, 2 rows affected (0.00 sec)
 | one |
 +-----+
 ```
+
+### `DOLT_JOIN_COST()`
+
+`dolt_join_cost()` is a diagnostic function for inspecting how Dolt's query
+planner costs and chooses join plans. It takes a single SQL query as a
+string, runs it through the analyzer (the query is **analyzed, not
+executed**), and returns the planner's join "memo": the groups of relations
+it explored, the candidate physical join operators considered for each
+(hash, merge, lookup, inner), and their estimated costs. The lowest-cost
+plan the planner picked in each group is marked with a `*`.
+
+It's mainly useful when tuning a slow join or checking whether a
+[join hint](/sql-reference/sql-support/miscellaneous#join-hints) is taking
+effect.
+
+```sql
+> SELECT dolt_join_cost('SELECT * FROM ab, cd, xy WHERE a = c AND b = d AND y = d');
+memo:
+├── G1: (tablescan: ab 3.0)*
+├── G2: (tablescan: cd 3.0)*
+├── G3: (hashjoin 1[ab] 2[cd] 12.1) (mergejoin 1[ab] 2[cd] 6.1)* (lookupjoin 1[ab] 2[cd] on PRIMARY 9.9) (innerjoin 1[ab] 2[cd] 10.1) …
+├── G4: (tablescan: xy 3.0)*
+├── G5: (hashjoin 3 4[xy] 12.1) (innerjoin 4[xy] 3 10.1)* (innerjoin 3 4[xy] 10.1)* …
+├── G6: (hashjoin 1[ab] 4[xy] 12.1) (innerjoin 4[xy] 1[ab] 10.1)* …
+└── G7: (hashjoin 2[cd] 4[xy] 12.1) (innerjoin 4[xy] 2[cd] 10.1)* …
+```
+
+Reading the output:
+
+- Each `Gn` is a memo group — a base relation or the result of joining other groups.
+- Within a group, each parenthesized entry is a candidate plan: the operator (`tablescan`, `hashjoin`, `mergejoin`, `lookupjoin`, `innerjoin`), its inputs (referenced by group id, with the table name in brackets for base relations, e.g. `1[ab]`), and the estimated cost.
+- The `*` marks the lowest-cost candidate — the plan the optimizer chose for that group.
 
 ## Table Functions
 
