@@ -1,0 +1,26 @@
+---
+// Generates a page for every Markdown file under src/content. The route is
+// derived from the file path by contentRouteSlug (see the shared helper);
+// the page title and on-page H1 come from frontmatter. This replaces the
+// hundreds of near-identical per-page wrappers that used to live here.
+import DocsLayout from "../layouts/DocsLayout.astro";
+import { contentRouteSlug } from "../../../shared/config/content-route.mjs";
+
+export function getStaticPaths() {
+  const SITE = "doltlab";
+  const modules = import.meta.glob("../content/**/*.md", { eager: true });
+  return Object.entries(modules)
+    .filter(([file]) => !file.includes("/.gitbook/"))
+    .map(([file, mod]) => ({
+      params: { slug: contentRouteSlug(file, SITE) },
+      props: { mod },
+    }));
+}
+
+const { mod } = Astro.props;
+const { Content, frontmatter } = mod;
+---
+
+<DocsLayout title={frontmatter.title}>
+  <Content />
+</DocsLayout>

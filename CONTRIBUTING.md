@@ -40,9 +40,10 @@ npm run dev                       # http://localhost:432x/docs
 
    Don't add a `# My Page` H1 — the `title` is rendered as the page's H1 automatically (see [Caveats](#caveats)). Start your content at `##`.
 
-2. **Page wrapper** — create `site/<site>/src/pages/<section>/<slug>.astro` that renders the markdown through `DocsLayout`. Copy a sibling page as a template; the wrapper reads both the browser `<title>` and the H1 from the markdown's frontmatter `title`, so there's nothing to set by hand.
-3. **Sidebar** — add the page to `site/<site>/src/nav.ts`.
-4. **Tests** — add the route to `cypress/fixtures/<site>-pages.ts` so the page-existence / single-h1 tests cover it.
+   That's the whole page. The route is generated from the file path by the `[...slug].astro` catch-all (there's no per-page `.astro` wrapper to write), and both the browser `<title>` and the H1 come from `title`. The path-to-route rules live in `site/shared/config/content-route.mjs` — e.g. on dolt, `content/reference/sql/<x>.md` is served at `/sql-reference/<x>`, and a `README.md` is the section index.
+
+2. **Sidebar** — add the page to `site/<site>/src/nav.ts`.
+3. **Tests** — add the route to `cypress/fixtures/<site>-pages.ts` so the page-existence / single-h1 tests cover it.
 
 ## Workflow
 
