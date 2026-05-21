@@ -2,8 +2,6 @@
 title: "SQL Modes"
 ---
 
-# SQL Modes
-
 Dolt supports a subset of [SQL modes that MySQL supports](https://dev.mysql.com/doc/refman/8.4/en/sql-mode.html).
 SQL modes are added upon request, so please [file an issue](https://github.com/dolthub/dolt/issues) if a SQL mode you need is missing.
 

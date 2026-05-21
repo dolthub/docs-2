@@ -3,8 +3,6 @@ title: "DoltHub/DoltLab Continuous Integration (CI)"
 ---
 
 
-# DoltHub/DoltLab Continuous Integration (CI)
-
 DoltHub and DoltLab support continuous integration (CI) testing which allow you to validate changes before you commit them on your primary branch.&#x20;
 
 Continuous integration (CI) testing originated as a software development best practice where automated tests run against incoming code changes pushed by software developers who are collaborating on a code repository. 

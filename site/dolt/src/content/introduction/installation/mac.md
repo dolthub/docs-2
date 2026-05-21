@@ -2,8 +2,6 @@
 title: Mac
 ---
 
-# Mac
-
 ## Install Script
 
 The download script for Linux can be used, as OSX is a `*nix` system. It will download the appropriate binary, and place it in `/usr/local/bin`:

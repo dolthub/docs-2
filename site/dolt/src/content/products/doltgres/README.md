@@ -2,8 +2,6 @@
 title: "Overview"
 ---
 
-# Overview
-
 ![](../../.gitbook/assets/doltgres-preview.png)
 
 DoltgreSQL is a Postgres-compatible version of Dolt. It is currently in pre-alpha release and has

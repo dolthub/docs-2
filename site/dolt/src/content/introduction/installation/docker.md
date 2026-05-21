@@ -3,8 +3,6 @@ title: Docker
 ---
 
 
-# Docker
-
 You can get a Dolt Docker container using our [official Docker images](https://hub.docker.com/u/dolthub).
 Both images support `linux/amd64` and `linux/arm64` platforms and are updated on every release of [Dolt](https://doltdb.com).
 Older versions are also available, and tagged with the Dolt version they contain. The source of the Dockerfiles can be found [here](https://github.com/dolthub/dolt/tree/main/docker)

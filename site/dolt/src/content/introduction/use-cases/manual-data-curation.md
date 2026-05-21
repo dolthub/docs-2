@@ -2,8 +2,6 @@
 title: Manual Data Curation
 ---
 
-# Manual Data Curation
-
 ## Problem
 
 - Are you using spreadsheets to curate production data?

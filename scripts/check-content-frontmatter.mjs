@@ -3,12 +3,17 @@
 //
 // The three docs sites load Markdown via `await import(...)` rather than
 // Astro's content collections, so a Zod `defineCollection` schema would
-// never actually run. This script enforces the same invariants at build
-// time instead: every content page must have a lowercase `title:` in its
-// frontmatter and at least one H1 (`# ...`) outside fenced code blocks.
+// never actually run. This script enforces the invariant at build time
+// instead: every content page must have a lowercase `title:` in its
+// frontmatter.
+//
+// The page H1 is no longer required in source — the remark plugin
+// `remark-inject-title-h1` injects an H1 from `title` for any page that
+// doesn't already provide its own. So a present, lowercase `title:` is
+// what guarantees each page renders both a <title> and an on-page H1.
 //
 // Usage: node scripts/check-content-frontmatter.mjs <content-dir>
-// Exits non-zero (failing the build) if any page violates the rules.
+// Exits non-zero (failing the build) if any page violates the rule.
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -49,18 +54,6 @@ function hasLowercaseTitle(fmLines) {
   return fmLines.some(l => /^title:\s*\S/.test(l));
 }
 
-function hasH1(lines) {
-  let inFence = false;
-  for (const line of lines) {
-    if (/^\s*```/.test(line)) {
-      inFence = !inFence;
-      continue;
-    }
-    if (!inFence && /^# \S/.test(line)) return true;
-  }
-  return false;
-}
-
 const problems = [];
 const files = findMarkdown(root);
 
@@ -76,9 +69,6 @@ for (const file of files) {
   if (!hasLowercaseTitle(fm)) {
     problems.push(`${rel}: missing lowercase \`title:\` in frontmatter`);
   }
-  if (!hasH1(lines)) {
-    problems.push(`${rel}: missing an H1 heading (\`# ...\`)`);
-  }
 }
 
 if (problems.length > 0) {
@@ -91,5 +81,5 @@ if (problems.length > 0) {
 }
 
 console.log(
-  `check-content-frontmatter: ${files.length} pages OK (title + H1) under ${root}`,
+  `check-content-frontmatter: ${files.length} pages OK (title) under ${root}`,
 );

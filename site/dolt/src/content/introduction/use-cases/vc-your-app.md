@@ -2,8 +2,6 @@
 title: Version Control Your Application
 ---
 
-# Version Control Your Application
-
 ## Problem
 
 * Do your customers want branches and merges in your application? 

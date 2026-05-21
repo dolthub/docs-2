@@ -2,8 +2,6 @@
 title: "Git Comparison"
 ---
 
-# Git Comparison
-
 We aim to match our CLI command behavior as closely to their Git equivalent as possible. This page lists the commands that are currently supported, and any known limitations.
 
 ## Setup and Config

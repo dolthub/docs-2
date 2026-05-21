@@ -3,8 +3,6 @@ title: Querying database history
 ---
 
 
-# Querying database history
-
 Dolt databases allow you to query the data at any point in the commit
 history. There are several ways to do so.
 

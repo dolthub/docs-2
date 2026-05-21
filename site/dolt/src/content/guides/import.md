@@ -2,8 +2,6 @@
 title: Importing Data
 ---
 
-# Importing Data
-
 This guide covers the ways to load existing data into a Dolt database. Jump
 to your source format or use case:
 

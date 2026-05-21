@@ -3,8 +3,6 @@ title: Databases
 ---
 
 
-# Databases
-
 ## What is a Database?
 
 A database is a container for a set of schema: [tables](/concepts/sql/table), [views](/concepts/sql/views),

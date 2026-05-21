@@ -2,8 +2,6 @@
 title: Versioned MySQL Replica
 ---
 
-# Versioned MySQL Replica
-
 ## Problem
 
 * Is your production MySQL vulnerable to data loss? 

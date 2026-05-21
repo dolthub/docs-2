@@ -3,8 +3,6 @@ title: Views
 ---
 
 
-# Views
-
 ## What is a View?
 
 Views look and act like tables, but the data in views is materialized on execution using a view

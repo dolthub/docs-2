@@ -2,8 +2,6 @@
 title: "Hosted Dolt: Getting Started"
 ---
 
-# Hosted Dolt: Getting Started
-
 ## Create an account
 
 Your journey today starts on the internet. Open a web browser and navigate to https://hosted.doltdb.com. You should be greeted by this welcoming site (pun intended).

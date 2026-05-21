@@ -2,8 +2,6 @@
 title: SQL Clients
 ---
 
-# SQL Clients
-
 Doltgres ships with a built-in Postgres compatible server. To start the server for your Doltgres
 database, you run `doltgres`. The `doltgres` command starts a Postgres compatible server
 on port 5432. By default, a user named `postgres` with a password of `password` is created, along

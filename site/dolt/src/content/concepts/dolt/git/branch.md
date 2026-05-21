@@ -3,8 +3,6 @@ title: Branch
 ---
 
 
-# Branch
-
 ## What is a Branch?
 
 A branch adds non-distributed, write isolation to Dolt. A branch can be thought of as a long running transaction. If you have a set of database changes that logically should be grouped together or reviewed together, you make those changes on a branch. 

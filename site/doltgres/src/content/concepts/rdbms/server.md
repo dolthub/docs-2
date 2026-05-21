@@ -2,8 +2,6 @@
 title: Server
 ---
 
-# Server
-
 ## What is a database server?
 
 A database server allows multiple local or remote clients to connect to the same database. You start

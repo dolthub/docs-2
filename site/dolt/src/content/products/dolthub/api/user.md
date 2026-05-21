@@ -2,8 +2,6 @@
 title: "User"
 ---
 
-# User
-
 DoltHub provides a user API for retrieving information about the authenticated user.
 
 > **Note**

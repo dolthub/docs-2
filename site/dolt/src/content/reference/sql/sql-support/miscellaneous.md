@@ -3,8 +3,6 @@ title: Miscellaneous
 ---
 
 
-# Miscellaneous
-
 ## Misc features
 
 | Component                         | Supported | Notes and limitations                                                                                                 |

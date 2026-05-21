@@ -2,8 +2,6 @@
 title: SQL Extensions Index
 ---
 
-# SQL Extensions Index
-
 A flat index of every Doltgres-specific SQL extension — every function,
 system table, and system variable — on a single page. Press ⌘F / Ctrl-F
 and search by keyword when you don't know what kind of construct exposes

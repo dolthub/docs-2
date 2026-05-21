@@ -2,8 +2,6 @@
 title: SQL Language Support
 ---
 
-# SQL Language Support
-
 Doltgres's goal is to be compliant with the PostgreSQL dialect, 
 with every query and statement that works in PostgreSQL behaving identically in Doltgres.
 

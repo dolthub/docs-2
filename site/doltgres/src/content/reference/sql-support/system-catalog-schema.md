@@ -2,8 +2,6 @@
 title: System Catalog Schema
 ---
 
-# System Catalog Schema
-
 The [Postgres `pg_catalog` schema](https://www.postgresql.org/docs/15/catalogs.html)
 provides access to a variety of database metadata useful for inspecting your database and
 also used by database tooling. Doltgres provides a subset of the data available in

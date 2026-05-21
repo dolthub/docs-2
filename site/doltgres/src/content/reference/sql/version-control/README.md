@@ -2,8 +2,6 @@
 title: Version Control in Doltgres
 ---
 
-# Version Control in Doltgres
-
 Unlike other relational databases, Doltgres has multiple branches and stores all data in a commit
 graph, like git. This makes it possible to efficiently diff any two commits, as well as merge one
 branch into another. All the git-like version control functionality is exposed as system tables,

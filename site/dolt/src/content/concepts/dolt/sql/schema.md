@@ -2,8 +2,6 @@
 title: Schema
 ---
 
-# Schema
-
 ## What is a Schema?
 
 Schema defines the shape of the data in your database. 

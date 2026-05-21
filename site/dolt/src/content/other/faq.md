@@ -2,8 +2,6 @@
 title: FAQ
 ---
 
-# FAQ
-
 ## Why is it called Dolt? Are you calling me dumb?
 
 It's named `dolt` to pay homage to [how Linus Torvalds named

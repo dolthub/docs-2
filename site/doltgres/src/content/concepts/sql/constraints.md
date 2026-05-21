@@ -3,8 +3,6 @@ title: Constraints
 ---
 
 
-# Constraints
-
 ## What is a Constraint?
 
 Constraints restrict the values allowed in a column. There are multiple forms of constraints:

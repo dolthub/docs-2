@@ -3,8 +3,6 @@ title: Databases
 ---
 
 
-# Databases
-
 ## What is a Database?
 
 A database is a container for a set of schema: [tables](/concepts/dolt/sql/table), [views](/concepts/dolt/sql/views), [triggers](/concepts/dolt/sql/triggers), [procedures](/concepts/dolt/sql/procedures), etc. In relational databases, queries within a database are optimized, while queries across multiple databases are not. 

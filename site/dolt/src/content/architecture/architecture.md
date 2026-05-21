@@ -3,8 +3,6 @@ title: Architecture
 ---
 
 
-# Architecture
-
 Dolt is the world's first version controlled SQL database.
 
 How would you build a version controlled SQL database? We will start with some of the high level requirements, explain some possible architecture options, and then explain the actual building blocks used to build Dolt.

@@ -3,8 +3,6 @@ title: Data Description
 ---
 
 
-# Data Description
-
 ## Data types
 
 | Data type            | Supported | Notes                           |

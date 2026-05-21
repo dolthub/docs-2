@@ -2,8 +2,6 @@
 title: Working Set
 ---
 
-# Working Set
-
 ## What is a Working Set?
 
 Doltgres has three kinds of changes: committed, staged and working. The working set is the set of
