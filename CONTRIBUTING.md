@@ -35,12 +35,12 @@ npm run dev                       # http://localhost:432x/docs
    title: My Page
    ---
 
-   # My Page
-
-   …content…
+   …content starting with `##` subheadings…
    ```
 
-2. **Page wrapper** — create `site/<site>/src/pages/<section>/<slug>.astro` that renders the markdown through `DocsLayout`. Copy a sibling page as a template.
+   Don't add a `# My Page` H1 — the `title` is rendered as the page's H1 automatically (see [Caveats](#caveats)). Start your content at `##`.
+
+2. **Page wrapper** — create `site/<site>/src/pages/<section>/<slug>.astro` that renders the markdown through `DocsLayout`. Copy a sibling page as a template; the wrapper reads both the browser `<title>` and the H1 from the markdown's frontmatter `title`, so there's nothing to set by hand.
 3. **Sidebar** — add the page to `site/<site>/src/nav.ts`.
 4. **Tests** — add the route to `cypress/fixtures/<site>-pages.ts` so the page-existence / single-h1 tests cover it.
 
@@ -69,7 +69,7 @@ npm run dev                       # http://localhost:432x/docs
 - **Internal links** are site-absolute with no `.md` extension. Use the URL form: `/sql-reference/version-control/dolt-sql-procedures#dolt_merge`, `/cli-reference/cli#dolt-status`, etc. A rehype plugin prepends the `/docs` base at build time, so write links *without* `/docs/`. Same-page anchors stay as `#anchor`.
 - **Images** must use *relative* paths (e.g. `../../.gitbook/assets/foo.png`) so Astro's asset pipeline can fingerprint them. Don't use absolute `/…` for images.
 - **Code blocks need a language** for syntax highlighting. Common: `sql` (incl. `mysql>` sessions — `mysql` isn't a Shiki grammar, use `sql`), `bash` (shell sessions), `text` (plain output / `+---+` result tables), `yaml`, `go`, `python`, `json`, `diff`, `ini`. Leave bare only when nothing fits.
-- **Each page has exactly one `# H1`** matching the frontmatter `title`. Demote any extra upstream H1s to `##` (and shift downstream levels accordingly). The `single-h1.spec.ts` Cypress check enforces this.
+- **The page H1 is generated from `title`.** A remark plugin (`site/shared/config/remark-inject-title-h1.mjs`) injects an `<h1>` from the frontmatter `title`, so don't repeat it as a manual `# Heading`. Write your own `# ...` only when you want a top heading that *differs* from the title (e.g. a more descriptive heading) — the plugin sees the existing H1 and leaves it alone. Either way, every page must have a lowercase `title:`: the build runs `scripts/check-content-frontmatter.mjs` (wired into each site's `build` script) and fails without one. Keep to a single H1 — demote any extra H1s to `##` (and shift downstream levels accordingly); the `single-h1.spec.ts` Cypress check also enforces one `<h1>`.
 
 ## Cypress tests
 
