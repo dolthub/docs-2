@@ -5,6 +5,6 @@ const post = await import("../../content/other/versioning.md");
 const Content = post.Content;
 ---
 
-<DocsLayout title="Versioning">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

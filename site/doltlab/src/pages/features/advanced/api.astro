@@ -5,6 +5,6 @@ const post = await import("../../../content/features/advanced/api.md");
 const Content = post.Content;
 ---
 
-<DocsLayout title="API">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

@@ -5,6 +5,6 @@ const post = await import("../../../content/reference/release-notes/v2.4.2.md");
 const Content = post.Content;
 ---
 
-<DocsLayout title="DoltLab v2.4.2 Release Notes">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

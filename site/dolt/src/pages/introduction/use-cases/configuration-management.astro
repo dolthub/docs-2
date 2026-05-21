@@ -5,6 +5,6 @@ const post = await import("../../../content/introduction/use-cases/configuration
 const Content = post.Content;
 ---
 
-<DocsLayout title="Configuration Management">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

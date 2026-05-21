@@ -5,6 +5,6 @@ const post = await import("../../../content/introduction/use-cases/data-sharing.
 const Content = post.Content;
 ---
 
-<DocsLayout title="Data Sharing">
+<DocsLayout title={post.frontmatter.title}>
   <Content />
 </DocsLayout>

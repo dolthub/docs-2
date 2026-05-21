@@ -1,5 +1,5 @@
 ---
-title: Mac 
+title: Mac
 ---
 
 # Mac
