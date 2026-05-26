@@ -611,7 +611,7 @@ CALL DOLT_CLONE('dolthub/us-jails', 'myCustomDbName');
 
 `--single-branch`: Clone only the history leading to the tip of a single branch, either specified by `--branch` or the remote's HEAD (the default).
 
-`-u`, `--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable.
+`-u`, `--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable on the `sql-server` process — see [Authenticating to remotes](/sql-reference/version-control/remote-authentication).
 
 #### Output Schema
 
@@ -847,7 +847,7 @@ CALL DOLT_FETCH('origin');
 
 `--prune`, `-p`: After fetching, remove any remote-tracking references that don't exist on the remote.
 
-`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable.
+`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable on the `sql-server` process — see [Authenticating to remotes](/sql-reference/version-control/remote-authentication).
 
 `--silent`: Suppress progress information.
 
@@ -1063,7 +1063,7 @@ commit history
 
 `-r`, `--rebase`: After fetching, rebase the current branch on top of the upstream branch instead of merging. Cannot be combined with `--squash`, `--no-ff`, `--ff-only`, or `--no-commit`.
 
-`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable.
+`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable on the `sql-server` process — see [Authenticating to remotes](/sql-reference/version-control/remote-authentication).
 
 `--silent`: Suppress progress information.
 
@@ -1151,7 +1151,7 @@ CALL DOLT_PUSH('--force', 'origin', 'main');
 
 `--all`: Push all branches.
 
-`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable.
+`--user`: User name to use when authenticating with the remote. The password is read from the `DOLT_REMOTE_PASSWORD` environment variable on the `sql-server` process — see [Authenticating to remotes](/sql-reference/version-control/remote-authentication).
 
 `--silent`: Suppress progress information.
 
