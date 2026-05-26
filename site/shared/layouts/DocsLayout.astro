@@ -51,6 +51,23 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {/* Apply the saved (or system) theme before paint to avoid a flash.
+        The navbar toggle flips this `dark` class and persists `docs-theme`. */}
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem("docs-theme");
+          var dark = stored
+            ? stored === "dark"
+            : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (dark) document.documentElement.classList.add("dark");
+        } catch (e) {
+          /* localStorage/matchMedia unavailable — stay light */
+        }
+      })();
+    </script>
+
     <title>{title} | {siteLabel}</title>
 
     {/* Social preview metadata (Open Graph + Twitter Card) */}
@@ -967,5 +984,26 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     color: inherit;
     border-radius: 2px;
     padding: 0.05em 0.15em;
+  }
+</style>
+
+<style is:global>
+  /* Dark mode — toggled by the navbar button (adds `dark` to <html>).
+     INTENTIONALLY MINIMAL for now: this only darkens the page backdrop
+     and the navbar gutter, plus `color-scheme` so native UI (scrollbars,
+     the search input, form controls) follow. The text-bearing surfaces
+     (content card, sidebar, TOC) are deliberately left light so nothing
+     renders dark-on-dark — their colors come from the `--color-primary`
+     brand variable that ThemeProvider sets inline on <html>, so the full
+     palette is a separate follow-up, not a CSS override here. */
+  html.dark {
+    color-scheme: dark;
+  }
+  html.dark body {
+    background: #0d1117;
+    color: #e6edf3;
+  }
+  html.dark .navbar-slot {
+    background: #0d1117;
   }
 </style>

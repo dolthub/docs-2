@@ -4,6 +4,8 @@ import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaLinkedin } from "@react-icons/all-files/fa/FaLinkedin";
 import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
+import { FaMoon } from "@react-icons/all-files/fa/FaMoon";
+import { FaSun } from "@react-icons/all-files/fa/FaSun";
 import React, { useState, useRef, useEffect } from "react";
 
 // "" (no base) or e.g. "/docs" — every docs site is served under this base
@@ -137,6 +139,56 @@ function LeftLinks() {
   );
 }
 
+// Light/dark theme toggle. The `dark` class on <html> is applied before
+// paint by the no-flash init script in DocsLayout; this just flips it and
+// persists the choice. Toggle instances stay in sync via a window event so
+// the desktop and mobile copies show the same icon.
+const THEME_KEY = "docs-theme";
+
+function setDarkMode(dark: boolean) {
+  document.documentElement.classList.toggle("dark", dark);
+  try {
+    localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
+  } catch {
+    /* localStorage unavailable (private mode, etc.) — ignore */
+  }
+  window.dispatchEvent(new CustomEvent("docs-themechange", { detail: { dark } }));
+}
+
+function DarkModeToggle() {
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+    function onChange(e: Event) {
+      setDark((e as CustomEvent<{ dark: boolean }>).detail.dark);
+    }
+    window.addEventListener("docs-themechange", onChange);
+    return () => window.removeEventListener("docs-themechange", onChange);
+  }, []);
+  const label = dark ? "Switch to light mode" : "Switch to dark mode";
+  return (
+    <button
+      type="button"
+      onClick={() => setDarkMode(!dark)}
+      data-cy="navbar-theme-toggle"
+      aria-label={label}
+      title={label}
+      style={{
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        color: "inherit",
+        display: "flex",
+        alignItems: "center",
+        padding: "0.3rem",
+        fontSize: "1.1rem",
+      }}
+    >
+      {dark ? <FaSun /> : <FaMoon />}
+    </button>
+  );
+}
+
 function RightLinks() {
   return (
     <div className="flex navbar-right">
@@ -147,14 +199,7 @@ function RightLinks() {
           <span className="navbar-icon-btn-label">GitHub</span>
         </span>
       </ExternalLink>
-      <a
-        href={`${dolthubUrl}/signin`}
-        data-cy="navbar-signin-button"
-        className="flex items-center border rounded-[0.25rem] px-3 py-[0.2rem] border-[#333C50]/20"
-        aria-label="desktop-signin"
-      >
-        Sign In
-      </a>
+      <DarkModeToggle />
     </div>
   );
 }
@@ -190,7 +235,7 @@ function MobileRightLinks() {
           {l.name} Docs
         </a>
       ))}
-      <a href={`${dolthubUrl}/signin`}>Sign In</a>
+      <DarkModeToggle />
     </>
   );
 }
