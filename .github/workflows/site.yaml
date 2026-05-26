@@ -24,6 +24,6 @@ jobs:
         with:
           node-version: "22"
       - name: Install dependencies
-        run: cd site/${{ matrix.site }} && npm install --legacy-peer-deps
+        run: npm install
       - name: Build
-        run: cd site/${{ matrix.site }} && npm run build
+        run: npm run build:${{ matrix.site }}
