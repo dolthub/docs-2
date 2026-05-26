@@ -19,7 +19,7 @@
     "compile": "tsc --noEmit"
   },
   "devDependencies": {
-    "cypress": "^13.0.0",
+    "cypress": "^15.15.0",
     "typescript": "^5.0.0"
   }
 }
