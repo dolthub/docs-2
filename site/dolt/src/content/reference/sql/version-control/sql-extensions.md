@@ -153,11 +153,16 @@ either commit/transaction semantics or replication. Full details:
 
 | Name | Description |
 |------|-------------|
+| [`dolt_allow_ci_creation`](/sql-reference/version-control/dolt-sysvars#dolt_allow_ci_creation) | Allow this session to create Dolt CI workflow tables. |
 | [`dolt_allow_commit_conflicts`](/sql-reference/version-control/dolt-sysvars#dolt_allow_commit_conflicts) | Permit committing a working set with unresolved conflicts. |
 | [`dolt_async_replication`](/sql-reference/version-control/dolt-sysvars#dolt_async_replication) | Push to the replication remote asynchronously instead of synchronously. |
 | [`dolt_author_date`](/sql-reference/version-control/dolt-sysvars#dolt_author_date) | Override the author date stamped on the next commit. |
 | [`dolt_author_email`](/sql-reference/version-control/dolt-sysvars#dolt_author_email) | Override the author email on the next commit. |
 | [`dolt_author_name`](/sql-reference/version-control/dolt-sysvars#dolt_author_name) | Override the author name on the next commit. |
+| [`dolt_auto_gc_enabled`](/sql-reference/version-control/dolt-sysvars#dolt_auto_gc_enabled) | Automatically garbage-collect unreferenced data in the background (read at startup). |
+| [`dolt_cluster_ack_writes_timeout_secs`](/sql-reference/version-control/dolt-sysvars#dolt_cluster_ack_writes_timeout_secs) | Seconds a primary waits for a standby to ack a replicated write (cluster replication). |
+| [`dolt_cluster_role`](/sql-reference/version-control/dolt-sysvars#dolt_cluster_role) | This server's cluster-replication role: `primary` or `standby`. |
+| [`dolt_cluster_role_epoch`](/sql-reference/version-control/dolt-sysvars#dolt_cluster_role_epoch) | Monotonic epoch tracking cluster role transitions. |
 | [`dolt_commit_verification_groups`](/sql-reference/version-control/dolt-sysvars#dolt_commit_verification_groups) | Test groups that must pass before a commit / merge / rebase is accepted. |
 | [`dolt_committer_date`](/sql-reference/version-control/dolt-sysvars#dolt_committer_date) | Override the committer date on the next commit. |
 | [`dolt_committer_email`](/sql-reference/version-control/dolt-sysvars#dolt_committer_email) | Override the committer email on the next commit. |
@@ -165,6 +170,7 @@ either commit/transaction semantics or replication. Full details:
 | [`dolt_dont_merge_json`](/sql-reference/version-control/dolt-sysvars#dolt_dont_merge_json) | Treat JSON columns as opaque blobs during three-way merges. |
 | [`dolt_force_transaction_commit`](/sql-reference/version-control/dolt-sysvars#dolt_force_transaction_commit) | Force the transaction commit even when it would violate constraints. |
 | [`dolt_log_level`](/sql-reference/version-control/dolt-sysvars#dolt_log_level) | Dolt's server-side log verbosity. |
+| [`dolt_optimize_json`](/sql-reference/version-control/dolt-sysvars#dolt_optimize_json) | Store JSON in Dolt's optimized, diff/merge-able format (on by default). |
 | [`dolt_override_schema`](/sql-reference/version-control/dolt-sysvars#dolt_override_schema) | Use a specific schema name regardless of the working-set HEAD. |
 | [`dolt_read_replica_force_pull`](/sql-reference/version-control/dolt-sysvars#dolt_read_replica_force_pull) | Force read replicas to fast-forward even on history divergence. |
 | [`dolt_read_replica_remote`](/sql-reference/version-control/dolt-sysvars#dolt_read_replica_remote) | Configure this server as a read replica of the named remote. |

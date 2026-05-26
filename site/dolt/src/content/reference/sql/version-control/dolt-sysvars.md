@@ -7,11 +7,14 @@ title: Dolt System Variables
 - [General system setting variables](#general-system-setting-variables)
 
   - [dbname_default_branch](#dbname_default_branch)
+  - [dolt_allow_ci_creation](#dolt_allow_ci_creation)
   - [dolt_allow_commit_conflicts](#dolt_allow_commit_conflicts)
+  - [dolt_auto_gc_enabled](#dolt_auto_gc_enabled)
   - [dolt_commit_verification_groups](#dolt_commit_verification_groups)
   - [dolt_dont_merge_json](#dolt_dont_merge_json)
   - [dolt_force_transaction_commit](#dolt_force_transaction_commit)
   - [dolt_log_level](#dolt_log_level)
+  - [dolt_optimize_json](#dolt_optimize_json)
   - [dolt_override_schema](#dolt_override_schema)
   - [dolt_show_branch_databases](#dolt_show_branch_databases)
   - [dolt_show_system_tables](#dolt_show_system_tables)
@@ -29,6 +32,9 @@ title: Dolt System Variables
   - [dolt_replication_remote_url_template](#dolt_replication_remote_url_template)
   - [dolt_read_replica_force_pull](#dolt_read_replica_force_pull)
   - [dolt_skip_replication_errors](#dolt_skip_replication_errors)
+  - [dolt_cluster_role](#dolt_cluster_role)
+  - [dolt_cluster_role_epoch](#dolt_cluster_role_epoch)
+  - [dolt_cluster_ack_writes_timeout_secs](#dolt_cluster_ack_writes_timeout_secs)
 
 - [Session metadata variables](#session-metadata-variables)
 
@@ -201,6 +207,18 @@ merge and allows them to be committed. Defaults to `0`.
 
 When set to `1`, Dolt will not attempt to automatically merge concurrent changes to the same JSON document, and will instead report the merge as having conflicts which must manually be resolved. Use this if your JSON requires invariants that could be violated if two commits make concurrent changes to different locations in the same document. Defaults to `0`.
 
+### `dolt_allow_ci_creation`
+
+Gates creation of [Dolt continuous integration](/products/dolthub/continuous-integration) workflows on this server. When set to `1`, a session may create the `dolt_ci_*` workflow tables (for example via `dolt ci init`); when `0` (the default), workflow creation is rejected. Session-scoped boolean.
+
+### `dolt_auto_gc_enabled`
+
+When set to `1` (the default), the server automatically garbage-collects unreferenced data in the background, so you don't have to run [`dolt_gc()`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc) by hand. This is a global, boolean variable read once at server startup; it cannot be changed at runtime, so set it via `config.yaml` or as a persisted system variable before starting the server.
+
+### `dolt_optimize_json`
+
+This setting was used during the introduction of a new JSON encoding method and is now deprecated. JSON columns always use the modern, optimized encoding. It may still be relevant to customers on older releases of the database, where setting it to `0` stored JSON as opaque documents instead of the optimized, diffable format. Defaults to `1`.
+
 ## Replication variables
 
 ### `dolt_replicate_to_remote`
@@ -301,6 +319,18 @@ a warning rather than causing queries to fail. Defaults to `0`.
 ```sql
 mysql> SET @@GLOBAL.dolt_skip_replication_errors = 1;
 ```
+
+### `dolt_cluster_role`
+
+The role this server plays in a [cluster replication](/sql-reference/server/replication#replication-role-and-epoch) deployment: `primary` (accepts writes and replicates them to standbys) or `standby` (receives replicated writes). This variable only exists when the server is started with cluster replication configured. It is a persisted, string-valued variable that you should not change directly with `SET` — use the `dolt_assume_cluster_role()` procedure, which updates the role and its epoch together. See [Replication Role and Epoch](/sql-reference/server/replication#replication-role-and-epoch).
+
+### `dolt_cluster_role_epoch`
+
+A monotonically increasing integer that tracks cluster role transitions; it is used to arbitrate which server is the current primary when roles change. Like [`dolt_cluster_role`](#dolt_cluster_role), it only exists when cluster replication is configured, is persisted, and is not meant to be set directly with `SET`. See [Replication Role and Epoch](/sql-reference/server/replication#replication-role-and-epoch).
+
+### `dolt_cluster_ack_writes_timeout_secs`
+
+How long, in seconds, a `primary` waits for a `standby` to acknowledge a replicated write before returning to the client. Accepts an integer from `0` to `60`; the default of `0` means the primary does not block waiting for standby acknowledgement. Persisted and settable at runtime.
 
 ## Session metadata variables
 
