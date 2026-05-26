@@ -20,7 +20,6 @@ export const shikiConfig = {
 // directory (e.g. site/dolt/), needed so Vite resolves shared component deps
 // from the site's own node_modules.
 export function buildViteConfig(siteDir) {
-  const nodeModules = siteDir + "/node_modules";
   return {
     server: {
       fs: {
@@ -32,13 +31,13 @@ export function buildViteConfig(siteDir) {
       noExternal: ["@dolthub/react-components"],
     },
     resolve: {
+      // With npm workspaces, react/react-dom and the @dolthub packages hoist
+      // to the repo-root node_modules, so a single copy is resolved for every
+      // site (and for shared/, which has no node_modules of its own). `dedupe`
+      // guards against a second React copy sneaking in. The old per-site path
+      // aliases are no longer needed now that resolution walks up to the
+      // hoisted root.
       dedupe: ["react", "react-dom"],
-      alias: {
-        // Ensure imports from shared/ resolve deps from the site's node_modules
-        "@dolthub/react-components": nodeModules + "/@dolthub/react-components",
-        "@dolthub/react-hooks": nodeModules + "/@dolthub/react-hooks",
-        "@react-icons/all-files": nodeModules + "/@react-icons/all-files",
-      },
     },
   };
 }
