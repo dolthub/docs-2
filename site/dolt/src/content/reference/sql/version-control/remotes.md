@@ -102,17 +102,17 @@ Sync functionality is supported via the [`clone`](/cli-reference/cli#dolt-clone)
 
 ## Remote Options
 
-## DoltHub
+### DoltHub
 
 [DoltHub](https://www.dolthub.com) is a remote operated by DoltHub Inc. Public repositories are free. Private repositories are free up to a Gigabyte. After a Gigabyte, private repositories are $50 a month and scale up in cost after 100GB. DoltHub adds a web GUI to your remotes along with Forks, Pull Requests, and Issues.
 
 See the [Getting Started Guide for DoltHub](/products/dolthub/data-sharing) on how to get started with a DoltHub remote.
 
-## DoltLab
+### DoltLab
 
 [DoltLab](https://www.doltlab.com) is a version of [DoltHub](https://www.dolthub.com) you can deploy in your own network. It looks very similar to DoltHub. See the [DoltLab Guide](https://doltlab.com/docs/installation) if you are interested in using DoltLab as a remote.
 
-## Filesystem
+### Filesystem
 
 Filesystem based remotes allow you to push/pull data from any location that can be accessed via the filesystem. This may be a directory on your local disk, or any other storage location that can be mounted to the filesystem. To add a filesystem based remote use a URL with the `file://` protocol.
 
@@ -146,18 +146,18 @@ dolt clone file:///c:/Users/brian/datasets/menus
 
 It's important to note that a directory-based remote is not the same as a workspace for a dolt clone, and the directory listed above as a remote file URL is not a dolt repository created or cloned with the [Dolt](https://doltdb.com) cli. Similarly, a [Dolt](https://doltdb.com) repository directory's file URL [cannot be used as a filesystem remote directly](https://github.com/dolthub/dolt/issues/1860). If you want to use a Git repository (ending in `.git`) as a remote, see [Git remotes](#git-remotes) below.
 
-## Git remotes
+### Git remotes
 
 Dolt can also use a **Git repository** as a remote (for example, GitHub, GitLab, or any SSH/HTTPS Git server). Dolt stores its remote data inside the Git repo under a Git ref. By default Dolt uses `refs/dolt/data`, but you can override this with `--ref`.
 
 > **Note:** Bitbucket is not supported as a Git remote.
 
-### Requirements and caveats
+#### Requirements and caveats
 
 - `git` must be installed and on your `PATH`.
 - The Git remote must already have **at least one branch** (a completely empty / uninitialized Git repo is not sufficient). If you create a new Git repo, push a “seed” commit/branch first.
 
-### Accepted URL formats
+#### Accepted URL formats
 
 Git remotes are recognized when the URL is explicitly `git+...` or when it ends in `.git`.
 
@@ -167,7 +167,7 @@ Git remotes are recognized when the URL is explicitly `git+...` or when it ends 
 - Schemeless host/path ending in `.git` (defaults to HTTPS): `github.com/org/repo.git`
 - Local paths ending in `.git` (relative or absolute): `../remote.git`, `/var/lib/dolt/remotes/remote.git`
 
-### CLI examples
+#### CLI examples
 
 Add a Git remote and push:
 
@@ -203,7 +203,7 @@ dolt clone ../remote.git
 dolt clone --ref refs/dolt/custom git@github.com:org/repo.git repo2
 ```
 
-### SQL examples
+#### SQL examples
 
 From SQL (e.g. `dolt sql` / `sql-server`), pass `--ref` as an argument to `dolt_remote()` / `dolt_clone()` when needed:
 
@@ -215,7 +215,7 @@ CALL dolt_remote('add', '--ref', 'refs/dolt/custom', 'origin', '../remote.git');
 CALL dolt_clone('--ref', 'refs/dolt/custom', '../remote.git', 'repo2');
 ```
 
-## AWS
+### AWS
 
 AWS remotes use a combination of DynamoDB and S3. The Dynamo table can be created with any name but must have a primary
 key with the name "db".
@@ -246,7 +246,7 @@ or
 dolt clone --aws-creds-profile prod-profile --aws-region us-west-2 origin aws://[dolt_dynamo_table:dolt_remotes_s3_storage]/menus
 ```
 
-## GCS
+### GCS
 
 Google Cloud Platform remotes use Google Cloud Storage (GCS). You can create or use an existing GCS bucket to host one or more [Dolt](https://doltdb.com) remotes. To add a GCP remote provide a URL with the `gs://` protocol like so:
 
@@ -256,7 +256,7 @@ dolt remote add origin gs://BUCKET/path/for/remote
 
 In order to initialize [Dolt](https://doltdb.com) to use your GCP credentials you will need to install the `gcloud` command line tool and run `gcloud auth login`. See the [Google document](https://cloud.google.com/sdk/gcloud/reference/auth/login) for details.
 
-## OCI
+### OCI
 
 Oracle Cloud Infrastructure (OCI) remotes use Oracle Cloud Object Storage. You can create or use an existing OCI bucket to host one or more [Dolt](https://doltdb.com) remotes. To add an OCI remote provide a URL with the `oci://` protocol like so:
 
@@ -266,11 +266,11 @@ dolt remote add origin oci://BUCKET/path/for/remote
 
 In order to initialize [Dolt](https://doltdb.com) to use your OCI credentials you will need to install the `oci` command line tool and run `oci session authenticate`. See the [Oracle document](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm) for details.
 
-## SSH
+### SSH
 
 Dolt supports SSH remotes using the `ssh://` protocol. This lets you clone, fetch, push, and pull directly to any host you can SSH into, with no additional server process required. Dolt runs its `transfer` command on the remote host over the SSH connection to serve repository data.
 
-### URL format
+#### URL format
 
 ```
 ssh://[user@]host[:port]/path/to/database
@@ -278,7 +278,7 @@ ssh://[user@]host[:port]/path/to/database
 
 The path is the absolute path to a Dolt data directory on the remote host.
 
-### Examples
+#### Examples
 
 - Cloning
 
@@ -299,7 +299,7 @@ dolt push origin main
 dolt clone ssh://user@myhost.com:2222/opt/dolt/databases/mydb
 ```
 
-### Environment variables
+#### Environment variables
 
 | Variable | Description | Default |
 |---|---|---|
@@ -318,13 +318,13 @@ Or if `dolt` is not on the remote host's default PATH:
 DOLT_SSH_EXEC_PATH="/usr/local/bin/dolt" dolt clone ssh://user@myhost.com/opt/dolt/databases/mydb
 ```
 
-### Requirements
+#### Requirements
 
 - [SSH daemon](https://www.ssh.com/academy/ssh/sshd) running on target host. User login properly set up for client user with appropriate credentials.
 - The SSH user must have read access to the Dolt data directory for clone/fetch/pull and write access for push.
 - SSH commands on the remote host run using the PATH of the sshd process, which may not include your usual PATH. The sshd PATH can be [configured](https://man.openbsd.org/sshd_config#SetEnv) to include the directory containing `dolt`. If `DOLT_SSH_EXEC_PATH` is not set, `dolt` must be in the default PATH available to SSH commands. If it is not, set `DOLT_SSH_EXEC_PATH` to the full path of the `dolt` binary on the remote host.
 
-### Usage with sql-server
+#### Usage with sql-server
 
 SSH remotes most directly map to Dolt's serverless data model, where Dolt originated as a serverless data format similar to Git. While it is possible to use SSH remotes with a running `sql-server`, there are important limitations:
 
@@ -332,13 +332,13 @@ SSH remotes most directly map to Dolt's serverless data model, where Dolt origin
 - You **can** clone and fetch from a data directory served by `sql-server`, and you can push and pull from within a running `sql-server` to SSH remotes using `dolt_push()` and `dolt_pull()`.
 - When a `sql-server` invokes push or pull against an SSH remote, the SSH connection runs as the system user the server process is running as. This has significant security implications -- that user's SSH keys and filesystem permissions determine what can be accessed on the remote host. Ensure the server's system user has appropriately scoped SSH credentials and access.
 
-### Security considerations
+#### Security considerations
 
 SSH remote access operates at the system user level of the SSH login. The client can specify any path on the remote host as the data directory, so the Dolt database access is bounded only by the file permissions of the user login on the target host. Take care when granting SSH access -- consider using a dedicated user with restricted filesystem permissions scoped to the directories you intend to serve.
 
 Given these constraints, enabling SSH remotes on multi-user systems should be done with care.
 
-## HTTP(s) Remotes
+### HTTP(s) Remotes
 
 [Dolt](https://doltdb.com) supports remotes which use the protocol `http://` and `https://`. Remote servers must implement the GRPC methods defined by the [ChunkStoreService interface](https://github.com/dolthub/dolt/blob/master/proto/dolt/services/remotesapi/v1alpha1/chunkstore.proto#L23). This is the way by which [DoltHub](https://dolthub.com) itself provides remote functionality. When you add a [DoltHub](https://dolthub.com) remote via `dolt remote add origin owner/repository` or do a `dolt clone owner/repository` [Dolt](https://doltdb.com) is just providing shorthand notation for the URL. When you run `dolt remote -v` you can see that [Dolt](https://doltdb.com) adds an `https://` URL with the host `doltremoteapi.dolthub.com` as can be seen here:
 
