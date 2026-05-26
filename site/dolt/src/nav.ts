@@ -133,6 +133,7 @@ const nav: NavSection[] = [
           { title: "Merges", href: "/sql-reference/version-control/merges" },
           { title: "Querying History", href: "/sql-reference/version-control/querying-history" },
           { title: "Using Remotes", href: "/sql-reference/version-control/remotes" },
+          { title: "Authenticating to Remotes", href: "/sql-reference/version-control/remote-authentication" },
           { title: "Procedures", href: "/sql-reference/version-control/dolt-sql-procedures" },
           { title: "Functions", href: "/sql-reference/version-control/dolt-sql-functions" },
           { title: "System Tables", href: "/sql-reference/version-control/dolt-system-tables" },
