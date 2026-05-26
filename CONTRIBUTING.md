@@ -4,7 +4,7 @@ How to edit, review, and ship docs changes.
 
 ## Where content lives
 
-Each site is an independent Astro app under `site/`. Page content is plain markdown:
+Each site is an Astro app under `site/`. The three sites (plus `site/shared`) are [npm workspaces](https://docs.npmjs.com/cli/using-npm/workspaces): one `npm install` at the repo root installs all of them and produces a single root `package-lock.json` — there are no per-site installs or lockfiles. Page content is plain markdown:
 
 | Site     | Content                      | Sidebar nav                | Page wrappers             |
 |----------|------------------------------|----------------------------|---------------------------|
@@ -19,9 +19,8 @@ The content file path mirrors the URL path (`introduction/installation.md` → `
 Edit the markdown file under `site/<site>/src/content/…` and preview locally:
 
 ```sh
-cd site/<site>
-npm install --legacy-peer-deps    # first time only
-npm run dev                       # http://localhost:432x/docs
+npm install                    # first time only — one root install covers all sites
+npm run dev -w site/<site>     # http://localhost:432x/docs
 ```
 
 (Ports: dolt `4321`, doltlab `4322`, doltgres `4323`.)
