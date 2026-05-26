@@ -20,7 +20,6 @@ title: Dolt System Variables
   - [dolt_show_system_tables](#dolt_show_system_tables)
   - [dolt_transaction_commit](#dolt_transaction_commit)
   - [dolt_transaction_commit_message](#dolt_transaction_commit_message)
-  - [dolt_transactions_disabled](#dolt_transactions_disabled)
   - [strict_mysql_compatibility](#strict_mysql_compatibility)
 
 - [Replication variables](#replication-variables)
@@ -218,11 +217,7 @@ When set to `1` (the default), the server automatically garbage-collects unrefer
 
 ### `dolt_optimize_json`
 
-When set to `1` (the default), `JSON` column values are stored in Dolt's optimized, addressable format, which supports structural diffing and three-way merging of JSON documents. Set to `0` to store JSON as opaque documents instead. Boolean; applies in both global and session scope.
-
-### `dolt_transactions_disabled`
-
-When set to `1`, Dolt's transaction layer is disabled for the session and statements are applied directly to the working set without transactional isolation. Defaults to `0`. This is intended for special-purpose tooling (such as `dolt filter-branch`) and is not recommended for normal use. Session-scoped boolean.
+This setting was used during the introduction of a new JSON encoding method and is now deprecated. JSON columns always use the modern, optimized encoding. It may still be relevant to customers on older releases of the database, where setting it to `0` stored JSON as opaque documents instead of the optimized, diffable format. Defaults to `1`.
 
 ## Replication variables
 

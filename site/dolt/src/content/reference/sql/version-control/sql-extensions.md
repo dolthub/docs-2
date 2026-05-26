@@ -189,7 +189,6 @@ either commit/transaction semantics or replication. Full details:
 | [`dolt_stats_paused`](/sql-reference/sql-support/miscellaneous#disable) | Pause the statistics collector without disabling it. |
 | [`dolt_transaction_commit`](/sql-reference/version-control/dolt-sysvars#dolt_transaction_commit) | Automatically create a Dolt commit at the end of each SQL transaction. |
 | [`dolt_transaction_commit_message`](/sql-reference/version-control/dolt-sysvars#dolt_transaction_commit_message) | Message used for auto-generated transaction commits. |
-| [`dolt_transactions_disabled`](/sql-reference/version-control/dolt-sysvars#dolt_transactions_disabled) | Disable Dolt's transaction layer for the session (special-purpose tooling). |
 
 <!--
 Maintenance: this page is a hand-curated index. When you add a new
