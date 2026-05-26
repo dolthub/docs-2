@@ -42,6 +42,7 @@ each with `SELECT … FROM` (Doltgres-style) for the same effect that
 | [`DOLT_CLONE()`](/reference/version-control/dolt-sql-functions#dolt_clone) | Clone a remote database into the current Doltgres environment. |
 | [`DOLT_COMMIT()`](/reference/version-control/dolt-sql-functions#dolt_commit) | Create a new commit from staged changes. |
 | [`DOLT_CONFLICTS_RESOLVE()`](/reference/version-control/dolt-sql-functions#dolt_conflicts_resolve) | Resolve a merge conflict by taking the `--ours` or `--theirs` side. |
+| [`DOLT_COUNT_COMMITS()`](/reference/version-control/dolt-sql-functions#dolt_count_commits) | Count how many commits one ref is ahead of and behind another. |
 | [`DOLT_FETCH()`](/reference/version-control/dolt-sql-functions#dolt_fetch) | Update remote-tracking refs without merging. |
 | [`DOLT_GC()`](/reference/version-control/dolt-sql-functions#dolt_gc) | Reclaim disk space by removing unreferenced chunks. |
 | [`DOLT_MERGE()`](/reference/version-control/dolt-sql-functions#dolt_merge) | Merge another branch into the current branch. |
@@ -52,8 +53,12 @@ each with `SELECT … FROM` (Doltgres-style) for the same effect that
 | [`DOLT_REMOTE()`](/reference/version-control/dolt-sql-functions#dolt_remote) | Add, remove, or list named remotes. |
 | [`DOLT_RESET()`](/reference/version-control/dolt-sql-functions#dolt_reset) | Move HEAD (and optionally the working set) to a different commit. |
 | [`DOLT_REVERT()`](/reference/version-control/dolt-sql-functions#dolt_revert) | Create a new commit that undoes a prior commit. |
+| [`DOLT_RM()`](/reference/version-control/dolt-sql-functions#dolt_rm) | Remove a table from the working set (or staging area with `--cached`). |
+| [`DOLT_STASH()`](/reference/version-control/dolt-sql-functions#dolt_stash) | Save, restore, or drop temporary stashes of uncommitted changes. |
 | [`DOLT_TAG()`](/reference/version-control/dolt-sql-functions#dolt_tag) | Create, list, or delete a tag at a commit. |
+| [`DOLT_THREAD_DUMP()`](/reference/version-control/dolt-sql-functions#dolt_thread_dump) | Return a goroutine dump of the server process (admin-only). |
 | [`DOLT_UNDROP()`](/reference/version-control/dolt-sql-functions#dolt_undrop) | Restore a recently dropped database from the recovery area. |
+| [`DOLT_UPDATE_COLUMN_TAG()`](/reference/version-control/dolt-sql-functions#dolt_update_column_tag) | Reassign the internal tag identifier of a column. |
 | [`DOLT_VERIFY_CONSTRAINTS()`](/reference/version-control/dolt-sql-functions#dolt_verify_constraints) | Walk the working set and record any constraint violations. |
 
 ## Informational Functions

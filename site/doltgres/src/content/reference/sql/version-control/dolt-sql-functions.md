@@ -15,6 +15,7 @@ title: Dolt SQL Functions
   - [dolt_clone()](#dolt_clone)
   - [dolt_commit()](#dolt_commit)
   - [dolt_conflicts_resolve()](#dolt_conflicts_resolve)
+  - [dolt_count_commits()](#dolt_count_commits)
   - [dolt_fetch()](#dolt_fetch)
   - [dolt_gc()](#dolt_gc)
   - [dolt_merge()](#dolt_merge)
@@ -25,8 +26,12 @@ title: Dolt SQL Functions
   - [dolt_remote()](#dolt_remote)
   - [dolt_reset()](#dolt_reset)
   - [dolt_revert()](#dolt_revert)
+  - [dolt_rm()](#dolt_rm)
+  - [dolt_stash()](#dolt_stash)
   - [dolt_tag()](#dolt_tag)
+  - [dolt_thread_dump()](#dolt_thread_dump)
   - [dolt_undrop()](#dolt_undrop)
+  - [dolt_update_column_tag()](#dolt_update_column_tag)
   - [dolt_verify_constraints()](#dolt_verify_constraints)
 
 - [Informational Functions](#informational-functions)
@@ -714,6 +719,39 @@ SELECT * FROM dolt_conflicts;
 SELECT DOLT_CONFLICTS_RESOLVE('--ours', 't1', 't2');
 ```
 
+### `DOLT_COUNT_COMMITS()`
+
+Counts how many commits one ref is ahead of and behind another, relative to
+their nearest common ancestor. This is a read-only operation.
+
+```sql
+SELECT DOLT_COUNT_COMMITS('--from', 'feature', '--to', 'main');
+```
+
+#### Options
+
+`--from`, `-f`: The ref to count from. **Required.**
+
+`--to`, `-t`: The ref to count to. **Required.**
+
+#### Output Schema
+
+```text
++--------+--------+--------------------------------+
+| Field  | Type   | Description                    |
++--------+--------+--------------------------------+
+| ahead  | bigint | commits in `from` not in `to`  |
+| behind | bigint | commits in `to` not in `from`  |
++--------+--------+--------------------------------+
+```
+
+#### Example
+
+```sql
+-- How far has the feature branch diverged from main?
+SELECT DOLT_COUNT_COMMITS('--from', 'feature', '--to', 'main');
+```
+
 ### `DOLT_FETCH()`
 
 Fetch refs, along with the objects necessary to complete their histories
@@ -1311,6 +1349,96 @@ SELECT from_pk, from_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=h
 +---------+--------+----------------------------------+-----------+
 ```
 
+### `DOLT_RM()`
+
+Removes tables from the staging area and working directory. With the
+`--cached` flag, removes tables only from the staging area while leaving
+the working directory unchanged.
+
+```sql
+SELECT DOLT_RM('table1');
+SELECT DOLT_RM('table1', 'table2', 'table3');
+SELECT DOLT_RM('--cached', 'table1');
+```
+
+#### Options
+
+`--cached`: Unstage and remove tables only from the staging area. Working
+tree tables, whether modified or not, are left alone.
+
+#### Output Schema
+
+```text
++--------+------+---------------------------+
+| Field  | Type | Description               |
++--------+------+---------------------------+
+| status | int  | 0 if successful, 1 if not |
++--------+------+---------------------------+
+```
+
+#### Example
+
+```sql
+-- Create and stage a table
+CREATE TABLE t1 (id INT PRIMARY KEY, name VARCHAR(50));
+SELECT DOLT_ADD('t1');
+
+-- Remove it from the staging area only, keeping the working copy
+SELECT DOLT_RM('--cached', 't1');
+
+-- Remove it completely (staging area and working directory)
+SELECT DOLT_RM('t1');
+```
+
+### `DOLT_STASH()`
+
+Manages temporary saves of uncommitted changes. Changes can be saved,
+restored, or removed without affecting the commit history. The function
+requires a `push` subcommand — it cannot be called without arguments to
+stash away changes.
+
+#### Push (save changes)
+
+```sql
+SELECT DOLT_STASH('push', 'stash_name');
+SELECT DOLT_STASH('push', 'stash_name', '--include-untracked');
+SELECT DOLT_STASH('push', 'stash_name', '--all');
+```
+
+Saves the current working directory and staged changes to a named stash. By
+default only changes to already-tracked tables are stashed.
+
+- `--include-untracked`, `-u`: Include untracked tables in the stash.
+- `--all`, `-a`: Include all changes (tracked, untracked, and ignored tables).
+
+#### Pop (restore and remove)
+
+```sql
+SELECT DOLT_STASH('pop', 'stash_name');
+SELECT DOLT_STASH('pop', 'stash_name', 'stash@{0}');
+```
+
+Applies the changes from the specified stash to the working directory and
+removes the stash. If conflicts occur, the operation is aborted.
+
+#### Drop
+
+```sql
+SELECT DOLT_STASH('drop', 'stash_name');
+SELECT DOLT_STASH('drop', 'stash_name', 'stash@{0}');
+```
+
+Removes the specified stash without applying its changes. If no stash id is
+given, removes the most recent stash for the given name.
+
+#### Clear
+
+```sql
+SELECT DOLT_STASH('clear', 'stash_name');
+```
+
+Removes all stashes for the specified stash name.
+
 ### `DOLT_TAG()`
 
 Creates a new tag that points at specified commit ref, or deletes an existing tag. To list existing
@@ -1360,6 +1488,26 @@ SELECT DOLT_COMMIT('-am', 'committing all changes');
 SELECT DOLT_TAG('v1','head','-m','creating v1 tag');
 ```
 
+### `DOLT_THREAD_DUMP()`
+
+Returns a dump of all goroutines running in the Doltgres server process, for
+debugging hangs or performance issues. This is an admin-only, read-only
+operation and takes no arguments.
+
+```sql
+SELECT DOLT_THREAD_DUMP();
+```
+
+#### Output Schema
+
+```text
++-------------+------+-------------------------------------+
+| Field       | Type | Description                         |
++-------------+------+-------------------------------------+
+| thread_dump | text | the server's current goroutine dump |
++-------------+------+-------------------------------------+
+```
+
 ### `DOLT_UNDROP()`
 
 Restores a dropped database. See the [`dolt_purge_dropped_databases()`
@@ -1393,6 +1541,46 @@ SELECT dolt_undrop();
 -- Use dolt_undrop() to restore it
 SELECT dolt_undrop('database1');
 SELECT * FROM database1.t;
+```
+
+### `DOLT_UPDATE_COLUMN_TAG()`
+
+Updates a column's internal identifier. Most users will never need to know
+about column tags, but [there are rare cases where a column tag collision can
+occur during a merge](https://www.dolthub.com/blog/2025-05-15-column-tags/),
+where it can be useful to manually update a column's tag. This is an advanced
+operation — use with caution and reach out to the Dolt team on
+[Discord](https://discord.gg/gqr7K4VNKe) or
+[GitHub](https://github.com/dolthub/doltgresql/issues/new) for guidance.
+
+The function updates the tag in the working set, so you must call
+[`dolt_commit()`](#dolt_commit) afterward to commit the change. Tag changes
+do not show up in working-set status or diffs, so commit them immediately to
+avoid a confusing dirty working set with no visible diff.
+
+#### Arguments
+
+`<table>`: The table containing the column to update.
+
+`<column>`: The name of the column to update.
+
+`<tag>`: An integer value to set as the column's new tag.
+
+#### Output Schema
+
+```text
++--------+------+---------------------------+
+| Field  | Type | Description               |
++--------+------+---------------------------+
+| status | int  | 0 if successful, 1 if not |
++--------+------+---------------------------+
+```
+
+#### Example
+
+```sql
+SELECT DOLT_UPDATE_COLUMN_TAG('myTable', 'col1', 42);
+SELECT DOLT_COMMIT('-am', 'updating myTable.col1 tag');
 ```
 
 ### `DOLT_VERIFY_CONSTRAINTS()`
