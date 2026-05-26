@@ -35,10 +35,8 @@ jobs:
           cache: "npm"
       - name: Install Cypress dependencies
         run: npm ci
-      - name: Install Astro site dependencies
-        run: cd site/dolt && npm install --legacy-peer-deps
       - name: Build Astro site
-        run: cd site/dolt && npm run build
+        run: npm run build:dolt
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
@@ -67,10 +65,8 @@ jobs:
           cache: "npm"
       - name: Install Cypress dependencies
         run: npm ci
-      - name: Install Astro site dependencies
-        run: cd site/doltlab && npm install --legacy-peer-deps
       - name: Build Astro site
-        run: cd site/doltlab && npm run build
+        run: npm run build:doltlab
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
@@ -100,10 +96,8 @@ jobs:
           cache: "npm"
       - name: Install Cypress dependencies
         run: npm ci
-      - name: Install Astro site dependencies
-        run: cd site/doltgres && npm install --legacy-peer-deps
       - name: Build Astro site
-        run: cd site/doltgres && npm run build
+        run: npm run build:doltgres
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
