@@ -1,4 +1,4 @@
-import { Navbar as Nav, DiscordButton, ExternalLink } from "@dolthub/react-components";
+import { Navbar as Nav, ExternalLink } from "@dolthub/react-components";
 import { FaDiscord } from "@react-icons/all-files/fa/FaDiscord";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaLinkedin } from "@react-icons/all-files/fa/FaLinkedin";
@@ -123,9 +123,6 @@ function DocsDropdown() {
 function LeftLinks() {
   return (
     <>
-      <a href={`${dolthubUrl}/discover`} data-cy="navbar-databases">
-        Databases
-      </a>
       <a href={`${dolthubUrl}/pricing`} data-cy="navbar-pricing">
         Pricing
       </a>
@@ -146,7 +143,13 @@ function LeftLinks() {
 const THEME_KEY = "docs-theme";
 
 function setDarkMode(dark: boolean) {
-  document.documentElement.classList.toggle("dark", dark);
+  const de = document.documentElement;
+  de.classList.toggle("dark", dark);
+  // Mirror the no-flash inline styles set by the head script in DocsLayout so
+  // a later page load (or this toggle) never shows the wrong root canvas.
+  // Keep these colors in sync with that script and the body background CSS.
+  de.style.colorScheme = dark ? "dark" : "light";
+  de.style.backgroundColor = dark ? "#0d1117" : "#f1f3f8";
   try {
     localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
   } catch {
@@ -165,34 +168,48 @@ function DarkModeToggle() {
     window.addEventListener("docs-themechange", onChange);
     return () => window.removeEventListener("docs-themechange", onChange);
   }, []);
-  const label = dark ? "Switch to light mode" : "Switch to dark mode";
+  const seg = "navbar-theme-toggle-seg";
+  const active = `${seg} navbar-theme-toggle-seg-active`;
   return (
-    <button
-      type="button"
-      onClick={() => setDarkMode(!dark)}
+    <div
+      className="navbar-theme-toggle"
       data-cy="navbar-theme-toggle"
-      aria-label={label}
-      title={label}
-      style={{
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        color: "inherit",
-        display: "flex",
-        alignItems: "center",
-        padding: "0.3rem",
-        fontSize: "1.1rem",
-      }}
+      role="group"
+      aria-label="Color theme"
     >
-      {dark ? <FaSun /> : <FaMoon />}
-    </button>
+      <button
+        type="button"
+        onClick={() => setDarkMode(false)}
+        className={dark ? seg : active}
+        aria-label="Switch to light mode"
+        aria-pressed={!dark}
+        title="Light mode"
+      >
+        <FaSun />
+      </button>
+      <button
+        type="button"
+        onClick={() => setDarkMode(true)}
+        className={dark ? active : seg}
+        aria-label="Switch to dark mode"
+        aria-pressed={dark}
+        title="Dark mode"
+      >
+        <FaMoon />
+      </button>
+    </div>
   );
 }
 
 function RightLinks() {
   return (
     <div className="flex navbar-right">
-      <DiscordButton href={doltDiscord} dark />
+      <ExternalLink href={doltDiscord} data-cy="discord-link" aria-label="Discord">
+        <span className="navbar-icon-btn">
+          <FaDiscord />
+          <span className="navbar-icon-btn-label">Discord</span>
+        </span>
+      </ExternalLink>
       <ExternalLink href={doltGithub} data-cy="github-link" aria-label="GitHub">
         <span className="navbar-icon-btn">
           <FaGithub />
