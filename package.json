@@ -25,5 +25,8 @@
   "devDependencies": {
     "cypress": "^15.15.0",
     "typescript": "^5.0.0"
+  },
+  "overrides": {
+    "qs": "^6.15.2"
   }
 }
