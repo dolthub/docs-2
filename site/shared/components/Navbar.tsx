@@ -123,6 +123,9 @@ function DocsDropdown() {
 function LeftLinks() {
   return (
     <>
+      <a href={`${dolthubUrl}/discover`} data-cy="navbar-databases">
+        Databases
+      </a>
       <a href={`${dolthubUrl}/pricing`} data-cy="navbar-pricing">
         Pricing
       </a>

@@ -162,6 +162,9 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     .sidebar-slot {
       width: 256px;
       min-width: 256px;
+      /* Left padding so the nav and search trigger never sit flush against
+         the window edge when the container spans full width (≤1400px). */
+      padding-left: 0.75rem;
       padding-right: 0.25rem;
       overflow: hidden;
     }
@@ -744,9 +747,15 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     cursor: default;
   }
 
-  /* Desktop sidebar */
+  /* Desktop sidebar. Fill the slot (w-full) rather than a fixed w-64: the slot
+     is itself 256px wide with horizontal padding, so a fixed 256px sidebar
+     overflows that padding and gets clipped right at the white content card —
+     making the row highlights touch it (the gap otherwise only existed by
+     grace of the scrollbar width, which is 0 with macOS overlay scrollbars).
+     Filling the slot lets the padding-right below produce a real, consistent
+     gap before the card. */
   .sidebar-desktop {
-    @apply hidden lg:block w-64 shrink-0 overflow-y-auto;
+    @apply hidden lg:block w-full shrink-0 overflow-y-auto;
     position: sticky;
     top: 0;
     height: 100vh;
