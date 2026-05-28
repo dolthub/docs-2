@@ -23,8 +23,12 @@ export function buildViteConfig(siteDir) {
   return {
     server: {
       fs: {
-        // Allow serving files from shared/ which is outside each site's root
-        allow: [siteDir, siteDir + "/../shared"],
+        // Allow serving from the site itself, the shared/ dir, and the
+        // repo root. Under npm workspaces, dependencies hoist to the
+        // repo-root node_modules (siteDir/../..), so the dev server must
+        // be allowed to read it — otherwise client islands like
+        // @astrojs/react fail with "outside of Vite serving allow list".
+        allow: [siteDir, siteDir + "/../shared", siteDir + "/../.."],
       },
     },
     ssr: {
