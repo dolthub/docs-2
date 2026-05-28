@@ -110,20 +110,20 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   :global(body) {
-    background: #f1f3f8;
+    @apply bg-stone-50;
   }
 
   /* Reserve space for client-only components to prevent layout shift */
   .navbar-slot {
     min-height: 48px;
-    background: #f1f3f8;
+    @apply bg-stone-50;
     padding-bottom: 0.5rem;
   }
 
   .sidebar-slot {
     width: 0;
     min-width: 0;
-    background: #f1f3f8;
+    @apply bg-stone-50;
     overflow: visible;
   }
 
@@ -146,13 +146,13 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     width: 200px;
     min-width: 200px;
     flex-shrink: 0;
-    background: #f1f3f8;
+    @apply bg-stone-50;
     padding-left: 0.75rem;
   }
 
   .docs-main {
     @apply flex-1 min-w-0 px-6 lg:px-12 pt-6 pb-16 min-h-[70vh];
-    background: white;
+    @apply bg-white;
     border-radius: 12px;
     margin-top: 0.75rem;
     margin-bottom: 0;
@@ -202,7 +202,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   .docs-main :global(code) {
     @apply rounded px-1.5 py-0.5 text-sm font-mono;
-    background: #f1f3f8;
+    @apply bg-stone-50;
   }
 
   .docs-main :global(pre) {
@@ -233,20 +233,20 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   .docs-main :global(th) {
     @apply font-semibold text-left;
     padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid #D7D8DF;
+    @apply border-b;
   }
 
   .docs-main :global(th + th) {
-    border-left: 1px solid #D7D8DF;
+    @apply border-l;
   }
 
   .docs-main :global(td) {
     padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid #D7D8DF;
+    @apply border-b;
   }
 
   .docs-main :global(td + td) {
-    border-left: 1px solid #D7D8DF;
+    @apply border-l;
   }
 
   .docs-main :global(tbody tr:last-child td) {
@@ -265,7 +265,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   /* DoltHub SQL console embed */
   .docs-main :global(.dolthub-embed-wrapper) {
     margin: 1rem 0;
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 8px;
     overflow: hidden;
   }
@@ -283,13 +283,13 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     font-size: 0.8rem;
     text-align: center;
     background: #f8f9fa;
-    border-top: 1px solid #D7D8DF;
+    @apply border-t;
     text-decoration: none !important;
   }
 
   /* API endpoint styles */
   .docs-main :global(.api-endpoint) {
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 8px;
     margin: 1.5rem 0;
   }
@@ -300,7 +300,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     background: #f8f9fa;
-    border-bottom: 1px solid #D7D8DF;
+    @apply border-b;
     font-family: "Space Mono", monospace;
   }
 
@@ -529,7 +529,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
      to the dark nav text color so they read on it. [class*=…] keeps us stable
      across library version hash changes. */
   .navbar-slot [class*="ForMobile_openMenu"] {
-    background: #f1f3f8;
+    @apply bg-stone-50;
   }
   .navbar-slot [class*="ForMobile_links"] a,
   .navbar-slot [class*="ForMobile_links"] button,
@@ -570,8 +570,8 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     top: 100%;
     left: 0;
     margin-top: 0.5rem;
-    background: white;
-    border: 1px solid #D7D8DF;
+    @apply bg-white;
+    @apply border;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     min-width: 150px;
@@ -676,7 +676,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .sidebar-desktop::-webkit-scrollbar-thumb {
-    background: #D7D8DF;
+    @apply bg-stone-100;
     border-radius: 4px;
   }
 
@@ -687,7 +687,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   /* Mobile toggle button */
   .sidebar-mobile-toggle {
     @apply flex lg:hidden items-center gap-2 px-4 py-3 text-sm w-full cursor-pointer;
-    background: #f1f3f8;
+    @apply bg-stone-50;
     color: rgba(var(--color-primary), 0.9);
     border: none;
     border-bottom: 1px solid #d7d8df;
@@ -751,9 +751,9 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     width: calc(100% - 1.5rem);
     margin: 0 0.75rem 0.75rem;
     padding: 0.5rem 0.75rem;
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 6px;
-    background: white;
+    @apply bg-white;
     cursor: pointer;
     font-size: 0.85rem;
     color: #999;
@@ -771,9 +771,9 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     gap: 0.5rem;
     margin: 0.75rem 0 0.5rem 0;
     padding: 0.5rem 0.75rem;
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 6px;
-    background: white;
+    @apply bg-white;
     cursor: pointer;
     font-size: 0.8rem;
     color: #999;
@@ -801,9 +801,9 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     display: none;
     font-size: 0.6rem;
     padding: 0.1rem 0.3rem;
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 3px;
-    background: white;
+    @apply bg-white;
     color: #999;
     font-family: inherit;
     line-height: 1.3;
@@ -841,7 +841,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     width: 90%;
     max-width: 600px;
     max-height: 75vh;
-    background: white;
+    @apply bg-white;
     border-radius: 12px;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
     overflow: hidden;
@@ -871,7 +871,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   /* Search input styling */
   .search-container :global(.pagefind-ui__search-input) {
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 8px;
     font-weight: 400;
     background: #f8f9fb;
@@ -880,7 +880,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   .search-container :global(.pagefind-ui__search-input:focus) {
     border-color: #327DD2;
     outline: none;
-    background: white;
+    @apply bg-white;
     box-shadow: 0 0 0 3px rgba(50, 125, 210, 0.1);
   }
 
@@ -920,7 +920,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   /* Load more button */
   .search-container :global(.pagefind-ui__button) {
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 8px;
     font-weight: 500;
     color: #666;
@@ -960,7 +960,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .toc::-webkit-scrollbar-thumb {
-    background: #D7D8DF;
+    @apply bg-stone-100;
     border-radius: 4px;
   }
 
