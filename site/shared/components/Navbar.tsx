@@ -6,9 +6,7 @@ import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
 import React, { useState, useRef, useEffect } from "react";
 
-// "" (no base) or e.g. "/docs" — every docs site is served under this base
-// path. All three sites share the same base, so the current site's
-// import.meta.env.BASE_URL also applies to the cross-product docs links.
+// "" (no base) or e.g. "/docs" — the base path every docs site is served under.
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 
 const dolthubUrl = "https://www.dolthub.com";
@@ -33,10 +31,8 @@ const localDocsLinks = [
   { name: "Doltgres", href: `http://localhost:4323${BASE}` },
 ];
 
-// The cross-product docs links must point at the same environment the
-// current page is served from. The three sites ship one static build that's
-// deployed to prod, awsdev, and the local dev servers alike, so the
-// environment can only be known at runtime — pick the link set by hostname.
+// One static build deploys to prod, awsdev, and local alike, so the matching
+// docs links can only be chosen at runtime — by hostname.
 function docsLinksForHost(hostname: string) {
   if (hostname === "localhost" || hostname === "127.0.0.1") return localDocsLinks;
   if (hostname.endsWith(".awsdev.ld-corp.com")) return devDocsLinks;

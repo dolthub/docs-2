@@ -31,14 +31,11 @@ const siteLabel = siteLabels[siteName] || "Docs";
 const appName = appNames[siteName] || "Docs";
 const currentPath = Astro.url.pathname;
 const isDev = import.meta.env.DEV;
-// BASE_URL is "/" (no base) or e.g. "/docs" — normalize to "" or "/docs"
-// so paths can be built as `${base}/asset` uniformly.
+// "" (no base) or e.g. "/docs", normalized so paths build as `${base}/asset`.
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-// Social-preview metadata. The og:image is each site's "what is <app>" hero
-// (copied to public/og-image.png by build setup). Astro.site is configured
-// per site (https://dolthub.com / doltlab.com / doltgres.com) so URLs are
-// fully qualified for social scrapers. Falls back gracefully if unset.
+// Social-preview metadata. Astro.site (per-site origin) makes the og:image and
+// URLs absolute for scrapers; falls back gracefully if unset.
 const siteOrigin = Astro.site ? Astro.site.origin : "";
 const socialTitle = `${title} | ${appName} Documentation`;
 const ogImage = `${siteOrigin}${base}/og-image.png`;

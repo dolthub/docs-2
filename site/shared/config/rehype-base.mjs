@@ -1,16 +1,6 @@
-// Rehype plugin: prefix the configured `base` path onto root-absolute
-// links and image sources inside rendered markdown.
-//
-// Astro only rewrites its own emitted page routes for `base`; it does NOT
-// touch hardcoded `/foo` hrefs in markdown content. Without this, every
-// in-content link like `](/sql-reference/x)` 404s once the site is served
-// under a base path (e.g. dolthub.com/docs).
-//
-// Skips: external (http(s):), protocol-relative (//), anchors (#),
-// mailto:, relative paths (./ ../), and links already under the base.
-// Dependency-free so it behaves identically across all three sites
-// regardless of each site's node_modules.
-
+// Rehype plugin: prefix the configured `base` onto root-absolute links and
+// images in rendered markdown. Astro rebases its own page routes but not
+// hardcoded `/foo` hrefs in content, which would 404 under a base path.
 export default function rehypeBasePath(options = {}) {
   const base = String(options.base || "").replace(/\/+$/, "");
   if (!base) return () => {};
