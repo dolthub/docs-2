@@ -486,11 +486,47 @@ const pageUrl = `${siteOrigin}${currentPath}`;
      wrapped Navbar and gives enough specificity to win without !important. */
   .navbar-slot [class*="ForDesktop_left"] > * {
     margin-left: 0.5rem;
-    margin-right: 1rem;
+    margin-right: 1.5rem;
   }
   .navbar-slot [class*="ForDesktop_right"] > * {
     margin-left: 1rem;
     margin-right: 0.5rem;
+  }
+
+  /* The right links (Discord, GitHub, Sign In/Profile) are wrapped in one
+     .navbar-right flex group, so the rule above only spaces the whole group.
+     The library spaces the buttons within it via margin-left: 2.5rem on every
+     <a> (.ForDesktop_right a) — too wide. Zero those out and set an even, tight
+     gap on the group instead. */
+  .navbar-right {
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Make the three right-side buttons (Discord, GitHub, Sign In/Profile) a
+     uniform width so the group lines up, and center each button's content.
+     They're each a flex container (the library buttons + .navbar-auth-btn), so
+     justify-content centers the icon+label / text. min-width (not width) avoids
+     clipping if a label grows. 6.5rem fits the widest (Discord). */
+  .navbar-slot .navbar-right > * {
+    min-width: 6.5rem;
+    justify-content: center;
+  }
+
+  /* Match the Sign In / Profile button to the Discord/GitHub icon buttons:
+     same 0.75rem label text and 1.5rem line-height. The library pins nav links
+     to font-size 0.875rem / line-height 1.25rem via `.ForDesktop_inner a`
+     (which outranks Tailwind utilities like text-xs/leading-6 on the element),
+     so set both here — the two-class .navbar-slot .navbar-auth-btn selector
+     wins. The 1.5rem line-height keeps the button the same height even though
+     the text is smaller. */
+  .navbar-slot .navbar-auth-btn {
+    font-size: 0.75rem;
+    line-height: 1.5rem;
+  }
+  .navbar-slot [class*="ForDesktop_right"] a {
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .docs-dropdown-desktop-only {

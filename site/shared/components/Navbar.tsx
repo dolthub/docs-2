@@ -150,8 +150,11 @@ function LeftLinks() {
 // the DoltHub app navbar's own Sign In / Profile logic.
 function ProfileOrSignIn() {
   const isSignedIn = useIsSignedIn(dolthubTokenKey);
+  // .navbar-auth-btn sets line-height: 1.5rem in DocsLayout (with enough
+  // specificity to beat the library's `a { line-height: 1.25rem }`) so this
+  // button is the same height as the Discord/GitHub icon buttons.
   const className =
-    "flex items-center border rounded-[0.25rem] px-3 py-[0.2rem] border-[#333C50]/20";
+    "navbar-auth-btn flex items-center border rounded-[0.25rem] px-3 py-[0.2rem] border-[#333C50]/20";
   return isSignedIn ? (
     <a
       href={`${dolthubUrl}/profile`}
