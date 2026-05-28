@@ -227,7 +227,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .docs-main :global(thead tr) {
-    background: #f3f4f6;
+    @apply bg-stone-50;
   }
 
   .docs-main :global(th) {
@@ -591,7 +591,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .docs-dropdown-item:hover {
-    background: #f3f4f6;
+    @apply bg-stone-50;
   }
 
   /* Shared sidebar nav styles */
@@ -741,7 +741,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   .sidebar-mobile-close:hover {
     color: rgba(var(--color-primary), 1);
-    background: #f3f4f6;
+    @apply bg-stone-50;
   }
 
   .sidebar-mobile-search {
@@ -878,7 +878,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .search-container :global(.pagefind-ui__search-input:focus) {
-    border-color: #327DD2;
+    @apply border-sky-500;
     outline: none;
     @apply bg-white;
     box-shadow: 0 0 0 3px rgba(50, 125, 210, 0.1);
@@ -895,7 +895,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .search-container :global(.pagefind-ui__result-link) {
-    color: #327DD2;
+    @apply text-sky-500;
     font-weight: 600;
   }
 
@@ -1022,7 +1022,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   .pagefind-ui--reset mark,
   .pagefind-ui mark {
     all: unset;
-    background: #D4E7FC;
+    @apply bg-sky-50;
     color: inherit;
     border-radius: 2px;
     padding: 0.05em 0.15em;
