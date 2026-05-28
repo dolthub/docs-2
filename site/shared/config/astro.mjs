@@ -1,6 +1,15 @@
-// Shared Astro configuration values.
-// Rehype plugins must be imported per-site since module resolution is local.
-// This file exports the rehype-autolink-headings options and vite config.
+// Shared Astro configuration. Exports a per-site config factory
+// (buildAstroConfig) plus the pieces it composes. Under npm workspaces all
+// dependencies hoist to the repo-root node_modules, so this shared file can
+// import the integrations/plugins directly — Node resolution walks up from
+// shared/ to the hoisted root.
+import { defineConfig } from "astro/config";
+import tailwind from "@astrojs/tailwind";
+import react from "@astrojs/react";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeBasePath from "./rehype-base.mjs";
+import remarkInjectTitleH1 from "./remark-inject-title-h1.mjs";
 
 export const autolinkHeadingsOptions = {
   behavior: "append",
@@ -40,4 +49,32 @@ export function buildViteConfig(siteDir) {
       dedupe: ["react", "react-dom"],
     },
   };
+}
+
+// Build a site's full Astro config. The three docs sites are identical except
+// for `site` (their canonical origin) and `siteDir` (used for Vite fs.allow),
+// so each site's astro.config.mjs is a one-line call into this factory.
+//
+// Astro's `base` only rewrites URLs, not the on-disk output layout, and
+// Cloudflare Pages serves the build dir at the project root. Nesting outDir
+// under the base segment makes `dist/docs/_astro/*` line up with the
+// `/docs/_astro/*` asset URLs in the HTML.
+export function buildAstroConfig(site, siteDir) {
+  const base = "/docs";
+  return defineConfig({
+    site,
+    base,
+    outDir: `./dist${base}`,
+    integrations: [tailwind(), react()],
+    markdown: {
+      shikiConfig,
+      remarkPlugins: [remarkInjectTitleH1],
+      rehypePlugins: [
+        [rehypeBasePath, { base }],
+        rehypeSlug,
+        [rehypeAutolinkHeadings, autolinkHeadingsOptions],
+      ],
+    },
+    vite: buildViteConfig(siteDir),
+  });
 }
