@@ -54,65 +54,6 @@ function useDocsLinks() {
   return links;
 }
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
-
-// GitHub repo whose star count the nav button shows, per docs site. DoltLab has
-// no public repo of its own, so it shows Dolt's stars; Doltgres shows its own
-// (dolthub/doltgresql). `fallbackStars` is shown until the live count loads (or
-// if the API call fails), so the button never renders empty.
-const githubBySite: Record<string, { repo: string; fallbackStars: number }> = {
-  dolt: { repo: "dolthub/dolt", fallbackStars: 18000 },
-  doltlab: { repo: "dolthub/dolt", fallbackStars: 18000 },
-  doltgres: { repo: "dolthub/doltgresql", fallbackStars: 1400 },
-};
-
-// Cache window for the star count. The site is static (no backend) and the
-// navbar re-mounts on every page load, so cache the count in localStorage and
-// hit the unauthenticated GitHub API (60 req/hr per IP) at most once per
-// visitor per interval — otherwise heavy browsing could get us rate limited.
-const STARS_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
-
-// Live GitHub star count for `repo`, cached in localStorage. Shows `fallback`
-// until a count is available; on a failed/rate-limited fetch it keeps the last
-// known value and backs off (records the attempt time) for the TTL.
-function useGithubStars(repo: string, fallback: number) {
-  const [stars, setStars] = useState(fallback);
-  useEffect(() => {
-    const key = `docs-github-stars:${repo}`;
-    let cached: { count?: number; ts?: number } = {};
-    try {
-      cached = JSON.parse(localStorage.getItem(key) || "{}");
-    } catch {
-      /* unparseable/unavailable storage — treat as empty */
-    }
-    if (typeof cached.count === "number") setStars(cached.count);
-    if (cached.ts && Date.now() - cached.ts < STARS_CACHE_TTL_MS) return;
-
-    let cancelled = false;
-    const remember = (count?: number) => {
-      try {
-        localStorage.setItem(key, JSON.stringify({ count, ts: Date.now() }));
-      } catch {
-        /* ignore */
-      }
-    };
-    fetch(`https://api.github.com/repos/${repo}`)
-      .then(res => (res.ok ? res.json() : Promise.reject(res.status)))
-      .then(data => {
-        const count = data?.stargazers_count;
-        if (typeof count === "number") {
-          if (!cancelled) setStars(count);
-          remember(count);
-        } else {
-          remember(cached.count);
-        }
-      })
-      .catch(() => remember(cached.count));
-    return () => {
-      cancelled = true;
-    };
-  }, [repo, fallback]);
-  return stars;
-}
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
 const dolthubTwitter = "https://www.twitter.com/dolthub";
 const dolthubYoutube =
@@ -126,6 +67,10 @@ const siteConfig: Record<string, { alt: string }> = {
 
 type NavbarProps = {
   siteName?: "dolt" | "doltlab" | "doltgres";
+  // GitHub repo (owner/name) and its star count, both resolved at build time
+  // in DocsLayout and baked in — the navbar makes no GitHub API calls.
+  githubRepo?: string;
+  githubStars?: number;
 };
 
 function Logo({ siteName = "dolt" }: NavbarProps) {
@@ -226,15 +171,13 @@ function ProfileOrSignIn() {
   );
 }
 
-function RightLinks({ siteName = "dolt" }: NavbarProps) {
-  const { repo, fallbackStars } = githubBySite[siteName] || githubBySite.dolt;
-  const stars = useGithubStars(repo, fallbackStars);
+function RightLinks({ githubRepo = "dolthub/dolt", githubStars = 0 }: NavbarProps) {
   return (
     <div className="flex navbar-right">
       <DiscordButton href={doltDiscord} dark />
       <GithubButton
-        href={`https://github.com/${repo}`}
-        githubStarCount={stars}
+        href={`https://github.com/${githubRepo}`}
+        githubStarCount={githubStars}
         dark
       />
       <ProfileOrSignIn />
@@ -242,14 +185,13 @@ function RightLinks({ siteName = "dolt" }: NavbarProps) {
   );
 }
 
-function MobileSocialLinks({ siteName = "dolt" }: NavbarProps) {
-  const { repo } = githubBySite[siteName] || githubBySite.dolt;
+function MobileSocialLinks({ githubRepo = "dolthub/dolt" }: NavbarProps) {
   return (
     <>
       <ExternalLink href={dolthubLinkedin} aria-label="linkedin">
         <FaLinkedin />
       </ExternalLink>
-      <ExternalLink href={`https://github.com/${repo}`} aria-label="github">
+      <ExternalLink href={`https://github.com/${githubRepo}`} aria-label="github">
         <FaGithub />
       </ExternalLink>
       <ExternalLink href={doltDiscord} aria-label="discord">
@@ -286,14 +228,18 @@ function MobileRightLinks() {
   );
 }
 
-export default function DocsNavbar({ siteName = "dolt" }: NavbarProps) {
+export default function DocsNavbar({
+  siteName = "dolt",
+  githubRepo,
+  githubStars,
+}: NavbarProps) {
   return (
     <Nav
       logo={<Logo siteName={siteName} />}
       leftLinks={<LeftLinks />}
-      rightLinks={<RightLinks siteName={siteName} />}
+      rightLinks={<RightLinks githubRepo={githubRepo} githubStars={githubStars} />}
       rightLinksMobile={<MobileRightLinks />}
-      mobileBottomLinks={<MobileSocialLinks siteName={siteName} />}
+      mobileBottomLinks={<MobileSocialLinks githubRepo={githubRepo} />}
       bgColor="bg-transparent"
       dark
       logoLeft
