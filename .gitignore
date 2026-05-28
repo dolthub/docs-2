@@ -5,3 +5,4 @@ cypress/downloads/
 site/*/dist/
 site/*/node_modules/
 site/*/.astro/
+.claude/

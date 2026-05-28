@@ -7,17 +7,12 @@ import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
 import React, { useState, useRef, useEffect } from "react";
 
-// Name of the (non-HttpOnly) cookie the DoltHub app sets on login, so client
-// JS can tell whether the visitor is signed in. Must match dolthub's
-// `dolthubTokenKey`; useIsSignedIn reads it via js-cookie. The cookie is only
-// readable on dolthub.com, so the signed-in "Profile" state shows there (the
-// docs are served at dolthub.com/docs); doltlab.com/doltgres.com fall back to
-// "Sign In", which is correct since there's no DoltHub session on those hosts.
+// The (non-HttpOnly) cookie the DoltHub app sets on login, so client JS can
+// tell whether the visitor is signed in. Only readable on dolthub.com, so the
+// Profile state shows there; doltlab/doltgres fall back to Sign In.
 const dolthubTokenKey = "dolthubToken";
 
-// "" (no base) or e.g. "/docs" — every docs site is served under this base
-// path. All three sites share the same base, so the current site's
-// import.meta.env.BASE_URL also applies to the cross-product docs links.
+// "" (no base) or e.g. "/docs" — the base path every docs site is served under.
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 
 const dolthubUrl = "https://www.dolthub.com";
@@ -42,10 +37,8 @@ const localDocsLinks = [
   { name: "Doltgres", href: `http://localhost:4323${BASE}` },
 ];
 
-// The cross-product docs links must point at the same environment the
-// current page is served from. The three sites ship one static build that's
-// deployed to prod, awsdev, and the local dev servers alike, so the
-// environment can only be known at runtime — pick the link set by hostname.
+// One static build deploys to prod, awsdev, and local alike, so the matching
+// docs links can only be chosen at runtime — by hostname.
 function docsLinksForHost(hostname: string) {
   if (hostname === "localhost" || hostname === "127.0.0.1") return localDocsLinks;
   if (hostname.endsWith(".awsdev.ld-corp.com")) return devDocsLinks;
@@ -103,21 +96,21 @@ function DocsDropdown() {
   }, []);
 
   return (
-    <div ref={ref} className="docs-dropdown" style={{ position: "relative", display: "inline-block" }}>
+    <div ref={ref} className="docs-dropdown relative inline-block">
       <button
         onClick={() => setOpen(!open)}
         data-cy="navbar-documentation"
         className="docs-dropdown-trigger"
       >
         Documentation
-        <svg width="10" height="6" viewBox="0 0 10 6" style={{ marginLeft: 4, display: "inline" }}>
+        <svg width="10" height="6" viewBox="0 0 10 6" className="ml-1 inline">
           <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       </button>
       {open && (
         <div className="docs-dropdown-menu">
           {links.map(l => (
-            <a key={l.name} href={l.href} className="docs-dropdown-item" style={{ margin: 0, display: "block" }}>
+            <a key={l.name} href={l.href} className="docs-dropdown-item m-0 block">
               {l.name}
             </a>
           ))}
@@ -150,11 +143,10 @@ function LeftLinks() {
 // the DoltHub app navbar's own Sign In / Profile logic.
 function ProfileOrSignIn() {
   const isSignedIn = useIsSignedIn(dolthubTokenKey);
-  // .navbar-auth-btn sets line-height: 1.5rem in DocsLayout (with enough
-  // specificity to beat the library's `a { line-height: 1.25rem }`) so this
-  // button is the same height as the Discord/GitHub icon buttons.
+  // .navbar-auth-btn (in DocsLayout) sets line-height: 1.5rem so this matches
+  // the Discord/GitHub button height.
   const className =
-    "navbar-auth-btn flex items-center border rounded-[0.25rem] px-3 py-[0.2rem] border-[#333C50]/20";
+    "navbar-auth-btn flex items-center border rounded px-3 py-[0.2rem] border-[#333C50]/20";
   return isSignedIn ? (
     <a
       href={`${dolthubUrl}/profile`}
