@@ -524,6 +524,27 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     font-size: 0.75rem;
     line-height: 1.5rem;
   }
+
+  /* Mobile nav menu. The open menu is a full-screen overlay (ForMobile_openMenu)
+     that the library leaves transparent because we pass bgColor="bg-transparent"
+     (so the desktop bar shows the .navbar-slot color) — so the open menu shows
+     the page through it. Give it the navbar-bar background, and recolor the
+     library's hard-coded white menu links, social icons, and close (X) button
+     to the dark nav text color so they read on it. [class*=…] keeps us stable
+     across library version hash changes. */
+  .navbar-slot [class*="ForMobile_openMenu"] {
+    background: #f1f3f8;
+  }
+  .navbar-slot [class*="ForMobile_links"] a,
+  .navbar-slot [class*="ForMobile_links"] button,
+  .navbar-slot [class*="ForMobile_bottomLinks"] svg,
+  .navbar-slot [class*="ForMobile_openMenu"] [class*="ForMobile_top"] button {
+    color: rgba(var(--color-background-acc-1), 1);
+  }
+  .navbar-slot [class*="ForMobile_links"] a:hover,
+  .navbar-slot [class*="ForMobile_links"] button:hover {
+    color: rgba(var(--color-primary), 0.8);
+  }
   .navbar-slot [class*="ForDesktop_right"] a {
     margin-left: 0;
     margin-right: 0;
@@ -669,22 +690,28 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   /* Mobile toggle button */
   .sidebar-mobile-toggle {
-    @apply flex lg:hidden items-center gap-2 px-4 py-2 text-xs w-full bg-white cursor-pointer;
-    color: rgba(var(--color-primary), 0.5);
+    @apply flex lg:hidden items-center gap-2 px-4 py-3 text-sm w-full cursor-pointer;
+    background: #f1f3f8;
+    color: rgba(var(--color-primary), 0.9);
     border: none;
-    border-bottom: 1px solid #e5e7eb;
-    font-weight: 500;
+    border-bottom: 1px solid #d7d8df;
+    font-weight: 600;
     letter-spacing: 0.02em;
   }
 
   .sidebar-mobile-toggle:hover {
-    color: rgba(var(--color-primary), 0.8);
-    background: #f9fafb;
+    color: rgba(var(--color-primary), 1);
+    background: #e9ebf1;
+  }
+
+  .sidebar-mobile-toggle svg:first-child {
+    width: 1.1rem;
+    height: 1.1rem;
   }
 
   .sidebar-mobile-chevron {
     margin-left: auto;
-    opacity: 0.4;
+    opacity: 0.7;
   }
 
   /* Mobile overlay */
