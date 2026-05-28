@@ -27,8 +27,10 @@ export const shikiConfig = {
 export function buildViteConfig(siteDir) {
   return {
     server: {
-      // shared/ lives outside each site's root, so allow it explicitly.
-      fs: { allow: [siteDir, siteDir + "/../shared"] },
+      // shared/ and (under workspaces) the repo-root node_modules sit outside
+      // each site's root, so allow both — else astro dev blocks @astrojs/react's
+      // client runtime ("outside of Vite serving allow list").
+      fs: { allow: [siteDir, siteDir + "/../shared", siteDir + "/../.."] },
     },
     ssr: {
       noExternal: ["@dolthub/react-components"],

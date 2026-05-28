@@ -1,10 +1,16 @@
 import { Navbar as Nav, DiscordButton, ExternalLink } from "@dolthub/react-components";
+import { useIsSignedIn } from "@dolthub/react-hooks";
 import { FaDiscord } from "@react-icons/all-files/fa/FaDiscord";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaLinkedin } from "@react-icons/all-files/fa/FaLinkedin";
 import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
 import React, { useState, useRef, useEffect } from "react";
+
+// The (non-HttpOnly) cookie the DoltHub app sets on login, so client JS can
+// tell whether the visitor is signed in. Only readable on dolthub.com, so the
+// Profile state shows there; doltlab/doltgres fall back to Sign In.
+const dolthubTokenKey = "dolthubToken";
 
 // "" (no base) or e.g. "/docs" — the base path every docs site is served under.
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
@@ -118,7 +124,7 @@ function LeftLinks() {
   return (
     <>
       <a href={`${dolthubUrl}/discover`} data-cy="navbar-databases">
-        Databases
+        DoltHub
       </a>
       <a href={`${dolthubUrl}/pricing`} data-cy="navbar-pricing">
         Pricing
@@ -133,6 +139,35 @@ function LeftLinks() {
   );
 }
 
+// Sign In when no DoltHub session cookie, Profile when there is one — mirrors
+// the DoltHub app navbar's own Sign In / Profile logic.
+function ProfileOrSignIn() {
+  const isSignedIn = useIsSignedIn(dolthubTokenKey);
+  // .navbar-auth-btn (in DocsLayout) sets line-height: 1.5rem so this matches
+  // the Discord/GitHub button height.
+  const className =
+    "navbar-auth-btn flex items-center border rounded px-3 py-[0.2rem] border-[#333C50]/20";
+  return isSignedIn ? (
+    <a
+      href={`${dolthubUrl}/profile`}
+      data-cy="navbar-desktop-profile-link"
+      className={className}
+      aria-label="desktop-profile"
+    >
+      Profile
+    </a>
+  ) : (
+    <a
+      href={`${dolthubUrl}/signin`}
+      data-cy="navbar-signin-button"
+      className={className}
+      aria-label="desktop-signin"
+    >
+      Sign In
+    </a>
+  );
+}
+
 function RightLinks() {
   return (
     <div className="flex navbar-right">
@@ -143,14 +178,7 @@ function RightLinks() {
           <span className="navbar-icon-btn-label">GitHub</span>
         </span>
       </ExternalLink>
-      <a
-        href={`${dolthubUrl}/signin`}
-        data-cy="navbar-signin-button"
-        className="flex items-center border rounded px-3 py-[0.2rem] border-[#333C50]/20"
-        aria-label="desktop-signin"
-      >
-        Sign In
-      </a>
+      <ProfileOrSignIn />
     </div>
   );
 }
@@ -179,6 +207,7 @@ function MobileSocialLinks() {
 
 function MobileRightLinks() {
   const links = useDocsLinks();
+  const isSignedIn = useIsSignedIn(dolthubTokenKey);
   return (
     <>
       {links.map(l => (
@@ -186,7 +215,13 @@ function MobileRightLinks() {
           {l.name} Docs
         </a>
       ))}
-      <a href={`${dolthubUrl}/signin`}>Sign In</a>
+      {isSignedIn ? (
+        <a href={`${dolthubUrl}/profile`} data-cy="navbar-mobile-profile-link">
+          Profile
+        </a>
+      ) : (
+        <a href={`${dolthubUrl}/signin`}>Sign In</a>
+      )}
     </>
   );
 }
