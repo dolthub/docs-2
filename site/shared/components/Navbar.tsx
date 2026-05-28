@@ -90,21 +90,21 @@ function DocsDropdown() {
   }, []);
 
   return (
-    <div ref={ref} className="docs-dropdown" style={{ position: "relative", display: "inline-block" }}>
+    <div ref={ref} className="docs-dropdown relative inline-block">
       <button
         onClick={() => setOpen(!open)}
         data-cy="navbar-documentation"
         className="docs-dropdown-trigger"
       >
         Documentation
-        <svg width="10" height="6" viewBox="0 0 10 6" style={{ marginLeft: 4, display: "inline" }}>
+        <svg width="10" height="6" viewBox="0 0 10 6" className="ml-1 inline">
           <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       </button>
       {open && (
         <div className="docs-dropdown-menu">
           {links.map(l => (
-            <a key={l.name} href={l.href} className="docs-dropdown-item" style={{ margin: 0, display: "block" }}>
+            <a key={l.name} href={l.href} className="docs-dropdown-item m-0 block">
               {l.name}
             </a>
           ))}
@@ -146,7 +146,7 @@ function RightLinks() {
       <a
         href={`${dolthubUrl}/signin`}
         data-cy="navbar-signin-button"
-        className="flex items-center border rounded-[0.25rem] px-3 py-[0.2rem] border-[#333C50]/20"
+        className="flex items-center border rounded px-3 py-[0.2rem] border-[#333C50]/20"
         aria-label="desktop-signin"
       >
         Sign In
