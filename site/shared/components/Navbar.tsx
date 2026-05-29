@@ -55,6 +55,26 @@ function useDocsLinks() {
   }, []);
   return links;
 }
+
+// Returns a function that appends `?theme=light|dark` to a URL. Used on the
+// cross-product Documentation links so the user's light/dark choice follows
+// them between dolthub.com/docs, doltlab.com/docs, and doltgres.com/docs —
+// each origin has its own localStorage, so we carry the choice on the link
+// and the destination's no-flash script honors it (and cleans the URL).
+function useThemeLink() {
+  const [theme, setTheme] = useState<"dark" | "light" | null>(null);
+  useEffect(() => {
+    const read = () =>
+      setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+    read();
+    function onChange() { read(); }
+    window.addEventListener("docs-themechange", onChange);
+    return () => window.removeEventListener("docs-themechange", onChange);
+  }, []);
+  return (href: string) =>
+    theme ? `${href}${href.includes("?") ? "&" : "?"}theme=${theme}` : href;
+}
+
 const doltGithub = "https://github.com/dolthub/dolt";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
@@ -97,6 +117,8 @@ function DocsDropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const withTheme = useThemeLink();
+
   return (
     <div ref={ref} className="docs-dropdown relative inline-block">
       <button
@@ -112,7 +134,7 @@ function DocsDropdown() {
       {open && (
         <div className="docs-dropdown-menu">
           {links.map(l => (
-            <a key={l.name} href={l.href} className="docs-dropdown-item m-0 block">
+            <a key={l.name} href={withTheme(l.href)} className="docs-dropdown-item m-0 block">
               {l.name}
             </a>
           ))}
@@ -276,10 +298,11 @@ function MobileSocialLinks() {
 function MobileRightLinks() {
   const links = useDocsLinks();
   const isSignedIn = useIsSignedIn(dolthubTokenKey);
+  const withTheme = useThemeLink();
   return (
     <>
       {links.map(l => (
-        <a key={l.name} href={l.href}>
+        <a key={l.name} href={withTheme(l.href)}>
           {l.name} Docs
         </a>
       ))}
