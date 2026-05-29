@@ -60,16 +60,33 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     <script is:inline>
       (function () {
         try {
-          var stored = localStorage.getItem("docs-theme");
-          var dark = stored
-            ? stored === "dark"
-            : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          // Cross-site theme handoff: the Documentation dropdown's
+          // cross-product links carry ?theme=light|dark so the choice
+          // follows the user across origins. If present, use it, persist
+          // it to this origin's localStorage, and strip the param from
+          // the URL so it doesn't stick around on refresh/share.
+          var url = new URL(window.location.href);
+          var q = url.searchParams.get("theme");
+          var dark;
+          if (q === "dark" || q === "light") {
+            dark = q === "dark";
+            try { localStorage.setItem("docs-theme", q); } catch (e) {}
+            url.searchParams.delete("theme");
+            try {
+              history.replaceState(null, "", url.pathname + url.search + url.hash);
+            } catch (e) {}
+          } else {
+            var stored = localStorage.getItem("docs-theme");
+            dark = stored
+              ? stored === "dark"
+              : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          }
           var de = document.documentElement;
           if (dark) de.classList.add("dark");
           de.style.colorScheme = dark ? "dark" : "light";
           de.style.backgroundColor = dark ? "#0d1117" : "#f1f3f8";
         } catch (e) {
-          /* localStorage/matchMedia unavailable — stay light */
+          /* localStorage/matchMedia/URL unavailable — stay light */
         }
       })();
     </script>
