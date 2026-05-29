@@ -40,9 +40,8 @@ export default function Search() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // (Re)initialize Pagefind UI every time the modal opens. The modal subtree
-  // unmounts on close, destroying the Pagefind-injected DOM, so each open gets
-  // a fresh container that needs a fresh PagefindUI instance.
+  // Re-init Pagefind UI on every open: the modal unmounts on close, destroying
+  // the Pagefind-injected DOM, so each open needs a fresh PagefindUI instance.
   useEffect(() => {
     if (!open) return;
 
@@ -70,8 +69,7 @@ export default function Search() {
       }, 200);
     }
 
-    // Clear a pending poll if the modal closes (or unmounts) before Pagefind
-    // loads — avoids a leaked interval and init into a stale container.
+    // Stop polling if the modal closes before Pagefind loads.
     return () => {
       if (interval) clearInterval(interval);
     };

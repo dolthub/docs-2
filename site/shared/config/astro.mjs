@@ -1,6 +1,13 @@
-// Shared Astro configuration values.
-// Rehype plugins must be imported per-site since module resolution is local.
-// This file exports the rehype-autolink-headings options and vite config.
+// Shared Astro config: a per-site factory (buildAstroConfig) plus its pieces.
+// Workspaces hoist deps to the root, so this file can import the plugins
+// directly (resolution walks up from shared/ to the hoisted root).
+import { defineConfig } from "astro/config";
+import tailwind from "@astrojs/tailwind";
+import react from "@astrojs/react";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeBasePath from "./rehype-base.mjs";
+import remarkInjectTitleH1 from "./remark-inject-title-h1.mjs";
 
 export const autolinkHeadingsOptions = {
   behavior: "append",
@@ -16,32 +23,42 @@ export const shikiConfig = {
   wrap: true,
 };
 
-// Build the vite config per-site. `siteDir` is the absolute path to the site
-// directory (e.g. site/dolt/), needed so Vite resolves shared component deps
-// from the site's own node_modules.
+// Per-site Vite config; siteDir is the absolute site path.
 export function buildViteConfig(siteDir) {
   return {
     server: {
-      fs: {
-        // Allow serving from the site itself, the shared/ dir, and the
-        // repo root. Under npm workspaces, dependencies hoist to the
-        // repo-root node_modules (siteDir/../..), so the dev server must
-        // be allowed to read it — otherwise client islands like
-        // @astrojs/react fail with "outside of Vite serving allow list".
-        allow: [siteDir, siteDir + "/../shared", siteDir + "/../.."],
-      },
+      // shared/ and (under workspaces) the repo-root node_modules sit outside
+      // each site's root, so allow both — else astro dev blocks @astrojs/react's
+      // client runtime ("outside of Vite serving allow list").
+      fs: { allow: [siteDir, siteDir + "/../shared", siteDir + "/../.."] },
     },
     ssr: {
       noExternal: ["@dolthub/react-components"],
     },
-    resolve: {
-      // With npm workspaces, react/react-dom and the @dolthub packages hoist
-      // to the repo-root node_modules, so a single copy is resolved for every
-      // site (and for shared/, which has no node_modules of its own). `dedupe`
-      // guards against a second React copy sneaking in. The old per-site path
-      // aliases are no longer needed now that resolution walks up to the
-      // hoisted root.
-      dedupe: ["react", "react-dom"],
-    },
+    // dedupe guards against a second React copy creeping in.
+    resolve: { dedupe: ["react", "react-dom"] },
   };
+}
+
+// A site's full Astro config; sites differ only by `site` and `siteDir`.
+// outDir nests under `base` because Astro's `base` rewrites URLs but not the
+// output layout, and Cloudflare serves the build dir at the project root.
+export function buildAstroConfig(site, siteDir) {
+  const base = "/docs";
+  return defineConfig({
+    site,
+    base,
+    outDir: `./dist${base}`,
+    integrations: [tailwind(), react()],
+    markdown: {
+      shikiConfig,
+      remarkPlugins: [remarkInjectTitleH1],
+      rehypePlugins: [
+        [rehypeBasePath, { base }],
+        rehypeSlug,
+        [rehypeAutolinkHeadings, autolinkHeadingsOptions],
+      ],
+    },
+    vite: buildViteConfig(siteDir),
+  });
 }

@@ -16,10 +16,8 @@ type SidebarProps = {
   currentPath: string;
 };
 
-// The site may be served under a base path (e.g. /docs). Astro rewrites its
-// own page routes for `base`, but nav hrefs in nav.ts are authored as plain
-// "/foo" — prefix the base so links and active-state matching line up with
-// the base-prefixed pathname Astro reports.
+// nav.ts hrefs are authored as plain "/foo"; prefix the base so links and
+// active-state matching line up with the base-prefixed pathname Astro reports.
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
 
 function withBase(href: string | undefined): string | undefined {

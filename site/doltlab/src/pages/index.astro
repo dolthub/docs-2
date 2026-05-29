@@ -1,12 +1,7 @@
 ---
-// The docs root (e.g. https://www.doltlab.com/docs/) redirects to the
-// "What is DoltLab?" page. In production, the real 301 comes from the
-// Cloudflare `_redirects` rule (see this site's `_redirects` file) — that
-// fires before this static page is served, so the page is normally never
-// rendered. The meta refresh and visible link below are a no-JS fallback
-// for the rare case the host serves the static asset instead of honoring
-// `_redirects`. No JS-driven `location.replace`: a client-side bounce
-// would double request count through any flaky upstream proxy.
+// The docs root 301s to the intro via the Cloudflare `_redirects` rule; this
+// static page is only a no-JS fallback for when the host serves the asset
+// instead. No client-side redirect — that would double requests via proxies.
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const target = `${base}/introduction/what-is-doltlab`;
 ---

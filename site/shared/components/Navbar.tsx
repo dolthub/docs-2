@@ -1,4 +1,5 @@
-import { Navbar as Nav, ExternalLink } from "@dolthub/react-components";
+import { Navbar as Nav, DiscordButton, ExternalLink } from "@dolthub/react-components";
+import { useIsSignedIn } from "@dolthub/react-hooks";
 import { FaDiscord } from "@react-icons/all-files/fa/FaDiscord";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaLinkedin } from "@react-icons/all-files/fa/FaLinkedin";
@@ -8,9 +9,12 @@ import { FaMoon } from "@react-icons/all-files/fa/FaMoon";
 import { FaSun } from "@react-icons/all-files/fa/FaSun";
 import React, { useState, useRef, useEffect } from "react";
 
-// "" (no base) or e.g. "/docs" — every docs site is served under this base
-// path. All three sites share the same base, so the current site's
-// import.meta.env.BASE_URL also applies to the cross-product docs links.
+// The (non-HttpOnly) cookie the DoltHub app sets on login, so client JS can
+// tell whether the visitor is signed in. Only readable on dolthub.com, so the
+// Profile state shows there; doltlab/doltgres fall back to Sign In.
+const dolthubTokenKey = "dolthubToken";
+
+// "" (no base) or e.g. "/docs" — the base path every docs site is served under.
 const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 
 const dolthubUrl = "https://www.dolthub.com";
@@ -35,10 +39,8 @@ const localDocsLinks = [
   { name: "Doltgres", href: `http://localhost:4323${BASE}` },
 ];
 
-// The cross-product docs links must point at the same environment the
-// current page is served from. The three sites ship one static build that's
-// deployed to prod, awsdev, and the local dev servers alike, so the
-// environment can only be known at runtime — pick the link set by hostname.
+// One static build deploys to prod, awsdev, and local alike, so the matching
+// docs links can only be chosen at runtime — by hostname.
 function docsLinksForHost(hostname: string) {
   if (hostname === "localhost" || hostname === "127.0.0.1") return localDocsLinks;
   if (hostname.endsWith(".awsdev.ld-corp.com")) return devDocsLinks;
@@ -96,21 +98,21 @@ function DocsDropdown() {
   }, []);
 
   return (
-    <div ref={ref} className="docs-dropdown" style={{ position: "relative", display: "inline-block" }}>
+    <div ref={ref} className="docs-dropdown relative inline-block">
       <button
         onClick={() => setOpen(!open)}
         data-cy="navbar-documentation"
         className="docs-dropdown-trigger"
       >
         Documentation
-        <svg width="10" height="6" viewBox="0 0 10 6" style={{ marginLeft: 4, display: "inline" }}>
+        <svg width="10" height="6" viewBox="0 0 10 6" className="ml-1 inline">
           <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       </button>
       {open && (
         <div className="docs-dropdown-menu">
           {links.map(l => (
-            <a key={l.name} href={l.href} className="docs-dropdown-item" style={{ margin: 0, display: "block" }}>
+            <a key={l.name} href={l.href} className="docs-dropdown-item m-0 block">
               {l.name}
             </a>
           ))}
@@ -124,7 +126,7 @@ function LeftLinks() {
   return (
     <>
       <a href={`${dolthubUrl}/discover`} data-cy="navbar-databases">
-        Databases
+        DoltHub
       </a>
       <a href={`${dolthubUrl}/pricing`} data-cy="navbar-pricing">
         Pricing
@@ -139,10 +141,10 @@ function LeftLinks() {
   );
 }
 
-// Light/dark theme toggle. The `dark` class on <html> is applied before
-// paint by the no-flash init script in DocsLayout; this just flips it and
-// persists the choice. Toggle instances stay in sync via a window event so
-// the desktop and mobile copies show the same icon.
+// Light/dark theme toggle. The `dark` class on <html> is applied before paint
+// by the no-flash init script in DocsLayout; this just flips it and persists
+// the choice. Toggle instances stay in sync via a window event so the desktop
+// and mobile copies show the same state.
 const THEME_KEY = "docs-theme";
 
 function setDarkMode(dark: boolean) {
@@ -204,22 +206,47 @@ function DarkModeToggle() {
   );
 }
 
+// Sign In when no DoltHub session cookie, Profile when there is one — mirrors
+// the DoltHub app navbar's own Sign In / Profile logic.
+function ProfileOrSignIn() {
+  const isSignedIn = useIsSignedIn(dolthubTokenKey);
+  // .navbar-auth-btn (in DocsLayout) sets line-height: 1.5rem so this matches
+  // the Discord/GitHub button height.
+  const className =
+    "navbar-auth-btn flex items-center border rounded px-3 py-[0.2rem] border-[#333C50]/20";
+  return isSignedIn ? (
+    <a
+      href={`${dolthubUrl}/profile`}
+      data-cy="navbar-desktop-profile-link"
+      className={className}
+      aria-label="desktop-profile"
+    >
+      Profile
+    </a>
+  ) : (
+    <a
+      href={`${dolthubUrl}/signin`}
+      data-cy="navbar-signin-button"
+      className={className}
+      aria-label="desktop-signin"
+    >
+      Sign In
+    </a>
+  );
+}
+
 function RightLinks() {
   return (
     <div className="flex navbar-right">
-      <ExternalLink href={doltDiscord} data-cy="discord-link" aria-label="Discord">
-        <span className="navbar-icon-btn">
-          <FaDiscord />
-          <span className="navbar-icon-btn-label">Discord</span>
-        </span>
-      </ExternalLink>
+      <DarkModeToggle />
+      <DiscordButton href={doltDiscord} dark />
       <ExternalLink href={doltGithub} data-cy="github-link" aria-label="GitHub">
         <span className="navbar-icon-btn">
           <FaGithub />
           <span className="navbar-icon-btn-label">GitHub</span>
         </span>
       </ExternalLink>
-      <DarkModeToggle />
+      <ProfileOrSignIn />
     </div>
   );
 }
@@ -248,6 +275,7 @@ function MobileSocialLinks() {
 
 function MobileRightLinks() {
   const links = useDocsLinks();
+  const isSignedIn = useIsSignedIn(dolthubTokenKey);
   return (
     <>
       {links.map(l => (
@@ -256,6 +284,13 @@ function MobileRightLinks() {
         </a>
       ))}
       <DarkModeToggle />
+      {isSignedIn ? (
+        <a href={`${dolthubUrl}/profile`} data-cy="navbar-mobile-profile-link">
+          Profile
+        </a>
+      ) : (
+        <a href={`${dolthubUrl}/signin`}>Sign In</a>
+      )}
     </>
   );
 }

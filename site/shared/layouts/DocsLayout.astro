@@ -6,7 +6,6 @@ import Search from "../components/Search";
 import Sidebar, { MobileSidebar } from "../components/Sidebar";
 import type { NavSection } from "../components/Sidebar";
 import TableOfContents from "../components/TableOfContents";
-import type { NavSection } from "../components/Sidebar";
 
 export interface Props {
   title: string;
@@ -32,14 +31,11 @@ const siteLabel = siteLabels[siteName] || "Docs";
 const appName = appNames[siteName] || "Docs";
 const currentPath = Astro.url.pathname;
 const isDev = import.meta.env.DEV;
-// BASE_URL is "/" (no base) or e.g. "/docs" — normalize to "" or "/docs"
-// so paths can be built as `${base}/asset` uniformly.
+// "" (no base) or e.g. "/docs", normalized so paths build as `${base}/asset`.
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-// Social-preview metadata. The og:image is each site's "what is <app>" hero
-// (copied to public/og-image.png by build setup). Astro.site is configured
-// per site (https://dolthub.com / doltlab.com / doltgres.com) so URLs are
-// fully qualified for social scrapers. Falls back gracefully if unset.
+// Social-preview metadata. Astro.site (per-site origin) makes the og:image and
+// URLs absolute for scrapers; falls back gracefully if unset.
 const siteOrigin = Astro.site ? Astro.site.origin : "";
 const socialTitle = `${title} | ${appName} Documentation`;
 const ogImage = `${siteOrigin}${base}/og-image.png`;
@@ -141,20 +137,20 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   :global(body) {
-    background: #f1f3f8;
+    @apply bg-stone-50;
   }
 
   /* Reserve space for client-only components to prevent layout shift */
   .navbar-slot {
     min-height: 48px;
-    background: #f1f3f8;
+    @apply bg-stone-50;
     padding-bottom: 0.5rem;
   }
 
   .sidebar-slot {
     width: 0;
     min-width: 0;
-    background: #f1f3f8;
+    @apply bg-stone-50;
     overflow: visible;
   }
 
@@ -180,13 +176,13 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     width: 200px;
     min-width: 200px;
     flex-shrink: 0;
-    background: #f1f3f8;
+    @apply bg-stone-50;
     padding-left: 0.75rem;
   }
 
   .docs-main {
     @apply flex-1 min-w-0 px-6 lg:px-12 pt-6 pb-16 min-h-[70vh];
-    background: white;
+    @apply bg-white;
     border-radius: 12px;
     margin-top: 0.75rem;
     margin-bottom: 0;
@@ -236,7 +232,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   .docs-main :global(code) {
     @apply rounded px-1.5 py-0.5 text-sm font-mono;
-    background: #f1f3f8;
+    @apply bg-stone-50;
   }
 
   .docs-main :global(pre) {
@@ -261,26 +257,26 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .docs-main :global(thead tr) {
-    background: #f3f4f6;
+    @apply bg-stone-50;
   }
 
   .docs-main :global(th) {
     @apply font-semibold text-left;
     padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid #D7D8DF;
+    @apply border-b;
   }
 
   .docs-main :global(th + th) {
-    border-left: 1px solid #D7D8DF;
+    @apply border-l;
   }
 
   .docs-main :global(td) {
     padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid #D7D8DF;
+    @apply border-b;
   }
 
   .docs-main :global(td + td) {
-    border-left: 1px solid #D7D8DF;
+    @apply border-l;
   }
 
   .docs-main :global(tbody tr:last-child td) {
@@ -299,7 +295,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   /* DoltHub SQL console embed */
   .docs-main :global(.dolthub-embed-wrapper) {
     margin: 1rem 0;
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 8px;
     overflow: hidden;
   }
@@ -317,13 +313,13 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     font-size: 0.8rem;
     text-align: center;
     background: #f8f9fa;
-    border-top: 1px solid #D7D8DF;
+    @apply border-t;
     text-decoration: none !important;
   }
 
   /* API endpoint styles */
   .docs-main :global(.api-endpoint) {
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 8px;
     margin: 1.5rem 0;
   }
@@ -334,7 +330,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     background: #f8f9fa;
-    border-bottom: 1px solid #D7D8DF;
+    @apply border-b;
     font-family: "Space Mono", monospace;
   }
 
@@ -558,24 +554,13 @@ const pageUrl = `${siteOrigin}${currentPath}`;
      wrapped Navbar and gives enough specificity to win without !important. */
   .navbar-slot [class*="ForDesktop_left"] > * {
     margin-left: 0.5rem;
-    margin-right: 2.25rem;
+    margin-right: 1.5rem;
   }
   .navbar-slot [class*="ForDesktop_right"] > * {
     margin-left: 0.5rem;
     margin-right: 0.25rem;
   }
 
-  /* The right links (Discord, GitHub, theme toggle) are wrapped in one
-     .navbar-right flex group, so the rule above only spaces the whole group.
-     The library also gives every <a> in the right area margin-left: 2.5rem
-     (.ForDesktop_right a) — that lands on the Discord/GitHub ExternalLinks but
-     not the toggle <div>, making the Discord↔GitHub gap huge and the
-     GitHub↔toggle gap tiny. Reset those margins and space the three evenly
-     with a flex gap. */
-  .navbar-right {
-    align-items: center;
-    gap: 0.85rem;
-  }
   .navbar-slot .navbar-right > * {
     margin: 0;
   }
@@ -637,6 +622,63 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     height: 1.35rem;
   }
 
+  /* The right links (Discord, GitHub, Sign In/Profile) are wrapped in one
+     .navbar-right flex group, so the rule above only spaces the whole group.
+     The library spaces the buttons within it via margin-left: 2.5rem on every
+     <a> (.ForDesktop_right a) — too wide. Zero those out and set an even, tight
+     gap on the group instead. */
+  .navbar-right {
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Make the three right-side buttons (Discord, GitHub, Sign In/Profile) a
+     uniform width so the group lines up, and center each button's content.
+     They're each a flex container (the library buttons + .navbar-auth-btn), so
+     justify-content centers the icon+label / text. min-width (not width) avoids
+     clipping if a label grows. 6.5rem fits the widest (Discord). */
+  .navbar-slot .navbar-right > * {
+    min-width: 6.5rem;
+    justify-content: center;
+  }
+
+  /* Match the Sign In / Profile button to the Discord/GitHub icon buttons:
+     same 0.75rem label text and 1.5rem line-height. The library pins nav links
+     to font-size 0.875rem / line-height 1.25rem via `.ForDesktop_inner a`
+     (which outranks Tailwind utilities like text-xs/leading-6 on the element),
+     so set both here — the two-class .navbar-slot .navbar-auth-btn selector
+     wins. The 1.5rem line-height keeps the button the same height even though
+     the text is smaller. */
+  .navbar-slot .navbar-auth-btn {
+    font-size: 0.75rem;
+    line-height: 1.5rem;
+  }
+
+  /* Mobile nav menu. The open menu is a full-screen overlay (ForMobile_openMenu)
+     that the library leaves transparent because we pass bgColor="bg-transparent"
+     (so the desktop bar shows the .navbar-slot color) — so the open menu shows
+     the page through it. Give it the navbar-bar background, and recolor the
+     library's hard-coded white menu links, social icons, and close (X) button
+     to the dark nav text color so they read on it. [class*=…] keeps us stable
+     across library version hash changes. */
+  .navbar-slot [class*="ForMobile_openMenu"] {
+    @apply bg-stone-50;
+  }
+  .navbar-slot [class*="ForMobile_links"] a,
+  .navbar-slot [class*="ForMobile_links"] button,
+  .navbar-slot [class*="ForMobile_bottomLinks"] svg,
+  .navbar-slot [class*="ForMobile_openMenu"] [class*="ForMobile_top"] button {
+    color: rgba(var(--color-background-acc-1), 1);
+  }
+  .navbar-slot [class*="ForMobile_links"] a:hover,
+  .navbar-slot [class*="ForMobile_links"] button:hover {
+    color: rgba(var(--color-primary), 0.8);
+  }
+  .navbar-slot [class*="ForDesktop_right"] a {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .docs-dropdown-desktop-only {
     display: none;
   }
@@ -661,8 +703,8 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     top: 100%;
     left: 0;
     margin-top: 0.5rem;
-    background: white;
-    border: 1px solid #D7D8DF;
+    @apply bg-white;
+    @apply border;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     min-width: 150px;
@@ -682,7 +724,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .docs-dropdown-item:hover {
-    background: #f3f4f6;
+    @apply bg-stone-50;
   }
 
   /* Shared sidebar nav styles */
@@ -773,7 +815,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .sidebar-desktop::-webkit-scrollbar-thumb {
-    background: #D7D8DF;
+    @apply bg-stone-100;
     border-radius: 4px;
   }
 
@@ -783,22 +825,28 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   /* Mobile toggle button */
   .sidebar-mobile-toggle {
-    @apply flex lg:hidden items-center gap-2 px-4 py-2 text-xs w-full bg-white cursor-pointer;
-    color: rgba(var(--color-primary), 0.5);
+    @apply flex lg:hidden items-center gap-2 px-4 py-3 text-sm w-full cursor-pointer;
+    @apply bg-stone-50;
+    color: rgba(var(--color-primary), 0.9);
     border: none;
-    border-bottom: 1px solid #e5e7eb;
-    font-weight: 500;
+    border-bottom: 1px solid #d7d8df;
+    font-weight: 600;
     letter-spacing: 0.02em;
   }
 
   .sidebar-mobile-toggle:hover {
-    color: rgba(var(--color-primary), 0.8);
-    background: #f9fafb;
+    color: rgba(var(--color-primary), 1);
+    background: #e9ebf1;
+  }
+
+  .sidebar-mobile-toggle svg:first-child {
+    width: 1.1rem;
+    height: 1.1rem;
   }
 
   .sidebar-mobile-chevron {
     margin-left: auto;
-    opacity: 0.4;
+    opacity: 0.7;
   }
 
   /* Mobile overlay */
@@ -832,7 +880,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   .sidebar-mobile-close:hover {
     color: rgba(var(--color-primary), 1);
-    background: #f3f4f6;
+    @apply bg-stone-50;
   }
 
   .sidebar-mobile-search {
@@ -842,9 +890,9 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     width: calc(100% - 1.5rem);
     margin: 0 0.75rem 0.75rem;
     padding: 0.5rem 0.75rem;
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 6px;
-    background: white;
+    @apply bg-white;
     cursor: pointer;
     font-size: 0.85rem;
     color: #999;
@@ -862,9 +910,9 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     gap: 0.5rem;
     margin: 0.75rem 0 0.5rem 0;
     padding: 0.5rem 0.75rem;
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 6px;
-    background: white;
+    @apply bg-white;
     cursor: pointer;
     font-size: 0.8rem;
     color: #999;
@@ -892,9 +940,9 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     display: none;
     font-size: 0.6rem;
     padding: 0.1rem 0.3rem;
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 3px;
-    background: white;
+    @apply bg-white;
     color: #999;
     font-family: inherit;
     line-height: 1.3;
@@ -932,7 +980,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     width: 90%;
     max-width: 600px;
     max-height: 75vh;
-    background: white;
+    @apply bg-white;
     border-radius: 12px;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
     overflow: hidden;
@@ -962,16 +1010,16 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   /* Search input styling */
   .search-container :global(.pagefind-ui__search-input) {
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 8px;
     font-weight: 400;
     background: #f8f9fb;
   }
 
   .search-container :global(.pagefind-ui__search-input:focus) {
-    border-color: #327DD2;
+    @apply border-sky-500;
     outline: none;
-    background: white;
+    @apply bg-white;
     box-shadow: 0 0 0 3px rgba(50, 125, 210, 0.1);
   }
 
@@ -986,7 +1034,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .search-container :global(.pagefind-ui__result-link) {
-    color: #327DD2;
+    @apply text-sky-500;
     font-weight: 600;
   }
 
@@ -1011,7 +1059,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
   /* Load more button */
   .search-container :global(.pagefind-ui__button) {
-    border: 1px solid #D7D8DF;
+    @apply border;
     border-radius: 8px;
     font-weight: 500;
     color: #666;
@@ -1051,7 +1099,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   }
 
   .toc::-webkit-scrollbar-thumb {
-    background: #D7D8DF;
+    @apply bg-stone-100;
     border-radius: 4px;
   }
 
@@ -1113,7 +1161,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   .pagefind-ui--reset mark,
   .pagefind-ui mark {
     all: unset;
-    background: #D4E7FC;
+    @apply bg-sky-50;
     color: inherit;
     border-radius: 2px;
     padding: 0.05em 0.15em;

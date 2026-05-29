@@ -1,7 +1,4 @@
-// Shared Tailwind configuration builder.
-// mergeConfig must be passed in by the caller since it resolves from the
-// site's own node_modules, not from shared/.
-
+// Shared Tailwind config builder; the caller passes in mergeConfig.
 export function baseTailwindConfig(mergeConfig, contentPaths) {
   return mergeConfig({
     theme: {
