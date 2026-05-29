@@ -6,6 +6,7 @@ import Search from "../components/Search";
 import Sidebar, { MobileSidebar } from "../components/Sidebar";
 import type { NavSection } from "../components/Sidebar";
 import TableOfContents from "../components/TableOfContents";
+import { githubStarsForSite, githubRepoForSite } from "../config/github-stars.mjs";
 
 export interface Props {
   title: string;
@@ -31,6 +32,10 @@ const siteLabel = siteLabels[siteName] || "Docs";
 const appName = appNames[siteName] || "Docs";
 const currentPath = Astro.url.pathname;
 const isDev = import.meta.env.DEV;
+// Fetched once at build time (memoized) and baked into the page, so the
+// browser never calls the rate-limited GitHub API.
+const githubStars = await githubStarsForSite(siteName);
+const githubRepo = githubRepoForSite(siteName);
 // "" (no base) or e.g. "/docs", normalized so paths build as `${base}/asset`.
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -99,7 +104,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     <ThemeInit client:only="react" />
     <div>
       <div class="navbar-slot">
-        <Navbar client:only="react" siteName={siteName} />
+        <Navbar client:only="react" siteName={siteName} githubStars={githubStars} githubRepo={githubRepo} />
       </div>
 
       <MobileSidebar client:only="react" nav={nav} currentPath={currentPath} />

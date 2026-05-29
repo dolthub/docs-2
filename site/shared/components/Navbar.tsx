@@ -1,4 +1,4 @@
-import { Navbar as Nav, DiscordButton, ExternalLink } from "@dolthub/react-components";
+import { Navbar as Nav, DiscordButton, GithubButton, ExternalLink } from "@dolthub/react-components";
 import { useIsSignedIn } from "@dolthub/react-hooks";
 import { FaDiscord } from "@react-icons/all-files/fa/FaDiscord";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
@@ -55,7 +55,6 @@ function useDocsLinks() {
   }, []);
   return links;
 }
-const doltGithub = "https://github.com/dolthub/dolt";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
 const dolthubTwitter = "https://www.twitter.com/dolthub";
@@ -70,6 +69,10 @@ const siteConfig: Record<string, { alt: string }> = {
 
 type NavbarProps = {
   siteName?: "dolt" | "doltlab" | "doltgres";
+  // GitHub repo (owner/name) and its star count, both resolved at build time
+  // in DocsLayout and baked in — the navbar makes no GitHub API calls.
+  githubRepo?: string;
+  githubStars?: number;
 };
 
 function Logo({ siteName = "dolt" }: NavbarProps) {
@@ -235,29 +238,28 @@ function ProfileOrSignIn() {
   );
 }
 
-function RightLinks() {
+function RightLinks({ githubRepo = "dolthub/dolt", githubStars = 0 }: NavbarProps) {
   return (
     <div className="flex navbar-right">
       <DarkModeToggle />
       <DiscordButton href={doltDiscord} dark />
-      <ExternalLink href={doltGithub} data-cy="github-link" aria-label="GitHub">
-        <span className="navbar-icon-btn">
-          <FaGithub />
-          <span className="navbar-icon-btn-label">GitHub</span>
-        </span>
-      </ExternalLink>
+      <GithubButton
+        href={`https://github.com/${githubRepo}`}
+        githubStarCount={githubStars}
+        dark
+      />
       <ProfileOrSignIn />
     </div>
   );
 }
 
-function MobileSocialLinks() {
+function MobileSocialLinks({ githubRepo = "dolthub/dolt" }: NavbarProps) {
   return (
     <>
       <ExternalLink href={dolthubLinkedin} aria-label="linkedin">
         <FaLinkedin />
       </ExternalLink>
-      <ExternalLink href={doltGithub} aria-label="github">
+      <ExternalLink href={`https://github.com/${githubRepo}`} aria-label="github">
         <FaGithub />
       </ExternalLink>
       <ExternalLink href={doltDiscord} aria-label="discord">
@@ -295,14 +297,18 @@ function MobileRightLinks() {
   );
 }
 
-export default function DocsNavbar({ siteName = "dolt" }: NavbarProps) {
+export default function DocsNavbar({
+  siteName = "dolt",
+  githubRepo,
+  githubStars,
+}: NavbarProps) {
   return (
     <Nav
       logo={<Logo siteName={siteName} />}
       leftLinks={<LeftLinks />}
-      rightLinks={<RightLinks />}
+      rightLinks={<RightLinks githubRepo={githubRepo} githubStars={githubStars} />}
       rightLinksMobile={<MobileRightLinks />}
-      mobileBottomLinks={<MobileSocialLinks />}
+      mobileBottomLinks={<MobileSocialLinks githubRepo={githubRepo} />}
       bgColor="bg-transparent"
       dark
       logoLeft

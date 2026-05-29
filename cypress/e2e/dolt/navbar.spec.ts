@@ -47,11 +47,15 @@ describe("Dolt docs — navbar", () => {
       });
     });
 
-    it("has Discord and GitHub external links", () => {
+    it("has Discord and GitHub links; GitHub shows a star count", () => {
       cy.get("a[href*='discord.gg']", { timeout }).should("exist");
-      cy.get("[data-cy=github-link]")
-        .should("have.attr", "href")
-        .and("include", "github.com");
+      // The GitHub button links to the repo and renders its star count (a
+      // fallback shows immediately, so a digit is present even if the API call
+      // is slow/rate-limited).
+      cy.get("a[href*='github.com/dolthub/dolt']", { timeout })
+        .should("exist")
+        .invoke("text")
+        .should("match", /\d/);
     });
 
     it("shows Sign In (not Profile) without the dolthubToken cookie", () => {
