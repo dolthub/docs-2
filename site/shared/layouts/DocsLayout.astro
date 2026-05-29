@@ -632,16 +632,6 @@ const pageUrl = `${siteOrigin}${currentPath}`;
     gap: 1rem;
   }
 
-  /* Make the three right-side buttons (Discord, GitHub, Sign In/Profile) a
-     uniform width so the group lines up, and center each button's content.
-     They're each a flex container (the library buttons + .navbar-auth-btn), so
-     justify-content centers the icon+label / text. min-width (not width) avoids
-     clipping if a label grows. 6.5rem fits the widest (Discord). */
-  .navbar-slot .navbar-right > *:not(.navbar-theme-toggle) {
-    min-width: 6.5rem;
-    justify-content: center;
-  }
-
   /* Match the Sign In / Profile button to the Discord/GitHub icon buttons:
      same 0.75rem label text and 1.5rem line-height. The library pins nav links
      to font-size 0.875rem / line-height 1.25rem via `.ForDesktop_inner a`
@@ -1299,10 +1289,19 @@ const pageUrl = `${siteOrigin}${currentPath}`;
   html.dark .navbar-slot a:hover {
     color: #ffffff !important;
   }
-  html.dark .navbar-slot .navbar-icon-btn {
+  /* All three right-side button styles use a dark-navy border at 20% (set by
+     .navbar-icon-btn for GitHub, the library's .TransparentButtonWithIcon_
+     darkButton for Discord, and border-[#333C50]/20 on .navbar-auth-btn for
+     Sign In/Profile) — invisible on the dark backdrop. Lift them to a light
+     translucent border, and do the same for Discord's inner label pill so it
+     matches the GitHub label treatment. */
+  html.dark .navbar-slot .navbar-icon-btn,
+  html.dark .navbar-slot [class*="TransparentButtonWithIcon_"],
+  html.dark .navbar-slot .navbar-auth-btn {
     border-color: rgba(230, 237, 243, 0.25);
   }
-  html.dark .navbar-slot .navbar-icon-btn-label {
+  html.dark .navbar-slot .navbar-icon-btn-label,
+  html.dark .navbar-slot [class*="TransparentButtonWithIcon_inner"] {
     background: rgba(230, 237, 243, 0.12);
   }
   html.dark .navbar-slot .navbar-theme-toggle {
