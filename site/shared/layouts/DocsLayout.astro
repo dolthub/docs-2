@@ -637,7 +637,7 @@ const pageUrl = `${siteOrigin}${currentPath}`;
      They're each a flex container (the library buttons + .navbar-auth-btn), so
      justify-content centers the icon+label / text. min-width (not width) avoids
      clipping if a label grows. 6.5rem fits the widest (Discord). */
-  .navbar-slot .navbar-right > * {
+  .navbar-slot .navbar-right > *:not(.navbar-theme-toggle) {
     min-width: 6.5rem;
     justify-content: center;
   }
