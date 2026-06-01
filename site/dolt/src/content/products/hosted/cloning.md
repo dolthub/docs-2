@@ -73,9 +73,8 @@ A few things worth calling out, since they trip people up:
   the name, granting it lets the user clone the database, `fetch`/`pull` updates, *and*
   push new branches up to the deployment — everything needed to prepare a pull request
   from a local copy. It does not let them push to a branch they don't have write access
-  to (see [Branch permissions](#branch-permissions) below).
-- A worked end-to-end example of the clone/branch/push flow lives in
-  [our bats tests](https://github.com/dolthub/dolt/blob/main/integration-tests/bats/sql-server-remotesrv.bats#L343).
+  to (see [Branch permissions](#branch-permissions) below). The end-to-end flow runs
+  through sections 2–5 below: clone, sync, push a feature branch, open a PR.
 
 After running the `dolt clone` command, you should have a local copy of your Hosted
 database.
