@@ -113,6 +113,11 @@ collaborator in your deployment's Settings tab.
 
 ![](../../.gitbook/assets/hosted-add-collaborator.png)
 
+For finer-grained control over who can write to which branches — e.g. letting
+collaborators push feature branches but not push to `main` — the Workbench tab has
+a Branch Permissions UI. See
+[Hosted Branch Permissions](https://www.dolthub.com/blog/2026-03-12-hosted-branch-permissions/).
+
 ## Quick Start
 
 ## Trial Instance

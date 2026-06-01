@@ -1,9 +1,8 @@
 import { ThemeProvider } from "@dolthub/react-components";
 import React from "react";
 
-// Initializes the CSS variables that react-components' Tailwind theme
-// relies on (--color-primary, --color-background-acc-1, etc.).
-// Renders nothing visible — just runs ThemeProvider's useEffect.
+// Runs ThemeProvider's effect to set the CSS variables react-components needs
+// (--color-primary, --color-background-acc-1, etc.). Renders nothing visible.
 export default function ThemeInit() {
   return (
     <ThemeProvider>
