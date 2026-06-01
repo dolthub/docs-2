@@ -140,6 +140,12 @@ Pull requests on Hosted can only be opened and merged from the web workbench —
 SQL/CLI surface doesn't expose a "create PR" operation today. The push itself can come
 from anywhere (CLI, agent, automation); only the PR ceremony is web-only.
 
+That split exists because pull requests are an artifact of the workbench, not part of
+the Dolt database itself — the same distinction as GitHub PRs vs. Git branches. The
+branches and commits a PR proposes are real Dolt objects and travel with the database
+if you clone it; the PR itself (title, description, comments, open/merged state) is
+workbench metadata and stays behind.
+
 ## Branch permissions
 
 If you want some collaborators to be able to push feature branches but not push to
