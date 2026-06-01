@@ -134,6 +134,12 @@ Finish up by clicking the "Add Collaborator" button.
 
 Taylor can now access the deployment page to get connectivity information. Her mission is to add rows to these new tables and make a Pull Request for me to review. Taylor actually did the next section as you can tell from the Hosted Dolt screenshots.
 
+> Adding a Hosted account as a collaborator gives them access to the deployment console
+> (Workbench, Settings, etc.) but does *not* create a SQL user for them. If your collaborator
+> wants to work from a local clone instead of the workbench, give them a SQL user with
+> `CLONE_ADMIN` — see [Cloning a Hosted Database](/products/hosted/cloning). Hosted account
+> usernames and SQL usernames are unrelated namespaces.
+
 ## Connect a MySQL client
 
 Dolt is a MySQL-compatible database. You can connect any client that can connect to MySQL to it. We're going to use the MySQl client that comes with MySQL in this section to connect to Dolt.
@@ -268,7 +274,9 @@ Let's head back over to the workbench to make a Pull Request.
 
 ## Make and Review a Pull Request
 
-The Hosted Dolt workbench supports pull requests and human review of your Hosted Dolt database. Head back over to your browser with the Hosted Dolt Web UI up and go to the Workbench tab. Click the `getting_started` database to open a workbench for it.
+The Hosted Dolt workbench supports pull requests and human review of your Hosted Dolt database. Pull requests on Hosted are always opened and merged from the workbench — there are no forks (forks are a [DoltHub](/concepts/dolthub/prs) / [DoltLab](/products/doltlab) feature) and no CLI/SQL surface for opening a PR. The branch you're proposing for review can come from anywhere (the workbench, a MySQL client, a [local clone](/products/hosted/cloning), automation), but the PR itself is created in the web UI.
+
+Head back over to your browser with the Hosted Dolt Web UI up and go to the Workbench tab. Click the `getting_started` database to open a workbench for it.
 
 As you can see on the "main" branch there are no rows inserted in the tables.
 

@@ -56,12 +56,26 @@ instructions in the Connectivity tab on your deployment page.
 ![](../../.gitbook/assets/hosted-clone-commands.png)
 
 If you'd like to allow other SQL users to clone without giving them access to your Hosted
-admin username and password, you can grant them `CLONE_ADMIN` privileges. They will then
-be able to execute the above commands using their own SQL user and password.
+admin username and password, you can grant them `CLONE_ADMIN` privileges.
 
 ```sql
+CREATE USER "[username]"@"[host]" IDENTIFIED BY "[password]";
 GRANT CLONE_ADMIN ON *.* TO "[username]"@"[host]";
 ```
+
+A few things worth calling out, since they trip people up:
+
+- **The SQL user has to exist first.** Hosted account collaborators (the people you add
+  on the deployment's Settings tab) are a separate namespace from the SQL users on the
+  database itself — adding someone as a collaborator does not create a SQL user for them.
+  Run the `CREATE USER` above, then share that username and password with them.
+- **`CLONE_ADMIN` covers the whole local-clone workflow, not just `dolt clone`.** Despite
+  the name, granting it lets the user clone the database, `fetch`/`pull` updates, *and*
+  push new branches up to the deployment — everything needed to prepare a pull request
+  from a local copy. It does not let them push to a branch they don't have write access
+  to (see [Branch permissions](#branch-permissions) below).
+- A worked end-to-end example of the clone/branch/push flow lives in
+  [our bats tests](https://github.com/dolthub/dolt/blob/main/integration-tests/bats/sql-server-remotesrv.bats#L343).
 
 After running the `dolt clone` command, you should have a local copy of your Hosted
 database.
@@ -96,8 +110,41 @@ commands to your remotesapi endpoint in the same way by passing the `--user` fla
 ## 4. Sync your upstream with changes from local copy
 
 If you make any changes on your local copy, you can push them to your upstream using
-[`dolt push`](/cli-reference/cli#dolt-push).
+[`dolt push`](/cli-reference/cli#dolt-push). Push to a feature branch rather than
+straight to `main` so that your change can be reviewed via a pull request before it
+lands — see the next section.
+
+```shell
+% dolt checkout -b my-change
+% # ...edit, dolt add, dolt commit...
+% dolt push origin --user "[username]" HEAD:my-change
+```
+
+You can also push straight to `main` if you'd rather skip review, subject to any
+[branch permissions](#branch-permissions) configured on the deployment:
 
 ```shell
 % dolt push origin --user "[username]" HEAD:main
 ```
+
+## 5. Open a pull request
+
+Hosted Dolt doesn't have forks — that's a DoltHub and DoltLab feature. To contribute
+a change for review, push a feature branch to the deployment (as in step 4 above) and
+then open the pull request from the **workbench**: open the deployment's Workbench
+tab, click into the database, go to the **Pull Requests** tab, and click
+**Create Pull Request**. Pick your branch as the "from" branch and `main` (or wherever)
+as the "to" branch. The detailed workbench flow is documented in
+[Creating a pull request](/products/hosted/sql-workbench#5-creating-a-pull-request).
+
+Pull requests on Hosted can only be opened and merged from the web workbench — the
+SQL/CLI surface doesn't expose a "create PR" operation today. The push itself can come
+from anywhere (CLI, agent, automation); only the PR ceremony is web-only.
+
+## Branch permissions
+
+If you want some collaborators to be able to push feature branches but not push to
+`main` (the most common reason to set up CLONE_ADMIN users in the first place), the
+Workbench tab has a Branch Permissions UI that lets you scope who can write to which
+branch patterns. The launch blog covers the model and the UI:
+[Hosted Branch Permissions](https://www.dolthub.com/blog/2026-03-12-hosted-branch-permissions/).
