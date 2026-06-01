@@ -34,8 +34,29 @@ describe("Dolt docs — navigation and structure", () => {
   });
 
   // Legacy redirects from the old GitBook site live in `site/dolt/_redirects`
-  // and 301 at the Cloudflare layer (e.g. `/docs/reference/sql/configuration`
-  // → `/docs/sql-reference/server/configuration`). They can't be exercised
-  // against `astro preview` because `_redirects` is a Cloudflare-only
-  // directive; verify them post-deploy.
+  // and 301 at the Cloudflare layer. They can't be exercised against `astro
+  // preview` because `_redirects` is a Cloudflare-only directive, so verify
+  // the runtime redirect post-deploy. As a guard against the file silently
+  // losing rules, statically assert the expected legacy roots are present —
+  // these have external links pointing at them (marketing site, blog posts,
+  // third-party docs) and must continue to resolve.
+  context("legacy redirects (static _redirects check)", () => {
+    let redirects: string;
+    before(() => {
+      cy.readFile("site/dolt/_redirects").then(t => (redirects = t as string));
+    });
+
+    const expected = [
+      /^\/docs\/reference\/cli\s/m,
+      /^\/docs\/reference\/cli\/\*\s/m,
+      /^\/docs\/reference\/sql\s/m,
+      /^\/docs\/reference\/sql\/\*\s/m,
+    ];
+
+    for (const pat of expected) {
+      it(`has a rule matching ${pat}`, () => {
+        expect(redirects).to.match(pat);
+      });
+    }
+  });
 });

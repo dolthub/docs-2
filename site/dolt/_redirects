@@ -14,3 +14,13 @@
 /docs/reference/sql/dolt-sql-procedures  /docs/sql-reference/version-control/dolt-sql-procedures  301
 /docs/reference/sql/dolt-sysvars         /docs/sql-reference/version-control/dolt-sysvars         301
 /docs/reference/sql/dolt-system-tables   /docs/sql-reference/version-control/dolt-system-tables   301
+
+# Catch-all for any other legacy /docs/reference/cli|sql paths. Cloudflare
+# evaluates top-down (first match wins), so the specific remaps above still
+# take precedence for paths that moved (e.g. .../sql/configuration -> server/).
+# Bare-root rules send /docs/reference/cli|sql to a sensible landing page;
+# the splat preserves sub-paths that still map 1:1.
+/docs/reference/cli      /docs/cli-reference/cli       301
+/docs/reference/cli/*    /docs/cli-reference/:splat    301
+/docs/reference/sql      /docs/sql-reference/server    301
+/docs/reference/sql/*    /docs/sql-reference/:splat    301
