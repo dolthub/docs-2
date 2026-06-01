@@ -1,0 +1,42 @@
+---
+// Static redirect stubs at /reference/cli/<slug> -> /cli-reference/<slug>.
+// In prod the matching splat rule in site/dolt/_redirects 301s at the
+// Cloudflare layer before the file is consulted; these stubs only get hit
+// on `astro preview` and direct file access, where _redirects isn't honored.
+// Either way the visitor ends up at /docs/cli-reference/<slug>.
+
+export function getStaticPaths() {
+  const modules = import.meta.glob("../../../content/reference/cli/**/*.md");
+  const paths = [];
+  for (const file of Object.keys(modules)) {
+    const sub = file
+      .replace(/^.*\/content\/reference\/cli\//, "")
+      .replace(/\.md$/, "")
+      .replace(/\/README$/, "")
+      .replace(/^README$/, "");
+    // Skip the section root; the splat in _redirects covers it, and Astro's
+    // catch-all can't emit an empty slug here.
+    if (!sub) continue;
+    paths.push({
+      params: { slug: sub },
+      props: { target: `/docs/cli-reference/${sub}` },
+    });
+  }
+  return paths;
+}
+
+const { target } = Astro.props as { target: string };
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Redirecting…</title>
+    <script set:html={`window.location.replace(${JSON.stringify(target)});`} />
+  </head>
+  <body>
+    <p>Redirecting to <a href={target}>{target}</a>…</p>
+  </body>
+</html>
