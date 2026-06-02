@@ -1,0 +1,25 @@
+# Cloudflare Pages response headers. Copied to the served build-output root
+# (dist/_headers) by the build script; Astro's outDir is dist/docs, so
+# public/ can't be used for this.
+
+# Mark the HTML pages as content-negotiable so any intermediaries (CDNs,
+# corporate proxies) cache HTML and Markdown separately for the same URL.
+/docs/*
+  Vary: Accept
+
+# Markdown alternates served at <doc-url>.md by pages/[...slug].md.ts.
+# Cloudflare defaults to text/plain for .md — make it explicit and cache
+# for an hour. Vary: Accept above applies here too (rules combine).
+/docs/*.md
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=3600
+
+# llms.txt is published both at the bundle root and under /docs/. The file
+# is Markdown by convention (https://llmstxt.org); without this header
+# Cloudflare ships it as text/plain.
+/llms.txt
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=3600
+/docs/llms.txt
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=3600

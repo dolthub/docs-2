@@ -1,5 +1,6 @@
 ---
 title: What is DoltLab?
+description: Introduction to DoltLab — a self-hostable GitHub-style server for Dolt databases, what it gives you over plain Dolt, and when you'd run it.
 ---
 
 

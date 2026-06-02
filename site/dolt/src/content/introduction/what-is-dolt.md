@@ -1,5 +1,6 @@
 ---
 title: What is Dolt?
+description: Introduction to Dolt — what it is, what sets it apart from other SQL databases, and when you'd reach for it.
 ---
 
 

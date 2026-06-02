@@ -40,6 +40,14 @@ const siteOrigin = Astro.site ? Astro.site.origin : "";
 const socialTitle = `${title} | ${appName} Documentation`;
 const ogImage = `${siteOrigin}${base}/og-image.png`;
 const pageUrl = `${siteOrigin}${currentPath}`;
+
+// Markdown alternate. Every content page is also served as raw .md by
+// pages/[...slug].md.ts — advertise it via <link rel="alternate"> so agents
+// and feed-style consumers can discover it without out-of-band knowledge.
+// Skip the docs root ("/docs/" -> "/docs.md" doesn't exist).
+const trimmedPath = currentPath.replace(/\/$/, "");
+const markdownAlternate =
+  trimmedPath && trimmedPath !== base ? `${trimmedPath}.md` : null;
 ---
 
 <!doctype html>
@@ -105,6 +113,9 @@ const pageUrl = `${siteOrigin}${currentPath}`;
 
     <link rel="icon" type="image/png" href={`${base}/favicon.png`} />
     <link rel="icon" type="image/x-icon" href={`${base}/favicon.ico`} />
+    {markdownAlternate && (
+      <link rel="alternate" type="text/markdown" href={markdownAlternate} />
+    )}
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"

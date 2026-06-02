@@ -7,6 +7,26 @@ const home = `${base}/`;
 
 <DocsLayout title="Page not found">
   <h1>Page not found</h1>
-  <p>We couldn't find the page you were looking for.</p>
-  <p><a href={home}>Back to DoltLab documentation home</a></p>
+  <p>The page you were looking for doesn't exist (or has moved).</p>
+
+  <h2>Where to go next</h2>
+  <ul>
+    <li><a href={home}>DoltLab documentation home</a></li>
+    <li>
+      Or use the search box at the top of any docs page (or press <kbd>/</kbd>)
+      to find what you're looking for.
+    </li>
+  </ul>
+
+  <h2>Looking for the raw Markdown of a page?</h2>
+  <p>
+    Every docs page is also served as raw Markdown — append <code>.md</code>
+    to any docs URL (for example <code>/docs/guides/basic.md</code>).
+    Convenient for LLM agents and offline reading.
+  </p>
+  <p>
+    A hierarchical index of every page is at
+    <a href={`${base}/llms.txt`}>/docs/llms.txt</a>
+    (also at the bundle root, <code>/llms.txt</code>).
+  </p>
 </DocsLayout>

@@ -1,5 +1,6 @@
 ---
 title: Merge
+description: Merging Dolt branches — fast-forward vs. three-way merges, what dolt_merge does, and how conflicts are surfaced.
 ---
 
 

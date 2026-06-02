@@ -91,7 +91,11 @@ describe("Doltgres docs — page content spot checks", () => {
     it("renders the custom 404 page", () => {
       cy.visit("/this-page-does-not-exist", { failOnStatusCode: false });
       cy.get("h1", { timeout }).should("be.visible").and("contain", "Page not found");
-      cy.contains("a", "Back to Doltgres documentation home").should("be.visible");
+      cy.contains("a", "Doltgres documentation home").should("be.visible");
+      // The .md-alternate hint is part of the helpful 404 — guard it so we
+      // don't accidentally drop it later.
+      cy.contains("append").should("be.visible");
+      cy.contains(".md").should("be.visible");
     });
   });
 });

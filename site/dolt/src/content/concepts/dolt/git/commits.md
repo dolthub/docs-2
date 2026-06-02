@@ -1,5 +1,6 @@
 ---
 title: Commits
+description: How commits work in Dolt — the unit of change in the version graph, how they're created, and how they relate to Git's notion of a commit.
 ---
 
 
