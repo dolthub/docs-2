@@ -29,7 +29,11 @@ describe("Dolt docs — navigation and structure", () => {
     it("renders the custom 404 page", () => {
       cy.visit("/this-page-does-not-exist", { failOnStatusCode: false });
       cy.get("h1", { timeout }).should("be.visible").and("contain", "Page not found");
-      cy.contains("a", "Back to Dolt documentation home").should("be.visible");
+      cy.contains("a", "Dolt documentation home").should("be.visible");
+      // Mention of the .md alternate is part of the helpful 404 — verify
+      // it's surfaced so we don't accidentally drop it later.
+      cy.contains("append").should("be.visible");
+      cy.contains(".md").should("be.visible");
     });
   });
 
