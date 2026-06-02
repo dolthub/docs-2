@@ -13,3 +13,13 @@
 /docs/*.md
   Content-Type: text/markdown; charset=utf-8
   Cache-Control: public, max-age=3600
+
+# llms.txt is published both at the bundle root and under /docs/. The file
+# is Markdown by convention (https://llmstxt.org); without this header
+# Cloudflare ships it as text/plain.
+/llms.txt
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=3600
+/docs/llms.txt
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=3600

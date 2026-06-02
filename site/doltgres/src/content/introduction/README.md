@@ -1,5 +1,6 @@
 ---
 title: "Overview"
+description: What Doltgres is — a Postgres-compatible, version-controlled database — and how it differs from Dolt and from vanilla Postgres.
 ---
 
 ## What is Doltgres?

@@ -1,5 +1,6 @@
 ---
 title: "Enterprise Administrator Guide"
+description: Administrator guide for Enterprise DoltLab — SSO, audit logs, multi-tenant configuration, the doltlabdb application server, and HA topologies.
 ---
 
 

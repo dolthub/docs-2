@@ -1,5 +1,6 @@
 ---
 title: "Installation"
+description: How to install Doltgres on Linux, macOS, and Windows, plus build-from-source instructions.
 ---
 
 

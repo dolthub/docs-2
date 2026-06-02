@@ -1,5 +1,6 @@
 ---
 title: Dolt SQL Procedures
+description: Reference for Dolt's version-control stored procedures — dolt_commit, dolt_merge, dolt_branch, dolt_revert, and friends, callable from any SQL client.
 ---
 
 
