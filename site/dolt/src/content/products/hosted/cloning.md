@@ -1,5 +1,6 @@
 ---
 title: "Hosted Dolt: Cloning a Hosted Database"
+description: Cloning a Hosted Dolt deployment to a local Dolt — exposing the remotesapi, granting CLONE_ADMIN, and the local-clone-to-PR workflow.
 ---
 
 ## How it works

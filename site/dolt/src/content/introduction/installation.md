@@ -1,5 +1,6 @@
 ---
 title: Installation
+description: Platform-specific install guides for the Dolt binary — Linux, Windows, Mac, Docker, the application server, and build-from-source.
 ---
 
 

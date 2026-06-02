@@ -1,5 +1,6 @@
 ---
 title: "Getting Started"
+description: First-time tutorial for Doltgres — start the server, connect with psql, create a branch, commit, merge, and open a pull request.
 ---
 
 1. Download the [latest release](https://github.com/dolthub/doltgresql/releases) of `doltgres`

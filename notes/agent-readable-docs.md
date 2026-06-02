@@ -125,6 +125,9 @@ Ranked roughly by leverage-per-effort.
 
 ## Suggested rollout
 
+> **Status:** Phase 1 shipped in PR #101. Phase 2 shipped in PR #102.
+> Phase 3 still on deck.
+
 **Phase 1 (one PR, ~half a day):** items 1, 3, 4, 5 from the high-value list.
 That gives every page a `.md` URL discoverable via `<link rel="alternate">`,
 a useful 404, and content-negotiation hints — without touching content or

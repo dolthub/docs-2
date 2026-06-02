@@ -1,5 +1,6 @@
 ---
 title: "Overview"
+description: Overview of Hosted Dolt — Dolt as a cloud-managed service, what's included, and pointers to the deeper hosted guides.
 ---
 
 ![](../../.gitbook/assets/hosted-dolt-preview.png)

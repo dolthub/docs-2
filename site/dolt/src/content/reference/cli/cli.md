@@ -1,5 +1,6 @@
 ---
 title: CLI
+description: Full reference for the dolt command-line interface — every command, every flag, with examples. Generated from `dolt dump-docs`.
 ---
 
 # Command Line Interface Reference

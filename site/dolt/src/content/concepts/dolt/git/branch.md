@@ -1,5 +1,6 @@
 ---
 title: Branch
+description: Creating, listing, switching, and deleting branches in Dolt — how to isolate work from main and bring it back.
 ---
 
 

@@ -1,5 +1,6 @@
 ---
 title: Dolt System Tables
+description: Reference for Dolt's version-control system tables — dolt_log, dolt_branches, dolt_diff_*, dolt_history_*, and the rest, for reading the version graph from SQL.
 ---
 
 ## Table of contents

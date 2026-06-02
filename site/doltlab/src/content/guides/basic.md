@@ -1,5 +1,6 @@
 ---
 title: "Basic Administrator Guide"
+description: End-to-end guide to running a basic DoltLab deployment — install, configure, manage users and remotes, back up, and troubleshoot.
 ---
 
 

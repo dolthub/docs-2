@@ -1,5 +1,6 @@
 ---
 title: Getting Started
+description: Quick tours of Dolt's three primary use cases — version-controlled database, Git-for-data, and versioned MySQL replica.
 ---
 
 Dolt has three primary functions all with different ways to get started.
