@@ -1,5 +1,6 @@
 ---
 title: Versioning
+description: How Dolt versions releases and what stability guarantees to expect.
 ---
 
 Dolt uses a three digit versioning format – `major`.`minor`.`patch`. For major, minor, and patch version bumps, you can expect:

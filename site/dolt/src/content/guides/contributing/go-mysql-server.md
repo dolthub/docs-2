@@ -1,5 +1,6 @@
 ---
 title: "Contributing to Go MySQL Server"
+description: Contributing to the SQL engine repo.
 ---
 
 This is a short tutorial about how to make and test

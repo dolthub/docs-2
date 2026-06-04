@@ -1,5 +1,6 @@
 ---
 title: "Contributing to Dolt"
+description: How to build Dolt from source and contribute changes.
 ---
 
 [Dolt](https://doltdb.com) is an open-source SQL database that has Git-like

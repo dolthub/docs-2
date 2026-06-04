@@ -1,5 +1,6 @@
 ---
 title: Version Controlled Database
+description: The five-minute tour — create a database, make changes, commit, branch, and diff your data.
 ---
 
 Dolt is a MySQL compatible database server.

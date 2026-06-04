@@ -1,5 +1,6 @@
 ---
 title: "Collations and character sets"
+description: Supported charsets and collations.
 ---
 
 

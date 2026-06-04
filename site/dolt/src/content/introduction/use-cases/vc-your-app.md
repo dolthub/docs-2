@@ -1,5 +1,6 @@
 ---
 title: Version Control Your Application
+description: Using Dolt as your app's database so schema and data changes ship, review, and roll back like code.
 ---
 
 ## Problem

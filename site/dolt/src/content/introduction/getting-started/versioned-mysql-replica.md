@@ -1,5 +1,6 @@
 ---
 title: Versioned MySQL Replica
+description: Pointing Dolt at an existing MySQL primary to get history and diffs without touching production.
 ---
 
 Dolt can be configured as a MySQL Replica.

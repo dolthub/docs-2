@@ -1,5 +1,6 @@
 ---
 title: Relational Database Management System
+description: Running Dolt as a real database server, not just a CLI tool.
 ---
 
 Dolt can be used as a Relational Database Management System or RDBMS. Dolt ships with [a MySQL compatible server](/concepts/dolt/rdbms/server) built in, accessed via the [`dolt sql-server` command](/cli-reference/cli#dolt-sql-server).

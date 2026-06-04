@@ -1,5 +1,6 @@
 ---
 title: Merges
+description: Running merges from SQL and handling conflicts programmatically.
 ---
 
 ## Merging branches

@@ -1,5 +1,6 @@
 ---
 title: Data and Model Quality Control
+description: Gating data and ML training-set changes behind review and tests so bad data never reaches production or a model.
 ---
 
 ## Problem

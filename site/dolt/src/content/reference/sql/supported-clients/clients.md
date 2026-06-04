@@ -1,5 +1,6 @@
 ---
 title: SQL Clients
+description: Connecting from application code — Python, Go, Node.js, Java, Ruby, PHP — and from ORMs like SQLAlchemy, Prisma, GORM, and ActiveRecord, using their standard MySQL drivers.
 ---
 
 Dolt ships with a built in MySQL compatible server. To start the server for your Dolt database, you run `dolt sql-server` in the repository directory. The `dolt sql-server` command starts a MySQL compatible server for the Dolt database on port 3306 with no authentication. The database name is the name of the repository directory but with dashes \(`-`\) replaced with underscores \(`_`\). So `dolt-test` repository name would become `dolt_test` database name. See [this documentation for more configuration details](/cli-reference/cli#dolt-sql-server).

@@ -1,5 +1,6 @@
 ---
 title: Git-Like Version Control
+description: The version-control half of Dolt — commits, branches, merges, and remotes applied to data.
 ---
 
 Dolt implements Git-style version control on tables instead of files. 

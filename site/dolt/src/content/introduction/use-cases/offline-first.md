@@ -1,5 +1,6 @@
 ---
 title: Offline First
+description: Cloning a full database locally, working disconnected, then syncing changes back like git push/pull.
 ---
 
 ## Problem

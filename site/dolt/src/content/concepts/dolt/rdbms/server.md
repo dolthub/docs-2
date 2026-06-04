@@ -1,5 +1,6 @@
 ---
 title: Server
+description: Starting dolt sql-server and connecting MySQL clients over the wire protocol.
 ---
 
 ## What is a database server?

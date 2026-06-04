@@ -1,5 +1,6 @@
 ---
 title: Remotes
+description: Pushing and pulling databases between Dolt instances and remotes like DoltHub — the git remote model for data.
 ---
 
 

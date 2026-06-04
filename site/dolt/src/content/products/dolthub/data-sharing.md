@@ -1,5 +1,6 @@
 ---
 title: Data Sharing on DoltHub
+description: Publishing, discovering, and collaborating on public and private datasets.
 ---
 
 ## Find data on DoltHub

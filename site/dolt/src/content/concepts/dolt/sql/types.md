@@ -1,5 +1,6 @@
 ---
 title: Types
+description: Supported column data types and their MySQL compatibility.
 ---
 
 

@@ -1,5 +1,6 @@
 ---
 title: Backups
+description: Configuring backups of a running Dolt server.
 ---
 
 

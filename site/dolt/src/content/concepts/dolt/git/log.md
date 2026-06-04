@@ -1,5 +1,6 @@
 ---
 title: Log
+description: Reading the commit history of a database from the CLI or the dolt_log system table.
 ---
 
 

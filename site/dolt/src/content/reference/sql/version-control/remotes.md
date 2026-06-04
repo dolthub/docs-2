@@ -1,5 +1,6 @@
 ---
 title: Using remotes
+description: Push, pull, fetch, and clone from SQL.
 ---
 
 ## What are Remotes?

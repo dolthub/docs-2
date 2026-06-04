@@ -1,5 +1,6 @@
 ---
 title: SQL Extensions Index
+description: Index of every Dolt-specific function, procedure, system table, and variable.
 ---
 
 A flat index of every Dolt-specific SQL extension — every stored procedure,

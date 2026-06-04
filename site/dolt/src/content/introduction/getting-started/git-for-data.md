@@ -1,5 +1,6 @@
 ---
 title: Git for Data
+description: Cloning, forking, pushing, and pulling a shared dataset the way you would a Git repo.
 ---
 
 Dolt is Git for Data. You can use Dolt's command line interface to

@@ -1,5 +1,6 @@
 ---
 title: Table
+description: Defining and managing tables — the versioned unit of data in Dolt.
 ---
 
 

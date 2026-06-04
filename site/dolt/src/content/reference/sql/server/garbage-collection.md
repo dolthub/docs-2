@@ -1,5 +1,6 @@
 ---
 title: Garbage Collection
+description: Reclaiming disk space from unreferenced data with dolt gc.
 ---
 
 ## How garbage is created

@@ -1,5 +1,6 @@
 ---
 title: Versioned MySQL Replica
+description: Running Dolt as a read replica of MySQL to get history and point-in-time snapshots without changing your primary.
 ---
 
 ## Problem

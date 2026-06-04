@@ -1,5 +1,6 @@
 ---
 title: "CSV"
+description: Bulk CSV export and import endpoints.
 ---
 
 DoltHub provides a CSV API for fetching table data as CSVs. You can request a CSV for an individual table or a zip of all table CSVs at a specified commit or branch.

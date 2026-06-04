@@ -1,5 +1,6 @@
 ---
 title: Benchmarks
+description: How Dolt performs versus MySQL, measured and published.
 ---
 
 Dolt publishes benchmarks for its correctness and performance relative

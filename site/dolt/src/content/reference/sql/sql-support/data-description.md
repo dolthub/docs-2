@@ -1,5 +1,6 @@
 ---
 title: Data Description
+description: Supported DDL — CREATE, ALTER, and DROP for tables, indexes, and more.
 ---
 
 

@@ -17,11 +17,12 @@ describe("Dolt docs — llms.txt", () => {
   });
 
   it("starts with the site title and a blockquote summary", () => {
-    expect(body).to.match(/^# Dolt Documentation\n\n> /);
+    expect(body).to.match(/^# Dolt\n\n> /);
   });
 
-  it("includes one H2 per top-level nav section", () => {
-    // Spot-check a handful of section headings — full list is driven by nav.ts.
+  it("includes one H2 per top-level nav section, plus Community & Source", () => {
+    // Spot-check a handful of section headings — most are driven by nav.ts;
+    // Community & Source is appended as a standalone section in the generator.
     for (const h of [
       "## Introduction",
       "## Concepts",
@@ -31,27 +32,47 @@ describe("Dolt docs — llms.txt", () => {
       "## Guides",
       "## Products",
       "## Other",
+      "## Community & Source",
     ]) {
       expect(body).to.include(h);
     }
   });
 
-  it("links every entry to a .md URL", () => {
-    // Pull every link target out and confirm they all end in .md.
+  it("appends the Agentic Writes blog entry to the Introduction section", () => {
+    // Non-doc entry the generator injects after the nav items in Introduction.
+    expect(body).to.include("[Agentic Writes with Dolt]");
+    expect(body).to.include("/blog/2026-06-04-agentic-writes/");
+  });
+
+  it("lists GitHub repos, the blog, and Discord under Community & Source", () => {
+    for (const link of [
+      "https://github.com/dolthub/dolt",
+      "https://github.com/dolthub/go-mysql-server",
+      "https://github.com/dolthub/doltgresql",
+      "https://discord.com/invite/RFwfYpu",
+    ]) {
+      expect(body).to.include(link);
+    }
+  });
+
+  it("links every docs page entry to a .md alternate", () => {
+    // Doc-page entries always point at the .md alternate. External entries
+    // (blog posts, GitHub, Discord) are allowed to be regular HTML URLs.
     const urls = [...body.matchAll(/\]\(([^)]+)\)/g)].map(m => m[1]);
     expect(urls.length).to.be.greaterThan(50);
     for (const url of urls) {
-      expect(url, `entry should link to a .md alternate: ${url}`).to.match(
+      if (!url.includes("/docs/")) continue;
+      expect(url, `docs entry should link to a .md alternate: ${url}`).to.match(
         /\.md$/,
       );
     }
   });
 
   it("surfaces frontmatter descriptions where present", () => {
-    // The What Is Dolt? page has a description as of this PR — it should
-    // appear after the colon in its llms.txt entry.
+    // The What Is Dolt? page has a description; it should appear after the
+    // colon in its llms.txt entry.
     expect(body).to.match(
-      /\[What Is Dolt\?\]\([^)]+\.md\): Introduction to Dolt/,
+      /\[What Is Dolt\?\]\([^)]+\.md\): What Dolt is, what sets it apart/,
     );
   });
 });

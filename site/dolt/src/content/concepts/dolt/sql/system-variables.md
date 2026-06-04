@@ -1,5 +1,6 @@
 ---
 title: System Variables
+description: Server and session variables that control Dolt behavior.
 ---
 
 ## What is a System Variable?

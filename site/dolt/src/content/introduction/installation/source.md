@@ -1,5 +1,6 @@
 ---
 title: Build from Source
+description: Compiling Dolt from the Go source for contributors and bleeding-edge builds.
 ---
 
 For those interested in building from source, clone the [Dolt repo from GitHub](https://github.com/dolthub/dolt) and use `go install`. Note, you must have [Golang installed](https://go.dev/doc/install) on the machine you are compiling on.

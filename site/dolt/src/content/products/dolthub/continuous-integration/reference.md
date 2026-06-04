@@ -1,5 +1,6 @@
 ---
 title: Workflow Reference
+description: The full workflow config syntax.
 ---
 
 Workflows are yaml files stored in a Dolt database that specify one or more CI Jobs and identify when those Job(s) should run.

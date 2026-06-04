@@ -1,5 +1,6 @@
 ---
 title: Dolt Cheat Sheet
+description: The commands you'll actually use day to day, on one page.
 ---
 
 This cheat sheet briefly summarizes the main version-control features of Dolt with simple

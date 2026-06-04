@@ -1,5 +1,6 @@
 ---
 title: Why DoltHub?
+description: The hosted (DoltHub) and self-hosted (DoltLab) Git servers for Dolt databases.
 ---
 
 

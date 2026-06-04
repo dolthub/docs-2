@@ -1,5 +1,6 @@
 ---
 title: FAQ
+description: Common questions — how Dolt differs from MySQL, performance trade-offs, storage cost, and when not to use it.
 ---
 
 ## Why is it called Dolt? Are you calling me dumb?

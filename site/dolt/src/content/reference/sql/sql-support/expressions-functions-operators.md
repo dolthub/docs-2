@@ -1,5 +1,6 @@
 ---
 title: "Expressions, Functions, and Operators"
+description: Supported scalar functions, operators, and expressions.
 ---
 
 ## Expressions, Functions, Operators

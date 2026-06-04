@@ -1,5 +1,6 @@
 ---
 title: Why Dolt?
+description: The core mental model — how Git concepts and SQL concepts combine into one engine.
 ---
 
 
