@@ -1,5 +1,6 @@
 ---
 title: Transactions
+description: Transaction semantics in Dolt and how they interact with commits and branches.
 ---
 
 

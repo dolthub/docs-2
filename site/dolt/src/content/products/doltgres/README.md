@@ -1,5 +1,6 @@
 ---
 title: "Overview"
+description: The Postgres-flavored Dolt — the same branch/diff/merge engine, speaking the Postgres wire protocol instead of MySQL.
 ---
 
 ![](../../.gitbook/assets/doltgres-preview.png)

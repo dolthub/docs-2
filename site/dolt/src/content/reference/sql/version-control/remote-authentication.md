@@ -1,5 +1,6 @@
 ---
 title: Authenticating to Remotes
+description: Setting up credentials to push and pull against DoltHub and other remotes.
 ---
 
 The remote-touching stored procedures

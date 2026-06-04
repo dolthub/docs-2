@@ -1,5 +1,6 @@
 ---
 title: Branch Permissions
+description: Restricting who can write to which branches — for example, protecting main.
 ---
 
 

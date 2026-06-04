@@ -1,5 +1,6 @@
 ---
 title: "Private Networking"
+description: Connecting Hosted Dolt over private networking / VPC peering instead of the public internet.
 ---
 
 

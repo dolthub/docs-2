@@ -1,5 +1,6 @@
 ---
 title: Metrics
+description: Prometheus metrics the server exposes for monitoring.
 ---
 
 Dolt's SQL server can optionally expose metrics through a [Prometheus](https://prometheus.io/) HTTP endpoint. You can enable the Prometheus HTTP endpoint by defining a `metrics` section in your [YAML configuration](/sql-reference/server/configuration). The following YAML configuration file shows a complete configuration file that enables Prometheus metrics on port 11228:

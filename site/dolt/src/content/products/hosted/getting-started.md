@@ -1,5 +1,6 @@
 ---
 title: "Hosted Dolt: Getting Started"
+description: Spinning up your first Hosted Dolt deployment.
 ---
 
 ## Create an account

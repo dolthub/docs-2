@@ -1,5 +1,6 @@
 ---
 title: Conflicts
+description: What a data merge conflict looks like, how Dolt surfaces it in the dolt_conflicts tables, and how to resolve it.
 ---
 
 

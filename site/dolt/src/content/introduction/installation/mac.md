@@ -1,5 +1,6 @@
 ---
 title: Mac
+description: Installing Dolt on macOS, including via Homebrew.
 ---
 
 ## Install Script

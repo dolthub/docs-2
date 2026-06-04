@@ -1,5 +1,6 @@
 ---
 title: Querying database history
+description: Querying past states and the full change history of a table from SQL.
 ---
 
 

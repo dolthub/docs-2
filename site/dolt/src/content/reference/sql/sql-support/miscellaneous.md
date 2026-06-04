@@ -1,5 +1,6 @@
 ---
 title: Miscellaneous
+description: Edge cases and other compatibility notes.
 ---
 
 

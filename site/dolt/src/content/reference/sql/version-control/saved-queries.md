@@ -1,5 +1,6 @@
 ---
 title: Saved Queries
+description: Storing and reusing named queries inside the database.
 ---
 
 Dolt is a database designed for sharing. Dolt ships with a feature called "Saved Queries". Saved queries are queries that are created and versioned along with the database itself. You can use saved queries to make your Dolt database easier to use by adding examples of how the data in the database could be queried.

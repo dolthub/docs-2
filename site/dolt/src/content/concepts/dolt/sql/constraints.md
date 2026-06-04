@@ -1,5 +1,6 @@
 ---
 title: Constraints
+description: Foreign keys, unique, check, and not-null constraints, including how they're enforced across merges.
 ---
 
 

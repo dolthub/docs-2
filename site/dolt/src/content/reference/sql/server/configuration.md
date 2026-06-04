@@ -1,5 +1,6 @@
 ---
 title: Configuration
+description: The config file and flags for dolt sql-server — ports, users, and behavior.
 ---
 
 A Dolt SQL server can be configured at server start time using a [configuration file](#configyaml), or by

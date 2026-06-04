@@ -1,5 +1,6 @@
 ---
 title: Secondary Indexes
+description: Creating secondary indexes and how they're stored and versioned.
 ---
 
 ## What is a Secondary Index?

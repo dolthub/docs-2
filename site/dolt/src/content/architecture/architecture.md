@@ -1,5 +1,6 @@
 ---
 title: Architecture
+description: How Dolt is built end to end — the SQL engine on top, the versioned storage engine underneath.
 ---
 
 

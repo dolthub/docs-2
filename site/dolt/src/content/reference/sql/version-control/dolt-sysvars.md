@@ -1,5 +1,6 @@
 ---
 title: Dolt System Variables
+description: Dolt-specific system variables that control version-control behavior.
 ---
 
 ## Table of contents

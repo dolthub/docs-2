@@ -1,5 +1,6 @@
 ---
 title: "Hosted Dolt: Notable Features"
+description: What Hosted Dolt gives you over self-hosting — managed backups, monitoring, and the built-in SQL workbench.
 ---
 
 ## Version Control

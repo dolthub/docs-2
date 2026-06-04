@@ -1,5 +1,6 @@
 ---
 title: Storage Engine
+description: The part that makes versioned data fast — content-addressed, structurally-shared storage.
 ---
 
 [Dolt](https://www.doltdb.com) is the world's first [version controlled SQL database](https://www.dolthub.com/blog/2022-08-04-database-versioning/). How would you build a storage engine for such a thing?

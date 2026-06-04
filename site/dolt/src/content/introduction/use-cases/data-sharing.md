@@ -1,5 +1,6 @@
 ---
 title: Data Sharing
+description: Publishing and collaboratively editing a dataset the way teams collaborate on code — fork, edit, open a PR, merge.
 ---
 
 ## Problem

@@ -1,5 +1,6 @@
 ---
 title: "Overview"
+description: Self-hosted DoltHub — run the full Git-server-for-data stack inside your own infrastructure, for teams that can't use the cloud.
 ---
 
 ![](../../.gitbook/assets/doltlab-preview.png)

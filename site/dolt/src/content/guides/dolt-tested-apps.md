@@ -1,5 +1,6 @@
 ---
 title: Integrations
+description: Apps, frameworks, and tools tested against Dolt — check here before assuming your stack works, though most MySQL-compatible tools do.
 ---
 
 ## Drop-in MySQL Replacement

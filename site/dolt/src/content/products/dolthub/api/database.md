@@ -1,5 +1,6 @@
 ---
 title: "Database"
+description: Listing and managing databases via API.
 ---
 
 DoltHub provides a database API for fetching and creating data on your database. You can create a database, create a pull request, create a pull request comment, and merge a pull request through these APIs.

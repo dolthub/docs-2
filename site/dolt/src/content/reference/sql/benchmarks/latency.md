@@ -1,5 +1,6 @@
 ---
 title: Latency
+description: Read and write latency benchmarks versus MySQL, and the overhead version control adds.
 ---
 
 ## Latency and Throughput

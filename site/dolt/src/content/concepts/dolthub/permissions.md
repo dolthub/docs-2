@@ -1,5 +1,6 @@
 ---
 title: Permissions
+description: Access control for databases and organizations on DoltHub and DoltLab.
 ---
 
 

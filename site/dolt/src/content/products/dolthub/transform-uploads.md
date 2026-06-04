@@ -1,5 +1,6 @@
 ---
 title: "Transforming File Uploads"
+description: Cleaning and transforming files as they're uploaded into a database.
 ---
 
 DoltHub and DoltLab >= `v0.8.1` allow users to optionally transform files before they&apos;re imported into a database. To do this, users can provide a Transform Url at the time they&apos;re uploading a file.

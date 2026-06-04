@@ -1,5 +1,6 @@
 ---
 title: "Hosted Dolt: Infrastructure"
+description: Where and how Hosted Dolt runs — regions, instance types, and storage.
 ---
 
 Before Hosted Dolt, if you wanted to run [Dolt](https://doltdb.com) as your OLTP database

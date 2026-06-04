@@ -1,5 +1,6 @@
 ---
 title: SQL Language Support
+description: What MySQL SQL Dolt does and doesn't support.
 ---
 
 Dolt's goal is to be compliant with the MySQL dialect, with every query and statement that works in MySQL behaving identically in Dolt. 

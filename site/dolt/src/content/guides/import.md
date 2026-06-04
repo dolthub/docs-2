@@ -1,5 +1,6 @@
 ---
 title: Importing Data
+description: Getting data into Dolt — CSV, JSON, MySQL dumps, and dolt table import.
 ---
 
 This guide covers the ways to load existing data into a Dolt database. Jump

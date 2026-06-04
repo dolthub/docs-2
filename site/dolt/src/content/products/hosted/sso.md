@@ -1,5 +1,6 @@
 ---
 title: "Hosted Dolt: Single Sign-On"
+description: Single sign-on for Hosted Dolt.
 ---
 
 ## What is SAML?

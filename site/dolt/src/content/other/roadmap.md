@@ -1,5 +1,6 @@
 ---
 title: Roadmap
+description: What's shipped, in progress, and planned.
 ---
 
 

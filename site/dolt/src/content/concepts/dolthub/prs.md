@@ -1,5 +1,6 @@
 ---
 title: Pull Requests
+description: Reviewing and merging data changes via pull requests, with diffs over the data itself.
 ---
 
 

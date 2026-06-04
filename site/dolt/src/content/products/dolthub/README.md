@@ -1,6 +1,6 @@
 ---
 title: "What is DoltHub"
-description: What DoltHub is — the hosted Git server for Dolt databases, with browsing, pull requests, discovery, and a public data catalog.
+description: The hosted Git server for Dolt databases — browsing, pull requests, discovery, and a public data catalog.
 ---
 
 

@@ -1,5 +1,6 @@
 ---
 title: MySQL Information Schema
+description: Which information_schema tables Dolt exposes.
 ---
 
 The [MySQL `information_schema` database](https://dev.mysql.com/doc/refman/8.0/en/information-schema-introduction.html) provides access to a variety of database metadata useful for inspecting your database and also used by database tooling. Dolt provides a subset of the data available in `information_schema`, as described below. In general, all tables from MySQL's `information_schema` exist, with the correct schema, but not all data is populated. If you need support for information_schema metadata that is available in MySQL, but not yet available in Dolt, please [open a GitHub issue](https://github.com/dolthub/dolt/issues/new) to let us know what you need.

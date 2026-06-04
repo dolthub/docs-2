@@ -1,5 +1,6 @@
 ---
 title: Audit
+description: A tamper-evident history of every row and schema change for compliance — who changed what and when, queryable from SQL via dolt_history and dolt_diff.
 ---
 
 ## Problem

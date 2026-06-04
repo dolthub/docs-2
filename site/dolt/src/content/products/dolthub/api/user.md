@@ -1,5 +1,6 @@
 ---
 title: "User"
+description: User and organization endpoints.
 ---
 
 DoltHub provides a user API for retrieving information about the authenticated user.

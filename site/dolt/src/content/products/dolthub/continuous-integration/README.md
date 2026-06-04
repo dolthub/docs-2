@@ -1,5 +1,6 @@
 ---
 title: "DoltHub/DoltLab Continuous Integration (CI)"
+description: Running tests against your data on every push — CI for databases.
 ---
 
 

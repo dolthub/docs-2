@@ -1,5 +1,6 @@
 ---
 title: Primary Key
+description: Why primary keys matter in Dolt, how they drive storage, and the cost of changing them.
 ---
 
 

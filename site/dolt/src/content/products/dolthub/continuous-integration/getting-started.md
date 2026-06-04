@@ -1,5 +1,6 @@
 ---
 title: Getting Started with DoltHub/DoltLab CI
+description: Setting up your first Dolt CI workflow.
 ---
 
 CI for DoltHub and DoltLab requires [Dolt v1.45.3](https://github.com/dolthub/dolt/releases/tag/v1.45.3). This release contains the `dolt ci` command you will use to configure CI to run.

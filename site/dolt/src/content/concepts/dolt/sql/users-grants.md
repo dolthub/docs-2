@@ -1,5 +1,6 @@
 ---
 title: Users/Grants
+description: User accounts and privilege management on a Dolt server.
 ---
 
 

@@ -1,5 +1,6 @@
 ---
 title: Hooks
+description: Webhooks that fire on database events like push and pull request.
 ---
 
 ## What is a hook?

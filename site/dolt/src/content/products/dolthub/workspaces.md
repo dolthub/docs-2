@@ -1,5 +1,6 @@
 ---
 title: DoltHub Workspaces
+description: Browser-based scratch space for editing data before committing.
 ---
 
 ## What are workspaces?

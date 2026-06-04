@@ -52,6 +52,7 @@ description: Reference for Dolt's version-control system tables — dolt_log, do
 - [Configuration](#configuration-tables)
 
   - [dolt_ignore](#dolt_ignore)
+  - [dolt_nonlocal_tables](#dolt_nonlocal_tables)
   - [dolt_tests](#dolt_tests)
 
 - [Rebasing](#rebasing-tables)
@@ -1509,6 +1510,8 @@ Configuration Tables can be staged and versioned just like user tables. They alw
 `dolt_ignore` stores a list of "table name patterns", and a boolean flag for each pattern indicating whether tables that match the patterns should not be staged for commit.
 
 This only affects the staging of new tables. Tables that have already been staged or committed are not affected the contents of `dolt_ignore`, and changes to those tables can still be staged.
+
+If your goal is to have a table whose data persists across checkouts, `dolt_ignore` does not accomplish this. In that case, we recommend instead using a [fully qualified table reference that includes a database revision](https://www.dolthub.com/docs/sql-reference/version-control/branches/#use-fully-qualified-references-with-database-revisions). If this is not possible (because you're using an ORM, for instance), then we reccomend using the [`dolt_nonlocal_tables`](#dolt_nonlocal_tables) system table.
 
 #### Schema
 

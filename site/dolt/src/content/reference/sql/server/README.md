@@ -1,5 +1,6 @@
 ---
 title: Running the Dolt SQL Server
+description: Operating dolt sql-server in production — config, access, backups, and tuning.
 ---
 
 There are two ways to run SQL queries against your database:

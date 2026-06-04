@@ -1,5 +1,6 @@
 ---
 title: "System Variables"
+description: Standard MySQL system variables Dolt honors.
 ---
 
 Dolt supports a subset of system variables MySQL supports.

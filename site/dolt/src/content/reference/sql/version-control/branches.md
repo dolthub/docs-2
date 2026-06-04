@@ -1,5 +1,6 @@
 ---
 title: Using branches and database revisions
+description: Creating and switching branches from SQL, and the branch-qualified database syntax.
 ---
 
 Branches and database revisions allow you to work with your data at any commit in your database's
