@@ -1,5 +1,6 @@
 ---
 title: Manual Data Curation
+description: Hand-editing a dataset safely — branch, make changes, diff to see exactly what moved, merge when it's right.
 ---
 
 ## Problem

@@ -1,5 +1,6 @@
 ---
 title: Block Store
+description: The content-addressed block layer commits are built on.
 ---
 
 Storage of information is the bedrock of every Database in existence. The logical application concepts by which you store that information is where a lot of Database discussion occurs. In Dolt's case, [Prolly Trees](/architecture/storage-engine/prolly-tree) allow for some of its key properties like structural sharing and fast diffs. For many databases, Dolt included, the abstraction of how those data structures are written to disk is somewhat secondary. Dolt uses a custom content-addressed block store to store data on disk.

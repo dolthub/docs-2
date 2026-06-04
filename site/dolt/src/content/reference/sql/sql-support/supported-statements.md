@@ -1,5 +1,6 @@
 ---
 title: Supported Statements
+description: The full list of supported SQL statements.
 ---
 
 ## Data manipulation statements

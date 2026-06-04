@@ -1,5 +1,6 @@
 ---
 title: Replication
+description: Replicating a Dolt server to standbys for read scaling and failover.
 ---
 
 ## What is Replication?

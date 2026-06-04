@@ -1,5 +1,6 @@
 ---
 title: Go MySQL Server
+description: Dolt's from-scratch Go implementation of a MySQL-compatible server.
 ---
 
 [go-mysql-server](https://github.com/dolthub/go-mysql-server) is the

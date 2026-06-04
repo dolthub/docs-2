@@ -1,5 +1,6 @@
 ---
 title: Prolly Tree
+description: The probabilistic B-tree structure that gives Dolt fast diffs and structural sharing — the core innovation behind it all.
 ---
 
 "Prolly Tree" is short for ["Probabilistic B-tree"](https://github.com/attic-labs/noms/blob/master/doc/intro#prolly-trees-probabilistic-b-trees). "Prolly Tree" was coined by the good folks who built [Noms](https://github.com/attic-labs/noms), who as far as we can tell invented the data structure. We here at [DoltHub](https://www.dolthub.com) have immense respect for their pioneering work, without which [Dolt](https://www.doltdb.com) would not exist.

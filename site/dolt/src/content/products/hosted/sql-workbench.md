@@ -1,5 +1,6 @@
 ---
 title: "Hosted Dolt: SQL Workbench"
+description: The browser-based SQL editor and data browser built into Hosted Dolt.
 ---
 
 Hosted Dolt has a built-in SQL Workbench with a [DoltHub](https://www.dolthub.com)-like

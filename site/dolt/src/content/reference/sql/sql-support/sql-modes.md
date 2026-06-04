@@ -1,5 +1,6 @@
 ---
 title: "SQL Modes"
+description: Supported sql_mode flags.
 ---
 
 Dolt supports a subset of [SQL modes that MySQL supports](https://dev.mysql.com/doc/refman/8.4/en/sql-mode.html).

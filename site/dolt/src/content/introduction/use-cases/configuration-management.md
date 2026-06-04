@@ -1,5 +1,6 @@
 ---
 title: Configuration Management
+description: Versioning application and config data so changes are reviewable and instantly revertible when a bad config ships.
 ---
 
 ## Problem

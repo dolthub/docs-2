@@ -1,5 +1,6 @@
 ---
 title: Import
+description: How fast Dolt ingests data via dolt table import and LOAD DATA.
 ---
 
 ## Bulk Import Benchmarking

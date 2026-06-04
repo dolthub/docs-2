@@ -1,5 +1,6 @@
 ---
 title: Supported Clients
+description: Which drivers, ORMs, and tools connect to Dolt — they're MySQL clients, so most just work.
 ---
 
 Dolt is MySQL compatible. Any MySQL client should be able to connect

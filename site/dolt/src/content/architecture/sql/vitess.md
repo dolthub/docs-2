@@ -1,5 +1,6 @@
 ---
 title: Vitess
+description: The Vitess-derived MySQL parser Dolt uses to read the wire protocol and SQL.
 ---
 
 Dolt's SQL server runs on [a fork of

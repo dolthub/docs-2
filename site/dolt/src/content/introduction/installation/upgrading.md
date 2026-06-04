@@ -1,5 +1,6 @@
 ---
 title: Upgrading
+description: Moving to a newer Dolt version and what to expect from the storage format.
 ---
 
 

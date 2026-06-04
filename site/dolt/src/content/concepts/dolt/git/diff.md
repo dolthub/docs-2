@@ -1,5 +1,6 @@
 ---
 title: Diff
+description: Seeing exactly which rows, columns, and schema elements changed between two commits, branches, or tags.
 ---
 
 

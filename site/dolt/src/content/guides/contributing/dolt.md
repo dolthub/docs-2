@@ -1,5 +1,6 @@
 ---
 title: "Contributing to Dolt"
+description: Contributing to the main dolt repo.
 ---
 
 ## How to Contribute to Dolt

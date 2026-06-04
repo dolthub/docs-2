@@ -1,5 +1,6 @@
 ---
 title: "Hosted Dolt: Using DoltHub as a Remote"
+description: Pushing and pulling a Hosted deployment to and from DoltHub.
 ---
 
 To interact with DoltHub from your Hosted instance, you can use DoltHub as a

@@ -1,5 +1,6 @@
 ---
 title: Triggers
+description: Defining triggers that fire on data changes.
 ---
 
 

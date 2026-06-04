@@ -1,5 +1,6 @@
 ---
 title: Version Control in Dolt
+description: The SQL surface for Dolt's version control — the part no other SQL database has.
 ---
 
 Unlike other relational databases, Dolt has multiple branches and

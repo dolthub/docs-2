@@ -1,5 +1,6 @@
 ---
 title: Views
+description: Defining and using SQL views.
 ---
 
 

@@ -1,5 +1,6 @@
 ---
 title: Linux
+description: Installing the Dolt binary on Linux.
 ---
 
 

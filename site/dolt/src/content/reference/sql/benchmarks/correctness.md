@@ -1,5 +1,6 @@
 ---
 title: Correctness
+description: Dolt's SQL correctness measured against the MySQL test suite.
 ---
 
 # SQL Correctness

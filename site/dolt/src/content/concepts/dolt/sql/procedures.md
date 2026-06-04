@@ -1,5 +1,6 @@
 ---
 title: Stored Procedures
+description: Stored procedures, including Dolt's version-control procedures callable from SQL.
 ---
 
 ## What is a Stored Procedure?

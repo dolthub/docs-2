@@ -1,5 +1,6 @@
 ---
 title: SQL Architecture
+description: The query engine layer and where it came from.
 ---
 
 Dolt's SQL engine is built as a layer on top of its storage

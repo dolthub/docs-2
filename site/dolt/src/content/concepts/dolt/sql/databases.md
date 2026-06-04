@@ -1,5 +1,6 @@
 ---
 title: Databases
+description: Creating, listing, and selecting databases on a Dolt server.
 ---
 
 

@@ -1,5 +1,6 @@
 ---
 title: Schema
+description: How Dolt stores and versions table schema, and how schema changes diff and merge.
 ---
 
 ## What is a Schema?

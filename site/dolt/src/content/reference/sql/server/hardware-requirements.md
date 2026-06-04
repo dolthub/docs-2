@@ -1,5 +1,6 @@
 ---
 title: Hardware Requirements
+description: CPU, memory, and disk sizing guidance for a Dolt server.
 ---
 
 Right-sizing the host matters more for a Dolt server than for a typical

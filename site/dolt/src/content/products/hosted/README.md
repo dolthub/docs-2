@@ -1,6 +1,6 @@
 ---
 title: "Overview"
-description: Overview of Hosted Dolt — Dolt as a cloud-managed service, what's included, and pointers to the deeper hosted guides.
+description: Dolt as a cloud-managed service — fully managed servers, backups, and monitoring, for teams that want Dolt without running it themselves.
 ---
 
 ![](../../.gitbook/assets/hosted-dolt-preview.png)

@@ -1,5 +1,6 @@
 ---
 title: Dolt SQL Functions
+description: Reference for Dolt's version-control SQL functions — active_branch, hashof, dolt_merge_base, and the rest.
 ---
 
 ## Table of Contents

@@ -1,5 +1,6 @@
 ---
 title: A Full-featured SQL Database
+description: The database half of Dolt — its MySQL-compatible SQL surface area.
 ---
 
 Dolt is a full-featured SQL database, akin to [Postgres](https://www.postgresql.org/) or [MySQL](https://www.mysql.com/).

@@ -1,5 +1,6 @@
 ---
 title: Working Set
+description: The uncommitted changes in your database — the data equivalent of Git's working directory and staging area.
 ---
 
 ## What is a Working Set?

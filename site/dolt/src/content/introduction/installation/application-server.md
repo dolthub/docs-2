@@ -1,5 +1,6 @@
 ---
 title: Application Server
+description: Running Dolt as a long-lived MySQL-compatible server rather than a one-off CLI command.
 ---
 
 These instructions are for bootstrapping dolt as an application

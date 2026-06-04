@@ -1,5 +1,6 @@
 ---
 title: "Overview"
+description: Open-source GUI for browsing, querying, and committing to Dolt databases locally.
 ---
 
 ![](../../.gitbook/assets/dolt-workbench-preview.png)

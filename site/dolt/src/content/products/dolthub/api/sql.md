@@ -1,5 +1,6 @@
 ---
 title: "SQL"
+description: Running read and write SQL queries over HTTP.
 ---
 
 DoltHub provides an API for accessing Dolt databases via web requests. A Dolt database can be attached to a DoltHub remote and pushed. At that point DoltHub provides an API against which users can execute Dolt SQL with results returned as JSON.
