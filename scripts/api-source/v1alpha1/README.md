@@ -9,4 +9,8 @@ The v1alpha1 API is the main HTTP surface for managing databases on DoltHub and 
 
 > **Note:** please send requests to `https://www.dolthub.com`, not `https://dolthub.com`.
 
-Browse the per-resource pages in the sidebar.
+Browse the per-resource pages in the sidebar, or jump straight to an endpoint from the index below.
+
+## All endpoints
+
+<!-- ENDPOINT_INDEX -->
