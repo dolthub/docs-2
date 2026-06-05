@@ -21,8 +21,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createpull.json" path="/{owner}/{database}/pulls" method="post" %}
-[createpull.json](../../../.gitbook/assets/dolthub-api/createpull.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/createpull.json" path="/{owner}/{database}/pulls" method="post" %}
+[createpull.json](../../../../.gitbook/assets/dolthub-api/createpull.json)
 {% endswagger %}
 
 ## Get pull request details
@@ -37,8 +37,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/getpull.json" path="/{owner}/{database}/pulls/{pull_id}" method="get" %}
-[getpull.json](../../../.gitbook/assets/dolthub-api/getpull.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/getpull.json" path="/{owner}/{database}/pulls/{pull_id}" method="get" %}
+[getpull.json](../../../../.gitbook/assets/dolthub-api/getpull.json)
 {% endswagger %}
 
 ## Update a pull request
@@ -53,8 +53,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/updatepull.json" path="/{owner}/{database}/pulls/{pull_id}" method="patch" %}
-[updatepull.json](../../../.gitbook/assets/dolthub-api/updatepull.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/updatepull.json" path="/{owner}/{database}/pulls/{pull_id}" method="patch" %}
+[updatepull.json](../../../../.gitbook/assets/dolthub-api/updatepull.json)
 {% endswagger %}
 
 ## List pull requests
@@ -69,11 +69,11 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/listpulls.json" path="/{owner}/{database}/pulls" method="get" %}
-[listpulls.json](../../../.gitbook/assets/dolthub-api/listpulls.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/listpulls.json" path="/{owner}/{database}/pulls" method="get" %}
+[listpulls.json](../../../../.gitbook/assets/dolthub-api/listpulls.json)
 {% endswagger %}
 
-## Create a pull request comment&#x20;
+## Create a pull request comment
 
 Here is an example of adding a pull request comment using an [authorization token](authentication.md).
 
@@ -85,8 +85,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/pullcomment.json" path="/{owner}/{database}/pulls/{pull_id}/comments" method="post" %}
-[pullcomment.json](../../../.gitbook/assets/dolthub-api/pullcomment.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/pullcomment.json" path="/{owner}/{database}/pulls/{pull_id}/comments" method="post" %}
+[pullcomment.json](../../../../.gitbook/assets/dolthub-api/pullcomment.json)
 {% endswagger %}
 
 ## Merge pull request
@@ -105,12 +105,12 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/mergePull.json" path="/{owner}/{database}/pulls/{pull_id}/merge" method="post" %}
-[mergePull.json](../../../.gitbook/assets/dolthub-api/mergePull.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/mergePull.json" path="/{owner}/{database}/pulls/{pull_id}/merge" method="post" %}
+[mergePull.json](../../../../.gitbook/assets/dolthub-api/mergePull.json)
 {% endswagger %}
 
 Then use `GET` to poll the operation to check if the merge operation is done.
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/pollMergeJob.json" path="/{owner}/{database}/pulls/{pull_id}/merge" method="get" %}
-[pollMergeJob.json](../../../.gitbook/assets/dolthub-api/pollMergeJob.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/pollMergeJob.json" path="/{owner}/{database}/pulls/{pull_id}/merge" method="get" %}
+[pollMergeJob.json](../../../../.gitbook/assets/dolthub-api/pollMergeJob.json)
 {% endswagger %}

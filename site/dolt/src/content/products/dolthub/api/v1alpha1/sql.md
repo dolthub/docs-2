@@ -137,7 +137,7 @@ As a reminder, this API is in Alpha version, and we will continue to flesh this 
 
 You can also explore our SQL API on DoltHub whenever you execute a query:
 
-![SQL API Tab](../../../.gitbook/assets/sql-api-tab-dolthub.png)
+![SQL API Tab](../../../../.gitbook/assets/sql-api-tab-dolthub.png)
 
 ## Writing
 

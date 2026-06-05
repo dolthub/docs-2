@@ -21,8 +21,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createRelease.json" path="/{owner}/{database}/releases" method="post" %}
-[createRelease.json](../../../.gitbook/assets/dolthub-api/createRelease.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/createRelease.json" path="/{owner}/{database}/releases" method="post" %}
+[createRelease.json](../../../../.gitbook/assets/dolthub-api/createRelease.json)
 {% endswagger %}
 
 ## List releases
@@ -37,6 +37,6 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/listreleases.json" path="/{owner}/{database}/releases" method="get" %}
-[listreleases.json](../../../.gitbook/assets/dolthub-api/listreleases.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/listreleases.json" path="/{owner}/{database}/releases" method="get" %}
+[listreleases.json](../../../../.gitbook/assets/dolthub-api/listreleases.json)
 {% endswagger %}

@@ -168,33 +168,38 @@ def process_file(src_path: str, dest_path: str):
 
 def main():
     api_files = [
-        # Capability-oriented pages.
-        "sql.md",
+        # Top-level landing pages — not version-specific.
+        "README.md",
+        # Independent APIs (separate surfaces, not part of v1alpha1).
         "csv.md",
         "hooks.md",
-        "authentication.md",
-        "user.md",
-        # Resource-oriented pages (split out of the old database.md).
-        "databases.md",
-        "branches.md",
-        "pull-requests.md",
-        "releases.md",
-        "tags.md",
-        "uploads.md",
-        "jobs.md",
         # Legacy stub: keeps /products/dolthub/api/database#<anchor> deep
         # links alive after the split. Every old H2 ID is preserved; each
-        # body is a one-line pointer to the new home.
+        # body is a one-line pointer to the new home under v1alpha1/.
         "database.md",
-        "README.md",
+        # v1alpha1 API surface.
+        "v1alpha1/README.md",
+        "v1alpha1/authentication.md",
+        "v1alpha1/sql.md",
+        "v1alpha1/user.md",
+        "v1alpha1/databases.md",
+        "v1alpha1/branches.md",
+        "v1alpha1/pull-requests.md",
+        "v1alpha1/releases.md",
+        "v1alpha1/tags.md",
+        "v1alpha1/uploads.md",
+        "v1alpha1/jobs.md",
     ]
 
-    for filename in api_files:
-        src = os.path.join(TEMPLATES_DIR, filename)
-        dest = os.path.join(OUT_DIR, filename)
+    for rel_path in api_files:
+        src = os.path.join(TEMPLATES_DIR, rel_path)
+        dest = os.path.join(OUT_DIR, rel_path)
 
         if not os.path.exists(src):
             continue
+
+        # Output may live in a subdir (v1alpha1/), so make sure it exists.
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
 
         result = process_file(src, dest)
 
@@ -207,7 +212,11 @@ def main():
         # Add frontmatter if missing
         if not result.startswith("---"):
             title_match = re.search(r'^# (.+)$', result, re.MULTILINE)
-            title = title_match.group(1) if title_match else filename.replace(".md", "")
+            title = (
+                title_match.group(1)
+                if title_match
+                else os.path.basename(rel_path).replace(".md", "")
+            )
             result = f'---\ntitle: "{title}"\n---\n\n{result}'
 
         # Ensure h1 exists

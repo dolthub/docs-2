@@ -21,8 +21,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createBranch.json" path="/{owner}/{database}/branches" method="post" %}
-[createBranch.json](../../../.gitbook/assets/dolthub-api/createBranch.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/createBranch.json" path="/{owner}/{database}/branches" method="post" %}
+[createBranch.json](../../../../.gitbook/assets/dolthub-api/createBranch.json)
 {% endswagger %}
 
 ## List branches
@@ -37,6 +37,6 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/listbranches.json" path="/{owner}/{database}/branches" method="get" %}
-[listbranches.json](../../../.gitbook/assets/dolthub-api/listbranches.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/listbranches.json" path="/{owner}/{database}/branches" method="get" %}
+[listbranches.json](../../../../.gitbook/assets/dolthub-api/listbranches.json)
 {% endswagger %}

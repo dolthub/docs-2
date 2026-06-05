@@ -27,8 +27,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/listoperations.json" path="/users/{username}/operations" method="get" %}
-[listoperations.json](../../../.gitbook/assets/dolthub-api/listoperations.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/listoperations.json" path="/users/{username}/operations" method="get" %}
+[listoperations.json](../../../../.gitbook/assets/dolthub-api/listoperations.json)
 {% endswagger %}
 
 ## List jobs
@@ -47,6 +47,6 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/listjobs.json" path="/{owner}/{database}/jobs" method="get" %}
-[listjobs.json](../../../.gitbook/assets/dolthub-api/listjobs.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/listjobs.json" path="/{owner}/{database}/jobs" method="get" %}
+[listjobs.json](../../../../.gitbook/assets/dolthub-api/listjobs.json)
 {% endswagger %}

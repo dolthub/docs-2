@@ -20,19 +20,11 @@ This documentation will walk you through discovering data on DoltHub, cloning a 
 
 ## DoltHub API
 
-DoltHub has [an API](/products/dolthub/api/) you can script against. The documentation covers:
+DoltHub exposes [three independent HTTP APIs](/products/dolthub/api/):
 
-1. [Authentication](/products/dolthub/api/authentication)
-2. [SQL](/products/dolthub/api/sql) — read or write SQL queries against a DoltHub database
-3. [CSV](/products/dolthub/api/csv) — download tables and uploads as CSV
-4. [Databases](/products/dolthub/api/databases) — create, fork, and list forks
-5. [Branches](/products/dolthub/api/branches) — create and list branches
-6. [Pull Requests](/products/dolthub/api/pull-requests) — open, get, update, comment on, and merge PRs
-7. [Releases](/products/dolthub/api/releases) and [Tags](/products/dolthub/api/tags)
-8. [File Uploads](/products/dolthub/api/uploads) — async data import with optional transforms
-9. [Jobs](/products/dolthub/api/jobs) — track the status of async operations
-10. [Hooks](/products/dolthub/api/hooks) — webhooks for database events
-11. [User](/products/dolthub/api/user) — info about the authenticated user
+1. [v1alpha1 API](/products/dolthub/api/v1alpha1) — the resource-oriented surface for SQL, databases, branches, pull requests, releases, tags, file uploads, jobs, and the authenticated user.
+2. [CSV](/products/dolthub/api/csv) — bulk export and import of table data as CSV.
+3. [Webhooks](/products/dolthub/api/hooks) — HTTP callbacks for database events like push and pull request.
 
 ## Guides
 

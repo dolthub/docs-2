@@ -12,72 +12,72 @@ _API version: v1alpha1_
 
 ## Create database
 
-→ Moved to [Databases / Create database](databases.md#create-database).
+→ Moved to [Databases / Create database](v1alpha1/databases.md#create-database).
 
 ## Fork database
 
-→ Moved to [Databases / Fork database](databases.md#fork-database).
+→ Moved to [Databases / Fork database](v1alpha1/databases.md#fork-database).
 
 ## List forks
 
-→ Moved to [Databases / List forks](databases.md#list-forks).
+→ Moved to [Databases / List forks](v1alpha1/databases.md#list-forks).
 
 ## Create pull request
 
-→ Moved to [Pull Requests / Create pull request](pull-requests.md#create-pull-request).
+→ Moved to [Pull Requests / Create pull request](v1alpha1/pull-requests.md#create-pull-request).
 
 ## Get pull request details
 
-→ Moved to [Pull Requests / Get pull request details](pull-requests.md#get-pull-request-details).
+→ Moved to [Pull Requests / Get pull request details](v1alpha1/pull-requests.md#get-pull-request-details).
 
 ## Update a pull request
 
-→ Moved to [Pull Requests / Update a pull request](pull-requests.md#update-a-pull-request).
+→ Moved to [Pull Requests / Update a pull request](v1alpha1/pull-requests.md#update-a-pull-request).
 
 ## List pull requests
 
-→ Moved to [Pull Requests / List pull requests](pull-requests.md#list-pull-requests).
+→ Moved to [Pull Requests / List pull requests](v1alpha1/pull-requests.md#list-pull-requests).
 
 ## Create a pull request comment&#x20;
 
-→ Moved to [Pull Requests / Create a pull request comment](pull-requests.md#create-a-pull-request-comment).
+→ Moved to [Pull Requests / Create a pull request comment](v1alpha1/pull-requests.md#create-a-pull-request-comment).
 
 ## Merge pull request
 
-→ Moved to [Pull Requests / Merge pull request](pull-requests.md#merge-pull-request).
+→ Moved to [Pull Requests / Merge pull request](v1alpha1/pull-requests.md#merge-pull-request).
 
 ## Upload a file
 
-→ Moved to [File Uploads / Upload a file](uploads.md#upload-a-file).
+→ Moved to [File Uploads / Upload a file](v1alpha1/uploads.md#upload-a-file).
 
 ## Create a branch
 
-→ Moved to [Branches / Create a branch](branches.md#create-a-branch).
+→ Moved to [Branches / Create a branch](v1alpha1/branches.md#create-a-branch).
 
 ## List branches
 
-→ Moved to [Branches / List branches](branches.md#list-branches).
+→ Moved to [Branches / List branches](v1alpha1/branches.md#list-branches).
 
 ## Create a tag
 
-→ Moved to [Tags / Create a tag](tags.md#create-a-tag).
+→ Moved to [Tags / Create a tag](v1alpha1/tags.md#create-a-tag).
 
 ## List tags
 
-→ Moved to [Tags / List tags](tags.md#list-tags).
+→ Moved to [Tags / List tags](v1alpha1/tags.md#list-tags).
 
 ## Create a release
 
-→ Moved to [Releases / Create a release](releases.md#create-a-release).
+→ Moved to [Releases / Create a release](v1alpha1/releases.md#create-a-release).
 
 ## List releases
 
-→ Moved to [Releases / List releases](releases.md#list-releases).
+→ Moved to [Releases / List releases](v1alpha1/releases.md#list-releases).
 
 ## List operations
 
-→ Moved to [Jobs / List operations](jobs.md#list-operations).
+→ Moved to [Jobs / List operations](v1alpha1/jobs.md#list-operations).
 
 ## List jobs
 
-→ Moved to [Jobs / List jobs](jobs.md#list-jobs).
+→ Moved to [Jobs / List jobs](v1alpha1/jobs.md#list-jobs).

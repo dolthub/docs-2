@@ -27,14 +27,14 @@ headers = {
 
 To upload the file, include two fields in the request body, `file` and `params`, the `file` should be type of `Blob`, and `params` should be a JSON object.
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/fileUpload.json" path="/{owner}/{database}/upload" method="post" %}
-[fileUpload.json](../../../.gitbook/assets/dolthub-api/fileUpload.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/fileUpload.json" path="/{owner}/{database}/upload" method="post" %}
+[fileUpload.json](../../../../.gitbook/assets/dolthub-api/fileUpload.json)
 {% endswagger %}
 
 Then use `GET` to poll the operation to check if the import operation is done.
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/pollImportJob.json" path="/{owner}/{database}/upload" method="get" %}
-[pollImportJob.json](../../../.gitbook/assets/dolthub-api/pollImportJob.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/pollImportJob.json" path="/{owner}/{database}/upload" method="get" %}
+[pollImportJob.json](../../../../.gitbook/assets/dolthub-api/pollImportJob.json)
 {% endswagger %}
 
 Here is an example of uploading a CSV file to create a table through this api endpoint in Javascript, you can reference the [`dolt table import`](/cli-reference/cli#dolt-table-import) documentation for additional information.:

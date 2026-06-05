@@ -19,6 +19,6 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/getCurrentUser.json" path="/user" method="get" %}
-[getCurrentUser.json](../../../.gitbook/assets/dolthub-api/getCurrentUser.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/getCurrentUser.json" path="/user" method="get" %}
+[getCurrentUser.json](../../../../.gitbook/assets/dolthub-api/getCurrentUser.json)
 {% endswagger %}

@@ -21,8 +21,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createTag.json" path="/{owner}/{database}/tags" method="post" %}
-[createTag.json](../../../.gitbook/assets/dolthub-api/createTag.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/createTag.json" path="/{owner}/{database}/tags" method="post" %}
+[createTag.json](../../../../.gitbook/assets/dolthub-api/createTag.json)
 {% endswagger %}
 
 ## List tags
@@ -37,6 +37,6 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/listtags.json" path="/{owner}/{database}/tags" method="get" %}
-[listtags.json](../../../.gitbook/assets/dolthub-api/listtags.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/listtags.json" path="/{owner}/{database}/tags" method="get" %}
+[listtags.json](../../../../.gitbook/assets/dolthub-api/listtags.json)
 {% endswagger %}

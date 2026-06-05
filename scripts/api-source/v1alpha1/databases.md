@@ -21,8 +21,8 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createDatabase.json" path="/database" method="post" %}
-[createDatabase.json](../../../.gitbook/assets/dolthub-api/createDatabase.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/createDatabase.json" path="/database" method="post" %}
+[createDatabase.json](../../../../.gitbook/assets/dolthub-api/createDatabase.json)
 {% endswagger %}
 
 ## Fork database
@@ -41,14 +41,14 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createFork.json" path="/fork" method="post" %}
-[createFork.json](../../../.gitbook/assets/dolthub-api/createFork.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/createFork.json" path="/fork" method="post" %}
+[createFork.json](../../../../.gitbook/assets/dolthub-api/createFork.json)
 {% endswagger %}
 
 Then use `GET` to poll the operation to check if the fork operation is done.
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createFork.json" path="/fork" method="get" %}
-[createFork.json](../../../.gitbook/assets/dolthub-api/createFork.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/createFork.json" path="/fork" method="get" %}
+[createFork.json](../../../../.gitbook/assets/dolthub-api/createFork.json)
 {% endswagger %}
 
 ## List forks
@@ -61,6 +61,6 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/listforks.json" path="/{owner}/{database}/forks" method="get" %}
-[listforks.json](../../../.gitbook/assets/dolthub-api/listforks.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/listforks.json" path="/{owner}/{database}/forks" method="get" %}
+[listforks.json](../../../../.gitbook/assets/dolthub-api/listforks.json)
 {% endswagger %}
