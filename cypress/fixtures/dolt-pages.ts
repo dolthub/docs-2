@@ -271,9 +271,18 @@ export const productsPages: DocPage[] = [
   },
   { path: "/products/dolthub/api/sql", title: "SQL" },
   { path: "/products/dolthub/api/csv", title: "CSV" },
-  { path: "/products/dolthub/api/database", title: "Database" },
+  { path: "/products/dolthub/api/databases", title: "Databases" },
+  { path: "/products/dolthub/api/branches", title: "Branches" },
+  { path: "/products/dolthub/api/pull-requests", title: "Pull Requests" },
+  { path: "/products/dolthub/api/releases", title: "Releases" },
+  { path: "/products/dolthub/api/tags", title: "Tags" },
+  { path: "/products/dolthub/api/uploads", title: "File Uploads" },
+  { path: "/products/dolthub/api/jobs", title: "Jobs" },
   { path: "/products/dolthub/api/hooks", title: "Hooks" },
   { path: "/products/dolthub/api/user", title: "User" },
+  // Legacy stub kept so old deep links like /api/database#create-pull-request
+  // still anchor — page is not in nav.
+  { path: "/products/dolthub/api/database", title: "Database (legacy)" },
   {
     path: "/products/dolthub/continuous-integration",
     title: "Continuous Integration",

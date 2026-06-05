@@ -1,10 +1,11 @@
-# User
+---
+title: "User"
+description: User and organization endpoints.
+---
 
 DoltHub provides a user API for retrieving information about the authenticated user.
 
-{% hint style="info" %}
-Please make sure to send your requests to `https://www.dolthub.com` instead of `https://dolthub.com`.
-{% endhint %}
+> **Note:** Please make sure to send your requests to `https://www.dolthub.com` instead of `https://dolthub.com`.
 
 ## Get current user
 

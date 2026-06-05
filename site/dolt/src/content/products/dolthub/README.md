@@ -23,10 +23,16 @@ This documentation will walk you through discovering data on DoltHub, cloning a 
 DoltHub has [an API](/products/dolthub/api/) you can script against. The documentation covers:
 
 1. [Authentication](/products/dolthub/api/authentication)
-2. [SQL API](/products/dolthub/api/sql) - Used to make read or write SQL queries to a DoltHub database
-3. [CSV API](/products/dolthub/api/csv) - Used to download CSV format files of DoltHub tables
-4. [Database API](/products/dolthub/api/database) - Used to interact with DoltHub databases and pull requests
-5. [Hooks](/products/dolthub/api/hooks) - Used to receive change events to your DoltHub databases
+2. [SQL](/products/dolthub/api/sql) — read or write SQL queries against a DoltHub database
+3. [CSV](/products/dolthub/api/csv) — download tables and uploads as CSV
+4. [Databases](/products/dolthub/api/databases) — create, fork, and list forks
+5. [Branches](/products/dolthub/api/branches) — create and list branches
+6. [Pull Requests](/products/dolthub/api/pull-requests) — open, get, update, comment on, and merge PRs
+7. [Releases](/products/dolthub/api/releases) and [Tags](/products/dolthub/api/tags)
+8. [File Uploads](/products/dolthub/api/uploads) — async data import with optional transforms
+9. [Jobs](/products/dolthub/api/jobs) — track the status of async operations
+10. [Hooks](/products/dolthub/api/hooks) — webhooks for database events
+11. [User](/products/dolthub/api/user) — info about the authenticated user
 
 ## Guides
 

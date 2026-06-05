@@ -3,11 +3,11 @@ title: "SQL"
 description: Running read and write SQL queries over HTTP.
 ---
 
+# SQL
+
 DoltHub provides an API for accessing Dolt databases via web requests. A Dolt database can be attached to a DoltHub remote and pushed. At that point DoltHub provides an API against which users can execute Dolt SQL with results returned as JSON.
 
-> **Note**
-Please make sure to send your requests to `https://www.dolthub.com` instead of `https://dolthub.com`.
-
+> **Note:** Please make sure to send your requests to `https://www.dolthub.com` instead of `https://dolthub.com`.
 
 ## Reading
 
@@ -201,9 +201,7 @@ write_res = requests.post(
 write_json = write_res.json()
 ```
 
-> **Note**
-Note: for larger queries you can put the query in the request body (`json={"query": [your query]}`) instead of using the query parameter.
-
+> **Note:** for larger queries you can put the query in the request body (`json={"query": [your query]}`) instead of using the query parameter.
 
 The `main` branch already exists in the database, and providing a `<to_branch>` that doesn't exist will create this new branch from the `<from_branch>`.
 

@@ -167,7 +167,27 @@ def process_file(src_path: str, dest_path: str):
 
 
 def main():
-    api_files = ["sql.md", "database.md", "csv.md", "hooks.md", "authentication.md", "user.md", "README.md"]
+    api_files = [
+        # Capability-oriented pages.
+        "sql.md",
+        "csv.md",
+        "hooks.md",
+        "authentication.md",
+        "user.md",
+        # Resource-oriented pages (split out of the old database.md).
+        "databases.md",
+        "branches.md",
+        "pull-requests.md",
+        "releases.md",
+        "tags.md",
+        "uploads.md",
+        "jobs.md",
+        # Legacy stub: keeps /products/dolthub/api/database#<anchor> deep
+        # links alive after the split. Every old H2 ID is preserved; each
+        # body is a one-line pointer to the new home.
+        "database.md",
+        "README.md",
+    ]
 
     for filename in api_files:
         src = os.path.join(TEMPLATES_DIR, filename)
