@@ -73,7 +73,7 @@ headers = {
 [listpulls.json](../../../.gitbook/assets/dolthub-api/listpulls.json)
 {% endswagger %}
 
-## Create a pull request comment&#x20;
+## Create a pull request comment
 
 Here is an example of adding a pull request comment using an [authorization token](authentication.md).
 

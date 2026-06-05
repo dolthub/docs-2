@@ -166,6 +166,130 @@ def process_file(src_path: str, dest_path: str):
     return result
 
 
+# ---------------------------------------------------------------------------
+# Endpoint index — a single agent- and human-readable table of every endpoint
+# in every API page, generated alongside the pages themselves so it can't drift.
+# Substituted into pages at the `<!-- ENDPOINT_INDEX -->` marker.
+# ---------------------------------------------------------------------------
+
+
+def slugify(text: str) -> str:
+    """Mirror rehype-slug / github-slugger output for ASCII headings — the same
+    algorithm Astro applies to <h2> id attributes."""
+    s = text.lower()
+    # Replace runs of non-[a-z0-9-] with a single hyphen…
+    s = re.sub(r"[^a-z0-9-]+", "-", s)
+    # …then collapse hyphens and trim.
+    s = re.sub(r"-+", "-", s).strip("-")
+    return s
+
+
+def section_title_from_template(content: str, filename: str) -> str:
+    """Best-effort label for the section heading in the index. Prefers the H1
+    in the template body, falls back to the frontmatter title, then to the
+    filename."""
+    m = re.search(r"^# (.+)$", content, re.MULTILINE)
+    if m:
+        return m.group(1).strip()
+    m = re.search(r'^title:\s*"?(.+?)"?\s*$', content, re.MULTILINE)
+    if m:
+        return m.group(1).strip()
+    return filename.replace(".md", "").replace("-", " ").title()
+
+
+def collect_endpoints(filename: str) -> tuple[str, list[dict]]:
+    """Walk one template, return (section_title, list of endpoint dicts).
+    Each endpoint dict carries the method, path, summary (from the swagger
+    spec) plus the page slug + anchor where its doc section lives."""
+    src_path = os.path.join(TEMPLATES_DIR, filename)
+    if not os.path.exists(src_path):
+        return ("", [])
+    with open(src_path) as f:
+        content = f.read()
+
+    section_title = section_title_from_template(content, filename)
+    page_slug = filename[: -len(".md")] if filename != "README.md" else ""
+
+    endpoints: list[dict] = []
+    last_h2_slug: str | None = None
+    swagger_re = re.compile(
+        r'^\{% swagger src="([^"]+)" path="([^"]+)" method="([^"]+)" %\}'
+    )
+    for line in content.split("\n"):
+        h2 = re.match(r"^## (.+)$", line)
+        if h2:
+            last_h2_slug = slugify(h2.group(1))
+            continue
+        m = swagger_re.match(line)
+        if not m:
+            continue
+        spec_path, path, method = m.group(1), m.group(2), m.group(3)
+        try:
+            spec = load_spec(spec_path)
+        except Exception:
+            continue
+        op = spec.get("paths", {}).get(path, {}).get(method.lower(), {})
+        endpoints.append(
+            {
+                "method": method.upper(),
+                "path": path,
+                "summary": op.get("summary", "").strip(),
+                "page": page_slug,
+                "anchor": last_h2_slug or "",
+            }
+        )
+    return (section_title, endpoints)
+
+
+# Site-absolute base used to build index links. The rehype-base plugin
+# prepends `/docs` at build time, so the rendered HTML carries
+# `/docs/products/dolthub/api/<page>#<anchor>` — a stable absolute path that
+# works regardless of which URL the index page itself is served at (the
+# README's URL may or may not carry a trailing slash, which breaks
+# browser-side resolution of relative links).
+API_BASE = "/products/dolthub/api"
+
+
+def render_endpoint_index(sections: list[tuple[str, list[dict]]]) -> str:
+    """Render a grouped Markdown table of every endpoint, sectioned by page.
+
+    Sections appear in the order the caller supplied (we use nav order).
+    Each row links the summary text to the doc anchor, so the table both
+    documents the surface and gives the reader one-click navigation."""
+    out: list[str] = []
+    for section_title, endpoints in sections:
+        if not endpoints:
+            continue
+        out.append(f"### {section_title}")
+        out.append("")
+        out.append("| Method | Path | What it does |")
+        out.append("|---|---|---|")
+        for e in endpoints:
+            summary = e["summary"].replace("|", r"\|") or "—"
+            link = f"{API_BASE}/{e['page']}"
+            if e["anchor"]:
+                link += f"#{e['anchor']}"
+            out.append(
+                f"| **{e['method']}** | `{e['path']}` | [{summary}]({link}) |"
+            )
+        out.append("")
+    return "\n".join(out)
+
+
+def build_endpoint_index(api_files: list[str]) -> str:
+    """Top-level entry: collect endpoints from every template and render."""
+    sections: list[tuple[str, list[dict]]] = []
+    for filename in api_files:
+        # Skip the index itself and the legacy stub (whose H2s point at the
+        # new pages rather than wrapping swagger tags, so it has no endpoints
+        # of its own anyway).
+        if filename in ("README.md", "database.md"):
+            continue
+        title, endpoints = collect_endpoints(filename)
+        sections.append((title, endpoints))
+    return render_endpoint_index(sections)
+
+
 def main():
     api_files = [
         # Capability-oriented pages.
@@ -189,6 +313,11 @@ def main():
         "README.md",
     ]
 
+    # Build the endpoint index once, off the same swagger sources every page
+    # consumes. Substituted into any template with a `<!-- ENDPOINT_INDEX -->`
+    # marker — currently just README.md.
+    endpoint_index = build_endpoint_index(api_files)
+
     for filename in api_files:
         src = os.path.join(TEMPLATES_DIR, filename)
         dest = os.path.join(OUT_DIR, filename)
@@ -197,6 +326,10 @@ def main():
             continue
 
         result = process_file(src, dest)
+
+        # Substitute the endpoint index in place of the marker. No-op on pages
+        # that don't include the marker, so it's safe to run on every file.
+        result = result.replace("<!-- ENDPOINT_INDEX -->", endpoint_index)
 
         # Strip .md from links
         result = re.sub(r'/README\.md\)', '/)', result)
