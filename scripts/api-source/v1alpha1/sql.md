@@ -1,17 +1,18 @@
-# SQL
+---
+title: "SQL"
+description: Running read and write SQL queries over HTTP.
+---
 
 DoltHub provides an API for accessing Dolt databases via web requests. A Dolt database can be attached to a DoltHub remote and pushed. At that point DoltHub provides an API against which users can execute Dolt SQL with results returned as JSON.
 
-{% hint style="info" %}
-Please make sure to send your requests to `https://www.dolthub.com` instead of `https://dolthub.com`.
-{% endhint %}
+> **Note:** Please make sure to send your requests to `https://www.dolthub.com` instead of `https://dolthub.com`.
 
 ## Reading
 
 ### Using the default branch
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/sqlRead.json" path="/{owner}/{database}" method="get" %}
-[sqlRead.json](../../../.gitbook/assets/dolthub-api/sqlRead.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/sqlRead.json" path="/{owner}/{database}" method="get" %}
+[sqlRead.json](../../../../.gitbook/assets/dolthub-api/sqlRead.json)
 {% endswagger %}
 
 We will use an example DoltHub database, [dolthub/ip-to-country](https://www.dolthub.com/repositories/dolthub/ip-to-country/) and the Python `requests` library to explore it in the Python console:
@@ -40,8 +41,8 @@ This shows our database metadata as a dictionary:
 
 ### Specifying a ref
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/sqlRead.json" path="/{owner}/{database}/{ref}" method="get" %}
-[sqlRead.json](../../../.gitbook/assets/dolthub-api/sqlRead.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/sqlRead.json" path="/{owner}/{database}/{ref}" method="get" %}
+[sqlRead.json](../../../../.gitbook/assets/dolthub-api/sqlRead.json)
 {% endswagger %}
 
 We can now execute a query:
@@ -91,7 +92,7 @@ As a reminder, this API is in Alpha version, and we will continue to flesh this 
 
 You can also explore our SQL API on DoltHub whenever you execute a query:
 
-![SQL API Tab](../../../.gitbook/assets/sql-api-tab-dolthub.png)
+![SQL API Tab](../../../../.gitbook/assets/sql-api-tab-dolthub.png)
 
 ## Writing
 
@@ -101,8 +102,8 @@ We can use our [SHAQ database](https://www.dolthub.com/repositories/dolthub/SHAQ
 
 ### 1. Run query
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/sqlWrite.json" path="/{owner}/{database}/write/{from_branch}/{to_branch}" method="post" %}
-[sqlWrite.json](../../../.gitbook/assets/dolthub-api/sqlWrite.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/sqlWrite.json" path="/{owner}/{database}/write/{from_branch}/{to_branch}" method="post" %}
+[sqlWrite.json](../../../../.gitbook/assets/dolthub-api/sqlWrite.json)
 {% endswagger %}
 
 First, we want to hit the write endpoint with our `UPDATE` query. This will start an asynchronous operation.
@@ -122,9 +123,7 @@ write_res = requests.post(
 write_json = write_res.json()
 ```
 
-{% hint style="info" %}
-Note: for larger queries you can put the query in the request body (`json={"query": [your query]}`) instead of using the query parameter.
-{% endhint %}
+> **Note:** for larger queries you can put the query in the request body (`json={"query": [your query]}`) instead of using the query parameter.
 
 The `main` branch already exists in the database, and providing a `<to_branch>` that doesn't exist will create this new branch from the `<from_branch>`.
 
@@ -145,8 +144,8 @@ The yielded JSON results include an `operation_name`.
 
 ### 2. Poll operation
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/sqlWrite.json" path="/{owner}/{database}/write" method="get" %}
-[sqlWrite.json](../../../.gitbook/assets/dolthub-api/sqlWrite.json)
+{% swagger src="../../../../.gitbook/assets/dolthub-api/sqlWrite.json" path="/{owner}/{database}/write" method="get" %}
+[sqlWrite.json](../../../../.gitbook/assets/dolthub-api/sqlWrite.json)
 {% endswagger %}
 
 `operation_name` can be used to poll the second endpoint to check if the operation is done.
