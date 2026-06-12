@@ -20,13 +20,11 @@ This documentation will walk you through discovering data on DoltHub, cloning a 
 
 ## DoltHub API
 
-DoltHub has [an API](/products/dolthub/api/) you can script against. The documentation covers:
+DoltHub exposes [three independent HTTP APIs](/products/dolthub/api/):
 
-1. [Authentication](/products/dolthub/api/authentication)
-2. [SQL API](/products/dolthub/api/sql) - Used to make read or write SQL queries to a DoltHub database
-3. [CSV API](/products/dolthub/api/csv) - Used to download CSV format files of DoltHub tables
-4. [Database API](/products/dolthub/api/database) - Used to interact with DoltHub databases and pull requests
-5. [Hooks](/products/dolthub/api/hooks) - Used to receive change events to your DoltHub databases
+1. [v1alpha1 API](/products/dolthub/api/v1alpha1) — the resource-oriented surface for SQL, databases, branches, pull requests, releases, tags, file uploads, jobs, and the authenticated user.
+2. [CSV](/products/dolthub/api/csv) — bulk export and import of table data as CSV.
+3. [Webhooks](/products/dolthub/api/hooks) — HTTP callbacks for database events like push and pull request.
 
 ## Guides
 

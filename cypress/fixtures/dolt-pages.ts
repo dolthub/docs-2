@@ -264,16 +264,25 @@ export const productsPages: DocPage[] = [
   { path: "/products/hosted/sso", title: "SSO" },
   { path: "/products/dolthub", title: "DoltHub" },
   { path: "/products/dolthub/data-sharing", title: "Data Sharing" },
-  { path: "/products/dolthub/api", title: "API" },
-  {
-    path: "/products/dolthub/api/authentication",
-    title: "Authentication",
-  },
-  { path: "/products/dolthub/api/sql", title: "SQL" },
+  { path: "/products/dolthub/api", title: "DoltHub/DoltLab API" },
+  // v1alpha1 — the main resource-oriented API surface.
+  { path: "/products/dolthub/api/v1alpha1", title: "v1alpha1 API" },
+  { path: "/products/dolthub/api/v1alpha1/authentication", title: "Authentication" },
+  { path: "/products/dolthub/api/v1alpha1/sql", title: "SQL" },
+  { path: "/products/dolthub/api/v1alpha1/user", title: "User" },
+  { path: "/products/dolthub/api/v1alpha1/databases", title: "Databases" },
+  { path: "/products/dolthub/api/v1alpha1/branches", title: "Branches" },
+  { path: "/products/dolthub/api/v1alpha1/pull-requests", title: "Pull Requests" },
+  { path: "/products/dolthub/api/v1alpha1/releases", title: "Releases" },
+  { path: "/products/dolthub/api/v1alpha1/tags", title: "Tags" },
+  { path: "/products/dolthub/api/v1alpha1/uploads", title: "File Uploads" },
+  { path: "/products/dolthub/api/v1alpha1/jobs", title: "Jobs" },
+  // Independent APIs — separate surfaces, not part of v1alpha1.
   { path: "/products/dolthub/api/csv", title: "CSV" },
-  { path: "/products/dolthub/api/database", title: "Database" },
   { path: "/products/dolthub/api/hooks", title: "Hooks" },
-  { path: "/products/dolthub/api/user", title: "User" },
+  // Legacy stub kept so old deep links like /api/database#create-pull-request
+  // still anchor — page is not in nav.
+  { path: "/products/dolthub/api/database", title: "Database (legacy)" },
   {
     path: "/products/dolthub/continuous-integration",
     title: "Continuous Integration",

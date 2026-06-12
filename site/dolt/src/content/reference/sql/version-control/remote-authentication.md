@@ -47,7 +47,7 @@ talking to:
 
 - **DoltHub** — your DoltHub username and an account password (or an API
   token configured to act as the password). See
-  [API authentication](/products/dolthub/api/authentication) for generating
+  [API authentication](/products/dolthub/api/v1alpha1/authentication) for generating
   tokens.
 - **DoltLab** — your DoltLab username and account password.
 - **Hosted Dolt** — the deployment's admin user / password, or any SQL user

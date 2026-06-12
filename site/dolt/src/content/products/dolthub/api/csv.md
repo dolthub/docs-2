@@ -3,11 +3,11 @@ title: "CSV"
 description: Bulk CSV export and import endpoints.
 ---
 
+# CSV
+
 DoltHub provides a CSV API for fetching table data as CSVs. You can request a CSV for an individual table or a zip of all table CSVs at a specified commit or branch.
 
-> **Note**
-Please make sure to send your requests to `https://www.dolthub.com` instead of `https://dolthub.com`.
-
+> **Note:** Please make sure to send your requests to `https://www.dolthub.com` instead of `https://dolthub.com`.
 
 #### Example
 
@@ -59,7 +59,7 @@ with open(local_file, 'wb') as file:
 
 #### Authentication
 
-API tokens can be used to authenticate calls to the CSV API over Basic [Authentication](authentication). This is useful for downloading data from private databases.
+API tokens can be used to authenticate calls to the CSV API over Basic [Authentication](/products/dolthub/api/v1alpha1/authentication). This is useful for downloading data from private databases.
 
 You can use the token in the header when downloading CSVs from a private database.
 

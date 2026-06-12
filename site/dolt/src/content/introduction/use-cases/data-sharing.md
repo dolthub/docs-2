@@ -33,7 +33,7 @@ Dolt replaces exchanging flat data files like CSVs via email, FTP servers, or ot
 
 ## External APIs
 
-Dolt is ideal for sharing data that does not have an API. But even for data with an API, Dolt is often more convenient. With Dolt, you get all the data and its history. With APIs you often have to assemble the data with multiple API calls. With APIs, the data can change out from under you, whereas with Dolt you can read a version of the data until you are ready to upgrade. DoltHub ships with a [SQL API](/products/dolthub/api/sql) so you can choose the data sharing solution that is right for your use case.
+Dolt is ideal for sharing data that does not have an API. But even for data with an API, Dolt is often more convenient. With Dolt, you get all the data and its history. With APIs you often have to assemble the data with multiple API calls. With APIs, the data can change out from under you, whereas with Dolt you can read a version of the data until you are ready to upgrade. DoltHub ships with a [SQL API](/products/dolthub/api/v1alpha1/sql) so you can choose the data sharing solution that is right for your use case.
 
 ## Companies Doing This
 
