@@ -37,7 +37,7 @@
           },
           {
             "name": "q",
-            "in": "q",
+            "in": "query",
             "description": "The SQL query to execute.",
             "required": false,
             "schema": {
@@ -79,7 +79,7 @@
                       "description": "Commit ref that the query is executed against",
                       "example": "main"
                     },
-                    "sql_query:": {
+                    "sql_query": {
                       "type": "string",
                       "description": "SQL query that was executed.",
                       "example": "SHOW TABLES"
@@ -149,7 +149,7 @@
                       "type": "string",
                       "example": "main"
                     },
-                    "sql_query:": {
+                    "sql_query": {
                       "type": "string",
                       "example": "invalid query"
                     }
@@ -202,7 +202,7 @@
           },
           {
             "name": "q",
-            "in": "q",
+            "in": "query",
             "description": "The SQL query to execute.",
             "required": false,
             "schema": {
@@ -244,7 +244,7 @@
                       "description": "Commit ref that the query is executed against",
                       "example": "newbranch"
                     },
-                    "sql_query:": {
+                    "sql_query": {
                       "type": "string",
                       "description": "SQL query that was executed.",
                       "example": "SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'"
@@ -314,7 +314,7 @@
                       "type": "string",
                       "example": "newbranch"
                     },
-                    "sql_query:": {
+                    "sql_query": {
                       "type": "string",
                       "example": "invalid query"
                     }

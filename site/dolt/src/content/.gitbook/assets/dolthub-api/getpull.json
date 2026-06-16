@@ -76,12 +76,12 @@
                       "description": "Pull request ID",
                       "example":"1"
                     },
-                    "title:": {
+                    "title": {
                       "type": "string",
                       "description": "Title of the pull request",
                       "example":"Added new data"
                     },
-                    "description:": {
+                    "description": {
                       "type": "string",
                       "description": "Description of the pull request",
                       "example":"Added missing museums, sourced from museums.com"

@@ -38,9 +38,9 @@ headers = {
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
 <tr><td><code>description</code></td><td>string</td><td>No</td><td>A description of the database.</td></tr>
-<tr><td><code>ownerName</code></td><td>string</td><td>No</td><td>The name of the owner of the database.</td></tr>
-<tr><td><code>repoName</code></td><td>string</td><td>No</td><td>The name of the repository for the database.</td></tr>
-<tr><td><code>visibility</code></td><td>string</td><td>No</td><td>The visibility of the database (public or private).</td></tr>
+<tr><td><code>ownerName</code></td><td>string</td><td>Yes</td><td>The name of the owner of the database.</td></tr>
+<tr><td><code>repoName</code></td><td>string</td><td>Yes</td><td>The name of the repository for the database.</td></tr>
+<tr><td><code>visibility</code></td><td>string</td><td>Yes</td><td>The visibility of the database (public or private).</td></tr>
 </tbody></table>
 </div>
 <div class="api-section">

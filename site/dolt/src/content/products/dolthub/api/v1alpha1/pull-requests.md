@@ -337,9 +337,6 @@ headers = {
 <tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
 <tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
 <tr><td><code>pageToken</code></td><td>query</td><td>string</td><td>No</td><td>The pageToken to get the next page of results <em>Example: <code class="api-example">AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw</code></em></td></tr>
-<tr><td><code>filterByState</code></td><td>query</td><td>string</td><td>No</td><td>Filter pulls by state, can be Open, Closed, or Merged. <em>Example: <code class="api-example">Open</code></em></td></tr>
-<tr><td><code>filterByReviewStatus</code></td><td>query</td><td>string</td><td>No</td><td>Filter pulls by review status, can be Approved, AssignedReviewer, Rejected or Reviewed <em>Example: <code class="api-example">Approved</code></em></td></tr>
-<tr><td><code>query</code></td><td>query</td><td>string</td><td>No</td><td>Search by pull request title or author name. <em>Example: <code class="api-example">test</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">

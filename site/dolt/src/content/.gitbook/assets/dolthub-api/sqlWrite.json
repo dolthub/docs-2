@@ -122,12 +122,12 @@
                       "description": "Branch the query is executed on",
                       "example": "main"
                     },
-                    "query:": {
+                    "query": {
                       "type": "string",
                       "description": "SQL query that was executed.",
                       "example": "UPDATE player_season_stat_totals SET player_id=714287 WHERE player_id=15404617"
                     },
-                    "operation_name:": {
+                    "operation_name": {
                       "type": "string",
                       "description": "Operation name that can be used to poll for the query result.",
                       "example": "operations/72abb56b-d478-43ae-9a2d-c9602184c7ab"
@@ -170,12 +170,12 @@
                       "description": "Branch the query is executed on",
                       "example": "main"
                     },
-                    "query:": {
+                    "query": {
                       "type": "string",
                       "description": "SQL query that was executed.",
                       "example": "UPDATE player_season_stat_totals SET player_id=714287 WHERE player_id=15404617"
                     },
-                    "operation_name:": {
+                    "operation_name": {
                       "type": "string",
                       "description": "Operation name that can be used to poll for the query result.",
                       "example": ""
