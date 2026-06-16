@@ -462,6 +462,36 @@ const markdownAlternate =
     color: #721c24;
   }
 
+  /* Per-response body block (sample JSON + fields table). Indented under
+     the status-code line, so each response's shape sits visually beneath
+     its code. */
+  .docs-main :global(.api-response-body) {
+    margin: 0.25rem 0 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .docs-main :global(.api-response-body p) {
+    margin: 0.25rem 0;
+    color: #555;
+  }
+
+  .docs-main :global(.api-response-example) {
+    margin: 0.25rem 0 0.5rem 0;
+    padding: 0.5rem 0.75rem;
+    background: #f6f8fa;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .docs-main :global(.api-response-example code) {
+    background: transparent;
+    padding: 0;
+    font-family: "Space Mono", monospace;
+    white-space: pre;
+  }
+
   .bottomOuter {
     @apply w-full overflow-hidden bg-space-500;
   }
@@ -1237,6 +1267,12 @@ const markdownAlternate =
   html.dark .docs-main .api-endpoint-header {
     background: #21262d;
     border-bottom-color: #30363d;
+  }
+  html.dark .docs-main .api-response-body p {
+    color: rgba(230, 237, 243, 0.7);
+  }
+  html.dark .docs-main .api-response-example {
+    background: #0d1117;
   }
 
   /* Inline code: the light #f1f3f8 swatch would show light text on a light

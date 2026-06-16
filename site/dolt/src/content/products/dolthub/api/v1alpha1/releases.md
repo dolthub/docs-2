@@ -56,7 +56,59 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "release_tag": "v1",
+  "release_description": "First version of the database",
+  "release_commit_sha": "1234567890",
+  "release_title": "my-release-v1",
+  "release_created_at": "2021-01-01T00:00:00Z",
+  "release_updated_at": "2021-01-01T00:00:00Z"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the create branch operation</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>release_tag</code></td><td>string</td><td>Name of the tag</td></tr>
+<tr><td><code>release_description</code></td><td>string</td><td>Description of the release</td></tr>
+<tr><td><code>release_commit_sha</code></td><td>string</td><td>Commit SHA of the release</td></tr>
+<tr><td><code>release_title</code></td><td>string</td><td>Title of the release</td></tr>
+<tr><td><code>release_created_at</code></td><td>string</td><td>Created at of the release</td></tr>
+<tr><td><code>release_updated_at</code></td><td>string</td><td>Updated at of the release</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error creating a release.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "release_tag": "v1",
+  "release_description": "First version of the database",
+  "release_commit_sha": "1234567890",
+  "release_title": "my-release-v1"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>release_tag</code></td><td>string</td><td>Name of the tag</td></tr>
+<tr><td><code>release_description</code></td><td>string</td><td>Description of the release</td></tr>
+<tr><td><code>release_commit_sha</code></td><td>string</td><td>Commit SHA of the release</td></tr>
+<tr><td><code>release_title</code></td><td>string</td><td>Title of the release</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -94,7 +146,52 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "next_page_token": "1234567890",
+  "releases": [
+    {
+      "release_title": "my-release-v1",
+      "release_tag": "v1",
+      "release_commit_sha": "1234567890",
+      "release_description": "First version of the database",
+      "release_created_at": "2023-03-31T18:00:00Z",
+      "release_updated_at": "2023-03-31T18:00:00Z"
+    }
+  ]
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>next_page_token</code></td><td>string</td><td>Next page token</td></tr>
+<tr><td><code>releases</code></td><td>array&lt;object&gt;</td><td>List of releases</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error creating a release.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 

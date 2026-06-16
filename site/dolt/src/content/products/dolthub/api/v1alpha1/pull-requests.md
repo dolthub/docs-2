@@ -59,7 +59,65 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Pull request created successfully.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "title": "LACMA data",
+  "description": "Records from the Los Angeles County of Museum.",
+  "from_owner_name": "liuliu",
+  "from_repository_name": "museum-collections",
+  "from_branch_name": "lacma",
+  "to_owner_name": "dolthub",
+  "to_repository_name": "museum-collections",
+  "to_branch_name": "main",
+  "pull_id": "66"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>title</code></td><td>string</td><td>The title of the pull request.</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>The description of the pull request.</td></tr>
+<tr><td><code>from_owner_name</code></td><td>string</td><td>The name of the owner of the source branch.</td></tr>
+<tr><td><code>from_repository_name</code></td><td>string</td><td>The name of the database containing the source branch.</td></tr>
+<tr><td><code>from_branch_name</code></td><td>string</td><td>The name of the source branch.</td></tr>
+<tr><td><code>to_owner_name</code></td><td>string</td><td>The name of the owner of the destination branch.</td></tr>
+<tr><td><code>to_repository_name</code></td><td>string</td><td>The name of the database containing the destination branch.</td></tr>
+<tr><td><code>to_branch_name</code></td><td>string</td><td>The name of the destination branch.</td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td>The id of the created pull request.</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error creating a pull request.",
+  "title": "LACMA data",
+  "description": "Records from the Los Angeles County of Museum.",
+  "from_owner_name": "liuliu",
+  "from_repository_name": "museum-collections",
+  "from_branch_name": "lacma",
+  "to_owner_name": "dolthub",
+  "to_repository_name": "museum-collections",
+  "to_branch_name": "main"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>title</code></td><td>string</td><td>The title of the pull request.</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>The description of the pull request.</td></tr>
+<tr><td><code>from_owner_name</code></td><td>string</td><td>The name of the owner of the source branch.</td></tr>
+<tr><td><code>from_repository_name</code></td><td>string</td><td>The name of the database containing the source branch.</td></tr>
+<tr><td><code>from_branch_name</code></td><td>string</td><td>The name of the source branch.</td></tr>
+<tr><td><code>to_owner_name</code></td><td>string</td><td>The name of the owner of the destination branch.</td></tr>
+<tr><td><code>to_repository_name</code></td><td>string</td><td>The name of the database containing the destination branch.</td></tr>
+<tr><td><code>to_branch_name</code></td><td>string</td><td>The name of the destination branch.</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -97,7 +155,65 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pull_id": "1",
+  "title:": "Added new data",
+  "description:": "Added missing museums, sourced from museums.com",
+  "state": "merged",
+  "from_branch_owner": "liuliu",
+  "from_branch_database": "museum-collections",
+  "from_branch": "feature",
+  "to_branch_owner": "dolthub",
+  "to_branch_database": "museum-collections",
+  "to_branch": "main",
+  "created_at": "2023-07-01T18:00:00Z",
+  "author": "liuliu"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td>Pull request ID</td></tr>
+<tr><td><code>title:</code></td><td>string</td><td>Title of the pull request</td></tr>
+<tr><td><code>description:</code></td><td>string</td><td>Description of the pull request</td></tr>
+<tr><td><code>state</code></td><td>string</td><td>State of the pull request</td></tr>
+<tr><td><code>from_branch_owner</code></td><td>string</td><td>Owner of database of the source branch.</td></tr>
+<tr><td><code>from_branch_database</code></td><td>string</td><td>Database name of source branch.</td></tr>
+<tr><td><code>from_branch</code></td><td>string</td><td>Name of the source branch.</td></tr>
+<tr><td><code>to_branch_owner</code></td><td>string</td><td>Owner of database of the destination branch.</td></tr>
+<tr><td><code>to_branch_database</code></td><td>string</td><td>Database name of destination branch.</td></tr>
+<tr><td><code>to_branch</code></td><td>string</td><td>Name of the destination branch.</td></tr>
+<tr><td><code>created_at</code></td><td>string</td><td>Time at which the pull request was created</td></tr>
+<tr><td><code>author</code></td><td>string</td><td>Author of the pull request</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error getting a pull request.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pull_id": "1"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -146,7 +262,49 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pull_id": "1",
+  "title": "Added new data",
+  "description": "Added new data from LACMA museum.",
+  "state": "closed"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td>Updated pull request ID</td></tr>
+<tr><td><code>title</code></td><td>string</td><td>Title of the pull request after update</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>Description of the pull request after update</td></tr>
+<tr><td><code>state</code></td><td>string</td><td>State of the pull request after update</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error updating the pull request.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pull_id": "1"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -187,7 +345,52 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pulls": [
+    {
+      "pull_id": "1",
+      "title:": "Added new data",
+      "description:": "Added missing museums, sourced from museums.com",
+      "state": "merged",
+      "created_at": "2023-07-01T18:00:00Z",
+      "creator": "liuliu"
+    }
+  ],
+  "next_page_token": "AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>pulls</code></td><td>array&lt;object&gt;</td><td>List of pull requests</td></tr>
+<tr><td><code>next_page_token</code></td><td>string</td><td>page token for the next page of results</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error getting pull request list.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -233,7 +436,47 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "repository_owner": "dolthub",
+  "repository_name": "museum-collections",
+  "pull_id": "66",
+  "comment": "The pull request looks good!"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request</td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td>Pull request ID</td></tr>
+<tr><td><code>comment</code></td><td>string</td><td>Comment added to the pull request</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error merging a pull request.",
+  "repository_owner": "dolthub",
+  "repository_name": "museum-collections",
+  "pull_id": "66",
+  "comment": "The pull request looks good!"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td>Pull request ID</td></tr>
+<tr><td><code>comment</code></td><td>string</td><td>Comment added to the pull request</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -275,7 +518,47 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> The pull request was merged successfully.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pull_id": "66",
+  "operation_name": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12",
+  "user_operation_name": "users/liuliu/userOperations/5e4834c9-375d-4bbd-bdaf-09eb0734127c"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td></td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td>The job id that is performing the merge.</td></tr>
+<tr><td><code>user_operation_name</code></td><td>string</td><td>The operation id that is associated to the merge job. It corresponds to the 'operation_name' field returned in the response of the list operations API.</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error merging a pull request.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pull_id": "66"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -304,7 +587,45 @@ Then use `GET` to poll the operation to check if the merge operation is done.
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> The status of the merge operation</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "operation_name": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12",
+  "job_created": true,
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pull_id": "66",
+  "job_status": "In Progress"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>The status of the operation, Success if the merge was successful</td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td>The operation name</td></tr>
+<tr><td><code>job_created</code></td><td>boolean</td><td>True if the job is created, False otherwise</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>The owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>The name of the database</td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td>The ID of the pull request</td></tr>
+<tr><td><code>job_status</code></td><td>string</td><td>The status of the job, In Progress if the job is still running, Completed if the job is done, Pending if the job is waiting to be run</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error polling an operation status.",
+  "operation_name": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
