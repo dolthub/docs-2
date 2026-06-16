@@ -53,7 +53,6 @@ Browse the per-resource pages in the sidebar, or jump straight to an endpoint fr
 | **POST** | `/{owner}/{database}/pulls` | [Create a new pull request](/products/dolthub/api/v1alpha1/pull-requests#create-pull-request) |
 | **GET** | `/{owner}/{database}/pulls/{pull_id}` | [Get pull request by ID](/products/dolthub/api/v1alpha1/pull-requests#get-pull-request-details) |
 | **PATCH** | `/{owner}/{database}/pulls/{pull_id}` | [Update Pull Request](/products/dolthub/api/v1alpha1/pull-requests#update-a-pull-request) |
-| **GET** | `/{owner}/{database}/pulls` | [List pull requests of a database](/products/dolthub/api/v1alpha1/pull-requests#list-pull-requests) |
 | **POST** | `/{owner}/{database}/pulls/{pull_id}/comments` | [Add comment to pull request](/products/dolthub/api/v1alpha1/pull-requests#create-a-pull-request-comment) |
 | **POST** | `/{owner}/{database}/pulls/{pull_id}/merge` | [Merge a pull request](/products/dolthub/api/v1alpha1/pull-requests#merge-pull-request) |
 | **GET** | `/{owner}/{database}/pulls/{pull_id}/merge` | [Check merge operation status](/products/dolthub/api/v1alpha1/pull-requests#merge-pull-request) |

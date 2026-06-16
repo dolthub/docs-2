@@ -27,7 +27,7 @@ DoltHub provides an API for accessing Dolt databases via web requests. A Dolt da
 <tbody>
 <tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
 <tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">ip-to-country</code></em></td></tr>
-<tr><td><code>q</code></td><td>q</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code class="api-example">SHOW TABLES</code></em></td></tr>
+<tr><td><code>q</code></td><td>query</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code class="api-example">SHOW TABLES</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
@@ -79,7 +79,7 @@ This shows our database metadata as a dictionary:
 <tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
 <tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">ip-to-country</code></em></td></tr>
 <tr><td><code>ref</code></td><td>path</td><td>string</td><td>Yes</td><td>The database ref to execute the query against. <em>Example: <code class="api-example">newbranch</code></em></td></tr>
-<tr><td><code>q</code></td><td>q</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code class="api-example">SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'</code></em></td></tr>
+<tr><td><code>q</code></td><td>query</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code class="api-example">SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
