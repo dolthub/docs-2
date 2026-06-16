@@ -46,7 +46,47 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Database created successfully.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "description": "Records from museums around the world.",
+  "repository_owner": "dolthub",
+  "repository_name": "museum-collections",
+  "visibility": "public"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>description</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>visibility</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error creating a database.",
+  "description": "Records from museums around the world.",
+  "repository_owner": "dolthub",
+  "repository_name": "museum-collections",
+  "visibility": "public"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>description</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>visibility</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -89,7 +129,45 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "parent_owner": "dolthub",
+  "parent_database": "museum-collections",
+  "forked_owner": "myusername",
+  "operation_name": "operations/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>parent_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>parent_database</code></td><td>string</td><td></td></tr>
+<tr><td><code>forked_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error creating a database.",
+  "parent_owner": "dolthub",
+  "parent_database": "museum-collections",
+  "forked_owner": "myusername"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>parent_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>parent_database</code></td><td>string</td><td></td></tr>
+<tr><td><code>forked_owner</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -115,7 +193,41 @@ Then use `GET` to poll the operation to check if the fork operation is done.
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> The status of the fork operation</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "done": true,
+  "operation_name": "operations/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12",
+  "database_owner": "myusername",
+  "database_name": "museum-collections"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>The status of the operation, Success if the fork creation was successful</td></tr>
+<tr><td><code>done</code></td><td>boolean</td><td>True if the fork operation is done, false otherwise</td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td>The operation name</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>The owner of the newly forked database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>The name of the newly forked database</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error polling an operation status.",
+  "operation_name": "operations/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -150,7 +262,56 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "forks": [
+    {
+      "database_owner": "anotherOrg",
+      "database_name": "museum-collections"
+    }
+  ],
+  "parent_owner": "",
+  "parent_database_name": "",
+  "network_root_owner": "dolthub",
+  "network_root_database_name": "museum-collections",
+  "fork_network_count": 3
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request.</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database.</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Name of the database.</td></tr>
+<tr><td><code>forks</code></td><td>array&lt;object&gt;</td><td>List of forks within the fork network of this database.</td></tr>
+<tr><td><code>parent_owner</code></td><td>string</td><td>Owner of the parent database, empty if this is the root.</td></tr>
+<tr><td><code>parent_database_name</code></td><td>string</td><td>Name of the parent database, empty if this is the root.</td></tr>
+<tr><td><code>network_root_owner</code></td><td>string</td><td>Owner of the root database in the fork network.</td></tr>
+<tr><td><code>network_root_database_name</code></td><td>string</td><td>Name of the root database in the fork network.</td></tr>
+<tr><td><code>fork_network_count</code></td><td>integer</td><td>Number of forks in the fork network (excluding the root).</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error getting the forks list.",
+  "database_owner": "dolthub",
+  "database_name": "with-archives"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database.</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Name of the database.</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 

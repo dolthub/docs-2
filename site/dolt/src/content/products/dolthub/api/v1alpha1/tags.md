@@ -55,7 +55,55 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "tag_name": "v1",
+  "tag_description": "First version of the database",
+  "revision_type": "branch",
+  "revision_name": "main"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the create branch operation</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>tag_name</code></td><td>string</td><td>Name of the tag</td></tr>
+<tr><td><code>tag_description</code></td><td>string</td><td>Description of the tag</td></tr>
+<tr><td><code>revision_type</code></td><td>string</td><td>Type of the revision</td></tr>
+<tr><td><code>revision_name</code></td><td>string</td><td>Name of the revision</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error creating a tag.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "tag_name": "v1",
+  "tag_description": "First version of the database",
+  "revision_type": "branch",
+  "revision_name": "main"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>tag_name</code></td><td>string</td><td>Name of the tag</td></tr>
+<tr><td><code>tag_description</code></td><td>string</td><td>Description of the tag</td></tr>
+<tr><td><code>revision_type</code></td><td>string</td><td>Type of the revision</td></tr>
+<tr><td><code>revision_name</code></td><td>string</td><td>Name of the revision</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -92,7 +140,47 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "tags": [
+    {
+      "tag_name": "v1",
+      "tag_description": "First version of the database",
+      "tagged_at": "2023-03-31T18:00:00Z"
+    }
+  ]
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>tags</code></td><td>array&lt;object&gt;</td><td>List of tags</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error creating a tag.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Database name</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
