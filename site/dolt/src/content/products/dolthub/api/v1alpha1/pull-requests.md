@@ -163,7 +163,30 @@ headers = {
 }
 ```
 
-> Failed to render API spec: Expecting value: line 49 column 9 (char 1484)
+<div class="api-endpoint">
+<div class="api-endpoint-header">
+<span class="api-method" style="background:#29E3C1">GET</span>
+<code class="api-path">/{owner}/{database}/pulls</code>
+</div>
+<p class="api-summary">List pull requests of a database</p>
+<p class="api-description">List pull requests</p>
+<div class="api-url"><strong>URL</strong> <code>https://www.dolthub.com/api/v1alpha1/{owner}/{database}/pulls</code></div>
+<div class="api-section">
+<h5>Parameters</h5>
+<table class="api-params">
+<thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
+<tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">museum-collections</code></em></td></tr>
+<tr><td><code>pageToken</code></td><td>query</td><td>string</td><td>No</td><td>The pageToken to get the next page of results <em>Example: <code class="api-example">AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw</code></em></td></tr>
+</tbody></table>
+</div>
+<div class="api-section">
+<h5>Responses</h5>
+<div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+</div>
+</div>
 
 
 ## Create a pull request comment
