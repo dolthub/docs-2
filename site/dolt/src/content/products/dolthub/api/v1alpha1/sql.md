@@ -27,13 +27,68 @@ DoltHub provides an API for accessing Dolt databases via web requests. A Dolt da
 <tbody>
 <tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
 <tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">ip-to-country</code></em></td></tr>
-<tr><td><code>q</code></td><td>q</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code class="api-example">SHOW TABLES</code></em></td></tr>
+<tr><td><code>q</code></td><td>query</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code class="api-example">SHOW TABLES</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "query_execution_status": "Success",
+  "query_execution_message": "",
+  "repository_owner": "dolthub",
+  "repository_name": "ip-to-country",
+  "commit_ref": "main",
+  "sql_query:": "SHOW TABLES",
+  "schema": [
+    {
+      "columnName": "Tables_in_dolt",
+      "columnType": "longtext"
+    }
+  ],
+  "rows": [
+    {
+      "[columnName]": "IPv4ToCountry"
+    }
+  ]
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>query_execution_status</code></td><td>string</td><td>Query execution status</td></tr>
+<tr><td><code>query_execution_message</code></td><td>string</td><td>Additional information about the query execution</td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>commit_ref</code></td><td>string</td><td>Commit ref that the query is executed against</td></tr>
+<tr><td><code>sql_query:</code></td><td>string</td><td>SQL query that was executed.</td></tr>
+<tr><td><code>schema</code></td><td>array&lt;object&gt;</td><td>Schema of the SQL table</td></tr>
+<tr><td><code>rows</code></td><td>array&lt;object&gt;</td><td>Rows returned by the query</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "query_execution_status": "Error",
+  "query_execution_message": "query error: Error parsing SQL",
+  "repository_owner": "dolthub",
+  "repository_name": "ip-to-country",
+  "commit_ref": "main",
+  "sql_query:": "invalid query"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>query_execution_status</code></td><td>string</td><td></td></tr>
+<tr><td><code>query_execution_message</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>commit_ref</code></td><td>string</td><td></td></tr>
+<tr><td><code>sql_query:</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -79,13 +134,68 @@ This shows our database metadata as a dictionary:
 <tr><td><code>owner</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database owner. <em>Example: <code class="api-example">dolthub</code></em></td></tr>
 <tr><td><code>database</code></td><td>path</td><td>string</td><td>Yes</td><td>The name of the database. <em>Example: <code class="api-example">ip-to-country</code></em></td></tr>
 <tr><td><code>ref</code></td><td>path</td><td>string</td><td>Yes</td><td>The database ref to execute the query against. <em>Example: <code class="api-example">newbranch</code></em></td></tr>
-<tr><td><code>q</code></td><td>q</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code class="api-example">SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'</code></em></td></tr>
+<tr><td><code>q</code></td><td>query</td><td>string</td><td>No</td><td>The SQL query to execute. <em>Example: <code class="api-example">SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'</code></em></td></tr>
 </tbody></table>
 </div>
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "query_execution_status": "Success",
+  "query_execution_message": "",
+  "repository_owner": "dolthub",
+  "repository_name": "ip-to-country",
+  "commit_ref": "newbranch",
+  "sql_query:": "SELECT * FROM IPv4ToCountry WHERE CountryCode2Letter = 'AU'",
+  "schema": [
+    {
+      "columnName": "IPFrom",
+      "columnType": "Int"
+    }
+  ],
+  "rows": [
+    {
+      "[columnName]": "16777216"
+    }
+  ]
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>query_execution_status</code></td><td>string</td><td>Query execution status</td></tr>
+<tr><td><code>query_execution_message</code></td><td>string</td><td>Additional information about the query execution</td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>commit_ref</code></td><td>string</td><td>Commit ref that the query is executed against</td></tr>
+<tr><td><code>sql_query:</code></td><td>string</td><td>SQL query that was executed.</td></tr>
+<tr><td><code>schema</code></td><td>array&lt;object&gt;</td><td>Schema of the SQL table</td></tr>
+<tr><td><code>rows</code></td><td>array&lt;object&gt;</td><td>Rows returned by the query</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "query_execution_status": "Error",
+  "query_execution_message": "query error: Error parsing SQL",
+  "repository_owner": "dolthub",
+  "repository_name": "ip-to-country",
+  "commit_ref": "newbranch",
+  "sql_query:": "invalid query"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>query_execution_status</code></td><td>string</td><td></td></tr>
+<tr><td><code>query_execution_message</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>commit_ref</code></td><td>string</td><td></td></tr>
+<tr><td><code>sql_query:</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -179,7 +289,57 @@ We can use our [SHAQ database](https://www.dolthub.com/repositories/dolthub/SHAQ
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "query_execution_status": "Success",
+  "query_execution_message": "Operation created. Poll the operation endpoint to see the execution status of this query.",
+  "repository_owner": "dolthub",
+  "repository_name": "SHAQ",
+  "from_branch_name": "main",
+  "to_branch_name": "main",
+  "query:": "UPDATE player_season_stat_totals SET player_id=714287 WHERE player_id=15404617",
+  "operation_name:": "operations/72abb56b-d478-43ae-9a2d-c9602184c7ab"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>query_execution_status</code></td><td>string</td><td>Query execution status</td></tr>
+<tr><td><code>query_execution_message</code></td><td>string</td><td>Additional information about the query execution</td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td>Owner of the database</td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td>Database name</td></tr>
+<tr><td><code>from_branch_name</code></td><td>string</td><td>Base branch</td></tr>
+<tr><td><code>to_branch_name</code></td><td>string</td><td>Branch the query is executed on</td></tr>
+<tr><td><code>query:</code></td><td>string</td><td>SQL query that was executed.</td></tr>
+<tr><td><code>operation_name:</code></td><td>string</td><td>Operation name that can be used to poll for the query result.</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "query_execution_status": "Error",
+  "query_execution_message": "query error: Error parsing SQL",
+  "repository_owner": "dolthub",
+  "repository_name": "SHAQ",
+  "from_branch_name": "main",
+  "to_branch_name": "main",
+  "query:": "UPDATE player_season_stat_totals SET player_id=714287 WHERE player_id=15404617",
+  "operation_name:": ""
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>query_execution_status</code></td><td>string</td><td></td></tr>
+<tr><td><code>query_execution_message</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>repository_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>from_branch_name</code></td><td>string</td><td>Base branch</td></tr>
+<tr><td><code>to_branch_name</code></td><td>string</td><td>Branch the query is executed on</td></tr>
+<tr><td><code>query:</code></td><td>string</td><td>SQL query that was executed.</td></tr>
+<tr><td><code>operation_name:</code></td><td>string</td><td>Operation name that can be used to poll for the query result.</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -243,7 +403,44 @@ The yielded JSON results include an `operation_name`.
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "_id": "operations/72abb56b-d478-43ae-9a2d-c9602184c7ab",
+  "done": true,
+  "res_details": {
+    "query_execution_status": "Success",
+    "query_execution_message": "Query OK, 2 rows affected. Rows matched: 2  Changed: 2  Warnings: 0.",
+    "owner_name": "dolthub",
+    "repository_name": "SHAQ",
+    "from_commit_id": "518ue176ec13qf563e87uoerkqqepood",
+    "to_commit_id": "5sp7i0bov6itma2u04dpk15ui24lrigp"
+  }
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>_id</code></td><td>string</td><td>The operation name</td></tr>
+<tr><td><code>done</code></td><td>boolean</td><td>Whether or not the operation has completed</td></tr>
+<tr><td><code>res_details</code></td><td>object</td><td>Additional information about the completed SQL write operation</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "query_execution_status": "Error",
+  "query_execution_message": "query error: Error parsing SQL",
+  "operation_name": "operations/72abb56b-d478-43ae-9a2d-c9602184c7ab"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>query_execution_status</code></td><td>string</td><td></td></tr>
+<tr><td><code>query_execution_message</code></td><td>string</td><td></td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 

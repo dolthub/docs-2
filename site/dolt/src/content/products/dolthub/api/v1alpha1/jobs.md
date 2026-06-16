@@ -50,7 +50,51 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "operations": [
+    {
+      "operation_name": "users/liuliu/userOperations/5e4834c9-375d-4bbd-bdaf-09eb0734127c",
+      "creator": "liuliu",
+      "description": "Run query CREATE TABLE tablename (\\n  pk INT,\\n  col1 VARCHAR(255),\\n  PRIMARY KEY (pk)\\n);",
+      "operation_type": "SqlWrite",
+      "operation_status": "liuliu",
+      "error": "table with name tablename already exists",
+      "metadata": "{'from_branch_name':'main','from_repo_name':'api-db','from_repo_owner':'liuliu','sql_query':'CREATE TABLE tablename (\\n  pk INT,\\n  col1 VARCHAR(255),\\n  PRIMARY KEY (pk)\\n);','to_branch_name':'main','to_repo_name':'api-db','to_repo_owner':'liuliu'}",
+      "created_at": "2024-01-09T22:19:49.000Z",
+      "updated_at": "2024-01-09T22:19:50.000Z"
+    }
+  ],
+  "next_page_token": "AWE2Nm9uMWQ26pQQpqLNLXu7a60647lpiZoDFrf5WDGHo68XNC-rfr068rymbEdUHCXidRxx7_fwGBMSzQi6C_D50NcJFXm0BwRnGmmHEL4T4xxkWoX3sL5mKD-PuMRuxeHPsR0NB5Rzi70jGzblVlfBTIHPJ20c630pNLrI_spxH0tYTzMnQ4uPpr3ub9P50FEH9i4Au0gUkmvj8NUibbGWi-R1AJYplEPr="
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request.</td></tr>
+<tr><td><code>operations</code></td><td>array&lt;object&gt;</td><td>List of operations</td></tr>
+<tr><td><code>next_page_token</code></td><td>string</td><td>Token for the next page of results</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error getting the operations list.",
+  "username": "liuliu",
+  "operation_type": "SqlWrite"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>username</code></td><td>string</td><td>The name of the user who initiated the operations.</td></tr>
+<tr><td><code>operation_type</code></td><td>string</td><td>Operation type if provided in the query</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -91,7 +135,53 @@ headers = {
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Success</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "jobs": [
+    {
+      "job_id": "repositoryOwners/dolthub/repositories/museum-collections/jobs/aa37149c-61c3-4ce2-b3d8-694d2a152257",
+      "creator": "liuliu",
+      "description": "Merge pull request #9",
+      "job_type": "Merge",
+      "status": "Failed",
+      "created_at": "2024-01-09T22:19:49.000Z",
+      "error": "failed to push to branch"
+    }
+  ],
+  "next_page_token": "AWE2Nm9uMWQ2M84_Q_ajmYOdCDIg_Ac8OuedPyAGoTT3TsBNnTSE29QPb6oJmZdbjYwdFjTwu6_ioVx4nsp3eCPoO5zyATKGsauocvy4onXjoWGfqmatl2dcm-2Ks45NPT0qRPu37HjVcaC0Qj2X5_KHcYI70fzOLn1RogexmtBlf_AtI3os4DntzhZtfp9GFtHiVekppo_26viXiKcjy0DpKay5"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>Status of the request.</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Name of the owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Name of the database</td></tr>
+<tr><td><code>jobs</code></td><td>array&lt;object&gt;</td><td>List of jobs</td></tr>
+<tr><td><code>next_page_token</code></td><td>string</td><td>Token for the next page of results</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error getting the jobs list.",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>Name of the owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>Name of the database</td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 

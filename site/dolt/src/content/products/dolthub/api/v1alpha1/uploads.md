@@ -59,7 +59,51 @@ To upload the file, include two fields in the request body, `file` and `params`,
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> Pull request created successfully.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "branch_name": "main",
+  "table_name": "lacma",
+  "operation_name": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12",
+  "user_operation_name": "users/liuliu/userOperations/5e4834c9-375d-4bbd-bdaf-09eb0734127c"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>branch_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>table_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td>The job id that is performing the upload.</td></tr>
+<tr><td><code>user_operation_name</code></td><td>string</td><td>The operation id that is associated to the upload job. It corresponds to the 'operation_name' field returned in the response of the list operations API.</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Invalid request body",
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "branch_name": "main",
+  "table_name": "lacma"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td></td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>branch_name</code></td><td>string</td><td></td></tr>
+<tr><td><code>table_name</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 
@@ -88,7 +132,45 @@ Then use `GET` to poll the operation to check if the import operation is done.
 <div class="api-section">
 <h5>Responses</h5>
 <div class="api-response"><span class="api-status-success">200</span> The status of the file import operation</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Success",
+  "operation_name": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12",
+  "job_created": true,
+  "database_owner": "dolthub",
+  "database_name": "museum-collections",
+  "pull_id": "66",
+  "job_status": "Completed"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td>The status of the operation, Success if the file import was successful</td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td>The operation name</td></tr>
+<tr><td><code>job_created</code></td><td>boolean</td><td>True if the import job is created, False otherwise</td></tr>
+<tr><td><code>database_owner</code></td><td>string</td><td>The owner of the database</td></tr>
+<tr><td><code>database_name</code></td><td>string</td><td>The name of the database</td></tr>
+<tr><td><code>pull_id</code></td><td>string</td><td>The ID of the pull request that the import job created. This is only present if the import job is completed</td></tr>
+<tr><td><code>job_status</code></td><td>string</td><td>The status of the job, In Progress if the job is still running, Completed if the job is done, Pending if the job is waiting to be run</td></tr>
+</tbody></table>
+</div>
 <div class="api-response"><span class="api-status-error">400</span> Bad request. The request was invalid or could not be processed.</div>
+<div class="api-response-body">
+<p>Body — <code>application/json</code></p>
+<pre class="api-response-example"><code>{
+  "status": "Error",
+  "message": "Error polling an operation status.",
+  "operation_name": "repositoryOwners/dolthub/repositories/museum-collections/jobs/b09a9221-9dcb-4a15-9ca8-a64656946f12"
+}</code></pre>
+<table class="api-params">
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>status</code></td><td>string</td><td></td></tr>
+<tr><td><code>message</code></td><td>string</td><td></td></tr>
+<tr><td><code>operation_name</code></td><td>string</td><td></td></tr>
+</tbody></table>
+</div>
 </div>
 </div>
 

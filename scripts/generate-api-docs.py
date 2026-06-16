@@ -138,11 +138,138 @@ def render_endpoint(spec: dict, path: str, method: str) -> str:
             desc = info.get("description", "")
             code_class = "api-status-success" if str(code).startswith("2") else "api-status-error"
             lines.append(f'<div class="api-response"><span class="{code_class}">{code}</span> {desc}</div>')
+            # Body shape (if the response carries a schema).
+            for ctype, body in info.get("content", {}).items():
+                schema = body.get("schema")
+                if not schema:
+                    continue
+                lines.append('<div class="api-response-body">')
+                lines.append(f'<p>Body — <code>{ctype}</code></p>')
+                example_text = render_example_json(schema)
+                if example_text is not None:
+                    lines.append(
+                        '<pre class="api-response-example"><code>'
+                        + html_escape(example_text)
+                        + '</code></pre>'
+                    )
+                fields_table = render_schema_fields_table(schema)
+                if fields_table:
+                    lines.extend(fields_table)
+                lines.append('</div>')
         lines.append('</div>')
 
     lines.append('</div>')
     lines.append('')
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Response body rendering — turns a JSON-Schema fragment into an example
+# payload and a flat properties table. The example shows the shape; the
+# table gives types and descriptions for each field.
+# ---------------------------------------------------------------------------
+
+
+_SCALAR_DEFAULTS = {
+    "string": "",
+    "integer": 0,
+    "number": 0,
+    "boolean": False,
+}
+
+
+def example_value(schema: dict):
+    """Build a representative example for a schema, preferring explicit
+    `example` fields. Recurses into objects and arrays."""
+    if not isinstance(schema, dict):
+        return None
+    if "example" in schema:
+        return schema["example"]
+    t = schema.get("type")
+    if t == "object" or "properties" in schema:
+        return {
+            name: example_value(prop)
+            for name, prop in schema.get("properties", {}).items()
+        }
+    if t == "array":
+        return [example_value(schema.get("items", {}))]
+    return _SCALAR_DEFAULTS.get(t)
+
+
+def render_example_json(schema: dict):
+    """Return a pretty-printed JSON example for `schema`, or None if the
+    schema yields nothing renderable."""
+    import json as _json
+    value = example_value(schema)
+    if value is None:
+        return None
+    return _json.dumps(value, indent=2)
+
+
+def html_escape(text: str) -> str:
+    return (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+    )
+
+
+def render_schema_fields_table(schema: dict) -> list[str]:
+    """Render the response schema's properties as an <api-params> table.
+    Handles three common shapes:
+      - object with .properties
+      - array of objects (items: { properties })
+      - object that wraps a single array property (e.g. `{ branches: [...] }`)
+    Returns an empty list if the schema doesn't fit any of those."""
+    props, prefix = _collect_renderable_props(schema)
+    if not props:
+        return []
+    required = schema.get("required", [])
+    out = [
+        '<table class="api-params">',
+        '<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>',
+        '<tbody>',
+    ]
+    for name, info in props.items():
+        ptype = info.get("type", "")
+        if ptype == "array":
+            item_type = info.get("items", {}).get("type", "")
+            type_text = f"array&lt;{item_type}&gt;" if item_type else "array"
+        else:
+            type_text = ptype
+        desc = info.get("description", "")
+        out.append(
+            f'<tr><td><code>{prefix}{name}</code></td>'
+            f'<td>{type_text}</td><td>{desc}</td></tr>'
+        )
+    out.append('</tbody></table>')
+    return out
+
+
+def _collect_renderable_props(schema: dict) -> tuple[dict, str]:
+    """Return (properties_dict, name_prefix). For a wrapper object like
+    `{ "branches": { "type": "array", "items": { properties: ... } } }`
+    descend into the array's item properties and prefix names with
+    `branches[].` so the table is informative."""
+    if not isinstance(schema, dict):
+        return ({}, "")
+    if schema.get("type") == "array":
+        items = schema.get("items", {})
+        if items.get("type") == "object" and "properties" in items:
+            return (items["properties"], "")
+        return ({}, "")
+    props = schema.get("properties", {})
+    if not props:
+        return ({}, "")
+    # If the object has exactly one array-of-objects property, descend so
+    # the table shows the actual item shape rather than just `branches: array`.
+    if len(props) == 1:
+        only_name, only_info = next(iter(props.items()))
+        if only_info.get("type") == "array":
+            items = only_info.get("items", {})
+            if items.get("type") == "object" and "properties" in items:
+                return (items["properties"], f"{only_name}[].")
+    return (props, "")
 
 
 def process_file(src_path: str, dest_path: str):
