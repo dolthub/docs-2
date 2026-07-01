@@ -1,0 +1,3251 @@
+# DoltHub Public API v2 — OpenAPI contract.
+#
+# This is the single source of truth for the v2 API (see dolthub-api-v2-plan.md §5.7).
+# TypeScript DTO types, runtime/contract-test JSON Schemas, and the public docs are all
+# generated from this file — never hand-edited downstream.
+#
+# Shared components are built up across phases:
+#   - components.schemas.Problem / ErrorCode  -> 1.c (error model)        [done]
+#   - components.schemas.Envelope / Meta      -> 1.d (success envelope)   [done]
+#   - components.schemas.Operation            -> 4.a (async operation resource) [done]
+# The first real path is GET /api/v2/user (1.t), which also adds the User /
+# EmailAddress resources.
+openapi: 3.1.0
+
+info:
+  title: DoltHub API
+  version: 2.0.0
+  summary: The public REST API for DoltHub databases, branches, commits, and SQL.
+  description: |
+    The DoltHub v2 API is an explicit, versioned, OpenAPI-defined contract. Unlike the
+    legacy `v1alpha1` API it replaces, v2 commits to consistent HTTP semantics, a single
+    error model (RFC 9457 problem details), a uniform success envelope, and a standardized
+    protocol for long-running operations.
+
+    This document is the contract: it is the source of truth for the implementation, the
+    generated client types, and the rendered reference docs. See the stability policy for
+    what "v2" guarantees and how changes are versioned.
+  contact:
+    name: DoltHub Support
+    url: https://www.dolthub.com/contact
+    email: dolt-interest@dolthub.com
+  license:
+    name: DoltHub Terms of Service
+    url: https://www.dolthub.com/terms
+  termsOfService: https://www.dolthub.com/terms
+
+servers:
+  - url: https://www.dolthub.com
+    description: Production
+
+# Default: every operation requires one of the supported credential types. Individual
+# operations may override this (e.g. public reads) once paths are added.
+security:
+  - personalAccessToken: []
+  - oauth2: []
+
+# Operation tags are registered here so renderers (Scalar) group operations consistently.
+# New tags are added as resources land in subsequent phases.
+tags:
+  - name: Database
+    description: DoltHub databases and their metadata.
+  - name: User
+    description: The authenticated user.
+  - name: Operations
+    description: Long-running async operations. Every async mutation returns an OperationRef; poll this resource to track progress.
+
+paths:
+  /api/v2/user:
+    get:
+      operationId: getCurrentUser
+      summary: Get the authenticated user.
+      description: Returns the profile of the user identified by the request's credentials.
+      tags:
+        - User
+      responses:
+        "200":
+          description: The authenticated user's profile.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases:
+    post:
+      operationId: createDatabase
+      summary: Create a database.
+      description: >-
+        Creates a database under the named owner (a user or organization). The caller's
+        credentials must allow creating under that owner — creating for yourself works as
+        long as you authenticate; creating for an organization requires membership with the
+        appropriate role. Returns the new `Database` resource on `201`. If a database with
+        the same `{owner, name}` already exists, the response is `409 Conflict`.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDatabaseRequest"
+      responses:
+        "201":
+          description: The newly-created database.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Database"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}:
+    get:
+      operationId: getDatabase
+      summary: Get a database.
+      description: >-
+        Returns the metadata for the database `{owner}/{database}`. Public databases are readable
+        without authentication; private databases require a credential with access (and return
+        `404` otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      # Optional auth: anonymous callers may read public databases; a token, when supplied, is
+      # honored for private access. The empty `{}` marks authentication as optional.
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      responses:
+        "200":
+          description: The database's metadata.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Database"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/branches:
+    get:
+      operationId: listBranches
+      summary: List branches.
+      description: >-
+        Returns the branches of the database `{owner}/{database}`, ordered by the backend.
+        Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when
+        `next_page_token` is absent or empty there are no further pages. Public databases are
+        readable without authentication; private databases require a credential with access (and
+        return `404` otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      # Optional auth: anonymous callers may read public databases; a token, when supplied, is
+      # honored for private access. The empty `{}` marks authentication as optional.
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+          example: us-jails
+        - $ref: "#/components/parameters/PageToken"
+      responses:
+        "200":
+          description: The database's branches.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Branch"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      operationId: createBranch
+      summary: Create a branch.
+      description: >-
+        Creates a new branch in `{owner}/{database}` pointing at the source revision named
+        by `from`. Authentication required; the caller must have write access. Returns the
+        new `Branch` resource on `201`. A `409 Conflict` comes back if a branch with the
+        same name already exists.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBranchRequest"
+      responses:
+        "201":
+          description: The newly-created branch.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Branch"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/tags:
+    get:
+      operationId: listTags
+      summary: List tags.
+      description: >-
+        Returns the tags of the database `{owner}/{database}`, ordered by the backend.
+        Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when
+        `next_page_token` is absent or empty there are no further pages. Public databases are
+        readable without authentication; private databases require a credential with access (and
+        return `404` otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      # Optional auth: anonymous callers may read public databases; a token, when supplied, is
+      # honored for private access. The empty `{}` marks authentication as optional.
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - $ref: "#/components/parameters/PageToken"
+      responses:
+        "200":
+          description: The database's tags.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Tag"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      operationId: createTag
+      summary: Create a tag.
+      description: >-
+        Creates a new tag in `{owner}/{database}` pointing at the source revision named by
+        `from`. The optional `message` makes the tag annotated; omitted yields a lightweight
+        tag. Returns the new `Tag` resource on `201`. Authentication required; the caller
+        must have write access. A `409 Conflict` comes back if a tag with the same name
+        already exists.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTagRequest"
+      responses:
+        "201":
+          description: The newly-created tag.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Tag"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/forks:
+    get:
+      operationId: listForks
+      summary: List forks.
+      description: >-
+        Returns the databases that have been directly forked from `{owner}/{database}` —
+        immediate children only. Forks-of-forks are not flattened into the list; use
+        `fork_network_count` on the `Database` resource for the transitive total. Topology
+        context (`parent`, `network_root`, total `fork_network_count`) lives on the `Database`
+        resource. Pagination (`page_token` / `meta.next_page_token`) will be added when the
+        backend supports it; until then the full list is returned in one response. Public
+        databases are readable without authentication; private databases require a credential
+        with access (and return `404` otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      # Optional auth: anonymous callers may read public databases; a token, when supplied, is
+      # honored for private access. The empty `{}` marks authentication as optional.
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      responses:
+        "200":
+          description: The database's direct fork children (immediate forks only).
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/DatabaseRef"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/releases:
+    get:
+      operationId: listReleases
+      summary: List releases.
+      description: >-
+        Returns the releases of the database `{owner}/{database}`, ordered by the backend.
+        Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when
+        `next_page_token` is absent or empty there are no further pages. Public databases are
+        readable without authentication; private databases require a credential with access
+        (and return `404` otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - $ref: "#/components/parameters/PageToken"
+      responses:
+        "200":
+          description: The database's releases.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Release"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      operationId: createRelease
+      summary: Create a release.
+      description: >-
+        Creates a release in `{owner}/{database}` pinned to the commit named by `commit_sha`
+        and published under `tag`. When `create_tag_if_not_exists` is true and no tag with
+        that name exists, the backend creates one pointing at the same commit; otherwise the
+        tag must already exist and point at the same commit. Returns the new `Release`
+        resource on `201`. Authentication required; the caller must have write access. A
+        `409 Conflict` comes back if a release with the same tag already exists.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReleaseRequest"
+      responses:
+        "201":
+          description: The newly-created release.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Release"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/sql:
+    get:
+      operationId: runSqlReadQuery
+      summary: Run a read-only SQL query.
+      description: >-
+        Executes a read-only SQL query against the database at the given revision and returns
+        the result rows, the column schema, and the query-execution status. Read queries are
+        not paginated — the full row set comes back in one response, bounded by `limit`
+        (default 1000) and the server-enforced row cap. For larger result sets, refine the
+        query (`LIMIT`/`WHERE`/`SELECT` fewer columns) or use the phase-4 async SQL job.
+
+        SQL-level errors (syntax errors, missing tables, timeouts, row-limit exceeded) come
+        back as `200` with `status: "error" | "timeout" | "row_limit" | "not_workspace"` and a
+        human-readable `message` — they are query-level conditions, not transport-level
+        failures. HTTP `4xx` / `5xx` are reserved for transport-level problems (auth, the
+        database doesn't exist, malformed request).
+
+        Public databases are readable without authentication; private databases require a
+        credential with access (and return `404` otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - name: ref
+          in: query
+          required: true
+          description: >-
+            The branch, tag, or commit hash to query against. A 32-character value using only
+            the characters `0-9a-v` (Dolt's base32 alphabet) is treated as a commit hash;
+            everything else resolves as a branch, tag, or other ref.
+          schema:
+            type: string
+            minLength: 1
+          example: main
+        - name: q
+          in: query
+          required: true
+          description: The SQL query to execute. Read-only — use the phase-4 SQL write endpoint for mutations.
+          schema:
+            type: string
+            minLength: 1
+          example: "SELECT name, year FROM jails LIMIT 10"
+        - name: limit
+          in: query
+          required: false
+          description: >-
+            Maximum number of rows to return (default `1000`). The server enforces an upper
+            cap; refine the query or use the async SQL job for larger result sets.
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "100"
+        - name: timeout_ms
+          in: query
+          required: false
+          description: >-
+            Per-query execution timeout in milliseconds (default `30000`, server-enforced
+            cap `60000`). A query that hits the cap returns `status: "timeout"`.
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "10000"
+      responses:
+        "200":
+          description: The query result. SQL-level errors live in `status` + `message`.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/QueryResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      operationId: runSqlReadQueryPost
+      summary: Run a read-only SQL query (large-query variant).
+      description: >-
+        Identical to `GET /sql` but accepts the query in the request body to avoid the
+        browser/proxy URL-length limit (~4–8 KB) that `?q=` hits for large SQL statements.
+        Use this when the query is too long for a query string; prefer `GET` for short queries
+        (simpler to cache and log). The response shape is identical.
+      tags:
+        - Database
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ref
+                - q
+              properties:
+                ref:
+                  type: string
+                  minLength: 1
+                  description: >-
+                    The branch, tag, or commit hash to query against. A 32-character value using
+                    only the characters `0-9a-v` (Dolt's base32 alphabet) is treated as a commit
+                    hash; everything else resolves as a branch, tag, or other ref.
+                  example: main
+                q:
+                  type: string
+                  minLength: 1
+                  description: The SQL query to execute. Read-only — mutations are rejected.
+                  example: "SELECT name, year FROM jails WHERE state = 'California' LIMIT 10"
+                limit:
+                  type: integer
+                  minimum: 1
+                  description: Maximum number of rows to return (default `1000`).
+                  example: 100
+                timeout_ms:
+                  type: integer
+                  minimum: 1
+                  description: Per-query execution timeout in milliseconds (default `30000`, cap `60000`).
+                  example: 10000
+      responses:
+        "200":
+          description: The query result. SQL-level errors live in `status` + `message`.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/QueryResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/pulls:
+    get:
+      operationId: listPulls
+      summary: List pull requests.
+      description: >-
+        Returns the pull requests for the database `{owner}/{database}`, ordered by the backend.
+        Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when
+        `next_page_token` is absent or empty there are no further pages. Public databases are
+        readable without authentication; private databases require a credential with access
+        (and return `404` otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - $ref: "#/components/parameters/PageToken"
+      responses:
+        "200":
+          description: The database's pull requests.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/PullSummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      operationId: createPull
+      summary: Create a pull request.
+      description: >-
+        Opens a new pull request in `{owner}/{database}`. `to_branch.database` must equal
+        the URL's `{owner}/{database}`. `from_branch.database` is usually the same; for a
+        cross-fork pull it points at a fork — in that case the caller must have read access
+        on the fork's database and the fork's network root must match the target. Returns
+        the new `Pull` resource on `201`. Authentication is required.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePullRequest"
+      responses:
+        "201":
+          description: The newly-created pull request.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Pull"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/pulls/{pull_number}:
+    get:
+      operationId: getPull
+      summary: Get a pull request.
+      description: >-
+        Returns the pull request `{pull_number}` in the database `{owner}/{database}`. Unlike
+        the list endpoint, the per-pull resource exposes structured `from_branch` /
+        `to_branch` references, each carrying the database the branch lives in — necessary to
+        disambiguate cross-fork pulls where the source branch lives in a different repository.
+        Public databases are readable without authentication; private databases require a
+        credential with access (and return `404` otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - name: pull_number
+          in: path
+          required: true
+          description: The per-database sequential pull-request identifier (à la GitHub PR numbers).
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      responses:
+        "200":
+          description: The requested pull request.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Pull"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    patch:
+      operationId: updatePull
+      summary: Update a pull request.
+      description: >-
+        Partially updates the pull request `{pull_number}` in `{owner}/{database}`. The body
+        carries only the fields the caller is changing — any subset of `title`, `description`,
+        `state`; at least one must be present. `state` is restricted to the writable
+        transitions (`open` ↔ `closed`); merging happens via the dedicated merge operation
+        (phase 4), not by writing state here. Returns the canonical `Pull` resource on `200`.
+        Authentication required.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - name: pull_number
+          in: path
+          required: true
+          description: The per-database sequential pull-request identifier.
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePullRequest"
+      responses:
+        "200":
+          description: The updated pull request.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Pull"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/pulls/{pull_number}/comments:
+    get:
+      operationId: listPullComments
+      summary: List a pull request's comments.
+      description: >-
+        Returns the top-level comments on pull request `{pull_number}` in
+        `{owner}/{database}`, in the order the backend returns them. The backend doesn't
+        paginate comments today, so the full list is returned in one response; if a comment
+        volume hot spot appears, `page_token` / `meta.next_page_token` will be wired through
+        without changing the resource shape. Diff-line comments and review comments are
+        separate resources (not in v2 yet). Public databases are readable without
+        authentication; private databases require a credential with access (and return `404`
+        otherwise, so their existence isn't leaked).
+      tags:
+        - Database
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - name: pull_number
+          in: path
+          required: true
+          description: The per-database sequential pull-request identifier (à la GitHub PR numbers).
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      responses:
+        "200":
+          description: The pull request's comments.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/PullComment"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      operationId: createPullComment
+      summary: Add a top-level comment to a pull request.
+      description: >-
+        Posts a new top-level comment on pull request `{pull_number}` in
+        `{owner}/{database}`. The body carries only the comment text; author and timestamps
+        are server-assigned from the authenticated caller and the server clock. Returns the
+        new `PullComment` on `201`. Diff-line and review comments are separate resources
+        (not in v2 yet).
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - name: pull_number
+          in: path
+          required: true
+          description: The per-database sequential pull-request identifier.
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePullCommentRequest"
+      responses:
+        "201":
+          description: The newly-created comment.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PullComment"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/imports/uploads:
+    post:
+      operationId: createImportUpload
+      summary: Initialize a multipart upload for an import.
+      description: >-
+        Starts a multipart upload session and returns the pre-signed part URLs the client
+        uses to upload the source file directly to object storage. Once every part is
+        uploaded, call `POST /api/v2/databases/{owner}/{database}/imports` with the returned
+        `token`, `contents_key`, and the collected `completed_parts` to create the import
+        operation. Authentication is required.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateImportUploadRequest"
+      responses:
+        "201":
+          description: The multipart upload session.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ImportUpload"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/imports:
+    post:
+      operationId: createImport
+      summary: Create an import operation.
+      description: >-
+        Imports the previously-uploaded file into `{owner}/{database}` as the table named
+        in the body. The upload (token, contents_key, and the parts uploaded against the
+        URLs returned by `POST .../imports/uploads`) must already be complete; the import
+        itself runs asynchronously. Returns `202` + an `OperationRef`; poll
+        `GET /api/v2/operations/{id}` until `status` is `succeeded` or `failed`.
+        Authentication is required.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateImportRequest"
+      responses:
+        "202":
+          description: The import operation has been accepted and is queued.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/pulls/{pull_number}/merge:
+    post:
+      operationId: mergePull
+      summary: Merge a pull request.
+      description: >-
+        Kicks off a merge of pull `{pull_number}` in `{owner}/{database}`. Returns `202`
+        with an `OperationRef`; poll `GET /api/v2/operations/{id}` until `status` is
+        `succeeded` (the operation's `result.pull_id` echoes the merged pull) or `failed`.
+        The caller must have write access on the database. Preconditions like "pull is
+        already merged" or "has conflicts" surface as `422` via the standard error model
+        rather than being pre-checked here. Authentication is required.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - name: pull_number
+          in: path
+          required: true
+          description: The pull request number (per-database sequential id).
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MergePullRequest"
+      responses:
+        "202":
+          description: The merge operation has been accepted and is queued.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/operations/{operation_id}:
+    get:
+      operationId: getOperation
+      summary: Get an async operation.
+      description: >-
+        Polls a long-running operation by its `id`. Every async mutation (SQL write, import,
+        merge, fork) returns an `OperationRef` in its `202` response; clients poll this
+        endpoint until `status` is `succeeded` or `failed`. The `id` is the job resource
+        name returned by the backend.
+      tags:
+        - Operations
+      parameters:
+        - name: operation_id
+          in: path
+          required: true
+          description: The operation ID returned in an `OperationRef`.
+          schema:
+            type: string
+            minLength: 1
+          example: owners/dolthub/repos/us-jails/jobs/abc123
+      responses:
+        "200":
+          description: The current state of the operation.
+          headers:
+            x-request-id:
+              description: Echoes the inbound `x-request-id`, or a server-generated `req_*` UUID.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Operation"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  # securitySchemes model the credential types the v2 auth layer accepts (§5.5). Personal
+  # access tokens and OAuth access tokens are both presented in the `Authorization` header.
+  # The public API does not support browser session cookies.
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      description: "A DoltHub personal access token, sent as `Authorization: Bearer <token>`."
+    oauth2:
+      type: oauth2
+      description: "A DoltHub OAuth 2.0 access token, sent as `Authorization: Bearer <token>`."
+      flows:
+        authorizationCode:
+          authorizationUrl: https://www.dolthub.com/oauth/authorize
+          tokenUrl: https://www.dolthub.com/oauth/token
+          scopes: {}
+
+  schemas:
+    # --- Error model (1.c, §5.3) ---------------------------------------------------------
+    # Every non-2xx response uses Problem (RFC 9457). The Operation resource (1.e) is added
+    # to this map by its PR.
+    ErrorCode:
+      type: string
+      title: ErrorCode
+      description: >-
+        A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on
+        this value, never on the human-readable `title`/`detail` prose. The baseline codes
+        below cover the standard HTTP failure categories; endpoint-specific codes (e.g.
+        `BRANCH_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them,
+        which is an additive, non-breaking change under the v2 stability policy (§5.1).
+      enum:
+        - VALIDATION_FAILED # 400 — malformed request or failed input validation
+        - UNAUTHENTICATED # 401 — missing or invalid credentials
+        - PERMISSION_DENIED # 403 — authenticated but not permitted
+        - NOT_FOUND # 404 — resource does not exist
+        - METHOD_NOT_ALLOWED # 405 — HTTP method not supported for this resource
+        - CONFLICT # 409 — conflicts with current state (e.g. already exists)
+        - UNPROCESSABLE # 422 — well-formed but semantically invalid
+        - RATE_LIMITED # 429 — rate limit exceeded
+        - INTERNAL # 500 — unexpected server fault
+        - SERVICE_UNAVAILABLE # 503 — temporarily unavailable
+        - OPERATION_FAILED # operation reached terminal failure state
+      examples:
+        - NOT_FOUND
+    Problem:
+      type: object
+      title: Problem
+      description: >-
+        A structured error body returned for every non-2xx response, following RFC 9457
+        (Problem Details for HTTP APIs). This is the single error model for the entire v2
+        API — there are no ad-hoc error shapes.
+      required:
+        - title
+        - status
+        - code
+        - request_id
+      properties:
+        type:
+          type: string
+          format: uri
+          default: about:blank
+          description: >-
+            A URI identifying the problem type; when dereferenced it points at
+            human-readable documentation for the error.
+          examples:
+            - https://dolthub.com/docs/api/errors/not-found
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type.
+          examples:
+            - Not found
+        status:
+          type: integer
+          format: int32
+          minimum: 400
+          maximum: 599
+          description: The HTTP status code, repeated in the body for convenience.
+          examples:
+            - 404
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+            - "Branch 'main' does not exist in dolthub/us-jails"
+        instance:
+          type: string
+          format: uri-reference
+          description: A URI reference identifying the specific occurrence (typically the request path).
+          examples:
+            - /api/v2/databases/dolthub/us-jails/branches/main
+        code:
+          $ref: "#/components/schemas/ErrorCode"
+        request_id:
+          type: string
+          description: >-
+            The request identifier, echoed on every response. Include it when contacting
+            support so a request can be traced end-to-end.
+          examples:
+            - req_01HZX9P7Q5N2M8
+      additionalProperties: true
+      examples:
+        - type: https://dolthub.com/docs/api/errors/not-found
+          title: Not found
+          status: 404
+          detail: "Branch 'main' does not exist in dolthub/us-jails"
+          instance: /api/v2/databases/dolthub/us-jails/branches/main
+          code: NOT_FOUND
+          request_id: req_01HZX9P7Q5N2M8
+
+    # --- Success envelope (1.d, §5.4) ----------------------------------------------------
+    # Every 2xx response body is enveloped: the resource (or list) under `data`, with
+    # optional response metadata under `meta`. Concrete endpoint responses specialize the
+    # envelope by narrowing `data` to a specific resource via `allOf`, e.g.:
+    #
+    #   responses:
+    #     "200":
+    #       content:
+    #         application/json:
+    #           schema:
+    #             allOf:
+    #               - $ref: "#/components/schemas/Envelope"
+    #               - type: object
+    #                 properties:
+    #                   data:
+    #                     $ref: "#/components/schemas/User"
+    #
+    # The base types `data` only loosely (object or array) so this allOf narrowing composes
+    # cleanly ((object|array) ∩ User = User). The first real use is GET /api/v2/user in 1.t.
+    Meta:
+      type: object
+      title: Meta
+      description: >-
+        Response metadata carried alongside the primary `data` payload. All fields are
+        optional; list endpoints populate `next_page_token` for cursor pagination (§5.6).
+      properties:
+        next_page_token:
+          type: string
+          description: >-
+            Opaque cursor for the next page of a list response. Absent or empty when there
+            are no further results; otherwise pass it back as the `page_token` query
+            parameter to fetch the next page.
+          examples:
+            - eyJvZmZzZXQiOjI1fQ
+      additionalProperties: true
+      examples:
+        - next_page_token: eyJvZmZzZXQiOjI1fQ
+    Envelope:
+      type: object
+      title: Envelope
+      description: >-
+        The success envelope wrapping every 2xx response body (§5.4): the resource or list of
+        resources under `data`, with optional `meta`. This is the single success shape for
+        the API — there are no unenveloped success bodies. Endpoints narrow `data` to a
+        concrete resource via `allOf` (see the section comment above); the base leaves `data`
+        unconstrained so that composition works.
+      required:
+        - data
+      properties:
+        data:
+          type: [object, array]
+          description: The primary response payload — a resource, or an array of resources for list endpoints.
+        meta:
+          $ref: "#/components/schemas/Meta"
+      examples:
+        - data:
+            username: dolthub
+          meta:
+            next_page_token: eyJvZmZzZXQiOjI1fQ
+
+    # --- Resources (1.t onward) ----------------------------------------------------------
+    # Resource schemas are the public DTO surface — what the v2 spec contract guarantees to
+    # integrators. Field names are snake_case (§5.2). Fields are added additively under the
+    # v2 stability policy (§5.1); renames or removals require v3.
+    DatabaseRef:
+      type: object
+      title: DatabaseRef
+      description: >-
+        A minimal reference to a database — owner and name only. Used wherever the API points
+        at another database (a fork's parent, a network's root, an item in the forks list)
+        without re-embedding the full Database resource.
+      required:
+        - owner
+        - name
+      properties:
+        owner:
+          type: string
+          description: The user or organization that owns the referenced database.
+          examples:
+            - dolthub
+        name:
+          type: string
+          description: The referenced database's name.
+          examples:
+            - us-jails
+      examples:
+        - owner: dolthub
+          name: us-jails
+    CreateDatabaseRequest:
+      type: object
+      title: CreateDatabaseRequest
+      description: >-
+        Body for `POST /api/v2/databases`. `owner` names the user or organization that will
+        own the new database; the caller's credentials must allow creating under that owner.
+      required:
+        - owner
+        - name
+        - visibility
+      properties:
+        owner:
+          type: string
+          description: The user or organization that will own the database.
+          minLength: 1
+          examples:
+            - dolthub
+        name:
+          type: string
+          description: >-
+            The database name. Must be unique within the owner and conform to DoltHub's
+            naming rules (letters, digits, `-`, `_`; cannot start or end with `-`).
+          minLength: 1
+          examples:
+            - us-jails
+        description:
+          type: string
+          description: Optional human-readable description.
+          examples:
+            - Open data about incarceration in the United States.
+        visibility:
+          type: string
+          enum:
+            - public
+            - private
+          description: >-
+            Whether the database is publicly readable. Defaults are *not* applied — clients
+            must declare the intended visibility on create.
+          examples:
+            - public
+      additionalProperties: false
+      examples:
+        - owner: dolthub
+          name: us-jails
+          description: Open data about incarceration in the United States.
+          visibility: public
+    CreatePullRequest:
+      type: object
+      title: CreatePullRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/pulls`. `to_branch.database`
+        must equal the URL's `{owner}/{database}` (the PR opens against this repo);
+        `from_branch.database` is usually the same but may point at a fork for cross-fork
+        PRs.
+      required:
+        - title
+        - from_branch
+        - to_branch
+      properties:
+        title:
+          type: string
+          description: The pull request's title.
+          minLength: 1
+          examples:
+            - Fix join planner regression
+        description:
+          type: string
+          description: Optional pull-request body (markdown).
+          examples:
+            - "Fixes #99."
+        from_branch:
+          $ref: "#/components/schemas/BranchRef"
+        to_branch:
+          $ref: "#/components/schemas/BranchRef"
+      examples:
+        - title: Fix join planner regression
+          description: "Fixes #99."
+          from_branch:
+            database: { owner: dolthub, name: us-jails }
+            branch_name: my-feature
+          to_branch:
+            database: { owner: dolthub, name: us-jails }
+            branch_name: main
+    CreatePullCommentRequest:
+      type: object
+      title: CreatePullCommentRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/pulls/{pull_number}/comments`.
+        Carries only the comment text; author and timestamps are server-assigned.
+      required:
+        - body
+      properties:
+        body:
+          type: string
+          description: The comment text (markdown).
+          minLength: 1
+          examples:
+            - "LGTM — one nit on the join planner case."
+      additionalProperties: false
+      examples:
+        - body: "LGTM — one nit on the join planner case."
+    MergePullRequest:
+      type: object
+      title: MergePullRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/pulls/{pull_number}/merge`.
+        Currently empty — the merge takes no parameters today. The empty object exists so
+        the schema is closed under `additionalProperties` (mistyped fields fail loud
+        rather than getting silently dropped) and so we have a stable place to add the
+        conflict-resolution strategy when that ships.
+      additionalProperties: false
+    UpdatePullRequest:
+      type: object
+      title: UpdatePullRequest
+      description: >-
+        Body for `PATCH /api/v2/databases/{owner}/{database}/pulls/{pull_number}`. Every
+        field is optional; the caller supplies whichever fields they're changing and the
+        server only updates those. At least one field must be present. `state` is restricted
+        to the writable transitions (`open` ↔ `closed`); to merge, use the merge operation.
+      minProperties: 1
+      properties:
+        title:
+          type: string
+          description: New title; omit to leave unchanged.
+          minLength: 1
+          examples:
+            - Fix join planner regression — addresses regression #99
+        description:
+          type: string
+          description: New description body (markdown); omit to leave unchanged.
+          examples:
+            - "Updated to cover the additional edge case from review."
+        state:
+          type: string
+          enum:
+            - open
+            - closed
+          description: New state. Merging is a separate operation; this field can't transition to `merged`.
+          examples:
+            - closed
+      additionalProperties: false
+      examples:
+        - state: closed
+        - title: New title
+          description: New body.
+    CreateBranchRequest:
+      type: object
+      title: CreateBranchRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/branches`. `from` is a
+        discriminated union — one of `{ branch }` or `{ commit }` — that names the source
+        revision the new branch will point at.
+      required:
+        - name
+        - from
+      properties:
+        name:
+          type: string
+          description: The new branch's name.
+          minLength: 1
+          examples:
+            - feature-x
+        from:
+          oneOf:
+            - type: object
+              required:
+                - branch
+              properties:
+                branch:
+                  type: string
+                  description: Branch the new branch will fork from.
+                  minLength: 1
+                  examples:
+                    - main
+              additionalProperties: false
+            - type: object
+              required:
+                - commit
+              properties:
+                commit:
+                  type: string
+                  description: Commit hash the new branch will start at.
+                  minLength: 1
+                  examples:
+                    - vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+              additionalProperties: false
+      additionalProperties: false
+      examples:
+        - name: feature-x
+          from:
+            branch: main
+        - name: hotfix
+          from:
+            commit: vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+    CreateTagRequest:
+      type: object
+      title: CreateTagRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/tags`. `from` is the same
+        `{ branch | commit }` discriminated union used by `CreateBranchRequest`. Supplying
+        `message` produces an annotated tag; omitting it produces a lightweight tag.
+      required:
+        - name
+        - from
+      properties:
+        name:
+          type: string
+          description: The new tag's name, unique within the database.
+          minLength: 1
+          examples:
+            - v1.0.0
+        from:
+          oneOf:
+            - type: object
+              required:
+                - branch
+              properties:
+                branch:
+                  type: string
+                  description: Branch whose head the tag will point at.
+                  minLength: 1
+                  examples:
+                    - main
+              additionalProperties: false
+            - type: object
+              required:
+                - commit
+              properties:
+                commit:
+                  type: string
+                  description: Commit hash the tag will point at.
+                  minLength: 1
+                  examples:
+                    - vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+              additionalProperties: false
+        message:
+          type: string
+          description: Optional annotation message. Present → annotated tag; absent → lightweight tag.
+          examples:
+            - First public release.
+      additionalProperties: false
+      examples:
+        - name: v1.0.0
+          from:
+            branch: main
+          message: First public release.
+        - name: hotfix-tag
+          from:
+            commit: vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+    CreateReleaseRequest:
+      type: object
+      title: CreateReleaseRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/releases`. Releases pin to a
+        specific commit (`commit_sha`), not a moving branch. The release is published under
+        `tag`; `create_tag_if_not_exists` lets the backend create that tag implicitly when it
+        doesn't already exist, otherwise the tag must already point at `commit_sha`.
+      required:
+        - tag
+        - title
+        - commit_sha
+      properties:
+        tag:
+          type: string
+          description: The tag the release is published under, unique within the database.
+          minLength: 1
+          examples:
+            - v1.0.0
+        title:
+          type: string
+          description: Human-readable title.
+          minLength: 1
+          examples:
+            - First public release
+        commit_sha:
+          type: string
+          description: The commit hash the release points at.
+          minLength: 1
+          examples:
+            - vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+        description:
+          type: string
+          description: Optional release notes body (markdown).
+          examples:
+            - "## Highlights\n- new join planner"
+        create_tag_if_not_exists:
+          type: boolean
+          description: >-
+            When true and no tag named `tag` exists, create one pointing at `commit_sha`.
+            Defaults to false — the caller is responsible for tag creation otherwise.
+          examples:
+            - true
+      additionalProperties: false
+      examples:
+        - tag: v1.0.0
+          title: First public release
+          commit_sha: vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+          description: "## Highlights\n- new join planner"
+          create_tag_if_not_exists: true
+    ImportFileType:
+      type: string
+      title: ImportFileType
+      description: Source file format for an import.
+      enum:
+        - csv
+        - psv
+        - xlsx
+        - json
+        - sql
+        - yaml
+      examples:
+        - csv
+    ImportOperation:
+      type: string
+      title: ImportOperation
+      description: >-
+        How the imported rows are applied to the target table. `create` requires the table
+        not to exist; `overwrite` replaces it; `update` upserts into an existing table;
+        `replace` truncates then inserts.
+      enum:
+        - create
+        - overwrite
+        - update
+        - replace
+      examples:
+        - create
+    CompletedPart:
+      type: object
+      title: CompletedPart
+      description: One part of a multipart upload, identified by its part number and the ETag the storage backend returned.
+      required:
+        - part_number
+        - etag
+      properties:
+        part_number:
+          type: integer
+          minimum: 1
+          description: The 1-based part number this entry corresponds to.
+          examples:
+            - 1
+        etag:
+          type: string
+          minLength: 1
+          description: The ETag returned by the storage backend for this part.
+          examples:
+            - '"d41d8cd98f00b204e9800998ecf8427e"'
+      additionalProperties: false
+    ImportUploadPart:
+      type: object
+      title: ImportUploadPart
+      description: A single part in an upload session — the part number plus the pre-signed URL to PUT it to.
+      required:
+        - part_number
+        - url
+      properties:
+        part_number:
+          type: integer
+          minimum: 1
+          description: The 1-based part number.
+          examples:
+            - 1
+        url:
+          type: string
+          format: uri
+          description: Pre-signed URL the client should upload this part to.
+      additionalProperties: false
+    ImportUpload:
+      type: object
+      title: ImportUpload
+      description: >-
+        A multipart upload session. The client PUTs each file chunk to the matching `parts[].url`,
+        collects the storage backend's ETag for each, and then calls `createImport` with the `token`,
+        `contents_key`, and the collected `CompletedPart`s.
+      required:
+        - token
+        - contents_key
+        - parts
+        - http_method
+        - headers
+      properties:
+        token:
+          type: string
+          description: Opaque upload-session token. Pass verbatim to `createImport`.
+          examples:
+            - upload-tok-9f3...
+        contents_key:
+          type: string
+          description: Storage key the assembled file will live at. Pass verbatim to `createImport`.
+          examples:
+            - imports/abc-def/states.csv
+        parts:
+          type: array
+          description: One entry per part, in part-number order.
+          items:
+            $ref: "#/components/schemas/ImportUploadPart"
+        http_method:
+          type: string
+          description: HTTP method to use when uploading each part. Currently always `PUT`.
+          enum:
+            - PUT
+          examples:
+            - PUT
+        headers:
+          type: object
+          description: >-
+            Headers the client must include on each part upload (e.g. proxy-auth,
+            signed-headers added by the storage backend). Usually empty; clients
+            should iterate every entry and add each name with all of its values to
+            the part-upload request. Each header may have multiple values.
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          examples:
+            - {}
+      additionalProperties: false
+    CreateImportUploadRequest:
+      type: object
+      title: CreateImportUploadRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/imports/uploads`. Asks the
+        server to mint a multipart upload session for a file of `content_length` bytes
+        split into `num_parts` parts; the response carries the pre-signed URLs to upload to.
+      required:
+        - content_length
+        - num_parts
+        - file_type
+      properties:
+        content_length:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Total size of the file being uploaded, in bytes.
+          examples:
+            - 1048576
+        num_parts:
+          type: integer
+          minimum: 1
+          description: Number of parts the client will split the upload into.
+          examples:
+            - 4
+        file_type:
+          $ref: "#/components/schemas/ImportFileType"
+      additionalProperties: false
+      examples:
+        - content_length: 1048576
+          num_parts: 4
+          file_type: csv
+    CreateImportRequest:
+      type: object
+      title: CreateImportRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/imports`. Wraps a completed
+        multipart upload (`token`, `contents_key`, `completed_parts`) into an import job
+        that loads the file into `table_name` on `branch_name`. Returns `202` + an
+        `OperationRef`.
+      required:
+        - branch_name
+        - table_name
+        - file_name
+        - file_size
+        - file_type
+        - import_operation
+        - token
+        - contents_key
+        - completed_parts
+        - file_parts_md5
+        - primary_keys
+      properties:
+        branch_name:
+          type: string
+          minLength: 1
+          description: The branch to import onto.
+          examples:
+            - main
+        table_name:
+          type: string
+          minLength: 1
+          description: The destination table.
+          examples:
+            - states
+        file_name:
+          type: string
+          minLength: 1
+          description: The original file name (used for the commit message and import description).
+          examples:
+            - states.csv
+        file_size:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Size of the uploaded file in bytes; must match the `content_length` from `createImportUpload`.
+          examples:
+            - 1048576
+        file_type:
+          $ref: "#/components/schemas/ImportFileType"
+        import_operation:
+          $ref: "#/components/schemas/ImportOperation"
+        token:
+          type: string
+          minLength: 1
+          description: Upload-session token from `createImportUpload`.
+          examples:
+            - upload-tok-9f3...
+        contents_key:
+          type: string
+          minLength: 1
+          description: Contents key from `createImportUpload`.
+          examples:
+            - imports/abc-def/states.csv
+        completed_parts:
+          type: array
+          description: One entry per uploaded part, in any order.
+          items:
+            $ref: "#/components/schemas/CompletedPart"
+          minItems: 1
+        file_parts_md5:
+          type: string
+          minLength: 1
+          description: >-
+            MD5 of the concatenated per-part MD5s, base64-encoded. Some backends require
+            this for integrity verification of the assembled file.
+          examples:
+            - hT39yyZyRkX...
+        primary_keys:
+          type: array
+          description: >-
+            Primary-key column names. May be empty when the destination table already exists
+            (its existing primary keys are used). Required (possibly empty) so a missing
+            field fails fast rather than mis-importing as no-primary-key.
+          items:
+            type: string
+            minLength: 1
+          examples:
+            - - id
+              - date
+        commit_message:
+          type: string
+          description: Override the default commit message the import produces.
+          examples:
+            - Initial load of US states.
+        pull_request_branch_name:
+          type: string
+          minLength: 1
+          description: >-
+            When set, the import lands on this branch (created from `branch_name`) and a
+            pull request is opened against `branch_name`. When unset, the import lands
+            directly on `branch_name`.
+          examples:
+            - import/states-2026-06-23
+        column_map:
+          type: object
+          description: >-
+            Optional mapping from source column names to destination column names. Useful
+            when the file's columns don't match the target table's columns.
+          additionalProperties:
+            type: string
+      additionalProperties: false
+      examples:
+        - branch_name: main
+          table_name: states
+          file_name: states.csv
+          file_size: 1048576
+          file_type: csv
+          import_operation: create
+          token: upload-tok-9f3...
+          contents_key: imports/abc-def/states.csv
+          completed_parts:
+            - part_number: 1
+              etag: '"d41d8cd98f00b204e9800998ecf8427e"'
+          file_parts_md5: hT39yyZyRkX...
+          primary_keys:
+            - id
+    OperationStatus:
+      type: string
+      title: OperationStatus
+      description: The lifecycle state of an async operation.
+      enum:
+        - queued
+        - running
+        - succeeded
+        - failed
+      examples:
+        - running
+
+    OperationType:
+      type: string
+      title: OperationType
+      description: The kind of work this operation performs.
+      enum:
+        - import
+        - merge
+        - sql_write
+        - fork
+        - dolt_ci
+      examples:
+        - merge
+
+    OperationError:
+      type: object
+      title: OperationError
+      description: Error details recorded when an operation reaches the `failed` status.
+      required:
+        - status
+        - code
+        - title
+      properties:
+        status:
+          type: integer
+          format: int32
+          minimum: 400
+          maximum: 599
+          description: HTTP-equivalent status code for the failure.
+          examples:
+            - 422
+        code:
+          $ref: "#/components/schemas/ErrorCode"
+        title:
+          type: string
+          description: A short, human-readable summary of the failure.
+          examples:
+            - Unprocessable
+
+    Operation:
+      type: object
+      title: Operation
+      description: >-
+        A long-running async operation. Every async mutation returns an `OperationRef`; poll
+        `GET /api/v2/operations/{id}` until `status` is `succeeded` or `failed`. The `id` is
+        opaque — pass it back to the poll endpoint verbatim.
+      required:
+        - id
+        - type
+        - status
+        - created_at
+        - cancelable
+      properties:
+        id:
+          type: string
+          description: >-
+            Opaque operation identifier. Pass verbatim to `GET /api/v2/operations/{id}`.
+          examples:
+            - owners/dolthub/repos/us-jails/jobs/abc123
+        type:
+          $ref: "#/components/schemas/OperationType"
+        status:
+          $ref: "#/components/schemas/OperationStatus"
+        created_at:
+          type: string
+          format: date-time
+          description: When the operation was enqueued.
+          examples:
+            - "2026-06-01T12:00:00Z"
+        cancelable:
+          type: boolean
+          description: >-
+            Reserved for a future cancel endpoint. Always `false` today —
+            no `POST /api/v2/operations/{id}/cancel` exists yet.
+          examples:
+            - false
+        error:
+          $ref: "#/components/schemas/OperationError"
+        result:
+          type: object
+          description: >-
+            Present when `status` is `succeeded`. Shape depends on `type`:
+            `import`/`merge` → `{ pull_id }`;
+            `sql_write` → `{ commit_sha }`;
+            `fork` → `{ database: { owner, name } }`.
+          additionalProperties: true
+
+    OperationRef:
+      type: object
+      title: OperationRef
+      description: >-
+        A reference to an in-progress async operation, returned in `202` responses.
+        Pass `id` to `GET /api/v2/operations/{id}` to poll for completion.
+      required:
+        - id
+        - href
+      properties:
+        id:
+          type: string
+          description: The operation ID.
+          examples:
+            - owners/dolthub/repos/us-jails/jobs/abc123
+        href:
+          type: string
+          format: uri
+          description: Absolute URL of the poll endpoint.
+          examples:
+            - https://www.dolthub.com/api/v2/operations/owners%2Fdolthub%2Frepos%2Fus-jails%2Fjobs%2Fabc123
+
+    Database:
+      type: object
+      title: Database
+      description: >-
+        A DoltHub database and its public metadata. v2 exposes the database's own
+        fields; caller-specific state (your role on it, whether you've starred it) is not part of
+        this resource.
+      required:
+        - owner
+        - name
+        - visibility
+        - fork_network_count
+        - star_count
+        - size_bytes
+      properties:
+        owner:
+          type: string
+          description: The user or organization that owns the database.
+          examples:
+            - dolthub
+        name:
+          type: string
+          description: The database name, unique within the owner.
+          examples:
+            - us-jails
+        description:
+          type: string
+          description: The database's short description.
+          examples:
+            - Open data about incarceration in the United States.
+        visibility:
+          type: string
+          enum:
+            - public
+            - private
+          description: Whether the database is publicly readable or private.
+          examples:
+            - public
+        fork_network_count:
+          type: integer
+          format: int32
+          description: >-
+            The total number of databases in this database's fork network — transitive,
+            counting forks-of-forks. The `/forks` endpoint returns immediate children
+            only, so `fork_network_count` may exceed the length of that list.
+        star_count:
+          type: integer
+          format: int32
+          description: The number of users who have starred the database.
+        size_bytes:
+          type: integer
+          format: int64
+          description: The on-disk size of the database, in bytes.
+        last_write_at:
+          type: string
+          format: date-time
+          description: When the database last received a write.
+          examples:
+            - "2024-01-15T12:34:56Z"
+        parent:
+          allOf:
+            - $ref: "#/components/schemas/DatabaseRef"
+          description: >-
+            The database this one was forked from. Omitted when this database is not a fork —
+            i.e., it is the root of its fork network.
+        network_root:
+          allOf:
+            - $ref: "#/components/schemas/DatabaseRef"
+          description: >-
+            The original database at the root of this database's fork network. Omitted when
+            this database is itself the root (no ancestors).
+      examples:
+        - owner: dolthub
+          name: us-jails
+          description: Open data about incarceration in the United States.
+          visibility: public
+          fork_network_count: 3
+          star_count: 42
+          size_bytes: 10485760
+          last_write_at: "2024-01-15T12:34:56Z"
+    Branch:
+      type: object
+      title: Branch
+      description: >-
+        A branch in a database — a named pointer to a head commit. v2 exposes the branch's
+        identity (name) and the head it currently points at; the head commit's full metadata
+        (message, author, parents) belongs to the commit resource, not the branch list.
+      required:
+        - name
+        - head_commit_sha
+      properties:
+        name:
+          type: string
+          description: The branch name, unique within the database.
+          examples:
+            - main
+        head_commit_sha:
+          type: string
+          description: The hash of the commit the branch currently points at.
+          examples:
+            - vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+        last_updated_at:
+          type: string
+          format: date-time
+          description: When the head commit was committed; absent if the backend didn't report it.
+          examples:
+            - "2024-01-15T12:34:56Z"
+      examples:
+        - name: main
+          head_commit_sha: vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+          last_updated_at: "2024-01-15T12:34:56Z"
+    Tag:
+      type: object
+      title: Tag
+      description: >-
+        A tag in a database — a named, optionally annotated pointer to a specific commit.
+        v2 exposes the tag's identity and the commit it targets; the target commit's full
+        metadata (message, author, parents) belongs to the commit resource, not the tag list.
+      required:
+        - name
+        - commit_sha
+      properties:
+        name:
+          type: string
+          description: The tag name, unique within the database.
+          examples:
+            - v1.0.0
+        commit_sha:
+          type: string
+          description: The hash of the commit the tag points at.
+          examples:
+            - vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+        message:
+          type: string
+          description: The tag's annotation message; omitted when the tag has none.
+          examples:
+            - First public release.
+        tagged_at:
+          type: string
+          format: date-time
+          description: When the tag was created; absent if the backend didn't report it.
+          examples:
+            - "2024-01-15T12:34:56Z"
+      examples:
+        - name: v1.0.0
+          commit_sha: vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+          message: First public release.
+          tagged_at: "2024-01-15T12:34:56Z"
+    Release:
+      type: object
+      title: Release
+      description: >-
+        A named release of a database — a title and notes attached to a specific commit, often
+        but not always paired with a tag of the same name. v2 exposes the release's public
+        fields; the internal release id is omitted (the tag is the user-facing identifier).
+      required:
+        - tag
+        - title
+        - commit_sha
+        - created_at
+        - updated_at
+      properties:
+        tag:
+          type: string
+          description: The tag the release is published under, unique within the database.
+          examples:
+            - v1.0.0
+        title:
+          type: string
+          description: The release's human-readable title.
+          examples:
+            - First public release
+        commit_sha:
+          type: string
+          description: The hash of the commit the release points at.
+          examples:
+            - vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+        description:
+          type: string
+          description: The release notes body (markdown). Omitted when the release has none.
+          examples:
+            - "## Highlights\n- new join planner\n- breaking: deprecated `foo()`"
+        created_at:
+          type: string
+          format: date-time
+          description: When the release was first published.
+          examples:
+            - "2024-01-15T12:34:56Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: When the release was last edited; equals `created_at` for never-edited releases.
+          examples:
+            - "2024-01-15T12:34:56Z"
+      examples:
+        - tag: v1.0.0
+          title: First public release
+          commit_sha: vt1u8gdsovtj0qq2qmd6he7n5o4mq2qm
+          description: "## Highlights\n- new join planner"
+          created_at: "2024-01-15T12:34:56Z"
+          updated_at: "2024-01-15T12:34:56Z"
+    PullSummary:
+      type: object
+      title: PullSummary
+      description: >-
+        The lean list shape of a pull request — title, state, creator, timestamps. Companion
+        to the canonical `Pull` resource returned by the per-pull GET, which adds structured
+        `from_branch` / `to_branch` references (fork-aware owner / database) needed to
+        disambiguate cross-fork PRs.
+      required:
+        - pull_number
+        - title
+        - state
+        - created_at
+        - creator
+      properties:
+        pull_number:
+          type: integer
+          format: int64
+          description: The per-database sequential identifier (à la GitHub PR numbers).
+          examples:
+            - 42
+        title:
+          type: string
+          description: The pull request's human-readable title.
+          examples:
+            - Fix join planner regression
+        description:
+          type: string
+          description: The pull request description (markdown). Omitted when the pull has none.
+          examples:
+            - "Fixes #99."
+        state:
+          type: string
+          enum:
+            - open
+            - closed
+            - merged
+          description: The pull request's lifecycle state.
+          examples:
+            - open
+        created_at:
+          type: string
+          format: date-time
+          description: When the pull request was created.
+          examples:
+            - "2024-01-15T12:34:56Z"
+        creator:
+          type: string
+          description: The username of the user who created the pull request.
+          examples:
+            - dolthub
+      examples:
+        - pull_number: 42
+          title: Fix join planner regression
+          description: "Fixes #99."
+          state: open
+          created_at: "2024-01-15T12:34:56Z"
+          creator: dolthub
+    BranchRef:
+      type: object
+      title: BranchRef
+      description: >-
+        A reference to a branch within a specific database. Carries the database so callers
+        can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may
+        live in different repositories.
+      required:
+        - database
+        - branch_name
+      properties:
+        database:
+          $ref: "#/components/schemas/DatabaseRef"
+        branch_name:
+          type: string
+          description: The branch name within the referenced database.
+          examples:
+            - my-feature
+            - main
+      examples:
+        - database:
+            owner: dolthub
+            name: us-jails
+          branch_name: my-feature
+    Pull:
+      type: object
+      title: Pull
+      description: >-
+        The canonical pull-request resource. Same public fields as the list `PullSummary`
+        plus structured `from_branch` / `to_branch` references that carry the database the
+        branch lives in (necessary for cross-fork pulls, where the source branch lives in a
+        different repository).
+      required:
+        - pull_number
+        - title
+        - state
+        - from_branch
+        - to_branch
+        - created_at
+        - creator
+      properties:
+        pull_number:
+          type: integer
+          format: int64
+          description: The per-database sequential identifier (à la GitHub PR numbers).
+          examples:
+            - 42
+        title:
+          type: string
+          description: The pull request's human-readable title.
+          examples:
+            - Fix join planner regression
+        description:
+          type: string
+          description: The pull request description (markdown). Omitted when the pull has none.
+          examples:
+            - "Fixes #99."
+        state:
+          type: string
+          enum:
+            - open
+            - closed
+            - merged
+          description: The pull request's lifecycle state.
+          examples:
+            - open
+        from_branch:
+          $ref: "#/components/schemas/BranchRef"
+        to_branch:
+          $ref: "#/components/schemas/BranchRef"
+        created_at:
+          type: string
+          format: date-time
+          description: When the pull request was created.
+          examples:
+            - "2024-01-15T12:34:56Z"
+        creator:
+          type: string
+          description: The username of the user who created the pull request.
+          examples:
+            - dolthub
+      examples:
+        - pull_number: 42
+          title: Fix join planner regression
+          description: "Fixes #99."
+          state: open
+          from_branch:
+            database:
+              owner: dolthub
+              name: us-jails
+            branch_name: my-feature
+          to_branch:
+            database:
+              owner: dolthub
+              name: us-jails
+            branch_name: main
+          created_at: "2024-01-15T12:34:56Z"
+          creator: dolthub
+    PullComment:
+      type: object
+      title: PullComment
+      description: >-
+        A top-level comment on a pull request. Diff-line comments and review comments are
+        modeled as separate resources (not in v2 yet).
+      required:
+        - comment_id
+        - author
+        - body
+        - created_at
+        - updated_at
+      properties:
+        comment_id:
+          type: string
+          description: The opaque per-comment identifier, unique within the pull request.
+          examples:
+            - 1c8f3b1e-5d2e-4a3a-9f2b-0e7a6d5c4b3a
+        author:
+          type: string
+          description: The username of the comment's author.
+          examples:
+            - alice
+        body:
+          type: string
+          description: The comment text (markdown).
+          examples:
+            - "LGTM — one nit on the join planner case."
+        created_at:
+          type: string
+          format: date-time
+          description: When the comment was first posted.
+          examples:
+            - "2024-01-15T12:34:56Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: When the comment was last edited (equals `created_at` if never edited).
+          examples:
+            - "2024-01-15T12:34:56Z"
+      examples:
+        - comment_id: 1c8f3b1e-5d2e-4a3a-9f2b-0e7a6d5c4b3a
+          author: alice
+          body: "LGTM — one nit on the join planner case."
+          created_at: "2024-01-15T12:34:56Z"
+          updated_at: "2024-01-15T12:34:56Z"
+    QueryColumn:
+      type: object
+      title: QueryColumn
+      description: One column in a query result's schema.
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+          description: The column name.
+          examples:
+            - state_name
+        type:
+          type: string
+          description: >-
+            The column's SQL type — e.g. `VARCHAR(255)`, `BIGINT`, `DATETIME(6)`. Clients
+            parsing typed values are expected to read this and coerce `cells` accordingly.
+          examples:
+            - "VARCHAR(255)"
+        is_primary_key:
+          type: boolean
+          description: Whether the column is part of the source table's primary key.
+        source_table:
+          type: string
+          description: >-
+            The table this column came from. Empty for expressions or virtual columns
+            (e.g. `COUNT(*)`).
+          examples:
+            - jails
+    QueryResult:
+      type: object
+      title: QueryResult
+      description: >-
+        The result of a `runSqlReadQuery` call. SQL-level conditions (success, error, timeout,
+        row-limit) live in `status` and `message` — they are query-level, not transport-level.
+      required:
+        - columns
+        - rows
+        - status
+      properties:
+        columns:
+          type: array
+          description: The result schema — one entry per column, in the row's cell order.
+          items:
+            $ref: "#/components/schemas/QueryColumn"
+        rows:
+          type: array
+          description: >-
+            The result rows. Each row is an array of cell values, ordered to match the
+            `columns` schema. Non-NULL cells are serialized as strings regardless of the
+            underlying SQL type; clients can parse per `columns[i].type` to coerce typed
+            values. NULL cells are serialized as JSON `null`. BLOB-typed cells are returned
+            as the placeholder string `"<binary>"` (the backend does not stream binary bytes
+            over this endpoint); clients can detect blob columns via `columns[i].type`.
+          items:
+            type: array
+            items:
+              type:
+                - string
+                - "null"
+        status:
+          type: string
+          description: >-
+            The query's execution status. `success` is the only status that guarantees
+            `rows` and `columns` are fully populated.
+          enum:
+            - success
+            - error
+            - timeout
+            - row_limit
+            - not_workspace
+        message:
+          type: string
+          description: >-
+            Server-supplied message describing the status. Always populated for non-`success`
+            statuses; usually empty on success.
+        warnings:
+          type: array
+          description: SQL-level warnings emitted by the query engine (e.g. truncated values).
+          items:
+            type: string
+      examples:
+        - columns:
+            - name: state_name
+              type: "VARCHAR(255)"
+              is_primary_key: true
+              source_table: jails
+            - name: count
+              type: BIGINT
+              is_primary_key: false
+              source_table: ""
+          rows:
+            - ["California", "162"]
+            - ["Texas", "108"]
+            - [null, "0"]
+          status: success
+          warnings: []
+    EmailAddress:
+      type: object
+      title: EmailAddress
+      description: An email address registered to a DoltHub user.
+      required:
+        - address
+        - is_primary
+        - is_verified
+      properties:
+        address:
+          type: string
+          format: email
+          description: The email address.
+          examples:
+            - dolt-interest@dolthub.com
+        is_primary:
+          type: boolean
+          description: Whether this is the user's primary email address.
+        is_verified:
+          type: boolean
+          description: Whether this email address has been verified.
+      examples:
+        - address: dolt-interest@dolthub.com
+          is_primary: true
+          is_verified: true
+    User:
+      type: object
+      title: User
+      description: >-
+        A DoltHub user. `GET /api/v2/user` returns the authenticated user's profile. v2
+        returns only the public-facing profile fields — internal flags (super-admin,
+        two-factor settings, API tokens) are never included.
+      required:
+        - username
+        - email_addresses
+      properties:
+        username:
+          type: string
+          description: The user's DoltHub username (unique handle).
+          examples:
+            - dolthub
+        display_name:
+          type: string
+          description: The user's display name. May be empty.
+          examples:
+            - DoltHub
+        bio:
+          type: string
+          description: The user's bio. May be empty.
+        location:
+          type: string
+          description: The user's stated location. May be empty.
+        website_url:
+          type: string
+          description: The user's website URL. May be empty.
+          examples:
+            - https://www.dolthub.com
+        profile_pic_url:
+          type: string
+          description: URL of the user's profile picture. May be empty.
+        email_addresses:
+          type: array
+          description: The user's registered email addresses.
+          items:
+            $ref: "#/components/schemas/EmailAddress"
+      examples:
+        - username: dolthub
+          display_name: DoltHub
+          bio: The database for agents.
+          location: San Mateo, CA
+          website_url: https://www.dolthub.com
+          profile_pic_url: https://www.dolthub.com/static/images/dolthub_logo.png
+          email_addresses:
+            - address: dolt-interest@dolthub.com
+              is_primary: true
+              is_verified: true
+
+  # Reusable parameters — pulled out as components.parameters so every list endpoint $refs
+  # the same shape rather than redeclaring it. PageToken is the v2 pagination convention
+  # (§5.6, established by 2.b); the response side lives in components.schemas.Meta.next_page_token.
+  parameters:
+    PageToken:
+      name: page_token
+      in: query
+      required: false
+      description: >-
+        Opaque cursor returned in a prior response's `meta.next_page_token`. Pass it back to
+        fetch the next page; omit it on the first request. The token format is server-defined
+        — clients must treat it as an opaque string.
+      schema:
+        type: string
+      example: eyJvZmZzZXQiOjI1fQ
+
+  # Reusable error responses — the status-code conventions for v2 (§5.3). Operations
+  # reference these so every endpoint returns the right code with one consistent body
+  # instead of the v1 "everything is 400" behavior. They are wired into operations as paths
+  # are added (first in 1.t).
+  responses:
+    BadRequest:
+      description: The request was malformed or failed input validation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Unauthorized:
+      description: Authentication credentials were missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Forbidden:
+      description: Authenticated, but not permitted to perform this action.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    MethodNotAllowed:
+      description: The HTTP method is not supported for this resource.
+      headers:
+        Allow:
+          description: The HTTP methods supported by this resource.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Conflict:
+      description: The request conflicts with the current state of the resource (e.g. it already exists).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    UnprocessableEntity:
+      description: The request was well-formed but semantically invalid.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    TooManyRequests:
+      description: The client has exceeded its rate limit.
+      headers:
+        Retry-After:
+          description: The number of seconds to wait before retrying the request.
+          schema:
+            type: integer
+            format: int32
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    InternalServerError:
+      description: An unexpected server error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    ServiceUnavailable:
+      description: The service is temporarily unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Problem"

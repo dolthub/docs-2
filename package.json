@@ -24,9 +24,11 @@
   },
   "devDependencies": {
     "cypress": "^15.15.0",
+    "remark-heading-id": "^1.0.1",
     "typescript": "^5.0.0"
   },
   "overrides": {
     "qs": "^6.15.2"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }

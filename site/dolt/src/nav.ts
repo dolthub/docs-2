@@ -271,6 +271,17 @@ const nav: NavSection[] = [
                   { title: "Jobs", href: "/products/dolthub/api/v1alpha1/jobs" },
                 ],
               },
+              {
+                title: "v2",
+                href: "/products/dolthub/api/v2",
+                children: [
+                  { title: "Authentication", href: "/products/dolthub/api/v2/authentication" },
+                  { title: "User", href: "/products/dolthub/api/v2/user" },
+                  { title: "Database", href: "/products/dolthub/api/v2/database" },
+                  { title: "Operations", href: "/products/dolthub/api/v2/operations" },
+                  { title: "Models", href: "/products/dolthub/api/v2/models" },
+                ],
+              },
               { title: "CSV", href: "/products/dolthub/api/csv" },
               { title: "Webhooks", href: "/products/dolthub/api/hooks" },
             ],
