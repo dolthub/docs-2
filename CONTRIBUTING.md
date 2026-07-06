@@ -44,6 +44,30 @@ npm run dev -w site/<site>     # http://localhost:432x/docs
 2. **Sidebar** — add the page to `site/<site>/src/nav.ts`.
 3. **Tests** — add the route to `cypress/fixtures/<site>-pages.ts` so the page-existence / single-h1 tests cover it.
 
+## Generating the DoltHub API docs
+
+The DoltHub API reference under `site/dolt/src/content/products/dolthub/api/` is generated, not hand-edited — don't touch the generated files directly, edit the source and regenerate.
+
+### v1alpha1
+
+Source of truth: the Swagger JSON in `site/dolt/src/content/.gitbook/assets/dolthub-api/<name>.json`, plus per-page markdown templates in `scripts/api-source/<page>.md`. To update an endpoint, edit whichever of those covers it, then run:
+
+```sh
+python3 scripts/generate-api-docs.py
+```
+
+This regenerates `site/dolt/src/content/products/dolthub/api/*.md` (excluding the `v2/` subdirectory).
+
+### v2
+
+Source of truth: the OpenAPI spec at `specs/dolthub-v2.yaml`. To update an endpoint or schema, edit that spec, then run:
+
+```sh
+npm run generate-api-v2 --workspace site/dolt
+```
+
+This writes `site/dolt/src/content/products/dolthub/api/v2/database.md` (one section per `Database`-tagged endpoint), `user.md`, `operations.md`, and `models.md` (one entry per component schema). `authentication.md`, `README.md`, and `migration.md` in that directory are hand-written and untouched by the script.
+
 ## Workflow
 
 | Branch          | What happens on merge |
@@ -65,7 +89,6 @@ npm run dev -w site/<site>     # http://localhost:432x/docs
 ## Caveats
 
 - **`cli.md` is generated**, not hand-edited. To update it, run `dolt dump-docs --file=site/dolt/src/content/reference/cli/cli.md` from a Dolt binary at the right version, then `chmod 644`.
-- **DoltHub API docs are generated.** Don't hand-edit `site/dolt/src/content/products/dolthub/api/*.md` — regenerate instead. To update an endpoint, edit either the Swagger JSON in `site/dolt/src/content/.gitbook/assets/dolthub-api/<name>.json` or the per-page markdown template in `scripts/api-source/<page>.md`, then run `python3 scripts/generate-api-docs.py`.
 - **Internal links** are site-absolute with no `.md` extension. Use the URL form: `/sql-reference/version-control/dolt-sql-procedures#dolt_merge`, `/cli-reference/cli#dolt-status`, etc. A rehype plugin prepends the `/docs` base at build time, so write links *without* `/docs/`. Same-page anchors stay as `#anchor`.
 - **Images** must use *relative* paths (e.g. `../../.gitbook/assets/foo.png`) so Astro's asset pipeline can fingerprint them. Don't use absolute `/…` for images.
 - **Code blocks need a language** for syntax highlighting. Common: `sql` (incl. `mysql>` sessions — `mysql` isn't a Shiki grammar, use `sql`), `bash` (shell sessions), `text` (plain output / `+---+` result tables), `yaml`, `go`, `python`, `json`, `diff`, `ini`. Leave bare only when nothing fits.
