@@ -51,10 +51,10 @@ export function buildAstroConfig(site, siteDir) {
     site,
     base,
     outDir: `./dist${base}`,
-    integrations: [
-      tailwind(),
-      react(),
-      unified({
+    integrations: [tailwind(), react()],
+    markdown: {
+      shikiConfig,
+      processor: unified({
         remarkPlugins: [remarkInjectTitleH1, remarkHeadingId],
         rehypePlugins: [
           [rehypeBasePath, { base }],
@@ -62,9 +62,6 @@ export function buildAstroConfig(site, siteDir) {
           [rehypeAutolinkHeadings, autolinkHeadingsOptions],
         ],
       }),
-    ],
-    markdown: {
-      shikiConfig,
     },
     vite: buildViteConfig(siteDir),
   });
