@@ -7,18 +7,6 @@ description: How to migrate your integrations from the DoltHub v1alpha1 API to v
 
 This page covers the mechanical changes needed to move an existing v1alpha1 integration to v2. Read it alongside the [v2 overview](../v2) and the per-resource pages.
 
-## What's not in v2 yet
-
-One v1alpha1 endpoint has no v2 equivalent yet. If you rely on it, keep using v1alpha1 for that call while migrating the rest:
-
-| v1alpha1 endpoint | Status |
-|---|---|
-| `POST /{owner}/{database}/write/...` — SQL write + merge | Not yet in v2 |
-
-All other v1alpha1 endpoints have direct v2 equivalents covered in the mapping below.
-
----
-
 ## 1. Base URL
 
 Every v1alpha1 path lives under `/api/v1alpha1/`. Every v2 path lives under `/api/v2/`.
