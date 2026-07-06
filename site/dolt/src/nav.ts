@@ -280,6 +280,7 @@ const nav: NavSection[] = [
                   { title: "Database", href: "/products/dolthub/api/v2/database" },
                   { title: "Operations", href: "/products/dolthub/api/v2/operations" },
                   { title: "Models", href: "/products/dolthub/api/v2/models" },
+                  { title: "Migrating from v1alpha1", href: "/products/dolthub/api/v2/migration" },
                 ],
               },
               { title: "CSV", href: "/products/dolthub/api/csv" },
