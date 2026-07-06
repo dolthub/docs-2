@@ -543,6 +543,49 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/forks' 
 }
 ```
 
+---
+
+### Fork a database {#createFork}
+`POST /api/v2/databases/{owner}/{database}/forks`
+
+Forks `{owner}/{database}` into `owner`'s namespace. Returns `202` with an `OperationRef`; follow `OperationRef.href` to poll for completion (operation IDs contain slashes and must not be interpolated raw into path templates). The caller must have read access on the source database and may only fork into a namespace they own. Duplicate forks (same source forked twice into the same owner) surface as `422` via the standard error model. Authentication is required.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the source database. |
+| `database` | path | string | yes | The source database name, unique within the owner. |
+
+**Request body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `owner` | string | yes | The user or organization that will own the new fork. |
+
+**Example request**
+
+```sh
+curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/forks' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"owner":"taylor"}'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `202` | The fork operation has been accepted and is queued. | [`OperationRef`](models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+
 
 ## Releases
 

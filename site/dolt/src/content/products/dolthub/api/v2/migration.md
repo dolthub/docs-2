@@ -149,7 +149,7 @@ curl 'https://www.dolthub.com/api/v2/operations/owners/dolthub/repos/us-jails/jo
 | `POST /{owner}/{database}/tags` | [`POST /api/v2/databases/{owner}/{database}/tags`](database#createTag) |
 | `POST /{owner}/{database}/upload` | [`POST .../imports/uploads`](database#createImportUpload) then [`POST .../imports`](database#createImport) |
 | `GET /{owner}/{database}/upload` | Poll [`GET /api/v2/operations/{id}`](operations#getOperation) |
-| `POST /fork` | `POST /api/v2/databases/{owner}/{database}/forks` |
+| `POST /fork` | [`POST /api/v2/databases/{owner}/{database}/forks`](database#createFork) |
 | `GET /fork` | Poll [`GET /api/v2/operations/{id}`](operations#getOperation) |
-| `GET /{owner}/{database}/jobs` | `GET /api/v2/databases/{owner}/{database}/jobs` |
-| `GET /users/{username}/operations` | `GET /api/v2/databases/{owner}/{database}/jobs` |
+| `GET /{owner}/{database}/jobs` | [`GET /api/v2/databases/{owner}/{database}/operations`](operations#listOperations) |
+| `GET /users/{username}/operations` | [`GET /api/v2/databases/{owner}/{database}/operations`](operations#listOperations) |

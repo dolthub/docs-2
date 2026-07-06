@@ -113,6 +113,15 @@ _Type: `object`_
 
 ---
 
+## CreateForkRequest {#model-createforkrequest}
+Body for `POST /api/v2/databases/{owner}/{database}/forks`. The URL identifies the source database; `owner` is the user or organization that will own the new fork. The new fork inherits the source database's name. Forking into a namespace the caller does not own returns `403`.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `owner` | `string` | yes | The user or organization that will own the new fork. |
+
+---
+
 ## UpdatePullRequest {#model-updatepullrequest}
 Body for `PATCH /api/v2/databases/{owner}/{database}/pulls/{pull_number}`. Every field is optional; the caller supplies whichever fields they're changing and the server only updates those. At least one field must be present. `state` is restricted to the writable transitions (`open` ↔ `closed`); to merge, use the merge operation.
 
@@ -291,6 +300,7 @@ Error details recorded when an operation reaches the `failed` status.
 | `status` | `integer` | yes | HTTP-equivalent status code for the failure. |
 | `code` | `string` | yes | A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on this value, never on the human-readable `title`/`detail` prose. The baseline codes below cover the standard HTTP failure categories; endpoint-specific codes (e.g. `BRANCH_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them, which is an additive, non-breaking change under the v2 stability policy (§5.1). |
 | `title` | `string` | yes | A short, human-readable summary of the failure. |
+| `detail` | `string` | no | A human-readable explanation of the failure, sourced from the underlying operation error message when available. |
 
 ---
 

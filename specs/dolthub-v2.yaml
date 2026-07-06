@@ -581,6 +581,82 @@ paths:
           $ref: "#/components/responses/MethodNotAllowed"
         "500":
           $ref: "#/components/responses/InternalServerError"
+    post:
+      operationId: createFork
+      summary: Fork a database.
+      description: >-
+        Forks `{owner}/{database}` into `owner`'s namespace. Returns `202` with an
+        `OperationRef`; follow `OperationRef.href` to poll for completion (operation IDs
+        contain slashes and must not be interpolated raw into path templates). The caller
+        must have read access on the source database and may only fork into a namespace
+        they own. Duplicate forks (same source forked twice into the same owner) surface
+        as `422` via the standard error model. Authentication is required.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the source database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The source database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateForkRequest"
+      responses:
+        "202":
+          description: The fork operation has been accepted and is queued.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /api/v2/databases/{owner}/{database}/releases:
     get:
       operationId: listReleases
@@ -1638,6 +1714,79 @@ paths:
           $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/operations:
+    get:
+      operationId: listOperations
+      summary: List a database's async operations.
+      description: >-
+        Returns the async operations (imports, merges, SQL writes, forks, …) recorded against
+        the database `{owner}/{database}`, ordered by the backend. Cursor-paginated via
+        `page_token` (request) / `meta.next_page_token` (response); when `next_page_token` is
+        absent or empty there are no further pages. Public databases are readable without
+        authentication; private databases require a credential with access (and return `404`
+        otherwise, so their existence isn't leaked). Each entry is the same `Operation` shape
+        `GET /api/v2/operations/{id}` returns — `data[i].id` is what you pass to that endpoint
+        to re-poll a single operation.
+      tags:
+        - Operations
+      security:
+        - {}
+        - personalAccessToken: []
+        - oauth2: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+        - $ref: "#/components/parameters/PageToken"
+      responses:
+        "200":
+          description: The database's async operations.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response (including 2xx). Reuse
+                the inbound `x-request-id` from the caller / edge proxy when present;
+                otherwise the server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Operation"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /api/v2/operations/{operation_id}:
     get:
       operationId: getOperation
@@ -1996,6 +2145,24 @@ components:
         the schema is closed under `additionalProperties` (mistyped fields fail loud
         rather than getting silently dropped) and so we have a stable place to add the
         conflict-resolution strategy when that ships.
+      additionalProperties: false
+    CreateForkRequest:
+      type: object
+      title: CreateForkRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/forks`. The URL identifies the
+        source database; `owner` is the user or organization that will own the new fork.
+        The new fork inherits the source database's name. Forking into a namespace the
+        caller does not own returns `403`.
+      required:
+        - owner
+      properties:
+        owner:
+          type: string
+          minLength: 1
+          description: The user or organization that will own the new fork.
+          examples:
+            - taylor
       additionalProperties: false
     UpdatePullRequest:
       type: object
@@ -2508,6 +2675,13 @@ components:
           description: A short, human-readable summary of the failure.
           examples:
             - Unprocessable
+        detail:
+          type: string
+          description: >-
+            A human-readable explanation of the failure, sourced from the underlying
+            operation error message when available.
+          examples:
+            - "Error 1213 (40001): serialization failure: this transaction conflicts with a committed transaction from another client, try restarting transaction"
 
     Operation:
       type: object
