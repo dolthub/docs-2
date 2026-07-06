@@ -17,9 +17,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "yarn"
+          cache: "npm"
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: Type check
         run: npm run compile
 
@@ -32,9 +32,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "yarn"
+          cache: "npm"
       - name: Install Cypress dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: Build Astro site
         run: npm run build:dolt
       - name: Run Cypress tests
@@ -62,9 +62,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "yarn"
+          cache: "npm"
       - name: Install Cypress dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: Build Astro site
         run: npm run build:doltlab
       - name: Run Cypress tests
@@ -93,9 +93,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "yarn"
+          cache: "npm"
       - name: Install Cypress dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: Build Astro site
         run: npm run build:doltgres
       - name: Run Cypress tests

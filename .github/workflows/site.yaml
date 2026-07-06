@@ -24,6 +24,6 @@ jobs:
         with:
           node-version: "22"
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: Build
         run: npm run build:${{ matrix.site }}
