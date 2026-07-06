@@ -36,6 +36,7 @@ Compared to `v1alpha1`, v2 commits to:
 | **GET** | `/api/v2/databases/{owner}/{database}/tags` | [List tags](database#listTags) |
 | **POST** | `/api/v2/databases/{owner}/{database}/tags` | [Create a tag](database#createTag) |
 | **GET** | `/api/v2/databases/{owner}/{database}/forks` | [List forks](database#listForks) |
+| **POST** | `/api/v2/databases/{owner}/{database}/forks` | [Fork a database](database#createFork) |
 | **GET** | `/api/v2/databases/{owner}/{database}/releases` | [List releases](database#listReleases) |
 | **POST** | `/api/v2/databases/{owner}/{database}/releases` | [Create a release](database#createRelease) |
 | **GET** | `/api/v2/databases/{owner}/{database}/sql` | [Run a read-only SQL query](database#runSqlReadQuery) |
@@ -54,4 +55,5 @@ Compared to `v1alpha1`, v2 commits to:
 
 | Method | Path | What it does |
 |--------|------|--------------|
+| **GET** | `/api/v2/databases/{owner}/{database}/operations` | [List a database's async operations](operations#listOperations) |
 | **GET** | `/api/v2/operations/{operation_id}` | [Get an async operation](operations#getOperation) |
