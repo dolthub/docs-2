@@ -20,11 +20,12 @@ This documentation will walk you through discovering data on DoltHub, cloning a 
 
 ## DoltHub API
 
-DoltHub exposes [three independent HTTP APIs](/products/dolthub/api/):
+DoltHub exposes [several independent HTTP APIs](/products/dolthub/api/):
 
-1. [v1alpha1 API](/products/dolthub/api/v1alpha1) — the resource-oriented surface for SQL, databases, branches, pull requests, releases, tags, file uploads, jobs, and the authenticated user.
-2. [CSV](/products/dolthub/api/csv) — bulk export and import of table data as CSV.
-3. [Webhooks](/products/dolthub/api/hooks) — HTTP callbacks for database events like push and pull request.
+1. [v2 API](/products/dolthub/api/v2) — the current generation, an explicit, versioned, OpenAPI-defined contract for SQL, databases, branches, pull requests, releases, tags, file uploads, and the authenticated user. New integrations should start here.
+2. [v1alpha1 API](/products/dolthub/api/v1alpha1) — the original API. Still supported, but new endpoints are being added to v2 only.
+3. [CSV](/products/dolthub/api/csv) — bulk export and import of table data as CSV.
+4. [Webhooks](/products/dolthub/api/hooks) — HTTP callbacks for database events like push and pull request.
 
 ## Guides
 
