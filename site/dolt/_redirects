@@ -8,12 +8,23 @@
 # site, blog posts, third-party pages) still point at these; redirect to
 # their current locations instead of 404ing.
 /docs/installation                       /docs/introduction/installation                          301
+/docs/guides/installation                /docs/introduction/installation                          301
+/docs/guides/installation/*              /docs/introduction/installation/:splat                   301
 /docs/reference/sql/configuration        /docs/sql-reference/server/configuration                 301
 /docs/reference/sql/backups              /docs/sql-reference/server/backups                       301
 /docs/reference/sql/replication          /docs/sql-reference/server/replication                   301
 /docs/reference/sql/dolt-sql-procedures  /docs/sql-reference/version-control/dolt-sql-procedures  301
 /docs/reference/sql/dolt-sysvars         /docs/sql-reference/version-control/dolt-sysvars         301
 /docs/reference/sql/dolt-system-tables   /docs/sql-reference/version-control/dolt-system-tables   301
+
+# The Spreadsheets client doc was removed upstream (deemed out of date;
+# https://github.com/dolthub/docs/commit/83438262) with no replacement page —
+# send it to the Supported Clients index instead of 404ing.
+/docs/sql-reference/supported-clients/spreadsheets  /docs/sql-reference/supported-clients  301
+
+# The v1alpha1 API docs used to live at the flat /products/dolthub/api/ path
+# before being nested under v1alpha1/ to make room for v2.
+/docs/products/dolthub/api/sql  /docs/products/dolthub/api/v1alpha1/sql  301
 
 # Catch-all for any other /docs/reference/{sql,cli}/* paths — the canonical
 # URLs are /docs/sql-reference/* and /docs/cli-reference/*. Cloudflare
