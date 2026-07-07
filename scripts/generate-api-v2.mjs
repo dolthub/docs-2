@@ -82,37 +82,62 @@ function methodBadge(method) {
   return `![${label}](https://img.shields.io/badge/${label}-${color}?style=flat-square)`;
 }
 
-function curlExample(method, path, operation) {
+// A request body is normally a single schema. When it's a `oneOf` (e.g. an
+// endpoint that's dual-purpose depending on the payload shape), treat each
+// branch as its own variant — each gets its own request-body table and
+// example below, labeled with the branch's schema title.
+function requestBodySchemaVariants(requestBody) {
+  const schema = requestBody?.content?.["application/json"]?.schema;
+  if (!schema) return [];
+  const resolved = deref(schema);
+  if (Array.isArray(resolved.oneOf) && resolved.oneOf.length) {
+    return resolved.oneOf.map((s) => deref(s));
+  }
+  return [resolved];
+}
+
+function examplePayload(resolved) {
+  const required = resolved.required ?? [];
+  const props = resolved.properties ?? {};
+  const example = Object.fromEntries(
+    Object.entries(props)
+      .filter(([k]) => required.includes(k))
+      .slice(0, 4)
+      .map(([k, v]) => {
+        const t = v.type ?? (v.enum ? "enum" : "object");
+        const ex =
+          v.examples?.[0] ??
+          v.example ??
+          (t === "string" ? `"example_${k}"` : t === "boolean" ? false : 0);
+        return [k, ex];
+      })
+  );
+  return Object.keys(example).length > 0 ? example : null;
+}
+
+function curlLines(method, path, payload) {
   const lines = [
     `curl -X ${METHOD_LABELS[method] ?? method.toUpperCase()} 'https://www.dolthub.com${path}'`,
     `  -H 'Authorization: Bearer YOUR_TOKEN'`,
   ];
   if (method !== "get" && method !== "delete") {
     lines.push(`  -H 'Content-Type: application/json'`);
-    const reqBody = operation.requestBody?.content?.["application/json"]?.schema;
-    if (reqBody) {
-      const resolved = deref(reqBody);
-      const required = resolved.required ?? [];
-      const props = resolved.properties ?? {};
-      const example = Object.fromEntries(
-        Object.entries(props)
-          .filter(([k]) => required.includes(k))
-          .slice(0, 4)
-          .map(([k, v]) => {
-            const t = v.type ?? (v.enum ? "enum" : "object");
-            const ex =
-              v.examples?.[0] ??
-              v.example ??
-              (t === "string" ? `"example_${k}"` : t === "boolean" ? false : 0);
-            return [k, ex];
-          })
-      );
-      if (Object.keys(example).length > 0) {
-        lines.push(`  -d '${JSON.stringify(example)}'`);
-      }
-    }
+    if (payload) lines.push(`  -d '${JSON.stringify(payload)}'`);
   }
   return lines.join(" \\\n");
+}
+
+// Returns one example per request-body variant: [{ label, curl }]. `label`
+// is null for the common single-schema case (no "Example request" suffix).
+function curlExamples(method, path, operation) {
+  const variants = requestBodySchemaVariants(operation.requestBody);
+  if (variants.length <= 1) {
+    return [{ label: null, curl: curlLines(method, path, variants[0] && examplePayload(variants[0])) }];
+  }
+  return variants.map((v) => ({
+    label: v.title ?? null,
+    curl: curlLines(method, path, examplePayload(v)),
+  }));
 }
 
 function parametersSection(params) {
@@ -131,11 +156,7 @@ function parametersSection(params) {
   return `\n**Parameters**\n\n| Name | In | Type | Required | Description |\n|------|----|------|----------|-------------|\n${rows}\n`;
 }
 
-function requestBodySection(requestBody) {
-  if (!requestBody) return "";
-  const schema = requestBody.content?.["application/json"]?.schema;
-  if (!schema) return "";
-  const resolved = deref(schema);
+function requestBodyFieldsTable(resolved) {
   const required = resolved.required ?? [];
   const props = resolved.properties ?? {};
   if (!Object.keys(props).length) return "";
@@ -147,7 +168,25 @@ function requestBodySection(requestBody) {
       return `| \`${k}\` | ${type} | ${req} | ${desc} |`;
     })
     .join("\n");
-  return `\n**Request body**\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n${rows}\n`;
+  return `| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n${rows}\n`;
+}
+
+function requestBodySection(requestBody) {
+  const variants = requestBodySchemaVariants(requestBody);
+  if (!variants.length) return "";
+  if (variants.length === 1) {
+    const table = requestBodyFieldsTable(variants[0]);
+    return table ? `\n**Request body**\n\n${table}` : "";
+  }
+  return variants
+    .map((v) => {
+      const table = requestBodyFieldsTable(v);
+      if (!table) return "";
+      const label = v.title ? ` — \`${v.title}\`` : "";
+      return `\n**Request body${label}**\n\n${table}`;
+    })
+    .filter(Boolean)
+    .join("");
 }
 
 function responseSchemaName(schema) {
@@ -264,7 +303,12 @@ function endpointBlock(method, path, operation, headingLevel = "###") {
   const body = requestBodySection(deref(operation.requestBody ?? {}));
   const responses = responsesSection(operation.responses);
   const successExample = successExampleBlock(operation.responses);
-  const curl = `\n**Example request**\n\n\`\`\`sh\n${curlExample(method, path, operation)}\n\`\`\`\n`;
+  const curl = curlExamples(method, path, operation)
+    .map(({ label, curl }) => {
+      const heading = label ? `\n**Example request — \`${label}\`**\n\n` : `\n**Example request**\n\n`;
+      return `${heading}\`\`\`sh\n${curl}\n\`\`\`\n`;
+    })
+    .join("");
   return [heading, methodPath, description, params, body, curl, responses, successExample]
     .filter(Boolean)
     .join("");

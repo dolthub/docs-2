@@ -449,6 +449,29 @@ One column in a query result's schema.
 
 ---
 
+## SqlReadRequest {#model-sqlreadrequest}
+Body for the read variant of `POST /api/v2/databases/{owner}/{database}/sql`. Identical semantics to the `GET /sql` query string — pass the query in the body when it's too long for a URL.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `ref` | `string` | yes | The branch, tag, or commit hash to query against. A 32-character value using only the characters `0-9a-v` (Dolt's base32 alphabet) is treated as a commit hash; everything else resolves as a branch, tag, or other ref. |
+| `q` | `string` | yes | The SQL query to execute. Read-only — mutations are rejected. |
+| `limit` | `integer` | no | Maximum number of rows to return (default `1000`). |
+| `timeout_ms` | `integer` | no | Per-query execution timeout in milliseconds (default `30000`, cap `60000`). |
+
+---
+
+## SqlWriteRequest {#model-sqlwriterequest}
+Body for the write variant of `POST /api/v2/databases/{owner}/{database}/sql`. Runs `query` on `to_branch` (creating it from `from_branch` if it doesn't exist) then merges `from_branch` into `to_branch`. Returns `202` + `OperationRef`. `from_branch` and `to_branch` are bare branch names — both must live in the URL's `{owner}/{database}`.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `from_branch` | `string` | yes | The branch to merge from after the write completes. |
+| `to_branch` | `string` | yes | The branch the write runs on. Created from `from_branch` when it doesn't already exist. |
+| `query` | `string` | yes | The SQL write statement to execute. |
+
+---
+
 ## QueryResult {#model-queryresult}
 The result of a `runSqlReadQuery` call. SQL-level conditions (success, error, timeout, row-limit) live in `status` and `message` — they are query-level, not transport-level.
 

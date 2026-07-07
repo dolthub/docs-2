@@ -40,7 +40,7 @@ Compared to `v1alpha1`, v2 commits to:
 | **GET** | `/api/v2/databases/{owner}/{database}/releases` | [List releases](database#listReleases) |
 | **POST** | `/api/v2/databases/{owner}/{database}/releases` | [Create a release](database#createRelease) |
 | **GET** | `/api/v2/databases/{owner}/{database}/sql` | [Run a read-only SQL query](database#runSqlReadQuery) |
-| **POST** | `/api/v2/databases/{owner}/{database}/sql` | [Run a read-only SQL query (large-query variant)](database#runSqlReadQueryPost) |
+| **POST** | `/api/v2/databases/{owner}/{database}/sql` | [Run a SQL query (read or write)](database#runSqlPost) |
 | **GET** | `/api/v2/databases/{owner}/{database}/pulls` | [List pull requests](database#listPulls) |
 | **POST** | `/api/v2/databases/{owner}/{database}/pulls` | [Create a pull request](database#createPull) |
 | **GET** | `/api/v2/databases/{owner}/{database}/pulls/{pull_number}` | [Get a pull request](database#getPull) |

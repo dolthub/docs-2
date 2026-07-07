@@ -193,10 +193,10 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
 
 ---
 
-### Run a read-only SQL query (large-query variant) {#runSqlReadQueryPost}
+### Run a SQL query (read or write) {#runSqlPost}
 `POST /api/v2/databases/{owner}/{database}/sql`
 
-Identical to `GET /sql` but accepts the query in the request body to avoid the browser/proxy URL-length limit (~4–8 KB) that `?q=` hits for large SQL statements. Use this when the query is too long for a query string; prefer `GET` for short queries (simpler to cache and log). The response shape is identical.
+Dual-purpose `/sql` POST: discriminated by the request body shape. A `SqlReadRequest` body (`{ ref, q }`) runs a read identical to `GET /sql` — same response shape — but carries the query in the body to dodge the browser/proxy URL-length limit (~4–8 KB) that `?q=` hits for large SQL statements. A `SqlWriteRequest` body (`{ from_branch, to_branch, query }`) kicks off an asynchronous SQL write — running the write on `to_branch` (creating it from `from_branch` if it doesn't exist), then merging `from_branch` into `to_branch` — and returns `202` with an `OperationRef`; poll `GET /api/v2/operations/{id}` for completion. Authentication is required for writes; reads follow the database-level convention (public DBs readable without a token, private DBs require one).
 
 
 **Parameters**
@@ -206,7 +206,7 @@ Identical to `GET /sql` but accepts the query in the request body to avoid the b
 | `owner` | path | string | yes | The user or organization that owns the database. |
 | `database` | path | string | yes | The database name, unique within the owner. |
 
-**Request body**
+**Request body — `SqlReadRequest`**
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -215,7 +215,15 @@ Identical to `GET /sql` but accepts the query in the request body to avoid the b
 | `limit` | integer | no | Maximum number of rows to return (default `1000`). |
 | `timeout_ms` | integer | no | Per-query execution timeout in milliseconds (default `30000`, cap `60000`). |
 
-**Example request**
+**Request body — `SqlWriteRequest`**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `from_branch` | string | yes | The branch to merge from after the write completes. |
+| `to_branch` | string | yes | The branch the write runs on. Created from `from_branch` when it doesn't already exist. |
+| `query` | string | yes | The SQL write statement to execute. |
+
+**Example request — `SqlReadRequest`**
 
 ```sh
 curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
@@ -224,13 +232,24 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
   -d '{"ref":"main","q":"SELECT name, year FROM jails WHERE state = 'California' LIMIT 10"}'
 ```
 
+**Example request — `SqlWriteRequest`**
+
+```sh
+curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"from_branch":"main","to_branch":"feature/new-states","query":"INSERT INTO states (name, abbr) VALUES ('Puerto Rico', 'PR')"}'
+```
+
 **Responses**
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The query result. SQL-level errors live in `status` + `message`. | [`QueryResult`](models#model-queryresult) |
+| `200` | The read query result. SQL-level errors live in `status` + `message`. | [`QueryResult`](models#model-queryresult) |
+| `202` | The write operation has been accepted and is queued. | [`OperationRef`](models#model-operationref) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |

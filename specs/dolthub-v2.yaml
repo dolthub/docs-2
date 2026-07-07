@@ -42,7 +42,7 @@ servers:
 # operations may override this (e.g. public reads) once paths are added.
 security:
   - personalAccessToken: []
-  - oauth2: []
+  - oauth2: [api_read_write]
 
 # Operation tags are registered here so renderers (Scalar) group operations consistently.
 # New tags are added as resources land in subsequent phases.
@@ -62,6 +62,9 @@ paths:
       description: Returns the profile of the user identified by the request's credentials.
       tags:
         - User
+      security:
+        - personalAccessToken: []
+        - oauth2: [api_read_write]
       responses:
         "200":
           description: The authenticated user's profile.
@@ -106,7 +109,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       requestBody:
         required: true
         content:
@@ -164,7 +167,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -233,7 +236,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -298,7 +301,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -377,7 +380,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -445,7 +448,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -527,7 +530,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -595,7 +598,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -672,7 +675,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -741,7 +744,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -827,7 +830,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -919,19 +922,25 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
     post:
-      operationId: runSqlReadQueryPost
-      summary: Run a read-only SQL query (large-query variant).
+      operationId: runSqlPost
+      summary: Run a SQL query (read or write).
       description: >-
-        Identical to `GET /sql` but accepts the query in the request body to avoid the
-        browser/proxy URL-length limit (~4–8 KB) that `?q=` hits for large SQL statements.
-        Use this when the query is too long for a query string; prefer `GET` for short queries
-        (simpler to cache and log). The response shape is identical.
+        Dual-purpose `/sql` POST: discriminated by the request body shape. A `SqlReadRequest`
+        body (`{ ref, q }`) runs a read identical to `GET /sql` — same response shape — but
+        carries the query in the body to dodge the browser/proxy URL-length limit (~4–8 KB)
+        that `?q=` hits for large SQL statements. A `SqlWriteRequest` body
+        (`{ from_branch, to_branch, query }`) kicks off an asynchronous SQL write — running
+        the write on `to_branch` (creating it from `from_branch` if it doesn't exist), then
+        merging `from_branch` into `to_branch` — and returns `202` with an `OperationRef`;
+        poll `GET /api/v2/operations/{id}` for completion. Authentication is required for
+        writes; reads follow the database-level convention (public DBs readable without a
+        token, private DBs require one).
       tags:
         - Database
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -954,37 +963,12 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - ref
-                - q
-              properties:
-                ref:
-                  type: string
-                  minLength: 1
-                  description: >-
-                    The branch, tag, or commit hash to query against. A 32-character value using
-                    only the characters `0-9a-v` (Dolt's base32 alphabet) is treated as a commit
-                    hash; everything else resolves as a branch, tag, or other ref.
-                  example: main
-                q:
-                  type: string
-                  minLength: 1
-                  description: The SQL query to execute. Read-only — mutations are rejected.
-                  example: "SELECT name, year FROM jails WHERE state = 'California' LIMIT 10"
-                limit:
-                  type: integer
-                  minimum: 1
-                  description: Maximum number of rows to return (default `1000`).
-                  example: 100
-                timeout_ms:
-                  type: integer
-                  minimum: 1
-                  description: Per-query execution timeout in milliseconds (default `30000`, cap `60000`).
-                  example: 10000
+              oneOf:
+                - $ref: "#/components/schemas/SqlReadRequest"
+                - $ref: "#/components/schemas/SqlWriteRequest"
       responses:
         "200":
-          description: The query result. SQL-level errors live in `status` + `message`.
+          description: The read query result. SQL-level errors live in `status` + `message`.
           headers:
             x-request-id:
               description: >-
@@ -1006,10 +990,35 @@ paths:
                     properties:
                       data:
                         $ref: "#/components/schemas/QueryResult"
+        "202":
+          description: The write operation has been accepted and is queued.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -1031,7 +1040,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1099,7 +1108,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1177,7 +1186,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1251,7 +1260,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1337,7 +1346,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1412,7 +1421,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1494,7 +1503,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1569,7 +1578,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1644,7 +1653,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1732,7 +1741,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1798,6 +1807,9 @@ paths:
         name returned by the backend.
       tags:
         - Operations
+      security:
+        - personalAccessToken: []
+        - oauth2: [api_read_write]
       parameters:
         - name: operation_id
           in: path
@@ -1848,12 +1860,19 @@ components:
       description: "A DoltHub personal access token, sent as `Authorization: Bearer <token>`."
     oauth2:
       type: oauth2
-      description: "A DoltHub OAuth 2.0 access token, sent as `Authorization: Bearer <token>`."
+      description: >-
+        A DoltHub OAuth 2.0 access token, sent as `Authorization: Bearer <token>`. v2 ships
+        with a single scope, `api_read_write`, which grants both reads and writes — there is
+        no read-only scope today. Every endpoint that accepts `oauth2` lists `api_read_write`
+        as the required scope so the rendered docs and any client-config generator surface
+        the value callers must actually request; future per-endpoint narrowing (e.g.
+        `api_read`) will be additive under the v2 stability policy (§5.1).
       flows:
         authorizationCode:
           authorizationUrl: https://www.dolthub.com/oauth/authorize
           tokenUrl: https://www.dolthub.com/oauth/token
-          scopes: {}
+          scopes:
+            api_read_write: Full read and write access to the v2 API.
 
   schemas:
     # --- Error model (1.c, §5.3) ---------------------------------------------------------
@@ -3186,6 +3205,79 @@ components:
             (e.g. `COUNT(*)`).
           examples:
             - jails
+    SqlReadRequest:
+      type: object
+      title: SqlReadRequest
+      description: >-
+        Body for the read variant of `POST /api/v2/databases/{owner}/{database}/sql`. Identical
+        semantics to the `GET /sql` query string — pass the query in the body when it's too
+        long for a URL.
+      required:
+        - ref
+        - q
+      properties:
+        ref:
+          type: string
+          minLength: 1
+          description: >-
+            The branch, tag, or commit hash to query against. A 32-character value using
+            only the characters `0-9a-v` (Dolt's base32 alphabet) is treated as a commit
+            hash; everything else resolves as a branch, tag, or other ref.
+          examples:
+            - main
+        q:
+          type: string
+          minLength: 1
+          description: The SQL query to execute. Read-only — mutations are rejected.
+          examples:
+            - "SELECT name, year FROM jails WHERE state = 'California' LIMIT 10"
+        limit:
+          type: integer
+          minimum: 1
+          description: Maximum number of rows to return (default `1000`).
+          examples:
+            - 100
+        timeout_ms:
+          type: integer
+          minimum: 1
+          description: Per-query execution timeout in milliseconds (default `30000`, cap `60000`).
+          examples:
+            - 10000
+      additionalProperties: false
+    SqlWriteRequest:
+      type: object
+      title: SqlWriteRequest
+      description: >-
+        Body for the write variant of `POST /api/v2/databases/{owner}/{database}/sql`. Runs
+        `query` on `to_branch` (creating it from `from_branch` if it doesn't exist) then merges
+        `from_branch` into `to_branch`. Returns `202` + `OperationRef`. `from_branch` and
+        `to_branch` are bare branch names — both must live in the URL's `{owner}/{database}`.
+      required:
+        - from_branch
+        - to_branch
+        - query
+      properties:
+        from_branch:
+          type: string
+          minLength: 1
+          description: The branch to merge from after the write completes.
+          examples:
+            - main
+        to_branch:
+          type: string
+          minLength: 1
+          description: >-
+            The branch the write runs on. Created from `from_branch` when it doesn't
+            already exist.
+          examples:
+            - feature/new-states
+        query:
+          type: string
+          minLength: 1
+          description: The SQL write statement to execute.
+          examples:
+            - "INSERT INTO states (name, abbr) VALUES ('Puerto Rico', 'PR')"
+      additionalProperties: false
     QueryResult:
       type: object
       title: QueryResult
