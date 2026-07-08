@@ -1,15 +1,8 @@
 # DoltHub Public API v2 — OpenAPI contract.
 #
-# This is the single source of truth for the v2 API (see dolthub-api-v2-plan.md §5.7).
-# TypeScript DTO types, runtime/contract-test JSON Schemas, and the public docs are all
-# generated from this file — never hand-edited downstream.
-#
-# Shared components are built up across phases:
-#   - components.schemas.Problem / ErrorCode  -> 1.c (error model)        [done]
-#   - components.schemas.Envelope / Meta      -> 1.d (success envelope)   [done]
-#   - components.schemas.Operation            -> 4.a (async operation resource) [done]
-# The first real path is GET /api/v2/user (1.t), which also adds the User /
-# EmailAddress resources.
+# This is the single source of truth for the v2 API. TypeScript DTO types,
+# runtime/contract-test JSON Schemas, and the public docs are all generated
+# from this file — never hand-edited downstream.
 openapi: 3.1.0
 
 info:
@@ -45,7 +38,6 @@ security:
   - oauth2: [api_read_write]
 
 # Operation tags are registered here so renderers (Scalar) group operations consistently.
-# New tags are added as resources land in subsequent phases.
 tags:
   - name: Database
     description: DoltHub databases and their metadata.
@@ -1850,7 +1842,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
 components:
-  # securitySchemes model the credential types the v2 auth layer accepts (§5.5). Personal
+  # securitySchemes model the credential types the v2 auth layer accepts. Personal
   # access tokens and OAuth access tokens are both presented in the `Authorization` header.
   # The public API does not support browser session cookies.
   securitySchemes:
@@ -1875,9 +1867,8 @@ components:
             api_read_write: Full read and write access to the v2 API.
 
   schemas:
-    # --- Error model (1.c, §5.3) ---------------------------------------------------------
-    # Every non-2xx response uses Problem (RFC 9457). The Operation resource (1.e) is added
-    # to this map by its PR.
+    # --- Error model ---------------------------------------------------------------------
+    # Every non-2xx response uses Problem (RFC 9457).
     ErrorCode:
       type: string
       title: ErrorCode
@@ -1886,7 +1877,7 @@ components:
         this value, never on the human-readable `title`/`detail` prose. The baseline codes
         below cover the standard HTTP failure categories; endpoint-specific codes (e.g.
         `BRANCH_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them,
-        which is an additive, non-breaking change under the v2 stability policy (§5.1).
+        which is an additive, non-breaking change under the v2 stability policy.
       enum:
         - VALIDATION_FAILED # 400 — malformed request or failed input validation
         - UNAUTHENTICATED # 401 — missing or invalid credentials
@@ -1922,7 +1913,7 @@ components:
             A URI identifying the problem type; when dereferenced it points at
             human-readable documentation for the error.
           examples:
-            - https://dolthub.com/docs/api/errors/not-found
+            - https://dolthub.com/docs/products/dolthub/api/v2/models/#model-errorcode
         title:
           type: string
           description: A short, human-readable summary of the problem type.
@@ -1958,7 +1949,7 @@ components:
             - req_01HZX9P7Q5N2M8
       additionalProperties: true
       examples:
-        - type: https://dolthub.com/docs/api/errors/not-found
+        - type: https://dolthub.com/docs/products/dolthub/api/v2/models/#model-errorcode
           title: Not found
           status: 404
           detail: "Branch 'main' does not exist in dolthub/us-jails"
@@ -1966,7 +1957,7 @@ components:
           code: NOT_FOUND
           request_id: req_01HZX9P7Q5N2M8
 
-    # --- Success envelope (1.d, §5.4) ----------------------------------------------------
+    # --- Success envelope ----------------------------------------------------------------
     # Every 2xx response body is enveloped: the resource (or list) under `data`, with
     # optional response metadata under `meta`. Concrete endpoint responses specialize the
     # envelope by narrowing `data` to a specific resource via `allOf`, e.g.:
@@ -1984,13 +1975,13 @@ components:
     #                     $ref: "#/components/schemas/User"
     #
     # The base types `data` only loosely (object or array) so this allOf narrowing composes
-    # cleanly ((object|array) ∩ User = User). The first real use is GET /api/v2/user in 1.t.
+    # cleanly ((object|array) ∩ User = User).
     Meta:
       type: object
       title: Meta
       description: >-
         Response metadata carried alongside the primary `data` payload. All fields are
-        optional; list endpoints populate `next_page_token` for cursor pagination (§5.6).
+        optional; list endpoints populate `next_page_token` for cursor pagination.
       properties:
         next_page_token:
           type: string
@@ -2007,7 +1998,7 @@ components:
       type: object
       title: Envelope
       description: >-
-        The success envelope wrapping every 2xx response body (§5.4): the resource or list of
+        The success envelope wrapping every 2xx response body: the resource or list of
         resources under `data`, with optional `meta`. This is the single success shape for
         the API — there are no unenveloped success bodies. Endpoints narrow `data` to a
         concrete resource via `allOf` (see the section comment above); the base leaves `data`
@@ -2026,10 +2017,10 @@ components:
           meta:
             next_page_token: eyJvZmZzZXQiOjI1fQ
 
-    # --- Resources (1.t onward) ----------------------------------------------------------
+    # --- Resources ----------------------------------------------------------------------
     # Resource schemas are the public DTO surface — what the v2 spec contract guarantees to
-    # integrators. Field names are snake_case (§5.2). Fields are added additively under the
-    # v2 stability policy (§5.1); renames or removals require v3.
+    # integrators. Field names are snake_case. Fields are added additively under the v2
+    # stability policy; renames or removals require v3.
     DatabaseRef:
       type: object
       title: DatabaseRef
@@ -3424,8 +3415,8 @@ components:
               is_verified: true
 
   # Reusable parameters — pulled out as components.parameters so every list endpoint $refs
-  # the same shape rather than redeclaring it. PageToken is the v2 pagination convention
-  # (§5.6, established by 2.b); the response side lives in components.schemas.Meta.next_page_token.
+  # the same shape rather than redeclaring it. PageToken is the v2 pagination convention;
+  # the response side lives in components.schemas.Meta.next_page_token.
   parameters:
     PageToken:
       name: page_token
@@ -3439,10 +3430,9 @@ components:
         type: string
       example: eyJvZmZzZXQiOjI1fQ
 
-  # Reusable error responses — the status-code conventions for v2 (§5.3). Operations
-  # reference these so every endpoint returns the right code with one consistent body
-  # instead of the v1 "everything is 400" behavior. They are wired into operations as paths
-  # are added (first in 1.t).
+  # Reusable error responses — the status-code conventions for v2. Operations reference
+  # these so every endpoint returns the right code with one consistent body instead of the
+  # v1 "everything is 400" behavior.
   responses:
     BadRequest:
       description: The request was malformed or failed input validation.
