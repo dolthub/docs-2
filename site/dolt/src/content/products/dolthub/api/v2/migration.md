@@ -121,6 +121,8 @@ curl 'https://www.dolthub.com/api/v2/operations/owners/dolthub/repos/us-jails/jo
 | `POST /database` | [`POST /api/v2/databases`](database#createDatabase) |
 | `GET /{owner}/{database}?q=` | [`GET /api/v2/databases/{owner}/{database}/sql?q=`](database#runSqlReadQuery) |
 | `GET /{owner}/{database}/{ref}?q=` | [`GET /api/v2/databases/{owner}/{database}/sql?q=&ref=`](database#runSqlReadQuery) |
+| `POST /{owner}/{database}/write/{from_branch}/{to_branch}` | [`POST /api/v2/databases/{owner}/{database}/sql`](database#runSqlPost) |
+| `GET /{owner}/{database}/write` | Poll [`GET /api/v2/operations/{id}`](operations#getOperation) |
 | `GET /{owner}/{database}/forks` | [`GET /api/v2/databases/{owner}/{database}/forks`](database#listForks) |
 | `GET /{owner}/{database}/branches` | [`GET /api/v2/databases/{owner}/{database}/branches`](database#listBranches) |
 | `POST /{owner}/{database}/branches` | [`POST /api/v2/databases/{owner}/{database}/branches`](database#createBranch) |
