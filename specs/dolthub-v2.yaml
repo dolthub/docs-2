@@ -807,7 +807,7 @@ paths:
         the result rows, the column schema, and the query-execution status. Read queries are
         not paginated — the full row set comes back in one response, bounded by `limit`
         (default 1000) and the server-enforced row cap. For larger result sets, refine the
-        query (`LIMIT`/`WHERE`/`SELECT` fewer columns) or use the phase-4 async SQL job.
+        query (`LIMIT`/`WHERE`/`SELECT` fewer columns).
 
         SQL-level errors (syntax errors, missing tables, timeouts, row-limit exceeded) come
         back as `200` with `status: "error" | "timeout" | "row_limit" | "not_workspace"` and a
@@ -854,7 +854,7 @@ paths:
         - name: q
           in: query
           required: true
-          description: The SQL query to execute. Read-only — use the phase-4 SQL write endpoint for mutations.
+          description: The SQL query to execute. Read-only — use `POST /sql-writes` for mutations.
           schema:
             type: string
             minLength: 1
@@ -864,7 +864,7 @@ paths:
           required: false
           description: >-
             Maximum number of rows to return (default `1000`). The server enforces an upper
-            cap; refine the query or use the async SQL job for larger result sets.
+            cap; refine the query for larger result sets.
           schema:
             type: string
             pattern: "^[1-9][0-9]*$"
@@ -914,19 +914,14 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
     post:
-      operationId: runSqlPost
-      summary: Run a SQL query (read or write).
+      operationId: runSqlReadQueryPost
+      summary: Run a SQL read query (body-encoded).
       description: >-
-        Dual-purpose `/sql` POST: discriminated by the request body shape. A `SqlReadRequest`
-        body (`{ ref, q }`) runs a read identical to `GET /sql` — same response shape — but
-        carries the query in the body to dodge the browser/proxy URL-length limit (~4–8 KB)
-        that `?q=` hits for large SQL statements. A `SqlWriteRequest` body
-        (`{ from_branch, to_branch, query }`) kicks off an asynchronous SQL write — running
-        the write on `to_branch` (creating it from `from_branch` if it doesn't exist), then
-        merging `from_branch` into `to_branch` — and returns `202` with an `OperationRef`;
-        poll `GET /api/v2/operations/{id}` for completion. Authentication is required for
-        writes; reads follow the database-level convention (public DBs readable without a
-        token, private DBs require one).
+        Body-encoded read variant of `GET /sql` — identical semantics and response shape,
+        but the query is carried in the body to dodge the browser/proxy URL-length limit
+        (~4–8 KB) that `?q=` hits for large SQL statements. Reads follow the
+        database-level convention: public databases are readable without a token, private
+        databases require one. Writes go to `POST /sql-writes`, not here.
       tags:
         - Database
       security:
@@ -955,9 +950,7 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: "#/components/schemas/SqlReadRequest"
-                - $ref: "#/components/schemas/SqlWriteRequest"
+              $ref: "#/components/schemas/SqlReadRequest"
       responses:
         "200":
           description: The read query result. SQL-level errors live in `status` + `message`.
@@ -982,6 +975,55 @@ paths:
                     properties:
                       data:
                         $ref: "#/components/schemas/QueryResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/sql-writes:
+    post:
+      operationId: runSqlWriteQuery
+      summary: Run an asynchronous SQL write.
+      description: >-
+        Kicks off an asynchronous SQL write. Runs `query` on `to_branch` (creating it from
+        `from_branch` if it doesn't exist), then merges `from_branch` into `to_branch`.
+        Returns `202` with an `OperationRef`; follow `OperationRef.href` to
+        `GET /api/v2/operations/{id}` and poll until `status` is `succeeded` or `failed`.
+        Authentication is required.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: [api_read_write]
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SqlWriteRequest"
+      responses:
         "202":
           description: The write operation has been accepted and is queued.
           headers:
@@ -1245,8 +1287,9 @@ paths:
         Partially updates the pull request `{pull_number}` in `{owner}/{database}`. The body
         carries only the fields the caller is changing — any subset of `title`, `description`,
         `state`; at least one must be present. `state` is restricted to the writable
-        transitions (`open` ↔ `closed`); merging happens via the dedicated merge operation
-        (phase 4), not by writing state here. Returns the canonical `Pull` resource on `200`.
+        transitions (`open` ↔ `closed`); merging happens via the dedicated merge endpoint
+        (`POST /pulls/{pull_number}/merge`), not by writing state here. Returns the canonical
+        `Pull` resource on `200`.
         Authentication required.
       tags:
         - Database
@@ -3239,8 +3282,8 @@ components:
       type: object
       title: SqlWriteRequest
       description: >-
-        Body for the write variant of `POST /api/v2/databases/{owner}/{database}/sql`. Runs
-        `query` on `to_branch` (creating it from `from_branch` if it doesn't exist) then merges
+        Body for `POST /api/v2/databases/{owner}/{database}/sql-writes`. Runs `query` on
+        `to_branch` (creating it from `from_branch` if it doesn't exist) then merges
         `from_branch` into `to_branch`. Returns `202` + `OperationRef`. `from_branch` and
         `to_branch` are bare branch names — both must live in the URL's `{owner}/{database}`.
       required:

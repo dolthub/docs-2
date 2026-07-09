@@ -273,7 +273,9 @@ function subResource(path) {
       case "tags": return "Tags";
       case "forks": return "Forks";
       case "releases": return "Releases";
-      case "sql": return "SQL";
+      case "sql":
+      case "sql-writes":
+        return "SQL";
       case "pulls": return "Pull Requests";
       case "imports": return "Imports";
       default: return m[1];
