@@ -374,7 +374,6 @@ const markdownAlternate =
 
   /* API endpoint styles */
   .docs-main :global(.api-endpoint) {
-    @apply border;
     border-radius: 8px;
     margin: 1.5rem 0;
     overflow: hidden;
@@ -1288,14 +1287,11 @@ const markdownAlternate =
     border-left-color: #30363d;
   }
 
-  /* DoltHub API endpoint blocks: the light header fill (#f8f9fa) and grey
-     block border don't read on the dark card. Give the header the same
-     raised #21262d fill as table headers and switch the borders to #30363d.
-     The method badges (.api-method) and status pills keep their own colors,
-     and the path/summary text inherits the light body color. */
-  html.dark .docs-main .api-endpoint {
-    border-color: #30363d;
-  }
+  /* DoltHub API endpoint blocks: the light header fill (#f8f9fa) doesn't
+     read on the dark card. Give the header the same raised #21262d fill
+     as table headers and switch its bottom border to #30363d. The method
+     badges (.api-method) and status pills keep their own colors, and the
+     path/summary text inherits the light body color. */
   html.dark .docs-main .api-endpoint-header {
     background: #21262d;
     border-bottom-color: #30363d;
