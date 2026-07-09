@@ -279,8 +279,13 @@ const markdownAlternate =
     @apply border-l-4 border-sky-300 pl-4 italic my-4;
   }
 
+  .docs-main :global(.table-scroll) {
+    @apply mb-4 overflow-x-auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .docs-main :global(table) {
-    @apply w-full mb-4 text-sm;
+    @apply w-full text-sm;
     border-collapse: collapse;
   }
 
@@ -405,6 +410,7 @@ const markdownAlternate =
 
   .docs-main :global(.api-section) {
     padding: 0 1rem 0.75rem;
+    overflow-x: auto;
   }
 
   .docs-main :global(.api-section h5) {
@@ -469,6 +475,7 @@ const markdownAlternate =
   .docs-main :global(.api-response-body) {
     margin: 0.25rem 0 0.75rem 1rem;
     font-size: 0.875rem;
+    overflow-x: auto;
   }
 
   .docs-main :global(.api-response-body p) {
