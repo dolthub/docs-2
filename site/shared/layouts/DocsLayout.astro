@@ -279,8 +279,12 @@ const markdownAlternate =
     @apply border-l-4 border-sky-300 pl-4 italic my-4;
   }
 
+  .docs-main :global(.table-scroll) {
+    @apply mb-4 overflow-x-auto;
+  }
+
   .docs-main :global(table) {
-    @apply w-full mb-4 text-sm;
+    @apply w-full text-sm;
     border-collapse: collapse;
   }
 
