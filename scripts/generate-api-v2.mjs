@@ -69,17 +69,19 @@ function escapeMarkdown(str = "") {
   return str.replace(/\|/g, "\\|").replace(/\n+/g, " ").trim();
 }
 
-function methodBadge(method) {
+// Same palette + markup as the hand-written v1alpha1 pages' .api-method /
+// .api-path spans (see DocsLayout.astro), so v2 endpoint headers match.
+function methodSpan(method) {
   const colors = {
-    get: "009485",
+    get: "29E3C1",
     post: "6DB0FC",
-    patch: "FFCA28",
-    put: "FFA726",
+    patch: "F0A35C",
+    put: "F0A35C",
     delete: "EF5350",
   };
   const color = colors[method] ?? "888888";
   const label = METHOD_LABELS[method] ?? method.toUpperCase();
-  return `![${label}](https://img.shields.io/badge/${label}-${color}?style=flat-square)`;
+  return `<span class="api-method" style="background:#${color}">${label}</span>`;
 }
 
 function curlExample(method, path, operation) {
@@ -234,7 +236,9 @@ function subResource(path) {
       case "tags": return "Tags";
       case "forks": return "Forks";
       case "releases": return "Releases";
-      case "sql": return "SQL";
+      case "sql":
+      case "sql-writes":
+        return "SQL";
       case "pulls": return "Pull Requests";
       case "imports": return "Imports";
       default: return m[1];
@@ -254,7 +258,7 @@ function endpointBlock(method, path, operation, headingLevel = "###") {
     ? operation.summary.replace(/\.$/, "")
     : `${METHOD_LABELS[method]} ${path}`;
   const heading = `${headingLevel} ${title} ${anchor}\n`;
-  const methodPath = `\`${METHOD_LABELS[method]} ${path}\`\n\n`;
+  const methodPath = `${methodSpan(method)} <code class="api-path">${path}</code>\n\n`;
   const description =
     operation.description &&
     operation.description.trim() !== (operation.summary ?? "").trim()

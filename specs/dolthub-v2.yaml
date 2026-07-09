@@ -1,15 +1,8 @@
 # DoltHub Public API v2 — OpenAPI contract.
 #
-# This is the single source of truth for the v2 API (see dolthub-api-v2-plan.md §5.7).
-# TypeScript DTO types, runtime/contract-test JSON Schemas, and the public docs are all
-# generated from this file — never hand-edited downstream.
-#
-# Shared components are built up across phases:
-#   - components.schemas.Problem / ErrorCode  -> 1.c (error model)        [done]
-#   - components.schemas.Envelope / Meta      -> 1.d (success envelope)   [done]
-#   - components.schemas.Operation            -> 4.a (async operation resource) [done]
-# The first real path is GET /api/v2/user (1.t), which also adds the User /
-# EmailAddress resources.
+# This is the single source of truth for the v2 API. TypeScript DTO types,
+# runtime/contract-test JSON Schemas, and the public docs are all generated
+# from this file — never hand-edited downstream.
 openapi: 3.1.0
 
 info:
@@ -42,10 +35,9 @@ servers:
 # operations may override this (e.g. public reads) once paths are added.
 security:
   - personalAccessToken: []
-  - oauth2: []
+  - oauth2: [api_read_write]
 
 # Operation tags are registered here so renderers (Scalar) group operations consistently.
-# New tags are added as resources land in subsequent phases.
 tags:
   - name: Database
     description: DoltHub databases and their metadata.
@@ -62,6 +54,9 @@ paths:
       description: Returns the profile of the user identified by the request's credentials.
       tags:
         - User
+      security:
+        - personalAccessToken: []
+        - oauth2: [api_read_write]
       responses:
         "200":
           description: The authenticated user's profile.
@@ -106,7 +101,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       requestBody:
         required: true
         content:
@@ -164,7 +159,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -233,7 +228,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -298,7 +293,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -377,7 +372,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -445,7 +440,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -527,7 +522,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -595,7 +590,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -672,7 +667,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -741,7 +736,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -812,7 +807,7 @@ paths:
         the result rows, the column schema, and the query-execution status. Read queries are
         not paginated — the full row set comes back in one response, bounded by `limit`
         (default 1000) and the server-enforced row cap. For larger result sets, refine the
-        query (`LIMIT`/`WHERE`/`SELECT` fewer columns) or use the phase-4 async SQL job.
+        query (`LIMIT`/`WHERE`/`SELECT` fewer columns).
 
         SQL-level errors (syntax errors, missing tables, timeouts, row-limit exceeded) come
         back as `200` with `status: "error" | "timeout" | "row_limit" | "not_workspace"` and a
@@ -827,7 +822,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -859,7 +854,7 @@ paths:
         - name: q
           in: query
           required: true
-          description: The SQL query to execute. Read-only — use the phase-4 SQL write endpoint for mutations.
+          description: The SQL query to execute. Read-only — use `POST /sql-writes` for mutations.
           schema:
             type: string
             minLength: 1
@@ -869,7 +864,7 @@ paths:
           required: false
           description: >-
             Maximum number of rows to return (default `1000`). The server enforces an upper
-            cap; refine the query or use the async SQL job for larger result sets.
+            cap; refine the query for larger result sets.
           schema:
             type: string
             pattern: "^[1-9][0-9]*$"
@@ -920,18 +915,19 @@ paths:
           $ref: "#/components/responses/InternalServerError"
     post:
       operationId: runSqlReadQueryPost
-      summary: Run a read-only SQL query (large-query variant).
+      summary: Run a SQL read query (body-encoded).
       description: >-
-        Identical to `GET /sql` but accepts the query in the request body to avoid the
-        browser/proxy URL-length limit (~4–8 KB) that `?q=` hits for large SQL statements.
-        Use this when the query is too long for a query string; prefer `GET` for short queries
-        (simpler to cache and log). The response shape is identical.
+        Body-encoded read variant of `GET /sql` — identical semantics and response shape,
+        but the query is carried in the body to dodge the browser/proxy URL-length limit
+        (~4–8 KB) that `?q=` hits for large SQL statements. Reads follow the
+        database-level convention: public databases are readable without a token, private
+        databases require one. Writes go to `POST /sql-writes`, not here.
       tags:
         - Database
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -954,37 +950,10 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - ref
-                - q
-              properties:
-                ref:
-                  type: string
-                  minLength: 1
-                  description: >-
-                    The branch, tag, or commit hash to query against. A 32-character value using
-                    only the characters `0-9a-v` (Dolt's base32 alphabet) is treated as a commit
-                    hash; everything else resolves as a branch, tag, or other ref.
-                  example: main
-                q:
-                  type: string
-                  minLength: 1
-                  description: The SQL query to execute. Read-only — mutations are rejected.
-                  example: "SELECT name, year FROM jails WHERE state = 'California' LIMIT 10"
-                limit:
-                  type: integer
-                  minimum: 1
-                  description: Maximum number of rows to return (default `1000`).
-                  example: 100
-                timeout_ms:
-                  type: integer
-                  minimum: 1
-                  description: Per-query execution timeout in milliseconds (default `30000`, cap `60000`).
-                  example: 10000
+              $ref: "#/components/schemas/SqlReadRequest"
       responses:
         "200":
-          description: The query result. SQL-level errors live in `status` + `message`.
+          description: The read query result. SQL-level errors live in `status` + `message`.
           headers:
             x-request-id:
               description: >-
@@ -1016,6 +985,80 @@ paths:
           $ref: "#/components/responses/MethodNotAllowed"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /api/v2/databases/{owner}/{database}/sql-writes:
+    post:
+      operationId: runSqlWriteQuery
+      summary: Run an asynchronous SQL write.
+      description: >-
+        Kicks off an asynchronous SQL write. Runs `query` on `to_branch` (creating it from
+        `from_branch` if it doesn't exist), then merges `from_branch` into `to_branch`.
+        Returns `202` with an `OperationRef`; follow `OperationRef.href` to
+        `GET /api/v2/operations/{id}` and poll until `status` is `succeeded` or `failed`.
+        Authentication is required.
+      tags:
+        - Database
+      security:
+        - personalAccessToken: []
+        - oauth2: [api_read_write]
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The user or organization that owns the database.
+          schema:
+            type: string
+            minLength: 1
+          example: dolthub
+        - name: database
+          in: path
+          required: true
+          description: The database name, unique within the owner.
+          schema:
+            type: string
+            minLength: 1
+          example: us-jails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SqlWriteRequest"
+      responses:
+        "202":
+          description: The write operation has been accepted and is queued.
+          headers:
+            x-request-id:
+              description: >-
+                The request identifier — echoed on every response. Reuse the inbound
+                `x-request-id` from the caller / edge proxy when present; otherwise the
+                server mints a `req_<UUID>` value.
+              schema:
+                type: string
+                examples:
+                  - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /api/v2/databases/{owner}/{database}/pulls:
     get:
       operationId: listPulls
@@ -1031,7 +1074,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1099,7 +1142,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1177,7 +1220,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1244,14 +1287,15 @@ paths:
         Partially updates the pull request `{pull_number}` in `{owner}/{database}`. The body
         carries only the fields the caller is changing — any subset of `title`, `description`,
         `state`; at least one must be present. `state` is restricted to the writable
-        transitions (`open` ↔ `closed`); merging happens via the dedicated merge operation
-        (phase 4), not by writing state here. Returns the canonical `Pull` resource on `200`.
+        transitions (`open` ↔ `closed`); merging happens via the dedicated merge endpoint
+        (`POST /pulls/{pull_number}/merge`), not by writing state here. Returns the canonical
+        `Pull` resource on `200`.
         Authentication required.
       tags:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1337,7 +1381,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1412,7 +1456,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1494,7 +1538,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1569,7 +1613,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1644,7 +1688,7 @@ paths:
         - Database
       security:
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1732,7 +1776,7 @@ paths:
       security:
         - {}
         - personalAccessToken: []
-        - oauth2: []
+        - oauth2: [api_read_write]
       parameters:
         - name: owner
           in: path
@@ -1798,6 +1842,9 @@ paths:
         name returned by the backend.
       tags:
         - Operations
+      security:
+        - personalAccessToken: []
+        - oauth2: [api_read_write]
       parameters:
         - name: operation_id
           in: path
@@ -1838,7 +1885,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
 components:
-  # securitySchemes model the credential types the v2 auth layer accepts (§5.5). Personal
+  # securitySchemes model the credential types the v2 auth layer accepts. Personal
   # access tokens and OAuth access tokens are both presented in the `Authorization` header.
   # The public API does not support browser session cookies.
   securitySchemes:
@@ -1848,17 +1895,23 @@ components:
       description: "A DoltHub personal access token, sent as `Authorization: Bearer <token>`."
     oauth2:
       type: oauth2
-      description: "A DoltHub OAuth 2.0 access token, sent as `Authorization: Bearer <token>`."
+      description: >-
+        A DoltHub OAuth 2.0 access token, sent as `Authorization: Bearer <token>`. v2 ships
+        with a single scope, `api_read_write`, which grants both reads and writes — there is
+        no read-only scope today. Every endpoint that accepts `oauth2` lists `api_read_write`
+        as the required scope so the rendered docs and any client-config generator surface
+        the value callers must actually request; future per-endpoint narrowing (e.g.
+        `api_read`) will be additive under the v2 stability policy (§5.1).
       flows:
         authorizationCode:
           authorizationUrl: https://www.dolthub.com/oauth/authorize
           tokenUrl: https://www.dolthub.com/oauth/token
-          scopes: {}
+          scopes:
+            api_read_write: Full read and write access to the v2 API.
 
   schemas:
-    # --- Error model (1.c, §5.3) ---------------------------------------------------------
-    # Every non-2xx response uses Problem (RFC 9457). The Operation resource (1.e) is added
-    # to this map by its PR.
+    # --- Error model ---------------------------------------------------------------------
+    # Every non-2xx response uses Problem (RFC 9457).
     ErrorCode:
       type: string
       title: ErrorCode
@@ -1867,7 +1920,7 @@ components:
         this value, never on the human-readable `title`/`detail` prose. The baseline codes
         below cover the standard HTTP failure categories; endpoint-specific codes (e.g.
         `BRANCH_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them,
-        which is an additive, non-breaking change under the v2 stability policy (§5.1).
+        which is an additive, non-breaking change under the v2 stability policy.
       enum:
         - VALIDATION_FAILED # 400 — malformed request or failed input validation
         - UNAUTHENTICATED # 401 — missing or invalid credentials
@@ -1903,7 +1956,7 @@ components:
             A URI identifying the problem type; when dereferenced it points at
             human-readable documentation for the error.
           examples:
-            - https://dolthub.com/docs/api/errors/not-found
+            - https://dolthub.com/docs/products/dolthub/api/v2/models/#model-errorcode
         title:
           type: string
           description: A short, human-readable summary of the problem type.
@@ -1939,7 +1992,7 @@ components:
             - req_01HZX9P7Q5N2M8
       additionalProperties: true
       examples:
-        - type: https://dolthub.com/docs/api/errors/not-found
+        - type: https://dolthub.com/docs/products/dolthub/api/v2/models/#model-errorcode
           title: Not found
           status: 404
           detail: "Branch 'main' does not exist in dolthub/us-jails"
@@ -1947,7 +2000,7 @@ components:
           code: NOT_FOUND
           request_id: req_01HZX9P7Q5N2M8
 
-    # --- Success envelope (1.d, §5.4) ----------------------------------------------------
+    # --- Success envelope ----------------------------------------------------------------
     # Every 2xx response body is enveloped: the resource (or list) under `data`, with
     # optional response metadata under `meta`. Concrete endpoint responses specialize the
     # envelope by narrowing `data` to a specific resource via `allOf`, e.g.:
@@ -1965,13 +2018,13 @@ components:
     #                     $ref: "#/components/schemas/User"
     #
     # The base types `data` only loosely (object or array) so this allOf narrowing composes
-    # cleanly ((object|array) ∩ User = User). The first real use is GET /api/v2/user in 1.t.
+    # cleanly ((object|array) ∩ User = User).
     Meta:
       type: object
       title: Meta
       description: >-
         Response metadata carried alongside the primary `data` payload. All fields are
-        optional; list endpoints populate `next_page_token` for cursor pagination (§5.6).
+        optional; list endpoints populate `next_page_token` for cursor pagination.
       properties:
         next_page_token:
           type: string
@@ -1988,7 +2041,7 @@ components:
       type: object
       title: Envelope
       description: >-
-        The success envelope wrapping every 2xx response body (§5.4): the resource or list of
+        The success envelope wrapping every 2xx response body: the resource or list of
         resources under `data`, with optional `meta`. This is the single success shape for
         the API — there are no unenveloped success bodies. Endpoints narrow `data` to a
         concrete resource via `allOf` (see the section comment above); the base leaves `data`
@@ -2007,10 +2060,10 @@ components:
           meta:
             next_page_token: eyJvZmZzZXQiOjI1fQ
 
-    # --- Resources (1.t onward) ----------------------------------------------------------
+    # --- Resources ----------------------------------------------------------------------
     # Resource schemas are the public DTO surface — what the v2 spec contract guarantees to
-    # integrators. Field names are snake_case (§5.2). Fields are added additively under the
-    # v2 stability policy (§5.1); renames or removals require v3.
+    # integrators. Field names are snake_case. Fields are added additively under the v2
+    # stability policy; renames or removals require v3.
     DatabaseRef:
       type: object
       title: DatabaseRef
@@ -3186,6 +3239,79 @@ components:
             (e.g. `COUNT(*)`).
           examples:
             - jails
+    SqlReadRequest:
+      type: object
+      title: SqlReadRequest
+      description: >-
+        Body for the read variant of `POST /api/v2/databases/{owner}/{database}/sql`. Identical
+        semantics to the `GET /sql` query string — pass the query in the body when it's too
+        long for a URL.
+      required:
+        - ref
+        - q
+      properties:
+        ref:
+          type: string
+          minLength: 1
+          description: >-
+            The branch, tag, or commit hash to query against. A 32-character value using
+            only the characters `0-9a-v` (Dolt's base32 alphabet) is treated as a commit
+            hash; everything else resolves as a branch, tag, or other ref.
+          examples:
+            - main
+        q:
+          type: string
+          minLength: 1
+          description: The SQL query to execute. Read-only — mutations are rejected.
+          examples:
+            - "SELECT name, year FROM jails WHERE state = 'California' LIMIT 10"
+        limit:
+          type: integer
+          minimum: 1
+          description: Maximum number of rows to return (default `1000`).
+          examples:
+            - 100
+        timeout_ms:
+          type: integer
+          minimum: 1
+          description: Per-query execution timeout in milliseconds (default `30000`, cap `60000`).
+          examples:
+            - 10000
+      additionalProperties: false
+    SqlWriteRequest:
+      type: object
+      title: SqlWriteRequest
+      description: >-
+        Body for `POST /api/v2/databases/{owner}/{database}/sql-writes`. Runs `q` on
+        `to_branch` (creating it from `from_branch` if it doesn't exist) then merges
+        `from_branch` into `to_branch`. Returns `202` + `OperationRef`. `from_branch` and
+        `to_branch` are bare branch names — both must live in the URL's `{owner}/{database}`.
+      required:
+        - from_branch
+        - to_branch
+        - q
+      properties:
+        from_branch:
+          type: string
+          minLength: 1
+          description: The branch to merge from after the write completes.
+          examples:
+            - main
+        to_branch:
+          type: string
+          minLength: 1
+          description: >-
+            The branch the write runs on. Created from `from_branch` when it doesn't
+            already exist.
+          examples:
+            - feature/new-states
+        q:
+          type: string
+          minLength: 1
+          description: The SQL write statement to execute.
+          examples:
+            - "INSERT INTO states (name, abbr) VALUES ('Puerto Rico', 'PR')"
+      additionalProperties: false
     QueryResult:
       type: object
       title: QueryResult
@@ -3332,8 +3458,8 @@ components:
               is_verified: true
 
   # Reusable parameters — pulled out as components.parameters so every list endpoint $refs
-  # the same shape rather than redeclaring it. PageToken is the v2 pagination convention
-  # (§5.6, established by 2.b); the response side lives in components.schemas.Meta.next_page_token.
+  # the same shape rather than redeclaring it. PageToken is the v2 pagination convention;
+  # the response side lives in components.schemas.Meta.next_page_token.
   parameters:
     PageToken:
       name: page_token
@@ -3347,10 +3473,9 @@ components:
         type: string
       example: eyJvZmZzZXQiOjI1fQ
 
-  # Reusable error responses — the status-code conventions for v2 (§5.3). Operations
-  # reference these so every endpoint returns the right code with one consistent body
-  # instead of the v1 "everything is 400" behavior. They are wired into operations as paths
-  # are added (first in 1.t).
+  # Reusable error responses — the status-code conventions for v2. Operations reference
+  # these so every endpoint returns the right code with one consistent body instead of the
+  # v1 "everything is 400" behavior.
   responses:
     BadRequest:
       description: The request was malformed or failed input validation.

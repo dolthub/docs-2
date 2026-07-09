@@ -1,11 +1,11 @@
 ---
 title: CLI
-description: Full reference for the dolt command-line interface — every command, every flag, with examples. Generated from `dolt dump-docs`.
+description: Full reference for the dolt command-line interface — every command, every flag, with examples.
 ---
 
 # Command Line Interface Reference
 
-```bash
+```
 $ dolt
 Valid commands for dolt are
                 init - Create an empty Dolt data repository.
@@ -105,6 +105,7 @@ The name of the database to use when executing SQL queries. Defaults the databas
 `--branch=<branch>`:
 Name of the branch to be selected
 
+
 ## `dolt add`
 
 Add table contents to the list of staged tables
@@ -116,6 +117,7 @@ dolt add [<table>...]
 ```
 
 **Description**
+
 
 This command updates the list of tables using the current content found in the working root, to prepare the content staged for the next commit. It adds the current content of existing tables as a whole or remove tables that do not exist in the working root anymore.
 
@@ -133,6 +135,8 @@ Stages any and all changes (adds, deletes, and modifications) except for ignored
 `-f`, `--force`:
 Allow adding otherwise ignored tables.
 
+
+
 ## `dolt backup`
 
 Manage database backups, including creation, sync, and restore.
@@ -149,6 +153,7 @@ dolt backup sync-url [--aws-region <region>] [--aws-creds-type <creds-type>] [--
 ```
 
 **Description**
+
 
 With no arguments, shows a list of existing backups. Several subcommands are available to perform operations on backups; point in time snapshots of a database's contents.
 
@@ -181,6 +186,7 @@ Snapshot the database and upload to the backup `<name>`. This includes branches,
 `sync-url`
 Snapshot the database and upload the backup to `<url>`. Like sync, this includes branches, tags, working sets, and remote tracking refs, but it does not require you to create a named backup.
 
+
 **Arguments and options**
 
 `<region>`: cloud provider region associated with this backup.
@@ -207,6 +213,8 @@ AWS credentials file
 
 `--aws-creds-profile`:
 AWS profile to use
+
+
 
 ## `dolt blame`
 
@@ -297,6 +305,8 @@ When in list mode, show only remote tracked branches. When with -d, delete a rem
 `--show-current`:
 Print the name of the current branch
 
+
+
 ## `dolt checkout`
 
 Switch branches or restore working tree tables
@@ -312,6 +322,7 @@ dolt checkout --track <remote>/<branch>
 ```
 
 **Description**
+
 
 Updates tables in the working set to match the staged versions. If no paths are given, dolt checkout will also update HEAD to set the specified branch as the current branch.
 
@@ -348,6 +359,8 @@ Silently overwrite ignored tables when switching branches (default behavior).
 `--no-overwrite-ignore`:
 Abort the operation when ignored tables in the working set would be overwritten by the checkout.
 
+
+
 ## `dolt cherry-pick`
 
 Apply the changes introduced by an existing commit.
@@ -360,11 +373,13 @@ dolt cherry-pick [--allow-empty] <commit>
 
 **Description**
 
+
 Applies the changes from an existing commit and creates a new commit from the current HEAD. This requires your working tree to be clean (no modifications from the HEAD commit).
 
 Cherry-picking merge commits or commits with table drops/renames is not currently supported. 
 
-If any data conflicts, schema conflicts, or constraint violations are detected during cherry-picking, you can use Dolt's conflict resolution features to resolve them. For more information on resolving conflicts, see: <https://dolthub.com/docs/concepts/dolt/git/conflicts>.
+If any data conflicts, schema conflicts, or constraint violations are detected during cherry-picking, you can use Dolt's conflict resolution features to resolve them. For more information on resolving conflicts, see: https://dolthub.com/docs/concepts/dolt/git/conflicts.
+
 
 **Arguments and options**
 
@@ -379,6 +394,8 @@ Allow empty commits to be cherry-picked. Note that use of this option only keeps
 
 `--skip-verification`:
 Skip commit verification before cherry-pick
+
+
 
 ## `dolt ci destroy`
 
@@ -554,6 +571,8 @@ View details of a specific Dolt CI workflow including steps, configuration, and 
 `-j`, `--job`:
 View workflow details for the given `<job name>`
 
+
+
 ## `dolt clean`
 
 Deletes untracked working tables
@@ -579,6 +598,8 @@ The `-x` flag causes dolt_ignore to be ignored so that untracked tables matching
 
 If `<tables>` is specified, only those table names are considered for deleting.
 
+
+
 **Arguments and options**
 
 `--dry-run`:
@@ -586,6 +607,8 @@ Tests removing untracked tables without modifying the working set.
 
 `-x`, `--x`:
 Do not respect dolt_ignore; remove untracked tables that match dolt_ignore. dolt_nonlocal_tables is always respected.
+
+
 
 ## `dolt clone`
 
@@ -604,6 +627,7 @@ Clones a repository into a newly created directory, creates remote-tracking bran
 After the clone, a plain `dolt fetch` without arguments will update all the remote-tracking branches, and a `dolt pull` without arguments will in addition merge the remote branch into the current branch.
 
 This default configuration is achieved by creating references to the remote branch heads under `<refs/remotes/origin>`  and by creating a remote named 'origin'.
+
 
 **Arguments and options**
 
@@ -641,6 +665,8 @@ User name to use when authenticating with the remote. Gets password from the env
 `--single-branch`:
 Clone only the history leading to the tip of a single branch, either specified by --branch or the remote's HEAD (default).
 
+
+
 ## `dolt commit`
 
 Record changes to the database
@@ -652,6 +678,7 @@ dolt commit [options]
 ```
 
 **Description**
+
 
 Stores the current contents of the staged tables in a new commit along with a log message from the user describing the changes.
 
@@ -695,6 +722,8 @@ Sign the commit using GPG. If no key-id is provided the key-id is taken from 'us
 
 `--skip-verification`:
 Skip commit verification
+
+
 
 ## `dolt config`
 
@@ -740,7 +769,20 @@ Valid configuration variables:
 
 	- remotes.default_port - sets default port for authenticating with doltremoteapi.
 
+	- remotesapi.credential_helper - sets a global credential helper for remotesapi requests. This option is ignored in repository local config.
+
 	- push.autoSetupRemote - if set to "true" assume --set-upstream on default push when no upstream tracking exists for the current branch.
+
+Credential helpers use the Bazel credential helper protocol. Dolt invokes the configured executable with the `get` argument and sends the canonical remotesapi origin on stdin:
+
+	{"uri":"https://example.com:443"}
+
+The helper returns additive HTTP headers and, optionally, an RFC 3339 expiration time:
+
+	{"headers":{"Proxy-Authorization":["Bearer TOKEN"]},"expires":"2026-06-24T20:00:00Z"}
+
+Dolt caches headers until shortly before their expiration. Responses without an expiration are used once. The helper is responsible for returning credentials only for origins it trusts. It cannot replace Dolt's own Authorization header or transport-controlled headers.
+
 
 **Arguments and options**
 
@@ -765,6 +807,8 @@ Get the value of one or more config parameters.
 `--unset`:
 Unset the value of one or more config parameters.
 
+
+
 ## `dolt conflicts cat`
 
 print conflicts
@@ -783,6 +827,8 @@ The dolt conflicts cat command reads table conflicts from the working set and wr
 
 `<table>`: List of tables to be printed. '.' can be used to print conflicts for all tables.
 
+
+
 ## `dolt conflicts resolve`
 
 Automatically resolves all conflicts taking either ours or theirs for the given tables
@@ -795,9 +841,11 @@ dolt conflicts resolve --ours|--theirs <table>...
 
 **Description**
 
+
 When a merge finds conflicting changes, it documents them in the dolt_conflicts table. A conflict is between two versions: ours (the rows at the destination branch head) and theirs (the rows at the source branch head).
 
 dolt conflicts resolve will automatically resolve the conflicts by taking either the ours or theirs versions for each row.
+
 
 **Arguments and options**
 
@@ -808,6 +856,8 @@ For all conflicts, take the version from our branch and resolve the conflict
 
 `--theirs`:
 For all conflicts, take the version from their branch and resolve the conflict
+
+
 
 ## `dolt constraints verify`
 
@@ -835,6 +885,8 @@ Verifies that all rows in the database do not violate constraints instead of jus
 `-o`, `--output-only`:
 Disables writing violated constraints to the constraint violations table.
 
+
+
 ## `dolt creds check`
 
 Check authenticating with a credential keypair against a doltremoteapi.
@@ -856,6 +908,8 @@ API endpoint, otherwise taken from config.
 
 `--creds`:
 Public Key ID or Public Key for credentials, otherwise taken from config.
+
+
 
 ## `dolt creds import`
 
@@ -889,6 +943,8 @@ available in the local dolt config.
 `--no-profile`:
 If provided, no attempt will be made to contact doltremoteapi and update user.name and user.email.
 
+
+
 ## `dolt creds ls`
 
 List keypairs available for authenticating with doltremoteapi.
@@ -910,11 +966,15 @@ The currently selected keypair appears with a `*` next to it.
 `-v`, `--verbose`:
 Verbose output, including key id.
 
+
+
 ## `dolt creds new`
 
 Create a new public/private keypair for authenticating with doltremoteapi.
 
 **Synopsis**
+
+
 
 **Description**
 
@@ -1011,6 +1071,8 @@ Execute for at least time seconds.
 `-o`, `--output`:
 Result directory (Defaults to temporary director)
 
+
+
 ## `dolt diff`
 
 Show changes between commits, commit and working tree, etc
@@ -1023,6 +1085,7 @@ dolt diff [options] <commit> <commit> [<tables>...]
 ```
 
 **Description**
+
 
 Show changes between the working and staged tables, changes between the working tables and the tables within a commit, or changes between tables at two commits.
 
@@ -1048,6 +1111,7 @@ To filter which data rows are displayed, use `--where <SQL expression>`. Table c
 To filter diff output by change type, use `--filter <type>` where `<type>` is one of `added`, `modified`, `renamed`, or `dropped`. The `added` filter shows only additions (new tables or rows), `modified` shows only schema modifications or row updates, `renamed` shows only renamed tables, and `dropped` shows only deletions (dropped tables or deleted rows). You can also use `removed` as an alias for `dropped`. For example, `dolt diff --filter=dropped` shows only deleted rows and dropped tables.
 
 The `--diff-mode` argument controls how modified rows are presented when the format output is set to `tabular`. When set to `row`, modified rows are presented as old and new rows. When set to `line`, modified rows are presented as a single row, and changes are presented using "+" and "-" within the column. When set to `in-place`, modified rows are presented as a single row, and changes are presented side-by-side with a color distinction (requires a color-enabled terminal). When set to `context`, rows that contain at least one column that spans multiple lines uses `line`, while all other rows use `row`. The default value is `context`.
+
 
 **Arguments and options**
 
@@ -1102,6 +1166,8 @@ Only shows table names.
 `--system`:
 Show system tables in addition to user tables
 
+
+
 ## `dolt docs diff`
 
 Diffs Dolt Docs
@@ -1120,6 +1186,8 @@ Diffs Dolt Docs
 
 `<doc>`: Dolt doc to be diffed.
 
+
+
 ## `dolt docs print`
 
 Prints Dolt Docs to stdout
@@ -1137,6 +1205,8 @@ Prints Dolt Docs to stdout
 **Arguments and options**
 
 `<doc>`: Dolt doc to be read.
+
+
 
 ## `dolt docs upload`
 
@@ -1158,6 +1228,8 @@ Uploads Dolt Docs from the file system into the database
 
 `<file>`: file to read Dolt doc from.
 
+
+
 ## `dolt dump`
 
 Export all tables.
@@ -1175,6 +1247,7 @@ If a dump file already exists then the operation will fail, unless the `--force 
 is provided. The force flag forces the existing dump file to be overwritten. The `-r` flag 
 is used to support different file formats of the dump. In the case of non .sql files each table is written to a separate
 csv,json or parquet file. 
+
 
 **Arguments and options**
 
@@ -1205,6 +1278,8 @@ Dump a table's schema, without including any data, to the output SQL file.
 `--no-create-db`:
 Do not write `CREATE DATABASE` statements in SQL files.
 
+
+
 ## `dolt fetch`
 
 Download objects and refs from another repository
@@ -1223,6 +1298,7 @@ By default dolt will attempt to fetch from a remote named `origin`.  The `<remot
 
 When no refspec(s) are specified on the command line, the fetch_specs for the default remote are used.
 
+
 **Arguments and options**
 
 `--user`:
@@ -1233,6 +1309,8 @@ After fetching, remove any remote-tracking references that don't exist on the re
 
 `--silent`:
 Suppress progress information.
+
+
 
 ## `dolt filter-branch`
 
@@ -1254,6 +1332,7 @@ If the `--branches` flag is supplied, filter-branch traverses and rewrites commi
 
 If the `--all` flag is supplied, filter-branch traverses and rewrites commits for all branches and tags.
 
+
 **Arguments and options**
 
 `-v`, `--verbose`:
@@ -1273,6 +1352,8 @@ log a warning and continue if any errors occur executing statements
 
 `-q`, `--query`:
 Queries to run, separated by semicolons. If not provided, queries are read from STDIN.
+
+
 
 ## `dolt fsck`
 
@@ -1298,6 +1379,9 @@ Don't show progress. Just print final report.
 Revives a corrupted chunk journal by discarding unparsable data.
 WARNING: This may result in data loss. Your original data will be preserved in a backup file. Use this option to restore
 the ability to use your Dolt database. Please contact Dolt (https://github.com/dolthub/dolt/issues) for assistance.
+
+
+
 
 ## `dolt gc`
 
@@ -1337,6 +1421,8 @@ Specify the archive compression level garbage collection results. Default is 1, 
 `--incremental-file-size`:
 max size in bytes of incremental GC table files
 
+
+
 ## `dolt init`
 
 Create an empty Dolt data repository
@@ -1353,6 +1439,7 @@ This command creates an empty Dolt data repository in the current directory.
 
 Running dolt init in an already initialized directory will fail.
 
+
 **Arguments and options**
 
 `--name`:
@@ -1368,6 +1455,8 @@ Specify the date used in the initial commit. If not specified the current system
 The branch name used to initialize this database. If not provided will be taken from `init.defaultbranch` in the global config. If unset, the default initialized branch will be named 'main'.
 
 `--fun`
+
+
 
 ## `dolt log`
 
@@ -1438,6 +1527,8 @@ Shows the diffstat for each commit.
 `--graph`:
 Shows the commit graph.
 
+
+
 ## `dolt login`
 
 Login to DoltHub or DoltLab
@@ -1452,6 +1543,7 @@ dolt login [--auth-endpoint <endpoint>] [--login-url <url>] [-i | --insecure] [<
 
 Login into DoltHub or DoltLab using the email in your config so you can pull from private repos and push to those you have permission to.
 
+
 **Arguments and options**
 
 `<creds>`: A specific credential to use for login. If omitted, new credentials will be generated.
@@ -1464,6 +1556,8 @@ Specify the login url where the browser will add credentials.
 
 `-i`, `--insecure`:
 If set, makes insecure connection to remote authentication server
+
+
 
 ## `dolt ls`
 
@@ -1483,6 +1577,7 @@ If the `--system` flag is supplied this will show the dolt system tables which a
 
 If the `--all` flag is supplied both user and system tables will be printed.
 
+
 **Arguments and options**
 
 `-v`, `--verbose`:
@@ -1493,6 +1588,8 @@ show system tables
 
 `-a`, `--all`:
 show user and system tables
+
+
 
 ## `dolt merge`
 
@@ -1514,6 +1611,7 @@ Incorporates changes from the named commits (since the time their histories dive
 The second syntax (`<dolt merge --abort>`) can only be run after the merge has resulted in conflicts. dolt merge `--abort` will abort the merge process and try to reconstruct the pre-merge state. However, if there were uncommitted changes when the merge started (and especially if those changes were further modified after the merge was started), dolt merge `--abort` will in some cases be unable to reconstruct the original (pre-merge) changes. Therefore: 
 
 `<Warning>`: Running dolt merge with non-trivial uncommitted changes is discouraged: while possible, it may leave you in a state that is hard to back out of in the case of a conflict.
+
 
 **Arguments and options**
 
@@ -1546,6 +1644,8 @@ Specify an explicit author using the standard A U Thor `<author@example.com>` fo
 
 `--skip-verification`:
 Skip commit verification before merge
+
+
 
 ## `dolt merge-base`
 
@@ -1627,6 +1727,8 @@ Name of the branch to be selected
 `-v`, `--verbose`:
 Includes full details when printing list of profiles.
 
+
+
 ## `dolt pull`
 
 Fetch from and integrate with another repository or a local branch
@@ -1644,6 +1746,7 @@ Incorporates changes from a remote repository into the current branch. In its de
 More precisely, dolt pull runs `dolt fetch` with the given parameters and calls `dolt merge` to merge the retrieved branch `HEAD` into the current branch.
 
 With `--rebase`, it runs `dolt rebase` instead of `dolt merge` after fetching. If the rebase encounters data conflicts, it will pause and allow you to resolve them, then continue with `dolt rebase --continue`.
+
 
 **Arguments and options**
 
@@ -1687,6 +1790,8 @@ Suppress progress information.
 `--skip-verification`:
 Skip commit verification before merge
 
+
+
 ## `dolt push`
 
 Update remote refs along with associated objects
@@ -1709,6 +1814,7 @@ A remote's branch can be deleted by pushing an empty source ref: `dolt push orig
 
 When neither the command-line does not specify what to push, the default behavior is used, which corresponds to the current branch being pushed to the corresponding upstream branch, but as a safety measure, the push is aborted if the upstream branch does not have the same name as the local one.
 
+
 **Arguments and options**
 
 `--user`:
@@ -1725,6 +1831,8 @@ Push all branches.
 
 `--silent`:
 Suppress progress information.
+
+
 
 ## `dolt query-diff`
 
@@ -1782,6 +1890,8 @@ directory to create and put retrieved table data.
 `--ref`:
 Git ref to use as the Dolt data ref for git remotes (default: refs/dolt/data).
 
+
+
 ## `dolt rebase`
 
 Reapplies commits on top of another base tip
@@ -1804,6 +1914,7 @@ Rebasing is useful to clean and organize your commit history, especially before 
 branch. For example, you can drop commits that contain debugging or test changes, or squash or fixup small commits into a 
 single commit, or reorder commits so that related changes are adjacent in the new commit history.
 
+
 **Arguments and options**
 
 `--empty`:
@@ -1820,6 +1931,8 @@ Start an interactive rebase
 
 `--skip-verification`:
 Skip commit verification before rebase
+
+
 
 ## `dolt reflog`
 
@@ -1846,6 +1959,8 @@ Dolt's reflog is similar to [Git's reflog](https://git-scm.com/docs/git-reflog),
 
 `--all`:
 Show all refs, including hidden refs, such as DoltHub workspace refs
+
+
 
 ## `dolt remote`
 
@@ -1909,6 +2024,8 @@ OSS credentials file
 `--oss-creds-profile`:
 OSS profile to use
 
+
+
 ## `dolt reset`
 
 Resets staged or working tables to HEAD or a specified commit
@@ -1946,6 +2063,8 @@ Resets the working tables and staged tables. Any changes to tracked tables in th
 `--soft`:
 Resets HEAD to the specified revision without touching the index or the working tables.
 
+
+
 ## `dolt revert`
 
 Undo the changes introduced in a commit
@@ -1977,6 +2096,8 @@ Abort the current revert operation and return the working set to the pre-revert 
 `--continue`:
 Continue the current revert operation after resolving conflicts.
 
+
+
 ## `dolt rm`
 
 Drops a table and removes it from tracking
@@ -1988,6 +2109,7 @@ dolt rm [<table>...]
 ```
 
 **Description**
+
 
 In it's default mode, this command drops a table and removes it from tracking. Without '--cached', you can only call rm on committed tables.
 
@@ -2001,6 +2123,8 @@ The dolt status command can be used to obtain a summary of which tables have cha
 
 `--cached`:
 Use this option to unstage and remove tables only from the index. Working tree tables, whether modified or not, will be left alone.
+
+
 
 ## `dolt schema export`
 
@@ -2025,6 +2149,8 @@ If `file` is given, the exported schemas will be written to that file, otherwise
 `<table>`: table whose schema is being exported.
 
 `<file>`: the file to which the schema will be exported.
+
+
 
 ## `dolt schema import`
 
@@ -2055,11 +2181,13 @@ A mapping file is json in the format:
 
 where source_field_name is the name of a field in the file being imported and dest_field_name is the name of a field in the table being imported to.
 
+
 In create, update, and replace scenarios the file's extension is used to infer the type of the file.  If a file does not have the expected extension then the `--file-type` parameter should be used to explicitly define the format of the file in one of the supported formats (Currently only csv is supported).  For files separated by a delimiter other than a ',', the --delim parameter can be used to specify a delimiter.
 
 If the parameter `--dry-run` is supplied a sql statement will be generated showing what would be executed if this were run without the --dry-run flag
 
 `--float-threshold` is the threshold at which a string representing a floating point number should be interpreted as a float versus an int.  If FloatThreshold is 0.0 then any number with a decimal point will be interpreted as a float (such as 0.0, 1.0, etc).  If FloatThreshold is 1.0 then any number with a decimal point will be converted to an int (0.5 will be the int 0, 1.99 will be the int 1, etc.  If the FloatThreshold is 0.001 then numbers with a fractional component greater than or equal to 0.001 will be treated as a float (1.0 would be an int, 1.0009 would be an int, 1.001 would be a float, 1.1 would be a float, etc)
+
 
 **Arguments and options**
 
@@ -2097,6 +2225,8 @@ Minimum value at which the fractional component of a value must exceed in order 
 `--delim`:
 Specify a delimiter for a csv style file with a non-comma delimiter.
 
+
+
 ## `dolt schema show`
 
 Shows the schema of one or more tables.
@@ -2118,6 +2248,8 @@ A list of tables can optionally be provided.  If it is omitted all table schemas
 `<table>`: table(s) whose schema is being displayed.
 
 `<commit>`: commit at which point the schema will be displayed.
+
+
 
 ## `dolt schema tags`
 
@@ -2142,6 +2274,8 @@ A list of tables can optionally be provided.  If it is omitted then all tables w
 `-r`, `--result-format`:
 How to format result output. Valid values are tabular, csv, json. Defaults to tabular.
 
+
+
 ## `dolt schema update-tag`
 
 Update the tag of the specified column
@@ -2159,6 +2293,7 @@ dolt schema update-tag <table> <column> <tag>
 Update tag of the specified column. Useful to fix a merge that is throwing a
 schema tag conflict.
 
+
 **Arguments and options**
 
 `<table>`: The name of the table
@@ -2166,6 +2301,8 @@ schema tag conflict.
 `<column>`: The name of the column
 
 `<tag>`: The new tag value
+
+
 
 ## `dolt show`
 
@@ -2224,6 +2361,8 @@ Uses merge base of the first commit and second commit (or HEAD if not supplied) 
 
 `--diff-mode`:
 Determines how to display modified rows with tabular output. Valid values are row, line, in-place, context. Defaults to context.
+
+
 
 ## `dolt sql`
 
@@ -2287,6 +2426,8 @@ Disable binary data as hex output.
 `--disable-auto-gc`:
 Disable automatically running GC.
 
+
+
 ## `dolt sql-server`
 
 Start a MySQL-compatible server.
@@ -2347,6 +2488,8 @@ This is an example yaml configuration file showing all supported items and their
 	  tls_key: ""
 	  tls_ca: ""
 	  jwt_required_for_localhost: false
+
+
 
 ENVIRONMENT VARIABLE INTERPOLATION:
 
@@ -2415,7 +2558,7 @@ SUPPORTED CONFIG FILE FIELDS:
 
 `user_session_vars`: A map of user name to a map of session variables to set on connection for each session.
 
-`cluster`: Settings related to running this server in a replicated cluster. For information on setting these values, see <https://dolthub.com/docs/sql-reference/server/replication>
+`cluster`: Settings related to running this server in a replicated cluster. For information on setting these values, see https://dolthub.com/docs/sql-reference/server/replication
 
 If a config file is not provided many of these settings may be configured on the command line.
 
@@ -2514,6 +2657,8 @@ Optional SQL password for MCP to connect with (requires --mcp-user).
 `--mcp-database`:
 Optional SQL database name MCP should connect to (requires --mcp-port and --mcp-user).
 
+
+
 ## `dolt stash`
 
 Stash the changes in a dirty workspace away.
@@ -2539,6 +2684,7 @@ With `pop`, the stash entry is applied to the working set and then removed. With
 
 Stash entries are shared across branches, so you can stash on one branch and pop or apply on another.
 
+
 **Arguments and options**
 
 `-u`, `--include-untracked`:
@@ -2546,6 +2692,8 @@ Untracked tables are also stashed.
 
 `-a`, `--all`:
 All tables are stashed, including untracked and ignored tables.
+
+
 
 ## `dolt status`
 
@@ -2566,6 +2714,8 @@ Displays working tables that differ from the current HEAD commit, tables that di
 `--ignored`:
 Show tables that are ignored (according to dolt_ignore)
 
+
+
 ## `dolt table cp`
 
 Makes a copy of a table
@@ -2584,6 +2734,7 @@ If a table exists at the target location this command will fail unless the `--fo
 
 All changes will be applied to the working tables and will need to be staged using `dolt add` and committed using `dolt commit`.
 
+
 **Arguments and options**
 
 `<oldtable>`: The table being copied.
@@ -2592,6 +2743,8 @@ All changes will be applied to the working tables and will need to be staged usi
 
 `-f`, `--force`:
 If data already exists in the destination, the force flag will allow the target to be overwritten.
+
+
 
 ## `dolt table export`
 
@@ -2615,6 +2768,7 @@ Supported file types: `csv`, `psv`, `json`, `jsonl`, `sql`, `parquet`.
 
 See the help for `dolt table import` as the options are the same.
 
+
 **Arguments and options**
 
 `<table>`: The table being exported.
@@ -2626,6 +2780,8 @@ If data already exists in the destination, the force flag will allow the target 
 
 `--file-type`:
 Explicitly define the type of the file if it can't be inferred from the file extension.
+
+
 
 ## `dolt table import`
 
@@ -2744,6 +2900,8 @@ Treats the first row of a CSV file as data instead of a header row with column n
 `--columns`:
 Comma-separated list of column names. If used with --no-header, defines column names for the file. If used without --no-header, overrides the column names in the file's header row.
 
+
+
 ## `dolt table mv`
 
 Renames a table
@@ -2755,6 +2913,7 @@ dolt table mv [-f] <oldtable> <newtable>
 ```
 
 **Description**
+
 
 The dolt table mv command will rename a table. If a table exists with the target name this command will 
 fail unless the `--force|-f` flag is provided.  In that case the table at the target location will be overwritten 
@@ -2773,6 +2932,8 @@ using `dolt commit`.
 `-f`, `--force`:
 If data already exists in the destination, the force flag will allow the target to be overwritten.
 
+
+
 ## `dolt table rm`
 
 Removes table(s) from the working set of tables.
@@ -2790,6 +2951,8 @@ dolt table rm <table>...
 **Arguments and options**
 
 `<table>`: The table to remove
+
+
 
 ## `dolt tag`
 
@@ -2827,6 +2990,8 @@ Delete a tag.
 `--author`:
 Specify an explicit author using the standard A U Thor `<author@example.com>` format.
 
+
+
 ## `dolt version`
 
 Displays the version for the Dolt binary.
@@ -2850,3 +3015,6 @@ display the feature version of this repository.
 
 `-v`, `--verbose`:
 display verbose details, including the storage format of this repository.
+
+
+

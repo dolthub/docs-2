@@ -261,6 +261,7 @@ const markdownAlternate =
   .docs-main :global(code) {
     @apply rounded px-1.5 py-0.5 text-sm font-mono;
     @apply bg-stone-50;
+    overflow-wrap: break-word;
   }
 
   .docs-main :global(pre) {
@@ -277,6 +278,11 @@ const markdownAlternate =
 
   .docs-main :global(blockquote) {
     @apply border-l-4 border-sky-300 pl-4 italic my-4;
+  }
+
+  .docs-main :global(.table-scroll) {
+    @apply overflow-x-auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .docs-main :global(table) {
@@ -305,6 +311,27 @@ const markdownAlternate =
 
   .docs-main :global(td + td) {
     @apply border-l;
+  }
+
+  /* On narrow viewports, auto layout gives each column exactly as much
+     room as its content demands — for tables with several short columns
+     (In/Type/Required) plus a prose column (Description), that reliably
+     exceeds the viewport. Switch to fixed layout with a floor per cell:
+     widths become deterministic (short cells keep one line, prose wraps
+     normally) instead of reactive to content, and only if the floors
+     themselves can't all fit does the .table-scroll / .api-section /
+     .api-response-body overflow-x: auto kick in as a fallback. Left
+     alone above this breakpoint — auto layout already looks right once
+     there's enough room for content to drive column widths. */
+  @media (max-width: 640px) {
+    .docs-main :global(table) {
+      table-layout: fixed;
+    }
+
+    .docs-main :global(th),
+    .docs-main :global(td) {
+      min-width: 4rem;
+    }
   }
 
   .docs-main :global(tbody tr:last-child td) {
@@ -347,28 +374,26 @@ const markdownAlternate =
 
   /* API endpoint styles */
   .docs-main :global(.api-endpoint) {
-    @apply border;
     border-radius: 8px;
     margin: 1.5rem 0;
+    overflow: hidden;
   }
 
   .docs-main :global(.api-endpoint-header) {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: #f8f9fa;
-    @apply border-b;
+    padding: 0.75rem 0;
     font-family: "Space Mono", monospace;
   }
 
   .docs-main :global(.api-method) {
     display: inline-block;
     padding: 0.2rem 0.6rem;
+    margin-right: 0.75rem;
     border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 700;
-    color: white;
+    color: #0f172a;
     letter-spacing: 0.05em;
     line-height: 1.4;
   }
@@ -379,22 +404,24 @@ const markdownAlternate =
     background: none !important;
     padding: 0 !important;
     color: inherit;
+    overflow-wrap: anywhere;
+    min-width: 0;
   }
 
   .docs-main :global(.api-summary) {
-    padding: 0.75rem 1rem 0;
+    padding: 0.75rem 0 0;
     font-weight: 600;
     margin: 0;
   }
 
   .docs-main :global(.api-description) {
-    padding: 0.25rem 1rem 0;
+    padding: 0.25rem 0 0;
     margin: 0;
     opacity: 0.8;
   }
 
   .docs-main :global(.api-url) {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0;
     font-size: 0.875rem;
   }
 
@@ -403,7 +430,8 @@ const markdownAlternate =
   }
 
   .docs-main :global(.api-section) {
-    padding: 0 1rem 0.75rem;
+    padding: 0 0 0.75rem;
+    overflow-x: auto;
   }
 
   .docs-main :global(.api-section h5) {
@@ -417,7 +445,7 @@ const markdownAlternate =
 
   .docs-main :global(.api-params) {
     font-size: 0.8125rem;
-    margin: 0 !important;
+    margin: 0 0 1rem !important;
   }
 
   .docs-main :global(.api-example) {
@@ -468,6 +496,7 @@ const markdownAlternate =
   .docs-main :global(.api-response-body) {
     margin: 0.25rem 0 0.75rem 1rem;
     font-size: 0.875rem;
+    overflow-x: auto;
   }
 
   .docs-main :global(.api-response-body p) {
@@ -1256,18 +1285,9 @@ const markdownAlternate =
     border-left-color: #30363d;
   }
 
-  /* DoltHub API endpoint blocks: the light header fill (#f8f9fa) and grey
-     block border don't read on the dark card. Give the header the same
-     raised #21262d fill as table headers and switch the borders to #30363d.
-     The method badges (.api-method) and status pills keep their own colors,
-     and the path/summary text inherits the light body color. */
-  html.dark .docs-main .api-endpoint {
-    border-color: #30363d;
-  }
-  html.dark .docs-main .api-endpoint-header {
-    background: #21262d;
-    border-bottom-color: #30363d;
-  }
+  /* DoltHub API endpoint blocks: the method badges (.api-method) and
+     status pills keep their own colors, and the path/summary text
+     inherits the light body color. */
   html.dark .docs-main .api-response-body p {
     color: rgba(230, 237, 243, 0.7);
   }
