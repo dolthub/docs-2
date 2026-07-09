@@ -118,7 +118,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}' \
 ### Run a read-only SQL query {#runSqlReadQuery}
 <span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/sql</code>
 
-Executes a read-only SQL query against the database at the given revision and returns the result rows, the column schema, and the query-execution status. Read queries are not paginated — the full row set comes back in one response, bounded by `limit` (default 1000) and the server-enforced row cap. For larger result sets, refine the query (`LIMIT`/`WHERE`/`SELECT` fewer columns) or use the phase-4 async SQL job.
+Executes a read-only SQL query against the database at the given revision and returns the result rows, the column schema, and the query-execution status. Read queries are not paginated — the full row set comes back in one response, bounded by `limit` (default 1000) and the server-enforced row cap. For larger result sets, refine the query (`LIMIT`/`WHERE`/`SELECT` fewer columns).
 SQL-level errors (syntax errors, missing tables, timeouts, row-limit exceeded) come back as `200` with `status: "error" | "timeout" | "row_limit" | "not_workspace"` and a human-readable `message` — they are query-level conditions, not transport-level failures. HTTP `4xx` / `5xx` are reserved for transport-level problems (auth, the database doesn't exist, malformed request).
 Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -130,8 +130,8 @@ Public databases are readable without authentication; private databases require 
 | `owner` | path | string | yes | The user or organization that owns the database. |
 | `database` | path | string | yes | The database name, unique within the owner. |
 | `ref` | query | string | yes | The branch, tag, or commit hash to query against. A 32-character value using only the characters `0-9a-v` (Dolt's base32 alphabet) is treated as a commit hash; everything else resolves as a branch, tag, or other ref. |
-| `q` | query | string | yes | The SQL query to execute. Read-only — use the phase-4 SQL write endpoint for mutations. |
-| `limit` | query | string | no | Maximum number of rows to return (default `1000`). The server enforces an upper cap; refine the query or use the async SQL job for larger result sets. |
+| `q` | query | string | yes | The SQL query to execute. Read-only — use `POST /sql-writes` for mutations. |
+| `limit` | query | string | no | Maximum number of rows to return (default `1000`). The server enforces an upper cap; refine the query for larger result sets. |
 | `timeout_ms` | query | string | no | Per-query execution timeout in milliseconds (default `30000`, server-enforced cap `60000`). A query that hits the cap returns `status: "timeout"`. |
 
 **Example request**
@@ -193,10 +193,10 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
 
 ---
 
-### Run a read-only SQL query (large-query variant) {#runSqlReadQueryPost}
+### Run a SQL read query (body-encoded) {#runSqlReadQueryPost}
 <span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/sql</code>
 
-Identical to `GET /sql` but accepts the query in the request body to avoid the browser/proxy URL-length limit (~4–8 KB) that `?q=` hits for large SQL statements. Use this when the query is too long for a query string; prefer `GET` for short queries (simpler to cache and log). The response shape is identical.
+Body-encoded read variant of `GET /sql` — identical semantics and response shape, but the query is carried in the body to dodge the browser/proxy URL-length limit (~4–8 KB) that `?q=` hits for large SQL statements. Reads follow the database-level convention: public databases are readable without a token, private databases require one. Writes go to `POST /sql-writes`, not here.
 
 
 **Parameters**
@@ -228,7 +228,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The query result. SQL-level errors live in `status` + `message`. | [`QueryResult`](models#model-queryresult) |
+| `200` | The read query result. SQL-level errors live in `status` + `message`. | [`QueryResult`](models#model-queryresult) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
@@ -273,6 +273,50 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
   }
 }
 ```
+
+---
+
+### Run an asynchronous SQL write {#runSqlWriteQuery}
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/sql-writes</code>
+
+Kicks off an asynchronous SQL write. Runs `query` on `to_branch` (creating it from `from_branch` if it doesn't exist), then merges `from_branch` into `to_branch`. Returns `202` with an `OperationRef`; follow `OperationRef.href` to `GET /api/v2/operations/{id}` and poll until `status` is `succeeded` or `failed`. Authentication is required.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the database. |
+| `database` | path | string | yes | The database name, unique within the owner. |
+
+**Request body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `from_branch` | string | yes | The branch to merge from after the write completes. |
+| `to_branch` | string | yes | The branch the write runs on. Created from `from_branch` when it doesn't already exist. |
+| `q` | string | yes | The SQL write statement to execute. |
+
+**Example request**
+
+```sh
+curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql-writes' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"from_branch":"main","to_branch":"feature/new-states","q":"INSERT INTO states (name, abbr) VALUES ('Puerto Rico', 'PR')"}'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `202` | The write operation has been accepted and is queued. | [`OperationRef`](models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
 
 
 ## Branches
@@ -901,7 +945,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/{
 ### Update a pull request {#updatePull}
 <span class="api-method" style="background:#F0A35C">PATCH</span> <code class="api-path">/api/v2/databases/{owner}/{database}/pulls/{pull_number}</code>
 
-Partially updates the pull request `{pull_number}` in `{owner}/{database}`. The body carries only the fields the caller is changing — any subset of `title`, `description`, `state`; at least one must be present. `state` is restricted to the writable transitions (`open` ↔ `closed`); merging happens via the dedicated merge operation (phase 4), not by writing state here. Returns the canonical `Pull` resource on `200`. Authentication required.
+Partially updates the pull request `{pull_number}` in `{owner}/{database}`. The body carries only the fields the caller is changing — any subset of `title`, `description`, `state`; at least one must be present. `state` is restricted to the writable transitions (`open` ↔ `closed`); merging happens via the dedicated merge endpoint (`POST /pulls/{pull_number}/merge`), not by writing state here. Returns the canonical `Pull` resource on `200`. Authentication required.
 
 
 **Parameters**
