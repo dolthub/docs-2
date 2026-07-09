@@ -280,12 +280,12 @@ const markdownAlternate =
   }
 
   .docs-main :global(.table-scroll) {
-    @apply mb-4 overflow-x-auto;
+    @apply overflow-x-auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .docs-main :global(table) {
-    @apply w-full text-sm;
+    @apply w-full mb-4 text-sm;
     border-collapse: collapse;
   }
 
@@ -385,6 +385,8 @@ const markdownAlternate =
     background: none !important;
     padding: 0 !important;
     color: inherit;
+    overflow-wrap: anywhere;
+    min-width: 0;
   }
 
   .docs-main :global(.api-summary) {
@@ -424,7 +426,7 @@ const markdownAlternate =
 
   .docs-main :global(.api-params) {
     font-size: 0.8125rem;
-    margin: 0 !important;
+    margin: 0 0 1rem !important;
   }
 
   .docs-main :global(.api-example) {
