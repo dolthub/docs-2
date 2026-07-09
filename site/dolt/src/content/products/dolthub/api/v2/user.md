@@ -8,7 +8,7 @@ description: The authenticated user resource in the DoltHub v2 API.
 The authenticated user.
 
 ## Get the authenticated user {#getCurrentUser}
-`GET /api/v2/user`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/user</code>
 
 Returns the profile of the user identified by the request's credentials.
 

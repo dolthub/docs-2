@@ -8,7 +8,7 @@ description: Long-running async operations in the DoltHub v2 API.
 Long-running async operations. Every async mutation returns an OperationRef; poll this resource to track progress.
 
 ## List a database's async operations {#listOperations}
-`GET /api/v2/databases/{owner}/{database}/operations`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/operations</code>
 
 Returns the async operations (imports, merges, SQL writes, forks, …) recorded against the database `{owner}/{database}`, ordered by the backend. Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when `next_page_token` is absent or empty there are no further pages. Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked). Each entry is the same `Operation` shape `GET /api/v2/operations/{id}` returns — `data[i].id` is what you pass to that endpoint to re-poll a single operation.
 
@@ -42,7 +42,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/operati
 ---
 
 ## Get an async operation {#getOperation}
-`GET /api/v2/operations/{operation_id}`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/operations/{operation_id}</code>
 
 Polls a long-running operation by its `id`. Every async mutation (SQL write, import, merge, fork) returns an `OperationRef` in its `202` response; clients poll this endpoint until `status` is `succeeded` or `failed`. The `id` is the job resource name returned by the backend.
 

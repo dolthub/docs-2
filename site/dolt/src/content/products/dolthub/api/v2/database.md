@@ -10,7 +10,7 @@ DoltHub databases and their metadata.
 ## Databases
 
 ### Create a database {#createDatabase}
-`POST /api/v2/databases`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases</code>
 
 Creates a database under the named owner (a user or organization). The caller's credentials must allow creating under that owner — creating for yourself works as long as you authenticate; creating for an organization requires membership with the appropriate role. Returns the new `Database` resource on `201`. If a database with the same `{owner, name}` already exists, the response is `409 Conflict`.
 
@@ -65,7 +65,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases' \
 ---
 
 ### Get a database {#getDatabase}
-`GET /api/v2/databases/{owner}/{database}`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}</code>
 
 Returns the metadata for the database `{owner}/{database}`. Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -116,7 +116,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}' \
 ## SQL
 
 ### Run a read-only SQL query {#runSqlReadQuery}
-`GET /api/v2/databases/{owner}/{database}/sql`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/sql</code>
 
 Executes a read-only SQL query against the database at the given revision and returns the result rows, the column schema, and the query-execution status. Read queries are not paginated — the full row set comes back in one response, bounded by `limit` (default 1000) and the server-enforced row cap. For larger result sets, refine the query (`LIMIT`/`WHERE`/`SELECT` fewer columns) or use the phase-4 async SQL job.
 SQL-level errors (syntax errors, missing tables, timeouts, row-limit exceeded) come back as `200` with `status: "error" | "timeout" | "row_limit" | "not_workspace"` and a human-readable `message` — they are query-level conditions, not transport-level failures. HTTP `4xx` / `5xx` are reserved for transport-level problems (auth, the database doesn't exist, malformed request).
@@ -194,7 +194,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
 ---
 
 ### Run a read-only SQL query (large-query variant) {#runSqlReadQueryPost}
-`POST /api/v2/databases/{owner}/{database}/sql`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/sql</code>
 
 Identical to `GET /sql` but accepts the query in the request body to avoid the browser/proxy URL-length limit (~4–8 KB) that `?q=` hits for large SQL statements. Use this when the query is too long for a query string; prefer `GET` for short queries (simpler to cache and log). The response shape is identical.
 
@@ -278,7 +278,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
 ## Branches
 
 ### List branches {#listBranches}
-`GET /api/v2/databases/{owner}/{database}/branches`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/branches</code>
 
 Returns the branches of the database `{owner}/{database}`, ordered by the backend. Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when `next_page_token` is absent or empty there are no further pages. Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -329,7 +329,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/branche
 ---
 
 ### Create a branch {#createBranch}
-`POST /api/v2/databases/{owner}/{database}/branches`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/branches</code>
 
 Creates a new branch in `{owner}/{database}` pointing at the source revision named by `from`. Authentication required; the caller must have write access. Returns the new `Branch` resource on `201`. A `409 Conflict` comes back if a branch with the same name already exists.
 
@@ -386,7 +386,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/branch
 ## Tags
 
 ### List tags {#listTags}
-`GET /api/v2/databases/{owner}/{database}/tags`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/tags</code>
 
 Returns the tags of the database `{owner}/{database}`, ordered by the backend. Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when `next_page_token` is absent or empty there are no further pages. Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -438,7 +438,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/tags' \
 ---
 
 ### Create a tag {#createTag}
-`POST /api/v2/databases/{owner}/{database}/tags`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/tags</code>
 
 Creates a new tag in `{owner}/{database}` pointing at the source revision named by `from`. The optional `message` makes the tag annotated; omitted yields a lightweight tag. Returns the new `Tag` resource on `201`. Authentication required; the caller must have write access. A `409 Conflict` comes back if a tag with the same name already exists.
 
@@ -497,7 +497,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/tags' 
 ## Forks
 
 ### List forks {#listForks}
-`GET /api/v2/databases/{owner}/{database}/forks`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/forks</code>
 
 Returns the databases that have been directly forked from `{owner}/{database}` — immediate children only. Forks-of-forks are not flattened into the list; use `fork_network_count` on the `Database` resource for the transitive total. Topology context (`parent`, `network_root`, total `fork_network_count`) lives on the `Database` resource. Pagination (`page_token` / `meta.next_page_token`) will be added when the backend supports it; until then the full list is returned in one response. Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -546,7 +546,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/forks' 
 ---
 
 ### Fork a database {#createFork}
-`POST /api/v2/databases/{owner}/{database}/forks`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/forks</code>
 
 Forks `{owner}/{database}` into `owner`'s namespace. Returns `202` with an `OperationRef`; follow `OperationRef.href` to poll for completion (operation IDs contain slashes and must not be interpolated raw into path templates). The caller must have read access on the source database and may only fork into a namespace they own. Duplicate forks (same source forked twice into the same owner) surface as `422` via the standard error model. Authentication is required.
 
@@ -590,7 +590,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/forks'
 ## Releases
 
 ### List releases {#listReleases}
-`GET /api/v2/databases/{owner}/{database}/releases`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/releases</code>
 
 Returns the releases of the database `{owner}/{database}`, ordered by the backend. Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when `next_page_token` is absent or empty there are no further pages. Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -644,7 +644,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/release
 ---
 
 ### Create a release {#createRelease}
-`POST /api/v2/databases/{owner}/{database}/releases`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/releases</code>
 
 Creates a release in `{owner}/{database}` pinned to the commit named by `commit_sha` and published under `tag`. When `create_tag_if_not_exists` is true and no tag with that name exists, the backend creates one pointing at the same commit; otherwise the tag must already exist and point at the same commit. Returns the new `Release` resource on `201`. Authentication required; the caller must have write access. A `409 Conflict` comes back if a release with the same tag already exists.
 
@@ -707,7 +707,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/releas
 ## Pull Requests
 
 ### List pull requests {#listPulls}
-`GET /api/v2/databases/{owner}/{database}/pulls`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/pulls</code>
 
 Returns the pull requests for the database `{owner}/{database}`, ordered by the backend. Cursor-paginated via `page_token` (request) / `meta.next_page_token` (response); when `next_page_token` is absent or empty there are no further pages. Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -761,7 +761,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls' 
 ---
 
 ### Create a pull request {#createPull}
-`POST /api/v2/databases/{owner}/{database}/pulls`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/pulls</code>
 
 Opens a new pull request in `{owner}/{database}`. `to_branch.database` must equal the URL's `{owner}/{database}`. `from_branch.database` is usually the same; for a cross-fork pull it points at a fork — in that case the caller must have read access on the fork's database and the fork's network root must match the target. Returns the new `Pull` resource on `201`. Authentication is required.
 
@@ -836,7 +836,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls'
 ---
 
 ### Get a pull request {#getPull}
-`GET /api/v2/databases/{owner}/{database}/pulls/{pull_number}`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/pulls/{pull_number}</code>
 
 Returns the pull request `{pull_number}` in the database `{owner}/{database}`. Unlike the list endpoint, the per-pull resource exposes structured `from_branch` / `to_branch` references, each carrying the database the branch lives in — necessary to disambiguate cross-fork pulls where the source branch lives in a different repository. Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -899,7 +899,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/{
 ---
 
 ### Update a pull request {#updatePull}
-`PATCH /api/v2/databases/{owner}/{database}/pulls/{pull_number}`
+<span class="api-method" style="background:#F0A35C">PATCH</span> <code class="api-path">/api/v2/databases/{owner}/{database}/pulls/{pull_number}</code>
 
 Partially updates the pull request `{pull_number}` in `{owner}/{database}`. The body carries only the fields the caller is changing — any subset of `title`, `description`, `state`; at least one must be present. `state` is restricted to the writable transitions (`open` ↔ `closed`); merging happens via the dedicated merge operation (phase 4), not by writing state here. Returns the canonical `Pull` resource on `200`. Authentication required.
 
@@ -972,7 +972,7 @@ curl -X PATCH 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls
 ---
 
 ### List a pull request's comments {#listPullComments}
-`GET /api/v2/databases/{owner}/{database}/pulls/{pull_number}/comments`
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v2/databases/{owner}/{database}/pulls/{pull_number}/comments</code>
 
 Returns the top-level comments on pull request `{pull_number}` in `{owner}/{database}`, in the order the backend returns them. The backend doesn't paginate comments today, so the full list is returned in one response; if a comment volume hot spot appears, `page_token` / `meta.next_page_token` will be wired through without changing the resource shape. Diff-line comments and review comments are separate resources (not in v2 yet). Public databases are readable without authentication; private databases require a credential with access (and return `404` otherwise, so their existence isn't leaked).
 
@@ -1025,7 +1025,7 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/{
 ---
 
 ### Add a top-level comment to a pull request {#createPullComment}
-`POST /api/v2/databases/{owner}/{database}/pulls/{pull_number}/comments`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/pulls/{pull_number}/comments</code>
 
 Posts a new top-level comment on pull request `{pull_number}` in `{owner}/{database}`. The body carries only the comment text; author and timestamps are server-assigned from the authenticated caller and the server clock. Returns the new `PullComment` on `201`. Diff-line and review comments are separate resources (not in v2 yet).
 
@@ -1082,7 +1082,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/
 ---
 
 ### Merge a pull request {#mergePull}
-`POST /api/v2/databases/{owner}/{database}/pulls/{pull_number}/merge`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/pulls/{pull_number}/merge</code>
 
 Kicks off a merge of pull `{pull_number}` in `{owner}/{database}`. Returns `202` with an `OperationRef`; poll `GET /api/v2/operations/{id}` until `status` is `succeeded` (the operation's `result.pull_id` echoes the merged pull) or `failed`. The caller must have write access on the database. Preconditions like "pull is already merged" or "has conflicts" surface as `422` via the standard error model rather than being pre-checked here. Authentication is required.
 
@@ -1120,7 +1120,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/
 ## Imports
 
 ### Initialize a multipart upload for an import {#createImportUpload}
-`POST /api/v2/databases/{owner}/{database}/imports/uploads`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/imports/uploads</code>
 
 Starts a multipart upload session and returns the pre-signed part URLs the client uses to upload the source file directly to object storage. Once every part is uploaded, call `POST /api/v2/databases/{owner}/{database}/imports` with the returned `token`, `contents_key`, and the collected `completed_parts` to create the import operation. Authentication is required.
 
@@ -1164,7 +1164,7 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/import
 ---
 
 ### Create an import operation {#createImport}
-`POST /api/v2/databases/{owner}/{database}/imports`
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v2/databases/{owner}/{database}/imports</code>
 
 Imports the previously-uploaded file into `{owner}/{database}` as the table named in the body. The upload (token, contents_key, and the parts uploaded against the URLs returned by `POST .../imports/uploads`) must already be complete; the import itself runs asynchronously. Returns `202` + an `OperationRef`; poll `GET /api/v2/operations/{id}` until `status` is `succeeded` or `failed`. Authentication is required.
 
