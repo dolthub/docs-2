@@ -3282,14 +3282,14 @@ components:
       type: object
       title: SqlWriteRequest
       description: >-
-        Body for `POST /api/v2/databases/{owner}/{database}/sql-writes`. Runs `query` on
+        Body for `POST /api/v2/databases/{owner}/{database}/sql-writes`. Runs `q` on
         `to_branch` (creating it from `from_branch` if it doesn't exist) then merges
         `from_branch` into `to_branch`. Returns `202` + `OperationRef`. `from_branch` and
         `to_branch` are bare branch names — both must live in the URL's `{owner}/{database}`.
       required:
         - from_branch
         - to_branch
-        - query
+        - q
       properties:
         from_branch:
           type: string
@@ -3305,7 +3305,7 @@ components:
             already exist.
           examples:
             - feature/new-states
-        query:
+        q:
           type: string
           minLength: 1
           description: The SQL write statement to execute.

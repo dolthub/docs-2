@@ -462,13 +462,13 @@ Body for the read variant of `POST /api/v2/databases/{owner}/{database}/sql`. Id
 ---
 
 ## SqlWriteRequest {#model-sqlwriterequest}
-Body for `POST /api/v2/databases/{owner}/{database}/sql-writes`. Runs `query` on `to_branch` (creating it from `from_branch` if it doesn't exist) then merges `from_branch` into `to_branch`. Returns `202` + `OperationRef`. `from_branch` and `to_branch` are bare branch names — both must live in the URL's `{owner}/{database}`.
+Body for `POST /api/v2/databases/{owner}/{database}/sql-writes`. Runs `q` on `to_branch` (creating it from `from_branch` if it doesn't exist) then merges `from_branch` into `to_branch`. Returns `202` + `OperationRef`. `from_branch` and `to_branch` are bare branch names — both must live in the URL's `{owner}/{database}`.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `from_branch` | `string` | yes | The branch to merge from after the write completes. |
 | `to_branch` | `string` | yes | The branch the write runs on. Created from `from_branch` when it doesn't already exist. |
-| `query` | `string` | yes | The SQL write statement to execute. |
+| `q` | `string` | yes | The SQL write statement to execute. |
 
 ---
 

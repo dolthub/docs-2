@@ -295,7 +295,7 @@ Kicks off an asynchronous SQL write. Runs `query` on `to_branch` (creating it fr
 |-------|------|----------|-------------|
 | `from_branch` | string | yes | The branch to merge from after the write completes. |
 | `to_branch` | string | yes | The branch the write runs on. Created from `from_branch` when it doesn't already exist. |
-| `query` | string | yes | The SQL write statement to execute. |
+| `q` | string | yes | The SQL write statement to execute. |
 
 **Example request**
 
@@ -303,7 +303,7 @@ Kicks off an asynchronous SQL write. Runs `query` on `to_branch` (creating it fr
 curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql-writes' \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -d '{"from_branch":"main","to_branch":"feature/new-states","query":"INSERT INTO states (name, abbr) VALUES ('Puerto Rico', 'PR')"}'
+  -d '{"from_branch":"main","to_branch":"feature/new-states","q":"INSERT INTO states (name, abbr) VALUES ('Puerto Rico', 'PR')"}'
 ```
 
 **Responses**
