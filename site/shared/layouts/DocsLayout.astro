@@ -313,6 +313,27 @@ const markdownAlternate =
     @apply border-l;
   }
 
+  /* On narrow viewports, auto layout gives each column exactly as much
+     room as its content demands — for tables with several short columns
+     (In/Type/Required) plus a prose column (Description), that reliably
+     exceeds the viewport. Switch to fixed layout with a floor per cell:
+     widths become deterministic (short cells keep one line, prose wraps
+     normally) instead of reactive to content, and only if the floors
+     themselves can't all fit does the .table-scroll / .api-section /
+     .api-response-body overflow-x: auto kick in as a fallback. Left
+     alone above this breakpoint — auto layout already looks right once
+     there's enough room for content to drive column widths. */
+  @media (max-width: 640px) {
+    .docs-main :global(table) {
+      table-layout: fixed;
+    }
+
+    .docs-main :global(th),
+    .docs-main :global(td) {
+      min-width: 4rem;
+    }
+  }
+
   .docs-main :global(tbody tr:last-child td) {
     border-bottom: none;
   }
