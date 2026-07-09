@@ -8,7 +8,6 @@ import { unified } from "@astrojs/markdown-remark";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeBasePath from "./rehype-base.mjs";
-import rehypeWrapTables from "./rehype-wrap-tables.mjs";
 import remarkInjectTitleH1 from "./remark-inject-title-h1.mjs";
 import remarkHeadingId from "remark-heading-id";
 
@@ -61,7 +60,6 @@ export function buildAstroConfig(site, siteDir) {
           [rehypeBasePath, { base }],
           rehypeSlug,
           [rehypeAutolinkHeadings, autolinkHeadingsOptions],
-          rehypeWrapTables,
         ],
       }),
     },

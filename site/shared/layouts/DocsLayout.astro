@@ -279,13 +279,10 @@ const markdownAlternate =
     @apply border-l-4 border-sky-300 pl-4 italic my-4;
   }
 
-  .docs-main :global(.table-scroll) {
-    @apply mb-4 overflow-x-auto;
-  }
-
   .docs-main :global(table) {
-    @apply w-full text-sm;
+    @apply w-full mb-4 text-sm;
     border-collapse: collapse;
+    table-layout: fixed;
   }
 
   .docs-main :global(thead tr) {
@@ -296,6 +293,7 @@ const markdownAlternate =
     @apply font-semibold text-left;
     padding: 0.5rem 0.75rem;
     @apply border-b;
+    overflow-wrap: anywhere;
   }
 
   .docs-main :global(th + th) {
@@ -305,6 +303,7 @@ const markdownAlternate =
   .docs-main :global(td) {
     padding: 0.5rem 0.75rem;
     @apply border-b;
+    overflow-wrap: anywhere;
   }
 
   .docs-main :global(td + td) {
