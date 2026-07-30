@@ -28,6 +28,7 @@ description: Reference for Dolt's version-control stored procedures — dolt_com
   - [dolt_reset()](#dolt_reset)
   - [dolt_revert()](#dolt_revert)
   - [dolt_rm()](#dolt_rm)
+  - [dolt_squash_history()](#dolt_squash_history)
   - [dolt_stash()](#dolt_stash)
   - [dolt_tag()](#dolt_tag)
   - [dolt_undrop()](#dolt_undrop)
@@ -1555,6 +1556,72 @@ CALL DOLT_RM('t1');
 SELECT * FROM DOLT_STATUS;
 Empty set (0.00 sec)
 ```
+
+### `DOLT_SQUASH_HISTORY()`
+
+Collapses a range of the current branch's history into a single new commit,
+leaving the data at HEAD unchanged. Unlike `DOLT_REBASE()`, which replays every
+commit, this is a pointer rewrite: it runs in constant time regardless of how
+many commits are collapsed.
+
+Everything from the `--first` commit through HEAD is collapsed into one new
+commit whose parents are exactly the parents of the `--first` commit. When
+`--first` is omitted it defaults to the initial commit's child, producing a
+history of just the initial commit followed by the new commit. The initial
+commit is never rewritten, so it is always preserved as the merge base.
+
+Only the current branch is affected; other branches keep their full history and
+continue to reference the old commits. The procedure requires a clean working
+set and does not garbage collect the orphaned commits -- run `dolt gc --full`
+afterward to reclaim their space.
+
+```sql
+CALL DOLT_SQUASH_HISTORY('--message', 'flattened history');
+CALL DOLT_SQUASH_HISTORY('--message', 'flattened history', '--first', 'commitHash123abc');
+```
+
+> **Note**
+
+#### Notes
+
+- `dolt_squash_history()` implicitly commits the current transaction and begins
+  a new one.
+- Because the collapsed commit is a full rewrite, it takes a required
+  `--message` and is authored by the current user rather than reusing the
+  messages of the squashed commits.
+
+#### Options
+
+`--message`: Required. The commit message for the new squashed commit.
+
+`--first`: The oldest commit to include in the squash. Everything from this
+commit through HEAD is collapsed into a single commit. Must be an ancestor of
+HEAD and cannot be the initial commit. Defaults to the initial commit's child.
+
+#### Output Schema
+
+```text
++-------+------+-------------------------------------+
+| Field | Type | Description                         |
++-------+------+-------------------------------------+
+| hash  | text | hash of the new squashed commit     |
++-------+------+-------------------------------------+
+```
+
+#### Example
+
+```sql
+-- Set the current database for the session
+USE mydb;
+
+-- Collapse the entire branch history down to the initial commit
+-- followed by a single new commit holding the current data.
+CALL DOLT_SQUASH_HISTORY('--message', 'squash history');
+
+-- Reclaim the space held by the now-orphaned commits.
+CALL DOLT_GC('--full');
+```
+
 ### `DOLT_STASH()`
 
 Manage temporary saves of uncommitted changes. Changes can be saved, restored, or removed without affecting the commit history. 
