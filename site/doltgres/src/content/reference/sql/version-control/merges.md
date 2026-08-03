@@ -5,7 +5,7 @@ title: Merges
 ## Merging branches
 
 To merge a branch into your current branch, use the [`DOLT_MERGE()`
-function](/reference/version-control/dolt-sql-functions#doltmerge):
+function](dolt-sql-functions.md#dolt_merge):
 
 ```sql
 SELECT DOLT_MERGE('feature-branch');
@@ -25,17 +25,17 @@ automatically rolled back and any merged tables will be reset.
 The two errors that merge can produce are conflicts and constraint-violations.
 If either error exists post-merge, the `conflicts` column will be set to `1`:
 
-```text
-+--------------+-----------+
-| fast_forward | conflicts |
-+--------------+-----------+
-| 0            | 1         |
-+--------------+-----------+
+```
++------+--------------+-----------+-----------------+
+| hash | fast_forward | conflicts | message         |
++------+--------------+-----------+-----------------+
+|      | 0            | 1         | conflicts found |
++------+--------------+-----------+-----------------+
 ```
 
 If no conflicts/constraint-violations were encountered, the current transaction
 will be completed, and a commit will be made. You can check the status of a
-merge using the [dolt_merge_status](/reference/version-control/dolt-system-tables#doltmergestatus) system table:
+merge using the [dolt.merge_status](/reference/version-control/dolt-system-tables#dolt.merge_status) system table:
 
 ```text
 > SELECT * from DOLT_MERGE_STATUS;
@@ -72,20 +72,20 @@ automatically merged.
 +------------+--------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
 | table_name | description                          | base_schema                                                       | our_schema                                                        | their_schema                                                      |
 +------------+--------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| people     | different column definitions for our | CREATE TABLE `people` (                                           | CREATE TABLE `people` (                                           | CREATE TABLE `people` (                                           |
-|            | column age and their column age      |   `id` int NOT NULL,                                              |   `id` int NOT NULL,                                              |   `id` int NOT NULL,                                              |
-|            |                                      |   `last_name` varchar(120),                                       |   `last_name` varchar(120),                                       |   `last_name` varchar(120),                                       |
-|            |                                      |   `first_name` varchar(120),                                      |   `first_name` varchar(120),                                      |   `first_name` varchar(120),                                      |
-|            |                                      |   `birthday` datetime(6),                                         |   `birthday` datetime(6),                                         |   `birthday` datetime(6),                                         |
-|            |                                      |   `age` int DEFAULT '0',                                          |   `age` float,                                                    |   `age` bigint,                                                   |
-|            |                                      |   PRIMARY KEY (`id`)                                              |   PRIMARY KEY (`id`)                                              |   PRIMARY KEY (`id`)                                              |
-|            |                                      | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
+| people     | different column definitions for our | CREATE TABLE "people" (                                           | CREATE TABLE "people" (                                           | CREATE TABLE "people" (                                           |
+|            | column age and their column age      |   "id" integer NOT NULL,                                          |   "id" integer NOT NULL,                                          |   "id" integer NOT NULL,                                          |
+|            |                                      |   "last_name" varchar(120),                                       |   "last_name" varchar(120),                                       |   "last_name" varchar(120),                                       |
+|            |                                      |   "first_name" varchar(120),                                      |   "first_name" varchar(120),                                      |   "first_name" varchar(120),                                      |
+|            |                                      |   "birthday" timestamp,                                           |   "birthday" timestamp,                                           |   "birthday" timestamp,                                           |
+|            |                                      |   "age" integer DEFAULT 0,                                        |   "age" real,                                                     |   "age" bigint,                                                   |
+|            |                                      |   PRIMARY KEY ("id")                                              |   PRIMARY KEY ("id")                                              |   PRIMARY KEY ("id")                                              |
+|            |                                      | );                                                                | );                                                                | );                                                                |
 +------------+--------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
 ```
 
 Merges that result in schema conflicts will leave an active merge state until
 the schema conflicts are resolved. Users can either `--abort` the active merge
-or resolve the schema conflict using [`dolt_conflicts_resolve()`](/reference/version-control/dolt-sql-functions#doltconflictsresolve).
+or resolve the schema conflict using [`dolt_conflicts_resolve()`](/reference/version-control/dolt-sql-functions#dolt_conflicts_resolve).
 `dolt_conflicts_resolve()` takes as arguments a table name and an option `--ours`
 or `--theirs` to specify which side of the merge should be accepted. It is important
 to note that this resolution strategy takes the _entire_ table from the choosen side
@@ -115,22 +115,22 @@ conflict table looks like this:
 DESCRIBE dolt_conflicts_people;
 +------------------+-------------+------+------+---------+-------+
 | Field            | Type        | Null | Key  | Default | Extra |
-+------------------+-------------+------+------+---------+-------+``
++------------------+-------------+------+------+---------+-------+
 | base_occupation  | varchar(32) | YES  |      |         |       |
 | base_last_name   | varchar(64) | YES  |      |         |       |
-| base_id          | int         | YES  |      |         |       |
+| base_id          | integer     | YES  |      |         |       |
 | base_first_name  | varchar(32) | YES  |      |         |       |
-| base_age         | int         | YES  |      |         |       |
+| base_age         | integer     | YES  |      |         |       |
 | our_occupation   | varchar(32) | YES  |      |         |       |
 | our_last_name    | varchar(64) | YES  |      |         |       |
-| our_id           | int         | YES  |      |         |       |
+| our_id           | integer     | YES  |      |         |       |
 | our_first_name   | varchar(32) | YES  |      |         |       |
-| our_age          | int         | YES  |      |         |       |
+| our_age          | integer     | YES  |      |         |       |
 | their_occupation | varchar(32) | YES  |      |         |       |
 | their_last_name  | varchar(64) | YES  |      |         |       |
-| their_id         | int         | YES  |      |         |       |
+| their_id         | integer     | YES  |      |         |       |
 | their_first_name | varchar(32) | YES  |      |         |       |
-| their_age        | int         | YES  |      |         |       |
+| their_age        | integer     | YES  |      |         |       |
 +------------------+-------------+------+------+---------+-------+
 
 SELECT * FROM dolt_conflicts_people;
@@ -169,22 +169,26 @@ DELETE FROM dolt_conflicts_people;
 
 ### Take theirs
 
-To use the merged values, overwriting our own, `REPLACE` and `DELETE`
+To use the merged values, overwriting our own, `INSERT ... ON CONFLICT` and `DELETE`
 rows from the table using the conflicts table:
 
 ```sql
--- Replace existing rows with rows taken with their_* values as long
+-- Overwrite existing rows with rows taken with their_* values as long
 -- as their_id is not null (rows deleted in theirs)
-REPLACE INTO people (id,first_name,last_name,age) (
+INSERT INTO people (id,first_name,last_name,age) (
     SELECT their_id, their_first_name, their_last_name, their_age
     FROM dolt_conflicts_people
     WHERE their_id IS NOT NULL
-);
+)
+ON CONFLICT (id) DO UPDATE
+SET first_name = excluded.first_name,
+    last_name = excluded.last_name,
+    age = excluded.age;
 
 -- Delete any rows that are deleted in theirs
-DELETE FROM PEOPLE WHERE id IN (
+DELETE FROM people WHERE id IN (
     SELECT base_id
-    FROM dolt_conflicts
+    FROM dolt_conflicts_people
     WHERE base_id IS NOT NULL AND their_id IS NULL
 );
 
@@ -194,7 +198,7 @@ DELETE FROM dolt_conflicts_people;
 
 It's also possible to modify a table through the `dolt_conflicts_$table_name`
 table. If you update any column prefixed with `our_`, that will update the
-corresponding rows in the source table. This allows the `REPLACE` statement
+corresponding rows in the source table. This allows the `INSERT` statement
 above to be re-written as:
 
 ```sql
@@ -205,7 +209,7 @@ SET    our_first_name = their_first_name,
 WHERE  their_id IS NOT NULL;
 ```
 
-See [`dolt_conflicts_$tablename`](/reference/version-control/dolt-system-tables#doltconflictstablename) for details.
+See [`dolt_conflicts_$tablename`](/reference/version-control/dolt-system-tables#dolt_conflicts_usdtablename) for details.
 
 ### Custom logic
 
@@ -225,12 +229,12 @@ merge conflicts, change this system variable to `1` for every client
 that needs to commit merge conflicts:
 
 ```sql
-set @@dolt_allow_commit_conflicts = 1;
+SET dolt_allow_commit_conflicts TO 1;
 ```
 
 The server will not allow you to create new Dolt commits (with the
 [`dolt_commit()` system function](/reference/version-control/dolt-sql-functions#dolt_commit)
-or with the [`@@dolt_transaction_commit` system
+or with the [`dolt_transaction_commit` system
 variable](/reference/version-control/dolt-sysvars#dolt_transaction_commit)) if the working
 set has conflicts. You must resolve conflicts before creating a Dolt
 commit.
@@ -277,15 +281,15 @@ When we merge, we see the `conflict` column has been set:
 ```sql
 > START TRANSACTION;
 > SELECT DOLT_MERGE('branch_to_merge');
-+--------------+-----------+
-| fast_forward | conflicts |
-+--------------+-----------+
-| 0            | 1         |
-+--------------+-----------+
++------+--------------+-----------+-----------------+
+| hash | fast_forward | conflicts | message         |
++------+--------------+-----------+-----------------+
+|      | 0            | 1         | conflicts found |
++------+--------------+-----------+-----------------+
 ```
 
 And we can inspect what the constraint violations are using the
-[dolt_constraint_violations](/reference/version-control/dolt-system-tables#dolt_constraint_violations)
+[dolt.constraint_violations](/reference/version-control/dolt-system-tables#dolt.constraint_violations)
 system table:
 
 ```sql

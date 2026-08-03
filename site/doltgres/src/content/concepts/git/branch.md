@@ -10,7 +10,7 @@ running transaction. If you have a set of database changes that logically should
 or reviewed together, you make those changes on a branch.
 
 A branch is a named reference that starts with a parent commit. When creating a branch you define
-it's parent commit and then effectively you have created a new copy of the Doltgres
+its parent commit and then effectively you have created a new copy of the Doltgres
 database. Changes to the branch only effect that branch. As you commit to the branch the head of the
 branch changes to the new commit.
 

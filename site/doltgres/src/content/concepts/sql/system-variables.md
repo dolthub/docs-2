@@ -4,12 +4,10 @@ title: System Variables
 
 ## What is a System Variable?
 
-System variables are server-side key-value pairs. These variables have lifecycles between server
-restarts (`PERSIST`), between sessions within a single server lifetime (`GLOBAL`), and within a
-single client session (`SESSION`). Variables for narrowing scopes are initialized hierarchically:
-`PERSIST` -> `GLOBAL` -> `SESSION`.
-
-<!-- TODO: this isn't quite accurate, needs revision -->
+System variables, called configuration parameters in Postgres, are server-side key-value pairs
+that control the server's behavior. You set a variable in your session with
+`SET <name> TO <value>`, and you read one with `SHOW <name>` or the `current_setting()`
+function. Server-wide defaults come from server configuration.
 
 ## How to use System Variables
 
@@ -23,8 +21,8 @@ support should have the same lifecycle behavior as Postgres.
 
 We also have Doltgres-specific system variables, which can be found
 [here](/reference/version-control/dolt-sysvars). Most dolt specific variables are
-prefixed with either `dolt_...` or the database's name (ex: `mydb_...`). These can be listed in the
-Postgres shell with show queries: `show all`.
+prefixed with either `dolt_...` or the database's name (ex: `mydb_...`). These can be read
+individually in the Postgres shell with `SHOW <name>` or `SELECT current_setting('<name>')`.
 
 ## Interaction with Doltgres Version Control
 
@@ -32,7 +30,7 @@ System variables are maintained outside of version control. Different clones of 
 can have different system variables.
 
 Some system variables impact transaction, merge, and conflict resolution behavior. For example,
-`@@dolt_force_transaction_commit` both creates a new Doltgres commit for every SQL transaction, and
+`dolt_force_transaction_commit` both creates a new Doltgres commit for every SQL transaction, and
 dismisses merge conflicts in the process of auto-executing these commits.
 
 A full list of Doltgres system variables and descriptions can be found
@@ -54,13 +52,13 @@ show max_connections;
 
 ```sql
 -- some variables are read only
-SET max_connections 10;
-Error 1105: Variable 'max_connections' is a read only variable
+SET max_connections TO 10;
+ERROR:  parameter "max_connections" cannot be changed now
 
 -- some variables are "dynamic" at session time
-SET TIME ZONE = 'PST8PDT';
+SET TIME ZONE 'PST8PDT';
 ```
 
 ### Show System Variables
 
-The `SHOW ALL` shows all system variables, but this syntax is not yet supported.
+Individual system variables can be read with `SHOW <name>`. `SHOW ALL` is not yet supported.

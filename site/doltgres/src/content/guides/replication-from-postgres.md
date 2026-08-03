@@ -28,9 +28,10 @@ the following commands as an admin user:
 ```
 
 This setup only needs to be run once. Change the value of the exported environment variables to
-change which database and tables are exported to Doltgres. The publication name and the slot name do
-not need to be the same, but are set to the same value above to make them easier to identify to
-administrators.
+change which database and tables are exported to Doltgres. The publication name and the slot name
+must be the same: Doltgres uses the `slot_name` from its configuration as both the replication slot
+name and the publication name when connecting to the primary, which is why both are created with
+`$SLOTNAME` above.
 
 You can also replicate all tables to Doltgres with the alternate syntax:
 
@@ -103,7 +104,10 @@ after seeding the replica with a dump, via a multi-step process:
 2. Record the current WAL location on the primary with `SELECT pg_current_wal_lsn();`
 3. Re-enable writes to the primary.
 4. Import the dump to the replica. `psql < pg_dump` can accomplish this on a running server.
-5. Write the WAL location recorded in step 2 to the file `./.doltcfg/pg_wal_location`
+5. Write the WAL location recorded in step 2 to the file `pg_wal_location` in the server's
+   configuration directory. If your `config.yaml` sets `cfg_dir`, that is `<cfg_dir>/pg_wal_location`;
+   if `cfg_dir` is not set in the `config.yaml`, the server looks for `./pg_wal_location` in the
+   directory it runs from.
 6. Restart the Doltgres replica server with replication enabled as above.
 
 Doltgres should now receive updates from the primary beginning at the point just after the snapshot

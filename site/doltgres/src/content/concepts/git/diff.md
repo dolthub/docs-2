@@ -15,7 +15,7 @@ as updates. Changes to primary key columns will appear as inserts and correspond
 If no primary key exists, all changes look like inserts and deletes. Effectively, for diff purposes,
 the keys of the table with no primary keys are the entire form.
 
-Doltgres can produce diffs on the command line, as tables, or as a SQL patch.
+Doltgres can produce diffs as SQL tables or as a SQL patch.
 
 Doltgres can produce diffs at scale because the Doltgres storage engine breaks the rows in the
 database down into chunks. Each chunk is content-addressed and stored in a tree called a Prolly

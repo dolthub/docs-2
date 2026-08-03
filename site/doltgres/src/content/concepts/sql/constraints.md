@@ -98,5 +98,5 @@ select dolt_commit('-am', 'Added salary for Jack Baker id=1');
 | 44h9p2k59o59rc1lcenkg4dghe052um0 |
 +----------------------------------+
 select dolt_merge('delete-parent');
-Error 1105: Constraint violation from merge detected, cannot commit transaction. Constraint violations from a merge must be resolved using the dolt_constraint_violations table before committing a transaction. To commit transactions with constraint violations set @@dolt_force_transaction_commit=1
+ERROR: Constraint violation from merge detected, cannot commit transaction. Constraint violations from a merge must be resolved using the dolt_constraint_violations table before committing a transaction. To commit transactions with constraint violations run "SET dolt_force_transaction_commit TO on"
 ```

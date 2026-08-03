@@ -13,7 +13,9 @@ elements in the database.
 
 ## Doltgres support for Stored Procedures
 
-Doltgres comes with [many built-in stored procedures for version control
-features](/reference/version-control/dolt-sql-functions).
+User created stored procedures are supported. You create a procedure with `CREATE PROCEDURE` and
+invoke it with `CALL`. Procedures can be written in PL/pgSQL, SQL, or C.
 
-User created stored procedures are not yet supported but will be added in a future release.
+Doltgres's [version control operations](/reference/version-control/dolt-sql-functions)
+are implemented as functions, not stored procedures. You invoke them with `SELECT`, as in
+`SELECT dolt_commit('-m', 'my commit');`. Using `CALL` on them returns an error.

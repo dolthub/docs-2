@@ -24,11 +24,10 @@ to a working set, you can `dolt_reset()` or `dolt_checkout()` to the previous co
 
 Git working sets change files. Doltgres working sets change tables.
 
-On the command line, working set changes do follow to the newly checked out branch, just like
-Git. However, in SQL server mode, working set changes are not transferred to the newly checked out
-branch when you do a `select dolt_checkout()`. The working set changes stay on the branch they were
-originally made. This change was made to account for multiple users using the same branch in SQL
-server mode.
+In Git, working set changes follow you to the newly checked out branch. However, in Doltgres,
+working set changes are not transferred to the newly checked out branch when you do a
+`select dolt_checkout()`. The working set changes stay on the branch they were originally made. This
+change was made to account for multiple users using the same branch in SQL server mode.
 
 ## Example
 

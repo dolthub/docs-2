@@ -12,7 +12,7 @@ Click links in the comments section to read docs for the feature.
 | SQL                                                | Comments                                                                                                                            |
 | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `CREATE DATABASE mydb;`                            | Creates a new Doltgres database                                                                                                         |
-| `SELECT DOLT_CLONE('post-no-preference/options');` | [Clones the `post-no-preference/options` database from DoltHub](/reference/version-control/dolt-sql-functions#dolt_clone) |
+| `SELECT DOLT_CLONE('file:///backups/mydb');` | [Clones a database from a file-based remote](/reference/version-control/dolt-sql-functions#dolt_clone) |
 
 ## Stage and snapshot
 
@@ -67,7 +67,7 @@ Click links in the comments section to read docs for the feature.
 
 | SQL                                                      | Comments                                                                                                                        |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `SELECT DOLT_REMOTE('add', 'myRemote', 'myOrg/myRepo');` | [Adds a new DoltHub remote](/reference/version-control/dolt-sql-functions#dolt_remote)                                |
+| `SELECT DOLT_REMOTE('add', 'myRemote', 'file:///backups/mydb');` | [Adds a new file-based remote](/reference/version-control/dolt-sql-functions#dolt_remote)                                |
 | `SELECT * FROM dolt_remotes;`                            | [Lists remotes](/reference/version-control/dolt-system-tables#dolt_remotes)                                            |
 | `SELECT DOLT_FETCH();`                                   | [Fetches all branches from the remote](/reference/version-control/dolt-sql-functions#dolt_fetch)                      |
 | `SELECT DOLT_PULL();`                                    | [Fetch and merge commits from the remote tracking branch](/reference/version-control/dolt-sql-functions#dolt_pull)    |
@@ -84,7 +84,7 @@ Click links in the comments section to read docs for the feature.
 | `SELECT DOLT_REVERT('gtfv1qhr5le61njimcbses9oom0de41e');`                 | [Creates a new commit which reverts the changes in a prior commit](/reference/version-control/dolt-sql-functions#dolt_revert)                   |
 | `SELECT * FROM DOLT_PATCH('main', 'WORKING');`                            | [Creates SQL statements to apply a diff between two revisions](/reference/version-control/dolt-sql-functions#dolt_patch)                         |
 | `SELECT * FROM dolt_conflicts;`                                           | [Lists which tables have conflicts after a merge](/reference/version-control/dolt-system-tables#dolt_conflicts)                                  |
-| `SELECT * FROM [dolt_conflicts_mytable];`                                 | [Lists the rows in conflict for `mytable`](/reference/version-control/dolt-system-tables#dolt_conflicts_usdtablename)                            |
+| `SELECT * FROM dolt_conflicts_mytable;`                                   | [Lists the rows in conflict for `mytable`](/reference/version-control/dolt-system-tables#dolt_conflicts_usdtablename)                            |
 | `SELECT DOLT_CONFLICTS_RESOLVE('--theirs', 'mytable');`                   | [Resolves conflicts in `mytable` by taking their changes](/reference/version-control/dolt-sql-functions#dolt_conflicts_resolve)                 |
 | `SELECT DOLT_TAG('tag1', 'myBranch');`                                    | [Creates a new tag at the HEAD of `mybranch`](/reference/version-control/dolt-sql-functions#dolt_tag)                                           |
 | `SELECT DOLT_CHERRY_PICK('qj6ouhjvtrnp1rgbvajaohmthoru2772');`            | [Applies the changes in a commit to the current branch HEAD](/reference/version-control/dolt-sql-functions#dolt_cherry_pick)                    |

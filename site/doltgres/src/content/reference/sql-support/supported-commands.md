@@ -8,7 +8,7 @@ title: Supported SQL Commands
 
 | SQL Commands    | Parses | Works | Notes and limitations |
 | :-------------- | :----: | :---: | :-------------------- |
-| ALTER TABLE     |   ✅   |  ❌   |                       |
+| ALTER TABLE     |   ✅   |  🟠   | SET SCHEMA and identity RESTART are not supported |
 | CREATE DATABASE |   ✅   |  🟠   |                       |
 | CREATE TABLE    |   ✅   |  🟠   |                       |
 | DROP DATABASE   |   ✅   |  🟠   |                       |
@@ -19,10 +19,10 @@ title: Supported SQL Commands
 | SQL Commands | Parses | Works | Notes and limitations |
 | :----------- | :----: | :---: | :-------------------- |
 | CALL         |   ✅   |  ✅   |                       |
-| DELETE       |   🟠   |  🟠   |                       |
-| INSERT       |   🟠   |  🟠   |                       |
+| DELETE       |   🟠   |  🟠   | Supports RETURNING    |
+| INSERT       |   🟠   |  🟠   | Supports ON CONFLICT DO NOTHING / DO UPDATE and RETURNING |
 | SELECT       |   🟠   |  🟠   |                       |
-| UPDATE       |   🟠   |  🟠   |                       |
+| UPDATE       |   🟠   |  🟠   | Supports RETURNING    |
 | VALUES       |   🟠   |  🟠   |                       |
 
 ## All SQL
@@ -32,21 +32,21 @@ title: Supported SQL Commands
 | SQL Commands             | Parses | Works | Notes and limitations |
 | :----------------------- | :----: | :---: | :-------------------- |
 | ALTER DEFAULT PRIVILEGES |   ✅   |  ❌   |                       |
-| ALTER GROUP              |   ❌   |  ❌   |                       |
-| ALTER ROLE               |   ❌   |  ❌   |                       |
-| ALTER USER               |   ❌   |  ❌   |                       |
+| ALTER GROUP              |   🟠   |  🟠   | Treated as ALTER ROLE; ADD/DROP USER forms are not supported |
+| ALTER ROLE               |   ✅   |  ✅   |                       |
+| ALTER USER               |   ✅   |  ✅   |                       |
 | ALTER USER MAPPING       |   ❌   |  ❌   |                       |
-| CREATE GROUP             |   🟠   |  ❌   |                       |
-| CREATE ROLE              |   🟠   |  ❌   |                       |
-| CREATE USER              |   🟠   |  ❌   |                       |
+| CREATE GROUP             |   ✅   |  ✅   | Alias for CREATE ROLE |
+| CREATE ROLE              |   ✅   |  ✅   |                       |
+| CREATE USER              |   ✅   |  ✅   |                       |
 | CREATE USER MAPPING      |   ❌   |  ❌   |                       |
-| DROP GROUP               |   ✅   |  ❌   |                       |
-| DROP ROLE                |   ✅   |  ❌   |                       |
-| DROP USER                |   ✅   |  ❌   |                       |
+| DROP GROUP               |   ✅   |  ✅   |                       |
+| DROP ROLE                |   ✅   |  ✅   |                       |
+| DROP USER                |   ✅   |  ✅   |                       |
 | DROP USER MAPPING        |   ❌   |  ❌   |                       |
-| GRANT                    |   ✅   |  ❌   |                       |
+| GRANT                    |   ✅   |  🟠   | Supported for tables, schemas, databases, sequences, routines, and role grants; cross-database grants are not supported |
 | REASSIGN OWNED           |   ❌   |  ❌   |                       |
-| REVOKE                   |   ✅   |  ❌   |                       |
+| REVOKE                   |   ✅   |  🟠   | Same forms as GRANT   |
 
 ## Data definition statements
 
@@ -63,7 +63,7 @@ title: Supported SQL Commands
 | ALTER FOREIGN TABLE              |   ❌   |  ❌   |                       |
 | ALTER FUNCTION                   |   ✅   |  ❌   |                       |
 | ALTER INDEX                      |   ✅   |  ❌   |                       |
-| ALTER LANGUAGE                   |   ✅   |  ❌   |                       |
+| ALTER LANGUAGE                   |   ❌   |  ❌   |                       |
 | ALTER LARGE OBJECT               |   ❌   |  ❌   |                       |
 | ALTER MATERIALIZED VIEW          |   ✅   |  ❌   |                       |
 | ALTER OPERATOR                   |   ❌   |  ❌   |                       |
@@ -75,12 +75,12 @@ title: Supported SQL Commands
 | ALTER ROUTINE                    |   ❌   |  ❌   |                       |
 | ALTER RULE                       |   ❌   |  ❌   |                       |
 | ALTER SCHEMA                     |   ✅   |  ❌   |                       |
-| ALTER SEQUENCE                   |   ✅   |  ❌   |                       |
+| ALTER SEQUENCE                   |   ✅   |  🟠   | Only OWNED BY is supported |
 | ALTER SERVER                     |   ❌   |  ❌   |                       |
 | ALTER STATISTICS                 |   ❌   |  ❌   |                       |
 | ALTER SUBSCRIPTION               |   ❌   |  ❌   |                       |
 | ALTER SYSTEM                     |   ❌   |  ❌   |                       |
-| ALTER TABLE                      |   ✅   |  ❌   |                       |
+| ALTER TABLE                      |   ✅   |  🟠   | SET SCHEMA and identity RESTART are not supported |
 | ALTER TABLESPACE                 |   ❌   |  ❌   |                       |
 | ALTER TEXT SEARCH CONFIGURATION  |   ❌   |  ❌   |                       |
 | ALTER TEXT SEARCH DICTIONARY     |   ❌   |  ❌   |                       |
@@ -89,31 +89,31 @@ title: Supported SQL Commands
 | ALTER TRIGGER                    |   ✅   |  ❌   |                       |
 | ALTER TYPE                       |   ✅   |  ❌   |                       |
 | ALTER VIEW                       |   ✅   |  ❌   |                       |
-| COMMENT                          |   ✅   |  ❌   |                       |
+| COMMENT                          |   ✅   |  🟠   | Silently ignored (no-op) |
 | CREATE ACCESS METHOD             |   ❌   |  ❌   |                       |
 | CREATE AGGREGATE                 |   ✅   |  ❌   |                       |
-| CREATE CAST                      |   ❌   |  ❌   |                       |
+| CREATE CAST                      |   ✅   |  ✅   |                       |
 | CREATE COLLATION                 |   ❌   |  ❌   |                       |
 | CREATE CONVERSION                |   ❌   |  ❌   |                       |
 | CREATE DATABASE                  |   ✅   |  🟠   |                       |
-| CREATE DOMAIN                    |   ✅   |  ❌   |                       |
+| CREATE DOMAIN                    |   ✅   |  🟠   | COLLATE is not supported |
 | CREATE EVENT TRIGGER             |   ❌   |  ❌   |                       |
-| CREATE EXTENSION                 |   ✅   |  ❌   |                       |
+| CREATE EXTENSION                 |   ✅   |  🟠   | Non-public SCHEMA, VERSION, and CASCADE are not supported |
 | CREATE FOREIGN DATA WRAPPER      |   ❌   |  ❌   |                       |
 | CREATE FOREIGN TABLE             |   ❌   |  ❌   |                       |
-| CREATE FUNCTION                  |   ✅   |  ❌   |                       |
-| CREATE INDEX                     |   ✅   |  ❌   |                       |
-| CREATE LANGUAGE                  |   ✅   |  ❌   |                       |
+| CREATE FUNCTION                  |   ✅   |  ✅   | Supports PL/pgSQL, SQL, and C functions |
+| CREATE INDEX                     |   ✅   |  🟠   | btree only; CONCURRENTLY is not supported |
+| CREATE LANGUAGE                  |   ❌   |  ❌   |                       |
 | CREATE MATERIALIZED VIEW         |   ✅   |  ❌   |                       |
 | CREATE OPERATOR                  |   ❌   |  ❌   |                       |
 | CREATE OPERATOR CLASS            |   ❌   |  ❌   |                       |
 | CREATE OPERATOR FAMILY           |   ❌   |  ❌   |                       |
 | CREATE POLICY                    |   ❌   |  ❌   |                       |
-| CREATE PROCEDURE                 |   ✅   |  ❌   |                       |
+| CREATE PROCEDURE                 |   ✅   |  ✅   | Supports PL/pgSQL, SQL, and C procedures |
 | CREATE PUBLICATION               |   ❌   |  ❌   |                       |
 | CREATE RULE                      |   ❌   |  ❌   |                       |
-| CREATE SCHEMA                    |   ✅   |  ❌   |                       |
-| CREATE SEQUENCE                  |   ✅   |  ❌   |                       |
+| CREATE SCHEMA                    |   ✅   |  ✅   |                       |
+| CREATE SEQUENCE                  |   ✅   |  🟠   | TEMPORARY, UNLOGGED, and CACHE values other than 1 are not supported |
 | CREATE SERVER                    |   ❌   |  ❌   |                       |
 | CREATE STATISTICS                |   ❌   |  ❌   |                       |
 | CREATE SUBSCRIPTION              |   ❌   |  ❌   |                       |
@@ -125,35 +125,35 @@ title: Supported SQL Commands
 | CREATE TEXT SEARCH PARSER        |   ❌   |  ❌   |                       |
 | CREATE TEXT SEARCH TEMPLATE      |   ❌   |  ❌   |                       |
 | CREATE TRANSFORM                 |   ❌   |  ❌   |                       |
-| CREATE TRIGGER                   |   ✅   |  ❌   |                       |
-| CREATE TYPE                      |   ✅   |  ❌   |                       |
+| CREATE TRIGGER                   |   ✅   |  🟠   | Row-level BEFORE/AFTER INSERT/UPDATE/DELETE only; CONSTRAINT, INSTEAD OF, FOR EACH STATEMENT, UPDATE OF, REFERENCING, and TRUNCATE triggers are not supported |
+| CREATE TYPE                      |   ✅   |  🟠   | Composite, enum, and shell types; RANGE and base types are not supported |
 | CREATE VIEW                      |   ✅   |  🟠   |                       |
 | DROP ACCESS METHOD               |   ❌   |  ❌   |                       |
 | DROP AGGREGATE                   |   ✅   |  ❌   |                       |
-| DROP CAST                        |   ❌   |  ❌   |                       |
+| DROP CAST                        |   ✅   |  ✅   |                       |
 | DROP COLLATION                   |   ❌   |  ❌   |                       |
 | DROP CONVERSION                  |   ❌   |  ❌   |                       |
 | DROP DATABASE                    |   ✅   |  🟠   |                       |
-| DROP DOMAIN                      |   ✅   |  ❌   |                       |
+| DROP DOMAIN                      |   ✅   |  ✅   |                       |
 | DROP EVENT TRIGGER               |   ❌   |  ❌   |                       |
-| DROP EXTENSION                   |   ✅   |  ❌   |                       |
+| DROP EXTENSION                   |   ✅   |  ✅   |                       |
 | DROP FOREIGN DATA WRAPPER        |   ❌   |  ❌   |                       |
 | DROP FOREIGN TABLE               |   ❌   |  ❌   |                       |
-| DROP FUNCTION                    |   ✅   |  ❌   |                       |
+| DROP FUNCTION                    |   ✅   |  ✅   |                       |
 | DROP INDEX                       |   ✅   |  🟠   |                       |
-| DROP LANGUAGE                    |   ✅   |  ❌   |                       |
-| DROP MATERIALIZED VIEW           |   ✅   |  🟠   |                       |
+| DROP LANGUAGE                    |   ❌   |  ❌   |                       |
+| DROP MATERIALIZED VIEW           |   ✅   |  ❌   | Executes as DROP VIEW; CREATE MATERIALIZED VIEW is not supported |
 | DROP OPERATOR                    |   ❌   |  ❌   |                       |
 | DROP OPERATOR CLASS              |   ❌   |  ❌   |                       |
 | DROP OPERATOR FAMILY             |   ❌   |  ❌   |                       |
 | DROP OWNED                       |   ❌   |  ❌   |                       |
 | DROP POLICY                      |   ❌   |  ❌   |                       |
-| DROP PROCEDURE                   |   ✅   |  ❌   |                       |
+| DROP PROCEDURE                   |   ✅   |  ✅   |                       |
 | DROP PUBLICATION                 |   ❌   |  ❌   |                       |
 | DROP ROUTINE                     |   ❌   |  ❌   |                       |
 | DROP RULE                        |   ❌   |  ❌   |                       |
-| DROP SCHEMA                      |   ✅   |  ❌   |                       |
-| DROP SEQUENCE                    |   ✅   |  ❌   |                       |
+| DROP SCHEMA                      |   ✅   |  🟠   | CASCADE is not supported |
+| DROP SEQUENCE                    |   ✅   |  ✅   |                       |
 | DROP SERVER                      |   ❌   |  ❌   |                       |
 | DROP STATISTICS                  |   ❌   |  ❌   |                       |
 | DROP SUBSCRIPTION                |   ❌   |  ❌   |                       |
@@ -165,7 +165,7 @@ title: Supported SQL Commands
 | DROP TEXT SEARCH TEMPLATE        |   ❌   |  ❌   |                       |
 | DROP TRANSFORM                   |   ❌   |  ❌   |                       |
 | DROP TRIGGER                     |   ✅   |  🟠   |                       |
-| DROP TYPE                        |   ✅   |  ❌   |                       |
+| DROP TYPE                        |   ✅   |  ✅   |                       |
 | DROP VIEW                        |   ✅   |  🟠   |                       |
 | SECURITY LABEL                   |   ❌   |  ❌   |                       |
 
@@ -175,15 +175,15 @@ title: Supported SQL Commands
 | :------------------------ | :----: | :---: | :-------------------- |
 | CALL                      |   ✅   |  ✅   |                       |
 | CLOSE                     |   ❌   |  ❌   |                       |
-| CREATE TABLE AS           |   ✅   |  ❌   |                       |
+| CREATE TABLE AS           |   ✅   |  🟠   | WITH NO DATA is not supported |
 | CLUSTER                   |   ❌   |  ❌   |                       |
-| COPY                      |   ❌   |  ❌   |                       |
+| COPY                      |   🟠   |  🟠   | COPY FROM STDIN and COPY FROM file work for text and CSV formats; BINARY and COPY TO are not supported |
 | DECLARE                   |   ❌   |  ❌   |                       |
-| DELETE                    |   🟠   |  🟠   |                       |
+| DELETE                    |   🟠   |  🟠   | Supports RETURNING    |
 | DO                        |   ❌   |  ❌   |                       |
 | FETCH                     |   ❌   |  ❌   |                       |
 | IMPORT FOREIGN SCHEMA     |   ❌   |  ❌   |                       |
-| INSERT                    |   🟠   |  🟠   |                       |
+| INSERT                    |   🟠   |  🟠   | Supports ON CONFLICT DO NOTHING / DO UPDATE and RETURNING |
 | LOAD                      |   ❌   |  ❌   |                       |
 | MERGE                     |   ❌   |  ❌   |                       |
 | MOVE                      |   ❌   |  ❌   |                       |
@@ -192,30 +192,30 @@ title: Supported SQL Commands
 | SELECT                    |   🟠   |  🟠   |                       |
 | SELECT INTO               |   ❌   |  ❌   |                       |
 | TRUNCATE                  |   🟠   |  🟠   |                       |
-| UPDATE                    |   🟠   |  🟠   |                       |
-| VACUUM                    |   ❌   |  ❌   |                       |
+| UPDATE                    |   🟠   |  🟠   | Supports RETURNING    |
+| VACUUM                    |   ✅   |  🟠   | Accepted as a no-op   |
 | VALUES                    |   🟠   |  🟠   |                       |
 
 ## Prepared statements
 
 | SQL Commands | Parses | Works | Notes and limitations |
 | :----------- | :----: | :---: | :-------------------- |
-| DEALLOCATE   |   ✅   |  ❌   |                       |
-| PREPARE      |   ✅   |  ❌   |                       |
-| EXECUTE      |   ✅   |  ❌   |                       |
+| DEALLOCATE   |   ✅   |  ✅   |                       |
+| PREPARE      |   ✅   |  ❌   | SQL-level PREPARE is not supported; prepared statements via the wire protocol work |
+| EXECUTE      |   ✅   |  ❌   | SQL-level EXECUTE is not supported; prepared statements via the wire protocol work |
 
 ## Session management statements
 
 | SQL Commands              | Parses | Works | Notes and limitations |
 | :------------------------ | :----: | :---: | :-------------------- |
-| DISCARD                   |   🟠   |  ❌   |                       |
+| DISCARD                   |   🟠   |  🟠   | Only DISCARD ALL is supported |
 | RESET                     |   ✅   |  ❌   |                       |
-| SET                       |   ✅   |  🟠   |                       |
+| SET                       |   ✅   |  🟠   | SET LOCAL is not supported |
 | SET CONSTRAINTS           |   ✅   |  ❌   |                       |
 | SET ROLE                  |   ✅   |  ❌   |                       |
 | SET SESSION AUTHORIZATION |   ✅   |  ❌   |                       |
 | SET TRANSACTION           |   🟠   |  ❌   |                       |
-| SHOW                      |   ✅   |  🟠   |                       |
+| SHOW                      |   ✅   |  🟠   | SHOW ALL is not supported |
 
 ## Transactional statements
 
@@ -243,5 +243,5 @@ title: Supported SQL Commands
 
 | SQL Commands | Parses | Works | Notes and limitations |
 | :----------- | :----: | :---: | :-------------------- |
-| ANALYZE      |   ❌   |  ❌   |                       |
-| EXPLAIN      |   ❌   |  ❌   |                       |
+| ANALYZE      |   ✅   |  ✅   |                       |
+| EXPLAIN      |   ✅   |  🟠   | EXPLAIN SELECT is supported; other statements are not |

@@ -20,7 +20,7 @@ when you do **not** need the hot-standby support of Direct-to-Standby Replicatio
 Remote Replication](/reference/server/replication#direct-vs.-remote-replication) for more details on the
 differences between Remote-Based Replication and Hot Standby Replication.
 
-In **Direct-to-Standby Replication**, the primary dolt sql-server instance replicates all writes to
+In **Direct-to-Standby Replication**, the primary Doltgres server instance replicates all writes to
 a set of configured standby servers. In this mode, there is no intermediate
 [remote](/concepts/git/remotes) and all SQL transaction commits are replicated, not
 just Doltgres commits.
@@ -78,15 +78,21 @@ Set the appropriate server variables:
 
 ```sql
 select dolt_remote('add', 'origin', 'file:///var/share/myremote/');
-ALTER SYSTEM SET dolt_replicate_to_remote 'origin';
+SET dolt_replicate_to_remote TO 'origin';
 ```
 
 > **Note**
 
 ### Note
 
-The `ALTER SYSTEM SET` syntax is not yet supported. For the time being, you must set system
-variables in the `config.yaml` file.
+Postgres's `ALTER SYSTEM SET` syntax is not supported. Setting a global-only Dolt system variable
+with a plain `SET` statement applies it at the global scope. To make a setting persist across
+server restarts, set it under the `system_variables:` key in your `config.yaml` file:
+
+```yaml
+system_variables:
+  dolt_replicate_to_remote: origin
+```
 
 
 

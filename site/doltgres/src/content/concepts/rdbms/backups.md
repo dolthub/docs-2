@@ -40,6 +40,10 @@ function](/reference/version-control/dolt-sql-functions#dolt_remote). Then you p
 branch to a remote using the [`dolt_push()`
 function](/reference/version-control/dolt-sql-functions#dolt_push).
 
-## Not yet supported: non-remote backups
-
-The `backup` command supported in Dolt is not yet available in doltgres. Check back for updates.
+Using a backup allows you to back up all branches, uncommitted changes included. You manage backups
+with the [`dolt_backup()`
+function](/reference/version-control/dolt-sql-functions#dolt_backup). You add a backup
+with `select dolt_backup('add', ...)`, upload to it with `select dolt_backup('sync', ...)` or
+`select dolt_backup('sync-url', ...)`, and restore a database from it with `select
+dolt_backup('restore', ...)`. See the [backups reference
+page](/reference/server/backups) for more detail.

@@ -29,8 +29,8 @@ changed since the last time you read it, log is useful in verifying this.
 
 ## Difference between Git log and Doltgres log
 
-Conceptually and practically log on the command line is very similar between Git and Doltgres. A
-table is akin to a file in Git.
+Conceptually, log is very similar between Git and Doltgres. In Doltgres, you access the log with a
+SQL query like `SELECT * FROM dolt_log`. A table is akin to a file in Git.
 
 Doltgres has additional log functionality beyond Git. You can produce a log of any cell (i.e. row,
 column pair) in the database using a SQL query against the `dolt_history_<tablename>` system table.

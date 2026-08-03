@@ -15,7 +15,7 @@ Views allow you to derive tables using SQL instead of storing a copy of all the 
 to derive. As a simple example, in a table of employee's salaries, you may store yearly salary but
 when using the table to calculate monthly salary, you use a view that divides the yearly salary by 12.
 
-Note, accessing views is be slower than accessing a table itself because the database must compute
+Note, accessing views can be slower than accessing a table itself because the database must compute
 the values returned.
 
 ## Difference between Postgres Views and Doltgres Views

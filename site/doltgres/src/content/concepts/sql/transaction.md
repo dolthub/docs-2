@@ -5,7 +5,7 @@ title: Transactions
 
 ## What is a Transaction?
 
-A transaction is the unit of change isolation is a database.
+A transaction is the unit of change isolation in a database.
 
 ## How to use Transactions
 
@@ -36,7 +36,7 @@ may not be merged.
 
 Note, you can make every transaction `COMMIT` a Doltgres commit by setting the [system
 variable](/concepts/sql/system-variables),
-[`@@dolt_transaction_commit`](/reference/version-control/dolt-sysvars#dolt_transaction_commit)
+[`dolt_transaction_commit`](/reference/version-control/dolt-sysvars#dolt_transaction_commit)
 
 ## Example
 

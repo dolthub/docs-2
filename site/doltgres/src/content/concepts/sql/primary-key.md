@@ -52,7 +52,7 @@ create table keyed (c1 int, c2 int, c3 int, c4 int, primary key(c1, c2));
 ### Alter a table's primary keys
 
 ```sql
-alter table keyed drop primary key;
+alter table keyed drop constraint keyed_pkey;
 alter table keyed add primary key(c1);
 ```
 

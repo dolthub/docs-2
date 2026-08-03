@@ -10,13 +10,11 @@ description: First-time tutorial for Doltgres — start the server, connect with
 
 ```bash
 $ doltgres
-Successfully initialized dolt data repository.
-Starting server with Config HP="localhost:5432"|T="28800000"|R="false"|L="info"|S="/tmp/mysql.sock"
+INFO[0000] Server ready. Accepting connections.
 ```
 
 4. Make sure you have Postgres version 15 or higher installed. I used Homebrew to install Postgres on my Mac.
-   This requires I manually add `/opt/homebrew/opt/postgresql@15/bin` to my path. On Postgres version 14 or lower,
-   `\` commands (i.e. `\d`, `\l`) do not yet work with Doltgres.
+   This requires I manually add `/opt/homebrew/opt/postgresql@15/bin` to my path.
 
 ```bash
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
@@ -83,26 +81,26 @@ getting_started=> \d
 getting_started=> select * from dolt_status;
    table_name           | staged |  status
 ------------------------+--------+-----------
- public.employees       | 0      | new table
- public.employees_teams | 0      | new table
- public.teams           | 0      | new table
+ public.employees       | f      | new table
+ public.employees_teams | f      | new table
+ public.teams           | f      | new table
 (3 rows)
 
 getting_started=> select dolt_add('teams', 'employees', 'employees_teams');
- status
---------
-      0
+ dolt_add
+----------
+        0
 (1 row)
 getting_started=> select * from dolt_status;
    table_name           | staged |  status
 ------------------------+--------+-----------
- public.employees       | 1      | new table
- public.employees_teams | 1      | new table
- public.teams           | 1      | new table
+ public.employees       | t      | new table
+ public.employees_teams | t      | new table
+ public.teams           | t      | new table
 (3 rows)
 
 getting_started=> select dolt_commit('-m', 'Created initial schema');
-               hash
+           dolt_commit
 ----------------------------------
  peqq98e2dl5gscvfvic71e7j6ne34533
 (1 row)

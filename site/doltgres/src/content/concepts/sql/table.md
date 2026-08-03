@@ -20,20 +20,20 @@ to change their schema.
 
 ## Difference between Postgres Table and Doltgres Table
 
-A Postgres and Dolt table function the same on the surface. `CREATE` and `ALTER` statements work the
+A Postgres and Doltgres table function the same on the surface. `CREATE` and `ALTER` statements work the
 same on both.
 
-Dolt and Postgres are [row major](https://en.wikipedia.org/wiki/Row-_and_column-major_order),
+Doltgres and Postgres are [row major](https://en.wikipedia.org/wiki/Row-_and_column-major_order),
 meaning row values are stored next to each other. However, Postgres stores data in a binary tree
-structure while Dolt stores table data on disk using a content-addressed binary tree called a
-[prolly tree](https://dolthub.com/docs/architecture/storage-engine/prolly-tree). This setup makes Dolt [fairly
+structure while Doltgres stores table data on disk using a content-addressed binary tree called a
+[prolly tree](https://docs.dolthub.com/architecture/storage-engine/prolly-tree). This setup makes Doltgres [fairly
 comparable in query performance to Postgres](/reference/benchmarks/latency) while also
-providing history-independence and fast `diff` between versions. Fast `diff` powers Dolt's version
+providing history-independence and fast `diff` between versions. Fast `diff` powers Doltgres's version
 control capabilities.
 
-## Interaction with Dolt Version Control
+## Interaction with Doltgres Version Control
 
-Dolt versions table schema and data. A table in Dolt is akin to a file in Git, it is the unit of
+Doltgres versions table schema and data. A table in Doltgres is akin to a file in Git, it is the unit of
 change. Tables are the target of `select dolt_add()`.
 
 ## Example

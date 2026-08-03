@@ -4,19 +4,21 @@ title: Supported Types
 
 ## Standard Types
 
-Most of the standard types with partial support are missing functionality regarding their parameters.
-For example, `timestamp` takes in a precision, but does not enforce it.
+Most of the standard types with partial support are missing some functionality regarding their parameters.
+Length and precision parameters are enforced for many types (for example `char` and `varchar` lengths),
+but some parameters (such as `timestamp` precision) may not be fully enforced yet.
 
 | SQL Type Name  | Implemented | Aliases                       |
 | :------------- | :---------: | :---------------------------- |
-| bit            |     ❌      |                               |
-| bit[]          |     ❌      |                               |
+| bit            |     ✅      |                               |
+| bit[]          |     ✅      |                               |
 | boolean        |     ✅      |                               |
 | boolean[]      |     ✅      |                               |
 | box            |     ❌      |                               |
 | box[]          |     ❌      |                               |
 | bytea          |     🟠      |                               |
 | bytea[]        |     🟠      |                               |
+| "char"         |     ✅      |                               |
 | char           |     🟠      | character                     |
 | char[]         |     🟠      | character[]                   |
 | cidr           |     ❌      |                               |
@@ -34,6 +36,7 @@ For example, `timestamp` takes in a precision, but does not enforce it.
 | inet           |     ❌      |                               |
 | inet[]         |     ❌      |                               |
 | int2           |     ✅      | smallint                      |
+| int2vector     |     ✅      |                               |
 | int2[]         |     ✅      | smallint[]                    |
 | int4           |     ✅      | int, integer                  |
 | int4[]         |     ✅      | int[], integer[]              |
@@ -59,6 +62,7 @@ For example, `timestamp` takes in a precision, but does not enforce it.
 | macaddr[]      |     ❌      |                               |
 | money          |     ❌      |                               |
 | money[]        |     ❌      |                               |
+| name           |     ✅      |                               |
 | numeric        |     🟠      | decimal                       |
 | numeric[]      |     🟠      | decimal[]                     |
 | nummultirange  |     ❌      |                               |
@@ -69,9 +73,9 @@ For example, `timestamp` takes in a precision, but does not enforce it.
 | point[]        |     ❌      |                               |
 | polygon        |     ❌      |                               |
 | polygon[]      |     ❌      |                               |
-| serial2        |     ❌      | smallserial                   |
-| serial4        |     ❌      | serial                        |
-| serial8        |     ❌      | bigserial                     |
+| serial2        |     ✅      | smallserial                   |
+| serial4        |     ✅      | serial                        |
+| serial8        |     ✅      | bigserial                     |
 | text           |     ✅      |                               |
 | text[]         |     ✅      |                               |
 | time           |     🟠      | time without time zone        |
@@ -92,8 +96,8 @@ For example, `timestamp` takes in a precision, but does not enforce it.
 | tsvector[]     |     ❌      |                               |
 | uuid           |     ✅      |                               |
 | uuid[]         |     ✅      |                               |
-| varbit         |     ❌      | bit varying                   |
-| varbit[]       |     ❌      | bit varying[]                 |
+| varbit         |     ✅      | bit varying                   |
+| varbit[]       |     ✅      | bit varying[]                 |
 | varchar        |     🟠      | character varying             |
 | varchar[]      |     🟠      | character varying[]           |
 | xml            |     ❌      |                               |
@@ -103,7 +107,7 @@ For example, `timestamp` takes in a precision, but does not enforce it.
 
 | SQL Type Name           | Implemented |
 | :---------------------- | :---------: |
-| any                     |     ❌      |
+| any                     |     ✅      |
 | anyarray                |     ✅      |
 | anycompatible           |     ❌      |
 | anycompatiblearray      |     ❌      |
@@ -111,23 +115,23 @@ For example, `timestamp` takes in a precision, but does not enforce it.
 | anycompatiblenonarray   |     ❌      |
 | anycompatiblerange      |     ❌      |
 | anyelement              |     ✅      |
-| anyenum                 |     ❌      |
+| anyenum                 |     ✅      |
 | anymultirange           |     ❌      |
 | anynonarray             |     ✅      |
 | anyrange                |     ❌      |
-| cstring                 |     ❌      |
+| cstring                 |     ✅      |
 | event_trigger           |     ❌      |
 | fdw_handler             |     ❌      |
 | index_am_handler        |     ❌      |
-| internal                |     ❌      |
+| internal                |     ✅      |
 | language_handler        |     ❌      |
 | pg_ddl_command          |     ❌      |
-| record                  |     ❌      |
+| record                  |     ✅      |
 | table_am_handler        |     ❌      |
-| trigger                 |     ❌      |
+| trigger                 |     ✅      |
 | tsm_handler             |     ❌      |
 | unknown                 |     🟠      |
-| void                    |     ❌      |
+| void                    |     ✅      |
 
 ## OID Alias Types
 
@@ -136,6 +140,9 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | SQL Type Name | Supported |
 | :------------ | :-------- |
 | oid           | ✅        |
+| oidvector     | ✅        |
+| cid           | ✅        |
+| tid           | ✅        |
 | xid           | 🟠        |
 | regclass      | ✅        |
 | regcollation  | ❌        |

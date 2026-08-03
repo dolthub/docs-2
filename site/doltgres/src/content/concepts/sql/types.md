@@ -23,7 +23,7 @@ Each column in your tables must have a type. You use types when defining tables.
 type of a column with `ALTER` statements.
 
 When querying tables, the type of the column defines which functions can be used on the data
-retrieved. To manipulate the type of a column when querying you use the `CONVERT()` function.
+retrieved. To manipulate the type of a column when querying you use `CAST()` or the `::` operator.
 
 ## Difference between Postgres Types and Doltgres Types
 
@@ -38,5 +38,5 @@ some type changes and will make a best effort to do so.
 ## Example
 
 ```sql
-create table complex (pk1 int, pk2 varchar(47), c1 tinyint not null, c2 datetime, c3 json, primary key(pk1, pk2));
+create table complex (pk1 int, pk2 varchar(47), c1 smallint not null, c2 timestamp, c3 json, primary key(pk1, pk2));
 ```

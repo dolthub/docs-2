@@ -9,7 +9,7 @@ For most syntax and technical questions, you should feel free to refer to
 the [PostgreSQL 15 user manual](https://www.postgresql.org/docs/15/index.html).
 
 Any deviation from the PostgreSQL 15 manual should be documented on this page, 
-or else indicates a bug. Please [file issues](https://github.com/dolthub/dolt/issues) 
+or else indicates a bug. Please [file issues](https://github.com/dolthub/doltgresql/issues)
 with any incompatibilities you discover.
 
 This series of documents shows:

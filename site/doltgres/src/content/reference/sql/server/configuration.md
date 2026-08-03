@@ -25,7 +25,7 @@ data_dir: /var/doltgres/dbs
 cfg_dir: .doltcfg
 ```
 
-The full list of supported fields can be found by running `doltgres --help`.
+The full list of supported fields can be found by running `doltgres -config-help`.
 
 <!-- TODO: Flesh this out with the full list of config settings, since we don't have CLI ref to fall
     back on like dolt does -->
@@ -37,7 +37,7 @@ Doltgres defines system variables that you can set in your session via the
 a server restart.
 
 ```sql
-set dolt_transaction_commit 1;
+SET dolt_transaction_commit TO 1;
 ```
 
 A full list of available system variables can be found in the [docs on

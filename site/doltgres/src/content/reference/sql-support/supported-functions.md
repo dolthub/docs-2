@@ -38,10 +38,10 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                                                     | Supported | Notes and limitations |
 |:-------------------------------------------------------------|:----------|:----------------------|
-| **datatype** [NOT] BETWEEN **datatype** AND **datatype**     | ❌         |                       |
-| **datatype** BETWEEN SYMMETRIC **datatype** AND **datatype** | ❌         |                       |
-| **datatype** IS [NOT] DISTINCT FROM **datatype**             | ❌         |                       |
-| **datatype** IS [NOT] NULL                                   | ❌         |                       |
+| **datatype** [NOT] BETWEEN **datatype** AND **datatype**     | ✅         |                       |
+| **datatype** BETWEEN SYMMETRIC **datatype** AND **datatype** | ✅         |                       |
+| **datatype** IS [NOT] DISTINCT FROM **datatype**             | ✅         |                       |
+| **datatype** IS [NOT] NULL                                   | ✅         |                       |
 | **datatype** IS [NOT] TRUE                                   | ❌         |                       |
 | **datatype** IS [NOT] FALSE                                  | ❌         |                       |
 | **datatype** IS [NOT] UNKNOWN                                | ❌         |                       |
@@ -72,12 +72,12 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | \|/ **double_precision**               | ❌         |                       |
 | \|\|/ **double_precision**             | ❌         |                       |
 | @ **numeric_type**                     | ❌         |                       |
-| **integral_type** & **integral_type**  | ❌         |                       |
-| **integral_type** \| **integral_type** | ❌         |                       |
-| **integral_type** # **integral_type**  | ❌         |                       |
+| **integral_type** & **integral_type**  | ✅         |                       |
+| **integral_type** \| **integral_type** | ✅         |                       |
+| **integral_type** # **integral_type**  | ✅         |                       |
 | ~ **integral_type**                    | ❌         |                       |
-| **integral_type** << **integer**       | ❌         |                       |
-| **integral_type** >> **integer**       | ❌         |                       |
+| **integral_type** << **integer**       | ✅         |                       |
+| **integral_type** >> **integer**       | ✅         |                       |
 
 ## Mathematical Functions
 
@@ -88,7 +88,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | abs          | ✅         |                       |
 | cbrt         | ✅         |                       |
 | ceil         | ✅         |                       |
-| ceiling      | ❌         |                       |
+| ceiling      | ✅         |                       |
 | degrees      | ✅         |                       |
 | div          | ✅         |                       |
 | erf          | ❌         |                       |
@@ -165,9 +165,9 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                           | Supported | Notes and limitations |
 |:-----------------------------------|:----------|:----------------------|
-| **text** \|\| **text**             | ❌         |                       |
-| **anynonarray** \|\| **text**      | ❌         |                       |
-| **text** \|\| **anynonarray**      | ❌         |                       |
+| **text** \|\| **text**             | ✅         |                       |
+| **anynonarray** \|\| **text**      | ✅         |                       |
+| **text** \|\| **anynonarray**      | ✅         |                       |
 | **text** IS [NOT][form] NORMALIZED | ❌         |                       |
 | btrim                              | ✅         |                       |
 | bit_length                         | ✅         |                       |
@@ -181,7 +181,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | position                           | ❌         |                       |
 | rpad                               | ✅         |                       |
 | rtrim                              | ✅         |                       |
-| substring                          | ❌         |                       |
+| substring                          | ✅         |                       |
 | trim                               | ❌         |                       |
 | unicode_assigned                   | ❌         |                       |
 | upper                              | ✅         |                       |
@@ -195,9 +195,9 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | **text** ^@ **text**  | ❌         |                       |
 | ascii                 | ✅         |                       |
 | chr                   | ✅         |                       |
-| concat                | ❌         |                       |
-| concat_ws             | ❌         |                       |
-| format                | ❌         |                       |
+| concat                | ✅         |                       |
+| concat_ws             | 🟠        | Available with MySQL semantics via the underlying engine |
+| format                | 🟠        | Available with MySQL semantics via the underlying engine |
 | initcap               | ✅         |                       |
 | left                  | ✅         |                       |
 | length                | ✅         |                       |
@@ -208,14 +208,14 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | quote_literal         | ❌         |                       |
 | quote_nullable        | ❌         |                       |
 | regexp_count          | ❌         |                       |
-| regexp_instr          | ❌         |                       |
-| regexp_like           | ❌         |                       |
+| regexp_instr          | 🟠        | Available with MySQL semantics via the underlying engine |
+| regexp_like           | 🟠        | Available with MySQL semantics via the underlying engine |
 | regexp_match          | ❌         |                       |
 | regexp_matches        | ❌         |                       |
-| regexp_replace        | ❌         |                       |
+| regexp_replace        | 🟠        | Available with MySQL semantics via the underlying engine |
 | regexp_split_to_array | ❌         |                       |
 | regexp_split_to_table | ❌         |                       |
-| regexp_substr         | ❌         |                       |
+| regexp_substr         | 🟠        | Available with MySQL semantics via the underlying engine |
 | repeat                | ✅         |                       |
 | replace               | ✅         |                       |
 | reverse               | ✅         |                       |
@@ -317,7 +317,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                                                  | Supported | Notes and limitations |
 |:----------------------------------------------------------|:----------|:----------------------|
-| [NOT] LIKE **pattern** [ESCAPE **escape-character**       | ❌         |                       |
+| [NOT] LIKE **pattern** [ESCAPE **escape-character**       | ✅         |                       |
 | [NOT] SIMILAR TO **pattern** [ESCAPE **escape-character** | ❌         |                       |
 
 ## Regular Expression Match Operators
@@ -326,9 +326,9 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function              | Supported | Notes and limitations |
 |:----------------------|:----------|:----------------------|
-| **text** ~ **text**   | ❌         |                       |
+| **text** ~ **text**   | ✅         |                       |
 | **text** ~* **text**  | ❌         |                       |
-| **text** !~ **text**  | ❌         |                       |
+| **text** !~ **text**  | ✅         |                       |
 | **text** !~* **text** | ❌         |                       |
 
 ## Formatting Functions
@@ -338,9 +338,9 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | Function     | Supported | Notes and limitations |
 |:-------------|:----------|:----------------------|
 | to_char      | ✅         |                       |
-| to_date      | ❌         |                       |
+| to_date      | ✅         |                       |
 | to_number    | ❌         |                       |
-| to_timestamp | ❌         |                       |
+| to_timestamp | ✅         |                       |
 
 ## Date/Time Operators
 
@@ -348,23 +348,23 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                            | Supported | Notes and limitations |
 |:------------------------------------|:----------|:----------------------|
-| **date** + **integer**              | ❌         |                       |
-| **date** + **interval**             | ❌         |                       |
-| **date** + **time**                 | ❌         |                       |
-| **interval** + **interval**         | ❌         |                       |
-| **timestamp** + **interval**        | ❌         |                       |
-| **time** + **interval**             | ❌         |                       |
-| - **interval**                      | ❌         |                       |
-| **date** - **date**                 | ❌         |                       |
-| **date** - **integer**              | ❌         |                       |
-| **date** - **interval**             | ❌         |                       |
-| **time** - **time**                 | ❌         |                       |
-| **time** - **interval**             | ❌         |                       |
-| **timestamp** - **interval**        | ❌         |                       |
-| **interval** - **interval**         | ❌         |                       |
-| **timestamp** - **timestamp**       | ❌         |                       |
-| **interval** * **double_precision** | ❌         |                       |
-| **interval** / **double_precision** | ❌         |                       |
+| **date** + **integer**              | ✅         |                       |
+| **date** + **interval**             | ✅         |                       |
+| **date** + **time**                 | ✅         |                       |
+| **interval** + **interval**         | ✅         |                       |
+| **timestamp** + **interval**        | ✅         |                       |
+| **time** + **interval**             | ✅         |                       |
+| - **interval**                      | ✅         |                       |
+| **date** - **date**                 | ✅         |                       |
+| **date** - **integer**              | ✅         |                       |
+| **date** - **interval**             | ✅         |                       |
+| **time** - **time**                 | ✅         |                       |
+| **time** - **interval**             | ✅         |                       |
+| **timestamp** - **interval**        | ✅         |                       |
+| **interval** - **interval**         | ✅         |                       |
+| **timestamp** - **timestamp**       | ✅         |                       |
+| **interval** * **double_precision** | ✅         |                       |
+| **interval** / **double_precision** | ✅         |                       |
 
 ## Date/Time Functions
 
@@ -373,15 +373,15 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | Function              | Supported | Notes and limitations                    |
 |:----------------------|:----------|:-----------------------------------------|
 | age                   | ✅         |                                          |
-| clock_timestamp       | ❌         |                                          |
+| clock_timestamp       | ✅         |                                          |
 | current_date          | ✅         |                                          |
-| current_time          | ❌         |                                          |
+| current_time          | ✅         |                                          |
 | current_timestamp     | ✅         |                                          |
 | date_add              | ❌         |                                          |
-| date_bin              | ❌         |                                          |
-| date_part             | ❌         |                                          |
+| date_bin              | ✅         |                                          |
+| date_part             | ✅         |                                          |
 | date_subtract         | ❌         |                                          |
-| date_trunc            | ❌         |                                          |
+| date_trunc            | ✅         |                                          |
 | extract               | ✅         |                                          |
 | isfinite              | ❌         |                                          |
 | justify_days          | ❌         |                                          |
@@ -392,14 +392,14 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | make_date             | ❌         |                                          |
 | make_interval         | ❌         |                                          |
 | make_time             | ❌         |                                          |
-| make_timestamp        | ❌         |                                          |
-| make_timestamptz      | ❌         |                                          |
+| make_timestamp        | ✅         |                                          |
+| make_timestamptz      | ✅         |                                          |
 | now                   | 🟠        | missing timezone value                   |
 | statement_timestamp   | ❌         |                                          |
-| timeofday             | ❌         |                                          |
-| timezone              | ❌         |                                          |
+| timeofday             | ✅         |                                          |
+| timezone              | ✅         |                                          |
 | transaction_timestamp | ❌         |                                          |
-| to_timestamp          | ❌         |                                          |
+| to_timestamp          | ✅         |                                          |
 
 ## Enum Support Functions
 
@@ -601,7 +601,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function               | Supported | Notes and limitations |
 |:-----------------------|:----------|:----------------------|
-| gen_random_uuid        | ❌         |                       |
+| gen_random_uuid        | ✅         |                       |
 | uuid_extract_timestamp | ❌         |                       |
 | uuid_extract_version   | ❌         |                       |
 
@@ -647,18 +647,18 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                  | Supported | Notes and limitations |
 |:--------------------------|:----------|:----------------------|
-| **json** -> **integer**   | ❌         |                       |
-| **jsonb** -> **integer**  | ❌         |                       |
-| **json** -> **text**      | ❌         |                       |
-| **jsonb** -> **text**     | ❌         |                       |
-| **json** ->> **integer**  | ❌         |                       |
-| **jsonb** ->> **integer** | ❌         |                       |
-| **json** ->> **text**     | ❌         |                       |
-| **jsonb** ->> **text**    | ❌         |                       |
-| **json** #> **text[]**    | ❌         |                       |
-| **jsonb** #> **text[]**   | ❌         |                       |
-| **json** #>> **text[]**   | ❌         |                       |
-| **jsonb** #>> **text[]**  | ❌         |                       |
+| **json** -> **integer**   | ✅         |                       |
+| **jsonb** -> **integer**  | ✅         |                       |
+| **json** -> **text**      | ✅         |                       |
+| **jsonb** -> **text**     | ✅         |                       |
+| **json** ->> **integer**  | ✅         |                       |
+| **jsonb** ->> **integer** | ✅         |                       |
+| **json** ->> **text**     | ✅         |                       |
+| **jsonb** ->> **text**    | ✅         |                       |
+| **json** #> **text[]**    | ✅         |                       |
+| **jsonb** #> **text[]**   | ✅         |                       |
+| **json** #>> **text[]**   | ✅         |                       |
+| **jsonb** #>> **text[]**  | ✅         |                       |
 
 ## Additional jsonb Operators
 
@@ -666,15 +666,15 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                  | Supported | Notes and limitations |
 |:--------------------------|:----------|:----------------------|
-| **jsonb** @> **jsonb**    | ❌         |                       |
-| **jsonb** <@ **jsonb**    | ❌         |                       |
-| **jsonb** ? **text**      | ❌         |                       |
-| **jsonb** ?\| **text[]**  | ❌         |                       |
-| **jsonb** ?& **text[]**   | ❌         |                       |
-| **jsonb** \|\|  **jsonb** | ❌         |                       |
-| **jsonb** - **text**      | ❌         |                       |
-| **jsonb** - **text[]**    | ❌         |                       |
-| **jsonb** - **integer**   | ❌         |                       |
+| **jsonb** @> **jsonb**    | ✅         |                       |
+| **jsonb** <@ **jsonb**    | ✅         |                       |
+| **jsonb** ? **text**      | ✅         |                       |
+| **jsonb** ?\| **text[]**  | ✅         |                       |
+| **jsonb** ?& **text[]**   | ✅         |                       |
+| **jsonb** \|\|  **jsonb** | ✅         |                       |
+| **jsonb** - **text**      | ✅         |                       |
+| **jsonb** - **text[]**    | ✅         |                       |
+| **jsonb** - **integer**   | ✅         |                       |
 | **jsonb** #- **text[]**   | ❌         |                       |
 | **jsonb** @? **jsonpath** | ❌         |                       |
 | **jsonb** @@ **jsonpath** | ❌         |                       |
@@ -687,13 +687,13 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 |:-------------------|:----------|:----------------------|
 | to_json            | ❌         |                       |
 | to_jsonb           | ❌         |                       |
-| array_to_json      | ❌         |                       |
+| array_to_json      | ✅         |                       |
 | json_array         | ❌         |                       |
-| row_to_json        | ❌         |                       |
-| json_build_array   | ❌         |                       |
-| jsonb_build_array  | ❌         |                       |
-| json_build_object  | ❌         |                       |
-| jsonb_build_object | ❌         |                       |
+| row_to_json        | ✅         |                       |
+| json_build_array   | ✅         |                       |
+| jsonb_build_array  | ✅         |                       |
+| json_build_object  | ✅         |                       |
+| jsonb_build_object | ✅         |                       |
 | json_object        | ❌         |                       |
 | jsonb_object       | ❌         |                       |
 | json               | ❌         |                       |
@@ -716,15 +716,14 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | jsonb_each                  | ❌         |                       |
 | json_each_text              | ❌         |                       |
 | jsonb_each_text             | ❌         |                       |
-| json_extract_path           | ❌         |                       |
-| jsonb_extract_path          | ❌         |                       |
-| json_extract_path_text      | ❌         |                       |
-| jsonb_extract_path_text     | ❌         |                       |
+| json_extract_path           | ✅         |                       |
+| jsonb_extract_path          | ✅         |                       |
+| json_extract_path_text      | ✅         |                       |
+| jsonb_extract_path_text     | ✅         |                       |
 | json_object_keys            | ❌         |                       |
 | jsonb_object_keys           | ❌         |                       |
 | json_populate_record        | ❌         |                       |
 | jsonb_populate_record       | ❌         |                       |
-| json_                       | ❌         |                       |
 | jsonb_populate_record_valid | ❌         |                       |
 | json_populate_recordset     | ❌         |                       |
 | jsonb_populate_recordset    | ❌         |                       |
@@ -732,7 +731,6 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | jsonb_to_record             | ❌         |                       |
 | json_to_recordset           | ❌         |                       |
 | jsonb_to_recordset          | ❌         |                       |
-| json_                       | ❌         |                       |
 | jsonb_set                   | ❌         |                       |
 | jsonb_set_lax               | ❌         |                       |
 | jsonb_insert                | ❌         |                       |
@@ -780,11 +778,11 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function | Supported | Notes and limitations |
 |:---------|:----------|:----------------------|
-| case     | ❌         |                       |
-| coalesce | ❌         |                       |
-| nullif   | ❌         |                       |
-| greatest | ❌         |                       |
-| least    | ❌         |                       |
+| case     | ✅         |                       |
+| coalesce | ✅         |                       |
+| nullif   | ✅         |                       |
+| greatest | ✅         |                       |
+| least    | ✅         |                       |
 
 ## Array Operators
 
@@ -795,9 +793,9 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | **anyarray** @> **anyarray**                       | ❌         |                       |
 | **anyarray** <@ **anyarray**                       | ❌         |                       |
 | **anyarray** && **anyarray**                       | ❌         |                       |
-| **anycompatiblearray** \|\| **anycompatiblearray** | ❌         |                       |
-| **anycompatible** \|\| **anycompatiblearray**      | ❌         |                       |
-| **anycompatiblearray** \|\| **anycompatible**      | ❌         |                       |
+| **anycompatiblearray** \|\| **anycompatiblearray** | ✅         |                       |
+| **anycompatible** \|\| **anycompatiblearray**      | ✅         |                       |
+| **anycompatiblearray** \|\| **anycompatible**      | ✅         |                       |
 
 ## Array Functions
 
@@ -806,24 +804,24 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | Function        | Supported | Notes and limitations           |
 |:----------------|:----------|:--------------------------------|
 | array_append    | ✅         |                                 |
-| array_cat       | ❌         |                                 |
+| array_cat       | ✅         |                                 |
 | array_dims      | ❌         |                                 |
 | array_fill      | ❌         |                                 |
-| array_length    | ❌         |                                 |
+| array_length    | ✅         |                                 |
 | array_lower     | ❌         |                                 |
 | array_ndims     | ❌         |                                 |
-| array_position  | ❌         |                                 |
-| array_positions | ❌         |                                 |
-| array_prepend   | ❌         |                                 |
+| array_position  | ✅         |                                 |
+| array_positions | ✅         |                                 |
+| array_prepend   | ✅         |                                 |
 | array_remove    | ❌         |                                 |
 | array_replace   | ❌         |                                 |
 | array_sample    | ❌         |                                 |
 | array_shuffle   | ❌         |                                 |
 | array_to_string | ✅         |                                 |
-| array_upper     | ❌         |                                 |
+| array_upper     | ✅         |                                 |
 | cardinality     | ❌         |                                 |
 | trim_array      | ❌         |                                 |
-| unnest          | 🟠        | works with array lengths of 0-1 |
+| unnest          | ✅         |                                 |
 
 ## Range Operators
 
@@ -918,14 +916,14 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | Function                      | Supported | Notes and limitations      |
 |:------------------------------|:----------|:---------------------------|
 | any_value                     | ❌         |                            |
-| array_agg                     | ❌         |                            |
-| avg                           | ❌         |                            |
+| array_agg                     | ✅         | Supports DISTINCT and ORDER BY |
+| avg                           | ✅         |                            |
 | bit_and                       | ❌         |                            |
 | bit_or                        | ❌         |                            |
 | bit_xor                       | ❌         |                            |
-| bool_and                      | ❌         |                            |
-| bool_or                       | ❌         |                            |
-| count                         | ✅         | only count(*) is supported |
+| bool_and                      | ✅         |                            |
+| bool_or                       | ✅         |                            |
+| count                         | 🟠        | count(*) is native; count(expression) is available with MySQL semantics via the underlying engine |
 | every                         | ❌         |                            |
 | json_agg                      | ❌         |                            |
 | json_agg_strict               | ❌         |                            |
@@ -935,12 +933,12 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | json_object_agg_strict        | ❌         |                            |
 | json_object_agg_unique        | ❌         |                            |
 | json_object_agg_unique_strict | ❌         |                            |
-| max                           | ❌         |                            |
-| min                           | ❌         |                            |
+| max                           | 🟠        | Available with MySQL semantics via the underlying engine |
+| min                           | 🟠        | Available with MySQL semantics via the underlying engine |
 | range_agg                     | ❌         |                            |
 | range_intersect_agg           | ❌         |                            |
-| string_agg                    | ❌         |                            |
-| sum                           | ❌         |                            |
+| string_agg                    | ✅         |                            |
+| sum                           | ✅         |                            |
 | xmlagg                        | ❌         |                            |
 
 ## Aggregate Functions for Statistics
@@ -961,11 +959,11 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | regr_sxx       | ❌         |                       |
 | regr_sxy       | ❌         |                       |
 | regr_syy       | ❌         |                       |
-| stddev         | ❌         |                       |
-| stddev_pop     | ❌         |                       |
-| stddev_samp    | ❌         |                       |
-| variance       | ❌         |                       |
-| var_pop        | ❌         |                       |
+| stddev         | 🟠        | Available with MySQL semantics via the underlying engine |
+| stddev_pop     | 🟠        | Available with MySQL semantics via the underlying engine |
+| stddev_samp    | 🟠        | Available with MySQL semantics via the underlying engine |
+| variance       | 🟠        | Available with MySQL semantics via the underlying engine |
+| var_pop        | 🟠        | Available with MySQL semantics via the underlying engine |
 | var_samp       | ❌         |                       |
 
 ## Ordered-Set Aggregate Functions
@@ -1003,16 +1001,16 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function     | Supported | Notes and limitations |
 |:-------------|:----------|:----------------------|
-| row_number   | ❌         |                       |
-| rank         | ❌         |                       |
-| dense_rank   | ❌         |                       |
-| percent_rank | ❌         |                       |
+| row_number   | ✅         |                       |
+| rank         | ✅         |                       |
+| dense_rank   | ✅         |                       |
+| percent_rank | ✅         |                       |
 | cume_dist    | ❌         |                       |
-| ntile        | ❌         |                       |
-| lag          | ❌         |                       |
-| lead         | ❌         |                       |
-| first_value  | ❌         |                       |
-| last_value   | ❌         |                       |
+| ntile        | 🟠        | Available with MySQL semantics via the underlying engine |
+| lag          | 🟠        | Available with MySQL semantics via the underlying engine |
+| lead         | 🟠        | Available with MySQL semantics via the underlying engine |
+| first_value  | 🟠        | Available with MySQL semantics via the underlying engine |
+| last_value   | 🟠        | Available with MySQL semantics via the underlying engine |
 | nth_value    | ❌         |                       |
 
 ## Merge Support Functions
@@ -1029,11 +1027,11 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function | Supported | Notes and limitations |
 |:---------|:----------|:----------------------|
-| exists   | ❌         |                       |
-| in       | ❌         |                       |
-| not in   | ❌         |                       |
+| exists   | ✅         |                       |
+| in       | ✅         |                       |
+| not in   | ✅         |                       |
 | any/some | ✅         |                       |
-| all      | ❌         |                       |
+| all      | ✅         |                       |
 
 ## Series Generating Functions
 
@@ -1041,7 +1039,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function         | Supported | Notes and limitations |
 |:-----------------|:----------|:----------------------|
-| generate_series  | ❌         |                       |
+| generate_series  | ✅         |                       |
 
 ## Subscript Generating Functions
 
@@ -1049,7 +1047,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function             | Supported | Notes and limitations |
 |:---------------------|:----------|:----------------------|
-| generate_subscripts  | ❌         |                       |
+| generate_subscripts  | ✅         |                       |
 
 ## Session Information Functions
 
@@ -1068,7 +1066,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | inet_client_port                | ❌         |                              |
 | inet_server_addr                | ❌         |                              |
 | inet_server_port                | ❌         |                              |
-| pg_backend_pid                  | ❌         |                              |
+| pg_backend_pid                  | ✅         |                              |
 | pg_blocking_pids                | ❌         |                              |
 | pg_conf_load_time               | ❌         |                              |
 | pg_current_logfile              | ❌         |                              |
@@ -1092,12 +1090,12 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 |:-----------------------------------|:----------|:----------------------|
 | has_any_column_privilege           | ❌         |                       |
 | has_column_privilege               | ❌         |                       |
-| has_database_privilege             | ❌         |                       |
+| has_database_privilege             | ✅         |                       |
 | has_foreign_data_wrapper_privilege | ❌         |                       |
 | has_function_privilege             | ❌         |                       |
 | has_language_privilege             | ❌         |                       |
 | has_parameter_privilege            | ❌         |                       |
-| has_schema_privilege               | ❌         |                       |
+| has_schema_privilege               | ✅         |                       |
 | has_sequence_privilege             | ❌         |                       |
 | has_server_privilege               | ❌         |                       |
 | has_table_privilege                | ❌         |                       |
@@ -1132,19 +1130,19 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                     | Supported | Notes and limitations   |
 |:-----------------------------|:----------|:------------------------|
-| pg_collation_is_visible      | ❌         |                         |
-| pg_conversion_is_visible     | ❌         |                         |
-| pg_function_is_visible       | 🟠        | Parses, not implemented |
-| pg_opclass_is_visible        | ❌         |                         |
-| pg_operator_is_visible       | ❌         |                         |
-| pg_opfamily_is_visible       | ❌         |                         |
-| pg_statistics_obj_is_visible | ❌         |                         |
+| pg_collation_is_visible      | ✅         |                         |
+| pg_conversion_is_visible     | ✅         |                         |
+| pg_function_is_visible       | ✅         |                         |
+| pg_opclass_is_visible        | ✅         |                         |
+| pg_operator_is_visible       | ✅         |                         |
+| pg_opfamily_is_visible       | ✅         |                         |
+| pg_statistics_obj_is_visible | ✅         |                         |
 | pg_table_is_visible          | ✅         |                         |
-| pg_ts_config_is_visible      | ❌         |                         |
-| pg_ts_dict_is_visible        | ❌         |                         |
+| pg_ts_config_is_visible      | ✅         |                         |
+| pg_ts_dict_is_visible        | ✅         |                         |
 | pg_ts_parser_is_visible      | ❌         |                         |
-| pg_ts_template_is_visible    | ❌         |                         |
-| pg_type_is_visible           | ❌         |                         |
+| pg_ts_template_is_visible    | ✅         |                         |
+| pg_type_is_visible           | ✅         |                         |
 
 ## System Catalog Information Functions
 
@@ -1154,19 +1152,19 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 |:-----------------------------------|:----------|:------------------------|
 | format_type                        | ✅         |                         |
 | pg_basetype                        | ❌         |                         |
-| pg_char_to_encoding                | ❌         |                         |
+| pg_char_to_encoding                | ✅         |                         |
 | pg_encoding_to_char                | 🟠        | Parses, not implemented |
 | pg_get_catalog_foreign_keys        | ❌         |                         |
 | pg_get_constraintdef               | ✅         |                         |
 | pg_get_expr                        | 🟠        | Parses, not implemented |
-| pg_get_functiondef                 | 🟠        | Parses, not implemented |
-| pg_get_function_arguments          | ❌         |                         |
+| pg_get_functiondef                 | ✅         | Returns stored definitions for user-created functions |
+| pg_get_function_arguments          | ✅         |                         |
 | pg_get_function_identity_arguments | 🟠        | Parses, not implemented |
-| pg_get_function_result             | ❌         |                         |
+| pg_get_function_result             | ✅         |                         |
 | pg_get_indexdef                    | 🟠        | Parses, not implemented |
 | pg_get_keywords                    | ❌         |                         |
 | pg_get_partkeydef                  | 🟠        | Parses, not implemented |
-| pg_get_ruledef                     | ❌         |                         |
+| pg_get_ruledef                     | ✅         |                         |
 | pg_get_serial_sequence             | ✅         |                         |
 | pg_get_statisticsobjdef            | ❌         |                         |
 | pg_get_triggerdef                  | 🟠        | Parses, not implemented |
@@ -1179,7 +1177,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | pg_settings_get_flags              | ❌         |                         |
 | pg_tablespace_databases            | ❌         |                         |
 | pg_tablespace_location             | 🟠        | Parses, not implemented |
-| pg_typeof                          | ❌         |                         |
+| pg_typeof                          | ✅         |                         |
 | COLLATION FOR                      | ❌         |                         |
 | to_regclass                        | ✅         |                         |
 | to_regcollation                    | ❌         |                         |
@@ -1335,7 +1333,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                      | Supported | Notes and limitations |
 |:------------------------------|:----------|:----------------------|
-| pg_is_wal_replay_paused       | ❌         |                       |
+| pg_is_wal_replay_paused       | ✅         |                       |
 | pg_get_wal_replay_pause_state | ❌         |                       |
 | pg_promote                    | ❌         |                       |
 | pg_wal_replay_pause           | ❌         |                       |
@@ -1463,14 +1461,14 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                         | Supported | Notes and limitations |
 |:---------------------------------|:----------|:----------------------|
-| pg_advisory_lock                 | ❌         |                       |
+| pg_advisory_lock                 | ✅         |                       |
 | pg_advisory_lock_shared          | ❌         |                       |
-| pg_advisory_unlock               | ❌         |                       |
+| pg_advisory_unlock               | ✅         |                       |
 | pg_advisory_unlock_all           | ❌         |                       |
 | pg_advisory_unlock_shared        | ❌         |                       |
 | pg_advisory_xact_lock            | ❌         |                       |
 | pg_advisory_xact_lock_shared     | ❌         |                       |
-| pg_try_advisory_lock             | ❌         |                       |
+| pg_try_advisory_lock             | ✅         |                       |
 | pg_try_advisory_lock_shared      | ❌         |                       |
 | pg_try_advisory_xact_lock        | ❌         |                       |
 | pg_try_advisory_xact_lock_shared | ❌         |                       |
@@ -1554,7 +1552,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/9.1/mon
 | pg_stat_get_xact_tuples_hot_updated          | ❌         |                         |
 | pg_stat_get_xact_blocks_fetched              | ❌         |                         |
 | pg_stat_get_xact_blocks_hit                  | ❌         |                         |
-| pg_backend_pid                               | ❌         |                         |
+| pg_backend_pid                               | ✅         |                         |
 | pg_stat_get_activity                         | ❌         |                         |
 | pg_stat_get_function_calls                   | ❌         |                         |
 | pg_stat_get_function_time                    | ❌         |                         |

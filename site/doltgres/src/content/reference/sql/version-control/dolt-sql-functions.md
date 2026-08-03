@@ -40,7 +40,7 @@ title: Dolt SQL Functions
   - [dolt_merge_base()](#dolt_merge_base)
   - [dolt_hashof()](#dolt_hashof)
   - [dolt_hashof_table()](#dolt_hashof_table)
-  - [dolt_hashof_db()](#dolt_hashof_table)
+  - [dolt_hashof_db()](#dolt_hashof_db)
   - [dolt_version()](#dolt_version)
   - [has_ancestor()](#has_ancestor)
 
@@ -76,16 +76,12 @@ SELECT DOLT_ADD('.');
 Version control features that only inspect the state of the database are modeled as [system
 tables](/reference/version-control/dolt-system-tables) or [table functions](#table-functions) instead.
 
-The functions in this section are also available as stored procedures. Whether you access them as
-functions or as procedures is up to you. The main difference is that in Postgres, stored procedures
-cannot return values, but functions can. This means that if your application needs the result of an
-operation, it must use the function version, rather than the procedure version.
-
-Otherwise, these statements are equivalent:
+The version control operations in this section are functions, and must be invoked with `SELECT`.
+Invoking them with `CALL` is not supported and will be rejected with an error:
 
 ```sql
 SELECT DOLT_ADD('.'); -- returns a status value
-CALL DOLT_ADD('.'); -- returns nothing, but will fail on an error
+CALL DOLT_ADD('.'); -- ERROR: Dolt stored procedure may only be invoked using SELECT
 ```
 
 ### `DOLT_ADD()`
@@ -138,14 +134,36 @@ SELECT DOLT_COMMIT('-m', 'committing all changes');
 
 ### `DOLT_BACKUP()`
 
-Sync with a configured backup. Other backup commands not supported
-via SQL yet.
+Add or remove a configured backup, sync with a configured backup, sync a backup
+to a remote URL, restore a remote URL backup as a new database.
+
+To sync the current database to a configured backup:
 
 ```sql
 SELECT DOLT_BACKUP('sync', 'name');
 ```
 
-#### Output Schema
+To sync with a remote URL which is not configured as a backup:
+
+```sql
+SELECT DOLT_BACKUP('sync-url', 'https://dolthub.com/some_organization/some_dolthub_repository');
+```
+
+To add and remove a configured backup:
+
+```sql
+SELECT DOLT_BACKUP('add', 'dolthub', 'https://dolthub.com/some_organization/some_dolthub_repository');
+
+SELECT DOLT_BACKUP('remove', 'dolthub');
+```
+
+To restore a backup:
+
+```sql
+SELECT DOLT_BACKUP('restore', 'https://dolthub.com/some_organization/some_dolthub_repository', 'database_name');
+```
+
+### Output Schema
 
 ```text
 +--------+------+---------------------------+
@@ -161,19 +179,24 @@ SELECT DOLT_BACKUP('sync', 'name');
 -- Set the current database for the session
 USE mydb;
 
--- Upload the current database contents to the named backup
-SELECT dolt_backup('sync', 'my-backup')
+-- Configure a backup to sync to.
+SELECT dolt_backup('add', 'my-backup', 'https://dolthub.com/some_organization/some_dolthub_repository');
+
+-- Upload the current database contents to that named backup
+SELECT dolt_backup('sync', 'my-backup');
+
+-- Restore the uploaded database to a new database name
+SELECT dolt_backup('restore', 'https://dolthub.com/some_organization/some_dolthub_repository', 'mydb_restored');
 ```
 
 ### `DOLT_BRANCH()`
 
 Create, delete, and rename branches.
 
-To list branches, use the [`DOLT_BRANCHES` system table](/reference/version-control/dolt-system-tables#dolt_branches),
+To list branches, use the [`DOLT_BRANCHES` system table](dolt-system-tables.md#dolt.branches),
 instead of the `DOLT_BRANCH()` function.
 
-To look up the current branch, use the [`@@<dbname>_head_ref` system
-variable](/reference/version-control/dolt-sysvars#dbname_head_ref), or the `active_branch()` SQL function, as shown in the
+To look up the current branch, use the `active_branch()` SQL function, as shown in the
 examples section below.
 
 WARNING: In a multi-session server environment, Dolt will prevent you from deleting or renaming a
@@ -307,7 +330,7 @@ SELECT DOLT_CHECKOUT('my-table');
 
 `DOLT_CHECKOUT()` with a branch argument has two side effects on your session state:
 
-1. The session's current database, as returned by `SELECT DATABASE()`, is now the unqualified
+1. The session's current database, as returned by `SELECT current_database()`, is now the unqualified
    database name.
 2. For the remainder of this session, references to the unqualified name of this database will
    resolve to the branch checked out.
@@ -410,11 +433,11 @@ SELECT commit_hash, message FROM dolt_log;
 | 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table         |
 | omuqq67att6vfnka94drdallu4983gnr | Initialize data repository |
 +----------------------------------+----------------------------+
-2 rows in set (0.00 sec)
+(2 rows)
 
 -- View the table
 SELECT * FROM mytable;
-Empty set (0.00 sec)
+(0 rows)
 
 -- Checkout new branch
 SELECT DOLT_CHECKOUT('mybranch');
@@ -429,7 +452,7 @@ SELECT commit_hash, message FROM dolt_log;
 | 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table         |
 | omuqq67att6vfnka94drdallu4983gnr | Initialize data repository |
 +----------------------------------+----------------------------+
-4 rows in set (0.00 sec)
+(4 rows)
 
 -- View the table
 SELECT * FROM mytable;
@@ -442,7 +465,7 @@ SELECT * FROM mytable;
 | 4 |
 | 5 |
 +---+
-5 rows in set (0.00 sec)
+(5 rows)
 ```
 
 We want to cherry-pick only the change introduced in commit hash
@@ -460,7 +483,7 @@ SELECT DOLT_CHERRY_PICK('k318tpmqn4l97ofpaerato9c3m70lc14');
 +----------------------------------+
 | mh518gdgbsut8m705b7b5rie9neq9uaj |
 +----------------------------------+
-1 row in set (0.02 sec)
+(1 row)
 
 mydb> SELECT * FROM mytable;
 +---+
@@ -469,7 +492,7 @@ mydb> SELECT * FROM mytable;
 | 1 |
 | 2 |
 +---+
-2 rows in set (0.00 sec)
+(2 rows)
 
 mydb> SELECT commit_hash, message FROM dolt_log;
 +----------------------------------+----------------------------+
@@ -479,7 +502,7 @@ mydb> SELECT commit_hash, message FROM dolt_log;
 | 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table         |
 | omuqq67att6vfnka94drdallu4983gnr | Initialize data repository |
 +----------------------------------+----------------------------+
-3 rows in set (0.00 sec)
+(3 rows)
 ```
 
 ### `DOLT_CLEAN()`
@@ -536,8 +559,8 @@ select * from dolt_status;
 +-------------------+--------+-----------+
 | table_name        | staged | status    |
 +-------------------+--------+-----------+
-| public.tracked    | 1      | new table |
-| public.untracked  | 0      | new table |
+| public.tracked    | t      | new table |
+| public.untracked  | f      | new table |
 +-------------------+--------+-----------+
 
 -- Clear untracked tables
@@ -548,7 +571,7 @@ select * from dolt_status;
 +-----------------+--------+-----------+
 | table_name      | staged | status    |
 +-----------------+--------+-----------+
-| public.tracked  | 1      | new table |
+| public.tracked  | t      | new table |
 +-----------------+--------+-----------+
 
 -- Committed and tracked tables are preserved
@@ -901,6 +924,9 @@ WHERE pk = 'key';
 SELECT DOLT_COMMIT('-a', '-m', 'committing all changes');
 
 -- Go back to main
+SELECT DOLT_CHECKOUT('main');
+
+-- Merge the feature branch into main
 SELECT DOLT_MERGE('feature-branch', '--author', 'John Doe <johndoe@example.com>');
 ```
 
@@ -935,7 +961,7 @@ commit on the target branch.
 If the merge causes conflicts or constraint violations, you must
 resolve them using the `dolt_conflicts` system tables before the
 transaction can be committed. See [Dolt system
-tables](/reference/version-control/dolt-system-tables##dolt_conflicts_usdtablename) for
+tables](dolt-system-tables.md#dolt_conflicts_usdtablename) for
 details.
 
 #### Output Schema
@@ -973,7 +999,7 @@ function](#dolt_undrop) can restore it. The `dolt_purge_dropped_databases()` fun
 holding area and permanently deletes any data from those databases. This action is not reversible,
 so callers should be cautious about using it. The main benefit of using this function is to reclaim
 disk space used by the temporary holding area. Because this is a destructive operation, callers must
-have `SUPER` privileges in order to execute it.
+have a `SUPERUSER` role in order to execute it.
 
 #### Example
 
@@ -1160,7 +1186,7 @@ select commit_hash, message from dolt_log;
 
 Adds a remote for a database at given url, or removes an existing remote with its remote-tracking
 branches and configuration settings. To list existing remotes, use the [`dolt_remotes` system
-table](/reference/version-control/dolt-system-tables#dolt_remotes).
+table](/reference/version-control/dolt-system-tables#dolt.remotes).
 
 ```sql
 SELECT DOLT_REMOTE('add','remote_name','remote_url');
@@ -1170,11 +1196,14 @@ SELECT DOLT_REMOTE('remove','existing_remote_name');
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
++-----------------------+------+----------------------------------------------------------+
+| Field                 | Type | Description                                              |
++-----------------------+------+----------------------------------------------------------+
+| hash                  | text | hash of the last revert commit created                   |
+| data_conflicts        | int  | number of data conflicts                                 |
+| schema_conflicts      | int  | number of schema conflicts                               |
+| constraint_violations | int  | number of constraint violations                          |
++-----------------------+------+----------------------------------------------------------+
 ```
 
 #### Example
@@ -1442,7 +1471,7 @@ Removes all stashes for the specified stash name.
 ### `DOLT_TAG()`
 
 Creates a new tag that points at specified commit ref, or deletes an existing tag. To list existing
-tags, use [`dolt_tags` system table](/reference/version-control/dolt-system-tables#dolt_tags).
+tags, use [`dolt.tags` system table](/reference/version-control/dolt-system-tables#dolt.tags).
 
 ```sql
 SELECT DOLT_TAG('tag_name', 'commit_ref');
@@ -1587,13 +1616,15 @@ SELECT DOLT_COMMIT('-am', 'updating myTable.col1 tag');
 
 Verifies that working set changes (inserts, updates, and/or deletes) satisfy the
 defined table constraints. If any constraints are violated they are written to the
-[DOLT_CONSTRAINT_VIOLATIONS](/reference/version-control/dolt-system-tables#doltconstraintviolations) table.
+[DOLT_CONSTRAINT_VIOLATIONS](/reference/version-control/dolt-system-tables#dolt.constraint_violations) table.
 
 `DOLT_VERIFY_CONSTRAINTS` by default does not detect constraints for row changes
 that have been previously committed. The `--all` option can be specified if you
-wish to validate all rows in the database. If `FOREIGN_KEY_CHECKS` has been disabled in prior commits,
-you may want to use the `--all` option to ensure that the current state is
-consistent and no violated constraints are missed.
+wish to validate all rows in the database. Doltgres always enforces constraints for
+SQL statements, but operations such as merges can introduce constraint violations,
+which are recorded for later verification. If violating rows have been committed in
+prior commits, you may want to use the `--all` option to ensure that the current
+state is consistent and no violated constraints are missed.
 
 #### Arguments and Options
 
@@ -1604,7 +1635,7 @@ Verifies constraints against every row.
 
 `-o`, `--output-only`:
 Disables writing results to the
-[DOLT_CONSTRAINT_VIOLATIONS](/reference/version-control/dolt-system-tables#doltconstraintviolations)
+[DOLT_CONSTRAINT_VIOLATIONS](/reference/version-control/dolt-system-tables#dolt.constraint_violations)
 system table.
 
 #### Output Schema
@@ -1638,11 +1669,23 @@ A simple case:
 ```sql
 -- enable dolt_force_transaction_commit so that we can inspect the
 -- violation in our working set
-SET dolt_force_transaction_commit = ON;
-SET FOREIGN_KEY_CHECKS = OFF;
-INSERT INTO PARENT VALUES (1);
--- Violates child's foreign key constraint
-INSERT INTO CHILD VALUES (1, -1);
+SET dolt_force_transaction_commit TO ON;
+
+-- Doltgres always enforces foreign key checks for SQL statements, so set up
+-- two branches whose merge violates child's foreign key constraint
+INSERT INTO parent VALUES (1);
+SELECT DOLT_COMMIT('-Am', 'setup');
+
+SELECT DOLT_CHECKOUT('-b', 'branch_to_merge');
+INSERT INTO child VALUES (1, 1);
+SELECT DOLT_COMMIT('-Am', 'add a child of parent 1');
+
+SELECT DOLT_CHECKOUT('main');
+DELETE FROM parent WHERE pk = 1;
+SELECT DOLT_COMMIT('-Am', 'delete parent 1');
+
+-- The merge introduces a foreign key constraint violation
+SELECT DOLT_MERGE('branch_to_merge');
 
 SELECT DOLT_VERIFY_CONSTRAINTS();
 /*
@@ -1675,11 +1718,10 @@ SELECT violation_type, pk, parent_fk from dolt_constraint_violations_child;
 Using `--all` to verify all rows:
 
 ```sql
-SET DOLT_FORCE_TRANSACTION_COMMIT = ON;
-SET FOREIGN_KEY_CHECKS = OFF;
-INSERT INTO PARENT VALUES (1);
-INSERT INTO CHILD VALUES (1, -1);
-SELECT DOLT_COMMIT('-am', 'violating rows');
+-- Continuing from the example above, clear the recorded violations, then
+-- force-commit the merged working set, which still contains violating rows
+DELETE FROM dolt_constraint_violations_child;
+SELECT DOLT_COMMIT('-a', '-f', '-m', 'commit rows that violate constraints');
 
 SELECT DOLT_VERIFY_CONSTRAINTS();
 /*
