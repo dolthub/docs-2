@@ -26,7 +26,7 @@ same on both.
 Doltgres and Postgres are [row major](https://en.wikipedia.org/wiki/Row-_and_column-major_order),
 meaning row values are stored next to each other. However, Postgres stores data in a binary tree
 structure while Doltgres stores table data on disk using a content-addressed binary tree called a
-[prolly tree](https://docs.dolthub.com/architecture/storage-engine/prolly-tree). This setup makes Doltgres [fairly
+[prolly tree](https://dolthub.com/docs/architecture/storage-engine/prolly-tree). This setup makes Doltgres [fairly
 comparable in query performance to Postgres](/reference/benchmarks/latency) while also
 providing history-independence and fast `diff` between versions. Fast `diff` powers Doltgres's version
 control capabilities.
