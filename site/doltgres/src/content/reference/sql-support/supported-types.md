@@ -16,17 +16,17 @@ but some parameters (such as `timestamp` precision) may not be fully enforced ye
 | boolean[]      |     ✅      |                               |
 | box            |     ❌      |                               |
 | box[]          |     ❌      |                               |
-| bytea          |     🟠      |                               |
-| bytea[]        |     🟠      |                               |
+| bytea          |     ✅      |                               |
+| bytea[]        |     ✅      |                               |
 | "char"         |     ✅      |                               |
-| char           |     🟠      | character                     |
-| char[]         |     🟠      | character[]                   |
+| char           |     ✅      | character                     |
+| char[]         |     ✅      | character[]                   |
 | cidr           |     ❌      |                               |
 | cidr[]         |     ❌      |                               |
 | circle         |     ❌      |                               |
 | circle[]       |     ❌      |                               |
-| date           |     🟠      |                               |
-| date[]         |     🟠      |                               |
+| date           |     ✅      |                               |
+| date[]         |     ✅      |                               |
 | datemultirange |     ❌      |                               |
 | daterange      |     ❌      |                               |
 | float4         |     ✅      | real                          |
@@ -48,10 +48,10 @@ but some parameters (such as `timestamp` precision) may not be fully enforced ye
 | int8range      |     ❌      |                               |
 | interval       |     ✅      |                               |
 | interval[]     |     ✅      |                               |
-| json           |     🟠      |                               |
-| json[]         |     🟠      |                               |
-| jsonb          |     🟠      |                               |
-| jsonb[]        |     🟠      |                               |
+| json           |     ✅      |                               |
+| json[]         |     ✅      |                               |
+| jsonb          |     ✅      |                               |
+| jsonb[]        |     ✅      |                               |
 | line           |     ❌      |                               |
 | line[]         |     ❌      |                               |
 | lseg           |     ❌      |                               |
@@ -63,8 +63,8 @@ but some parameters (such as `timestamp` precision) may not be fully enforced ye
 | money          |     ❌      |                               |
 | money[]        |     ❌      |                               |
 | name           |     ✅      |                               |
-| numeric        |     🟠      | decimal                       |
-| numeric[]      |     🟠      | decimal[]                     |
+| numeric        |     ✅      | decimal                       |
+| numeric[]      |     ✅      | decimal[]                     |
 | nummultirange  |     ❌      |                               |
 | numrange       |     ❌      |                               |
 | path           |     ❌      |                               |
@@ -78,14 +78,14 @@ but some parameters (such as `timestamp` precision) may not be fully enforced ye
 | serial8        |     ✅      | bigserial                     |
 | text           |     ✅      |                               |
 | text[]         |     ✅      |                               |
-| time           |     🟠      | time without time zone        |
-| time[]         |     🟠      | time without time zone[]      |
-| timestamp      |     🟠      | timestamp without time zone   |
-| timestamp[]    |     🟠      | timestamp without time zone[] |
-| timestamptz    |     🟠      | timestamp with time zone      |
-| timestamptz[]  |     🟠      | timestamp with time zone[]    |
-| timetz         |     🟠      | time with time zone           |
-| timetz[]       |     🟠      | time with time zone[]         |
+| time           |     ✅      | time without time zone        |
+| time[]         |     ✅      | time without time zone[]      |
+| timestamp      |     ✅      | timestamp without time zone   |
+| timestamp[]    |     ✅      | timestamp without time zone[] |
+| timestamptz    |     ✅      | timestamp with time zone      |
+| timestamptz[]  |     ✅      | timestamp with time zone[]    |
+| timetz         |     ✅      | time with time zone           |
+| timetz[]       |     ✅      | time with time zone[]         |
 | tsmultirange   |     ❌      |                               |
 | tsquery        |     ❌      |                               |
 | tsquery[]      |     ❌      |                               |
@@ -98,8 +98,8 @@ but some parameters (such as `timestamp` precision) may not be fully enforced ye
 | uuid[]         |     ✅      |                               |
 | varbit         |     ✅      | bit varying                   |
 | varbit[]       |     ✅      | bit varying[]                 |
-| varchar        |     🟠      | character varying             |
-| varchar[]      |     🟠      | character varying[]           |
+| varchar        |     ✅      | character varying             |
+| varchar[]      |     ✅      | character varying[]           |
 | xml            |     ❌      |                               |
 | xml[]          |     ❌      |                               |
 

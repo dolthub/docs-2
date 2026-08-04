@@ -23,9 +23,7 @@ You create indexes using the `CREATE INDEX` SQL statement.
 
 ## Difference between Postgres Secondary Indexes and Doltgres Secondary Indexes
 
-Doltgres only supports btree indexes. Other Postgres index access methods, like GIN, GiST, hash,
-and BRIN, are not yet supported. Partial indexes (`CREATE INDEX ... WHERE ...`) and expression
-indexes are supported.
+Functionally, Doltgres and Postgres indexes are equivalent.
 
 ## Interaction with Doltgres Version Control
 

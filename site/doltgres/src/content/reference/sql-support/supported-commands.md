@@ -6,24 +6,24 @@ title: Supported SQL Commands
 
 ## Data Description (DDL)
 
-| SQL Commands    | Parses | Works | Notes and limitations |
-| :-------------- | :----: | :---: | :-------------------- |
-| ALTER TABLE     |   ✅   |  🟠   | SET SCHEMA and identity RESTART are not supported |
-| CREATE DATABASE |   ✅   |  🟠   |                       |
-| CREATE TABLE    |   ✅   |  🟠   |                       |
-| DROP DATABASE   |   ✅   |  🟠   |                       |
-| DROP TABLE      |   ✅   |  🟠   |                       |
+| SQL Commands    | Parses | Works | Notes and limitations                    |
+|:----------------|:------:|:-----:|:-----------------------------------------|
+| ALTER TABLE     | ✅     | ✅    | Some ALTER TABLE statments not supported |
+| CREATE DATABASE | ✅     | ✅    |                                          |
+| CREATE TABLE    | ✅     | ✅    |                                          |
+| DROP DATABASE   | ✅     | ✅    |                                          |
+| DROP TABLE      | ✅     | ✅    |                                          |
 
 ## Data Manipulation (DML)
 
 | SQL Commands | Parses | Works | Notes and limitations |
 | :----------- | :----: | :---: | :-------------------- |
 | CALL         |   ✅   |  ✅   |                       |
-| DELETE       |   🟠   |  🟠   | Supports RETURNING    |
-| INSERT       |   🟠   |  🟠   | Supports ON CONFLICT DO NOTHING / DO UPDATE and RETURNING |
-| SELECT       |   🟠   |  🟠   |                       |
-| UPDATE       |   🟠   |  🟠   | Supports RETURNING    |
-| VALUES       |   🟠   |  🟠   |                       |
+| DELETE       |   ✅   |  ✅   | Supports RETURNING    |
+| INSERT       |   ✅   |  ✅   | Supports ON CONFLICT DO NOTHING / DO UPDATE and RETURNING |
+| SELECT       |   ✅   |  ✅   |                       |
+| UPDATE       |   ✅   |  ✅   | Supports RETURNING    |
+| VALUES       |   ✅   |  ✅   |                       |
 
 ## All SQL
 
@@ -80,7 +80,7 @@ title: Supported SQL Commands
 | ALTER STATISTICS                 |   ❌   |  ❌   |                       |
 | ALTER SUBSCRIPTION               |   ❌   |  ❌   |                       |
 | ALTER SYSTEM                     |   ❌   |  ❌   |                       |
-| ALTER TABLE                      |   ✅   |  🟠   | SET SCHEMA and identity RESTART are not supported |
+| ALTER TABLE                      |   ✅   |  ✅   |                       |
 | ALTER TABLESPACE                 |   ❌   |  ❌   |                       |
 | ALTER TEXT SEARCH CONFIGURATION  |   ❌   |  ❌   |                       |
 | ALTER TEXT SEARCH DICTIONARY     |   ❌   |  ❌   |                       |
@@ -95,7 +95,7 @@ title: Supported SQL Commands
 | CREATE CAST                      |   ✅   |  ✅   |                       |
 | CREATE COLLATION                 |   ❌   |  ❌   |                       |
 | CREATE CONVERSION                |   ❌   |  ❌   |                       |
-| CREATE DATABASE                  |   ✅   |  🟠   |                       |
+| CREATE DATABASE                  |   ✅   |  ✅   |                       |
 | CREATE DOMAIN                    |   ✅   |  🟠   | COLLATE is not supported |
 | CREATE EVENT TRIGGER             |   ❌   |  ❌   |                       |
 | CREATE EXTENSION                 |   ✅   |  🟠   | Non-public SCHEMA, VERSION, and CASCADE are not supported |
@@ -113,7 +113,7 @@ title: Supported SQL Commands
 | CREATE PUBLICATION               |   ❌   |  ❌   |                       |
 | CREATE RULE                      |   ❌   |  ❌   |                       |
 | CREATE SCHEMA                    |   ✅   |  ✅   |                       |
-| CREATE SEQUENCE                  |   ✅   |  🟠   | TEMPORARY, UNLOGGED, and CACHE values other than 1 are not supported |
+| CREATE SEQUENCE                  |   ✅   |  ✅   |                       |
 | CREATE SERVER                    |   ❌   |  ❌   |                       |
 | CREATE STATISTICS                |   ❌   |  ❌   |                       |
 | CREATE SUBSCRIPTION              |   ❌   |  ❌   |                       |
@@ -179,11 +179,11 @@ title: Supported SQL Commands
 | CLUSTER                   |   ❌   |  ❌   |                       |
 | COPY                      |   🟠   |  🟠   | COPY FROM STDIN and COPY FROM file work for text and CSV formats; BINARY and COPY TO are not supported |
 | DECLARE                   |   ❌   |  ❌   |                       |
-| DELETE                    |   🟠   |  🟠   | Supports RETURNING    |
+| DELETE                    |   ✅   |  ✅   | Supports RETURNING    |
 | DO                        |   ❌   |  ❌   |                       |
 | FETCH                     |   ❌   |  ❌   |                       |
 | IMPORT FOREIGN SCHEMA     |   ❌   |  ❌   |                       |
-| INSERT                    |   🟠   |  🟠   | Supports ON CONFLICT DO NOTHING / DO UPDATE and RETURNING |
+| INSERT                    |   ✅   |  ✅   | Supports ON CONFLICT DO NOTHING / DO UPDATE and RETURNING |
 | LOAD                      |   ❌   |  ❌   |                       |
 | MERGE                     |   ❌   |  ❌   |                       |
 | MOVE                      |   ❌   |  ❌   |                       |
@@ -192,9 +192,9 @@ title: Supported SQL Commands
 | SELECT                    |   🟠   |  🟠   |                       |
 | SELECT INTO               |   ❌   |  ❌   |                       |
 | TRUNCATE                  |   🟠   |  🟠   |                       |
-| UPDATE                    |   🟠   |  🟠   | Supports RETURNING    |
+| UPDATE                    |   ✅   |  ✅   | Supports RETURNING    |
 | VACUUM                    |   ✅   |  🟠   | Accepted as a no-op   |
-| VALUES                    |   🟠   |  🟠   |                       |
+| VALUES                    |   ✅   |  ✅   |                       |
 
 ## Prepared statements
 
@@ -208,7 +208,7 @@ title: Supported SQL Commands
 
 | SQL Commands              | Parses | Works | Notes and limitations |
 | :------------------------ | :----: | :---: | :-------------------- |
-| DISCARD                   |   🟠   |  🟠   | Only DISCARD ALL is supported |
+| DISCARD                   |   ✅   |  🟠   | Only DISCARD ALL is supported |
 | RESET                     |   ✅   |  ❌   |                       |
 | SET                       |   ✅   |  🟠   | SET LOCAL is not supported |
 | SET CONSTRAINTS           |   ✅   |  ❌   |                       |

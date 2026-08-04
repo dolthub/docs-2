@@ -105,12 +105,6 @@ AND from_commit = HASHOF('HEAD~')
 ORDER BY state, to_commit_date;
 ```
 
-{% hint style="warning" %}
-Known limitation: `dolt_commit_diff_$TABLENAME` queries like the one above do not currently work in
-Doltgres, which fails to recognize the required filter to a single `to_commit`. Use the
-`dolt_diff_$TABLENAME` table or the `dolt_diff()` table function instead.
-{% endhint %}
-
 For more information, see the [system table
 docs](/reference/version-control/dolt-system-tables).
 
