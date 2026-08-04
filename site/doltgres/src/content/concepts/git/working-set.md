@@ -79,7 +79,7 @@ select * from docs;
  4  | 4
 (5 rows)
 select dolt_checkout('branch2');
- status
+ dolt_checkout
 --------
  0
 (1 row)
