@@ -6,10 +6,8 @@ title: Dolt System Variables
 
 - [General system setting variables](#general-system-setting-variables)
 
-  - [dbname_default_branch](#dbname_default_branch)
   - [dolt_allow_commit_conflicts](#dolt_allow_commit_conflicts)
   - [dolt_force_transaction_commit](#dolt_force_transaction_commit)
-  - [dolt_log_level](#dolt_log_level)
   - [dolt_override_schema](#dolt_override_schema)
   - [dolt_show_branch_databases](#dolt_show_branch_databases)
   - [dolt_show_system_tables](#dolt_show_system_tables)
@@ -27,26 +25,7 @@ title: Dolt System Variables
   - [dolt_read_replica_force_pull](#dolt_read_replica_force_pull)
   - [dolt_skip_replication_errors](#dolt_skip_replication_errors)
 
-- [Session metadata variables](#session-metadata-variables)
-
-  - [dbname_head_ref](#dbname_head_ref)
-  - [dbname_head](#dbname_head)
-  - [dbname_working](#dbname_working)
-  - [dbname_staged](#dbname_staged)
-
 ## General system setting variables
-
-### `dbname_default_branch`
-
-This system variable controls a database's default branch, defaulting to the checked out branch when
-the server started. For a database named `mydb`, this variable will be named
-`mydb_default_branch`. New sessions will connect to this branch by default.
-
-### `dolt_log_level`
-
-This system variable controls logging levels in the server. Valid values are `error`, `warn`,
-`info`, `debug`, or `trace`. This value overrides whatever was specified on the command line for
-`doltgres` or in the `config.yaml` file.
 
 ### `dolt_show_branch_databases`
 
@@ -239,49 +218,3 @@ a warning rather than causing queries to fail. Defaults to `0`.
 ```sql
 SET dolt_skip_replication_errors TO 1;
 ```
-
-## Session metadata variables
-
-### `dbname_head_ref`
-
-Each session defines a system variable that controls the current
-session head. For a database called `mydb`, this variable
-will be called `mydb_head_ref` and be set to the current head.
-
-```sql
-mydb=> select mydb_head_ref;
-mydb_head_ref
-------------------
-refs/heads/main
-(1 row)
-```
-
-You can set this session variable to switch your current head. Use either `refs/heads/branchName` or
-just `branchName`:
-
-```sql
-SET mydb_head_ref TO 'feature-branch'
-```
-
-This is equivalent to:
-
-```sql
-select dolt_checkout('feature-branch')
-```
-
-### `dbname_head`
-
-This system variable reflects the current HEAD commit's hash. For a database called `mydb`, this
-variable will be called `mydb_head`. It is read-only.
-
-### `dbname_working`
-
-This system variable reflects the current working root value's hash. For a database called `mydb`,
-this variable will be called `mydb_working`. Its value corresponds to the current working
-hash. Selecting it is useful for diagnostics. It is read-only.
-
-### `dbname_staged`
-
-This system variable reflects the current staged root value's hash. For a database called `mydb`,
-this variable will be called `mydb_staged` Selecting it is useful for diagnostics. It is
-read-only.

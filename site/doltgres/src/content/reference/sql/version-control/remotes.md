@@ -12,8 +12,8 @@ description of remotes can be found [here](/concepts/git/remotes).
 
 ## Configuring Remotes
 
-Remotes are configured using the [`dolt_remote`
-procedure](/reference/version-control/dolt-sql-functions#dolt_remote). You configure a remote with a name and a
+Remotes are configured using the [`dolt_remote()`
+function](/reference/version-control/dolt-sql-functions#dolt_remote). You configure a remote with a name and a
 URL. When you want to use the remote, you refer to it by name. When you clone a remote, a remote
 named `origin` is automatically configured for you.
 
@@ -26,33 +26,29 @@ First, we need to add a new remote:
 
 ```sql
 select dolt_remote('add', 'origin', 'file:///var/share/remotes');
-+--------+
-| status |
-+--------+
-|      0 |
-+--------+
-1 row in set (0.03 sec)
+ dolt_remote
+-------------
+ {0}
+(1 row)
 ```
 
 And then we can push:
 
 ```sql
 select dolt_push('origin', 'main');
-+--------+
-| status |
-+--------+
-|      0 |
-+--------+
-1 row in set (0.77 sec)
+ dolt_push
+-----------
+ {0,""}
+(1 row)
 ```
 
-Now the data from our local Dolt server is now available for others to clone using the same URL.
+Now the data from our local Doltgres server is now available for others to clone using the same URL.
 
 ## Remote Actions
 
 Sync functionality is supported via the [`clone`](/reference/version-control/dolt-sql-functions#dolt_clone),
 [`fetch`](/reference/version-control/dolt-sql-functions#dolt_fetch), [`push`](/reference/version-control/dolt-sql-functions#dolt_push), and
-[`pull`](/reference/version-control/dolt-sql-functions#dolt_pull) procedures.
+[`pull`](/reference/version-control/dolt-sql-functions#dolt_pull) functions.
 
 ## Remote Options
 
@@ -167,10 +163,9 @@ run. This username and password correspond to a configured SQL user on the sql-s
 
 ### Reading from sql-server
 
-The `clone`,`fetch`, and `pull` operations require the SQL user must have a grant for the
-`CLONE_ADMIN` privilege on the server to which they are connecting. Here is an end-to-end example
-showing exposing the remotesapi on a running sql-server, granting a user permissions to a database
-on it, and then cloning that database from a Dolt client.
+The `clone`, `fetch`, and `pull` operations require that the SQL user be a superuser on the server
+to which they are connecting. Here is an end-to-end example showing exposing the remotesapi on a
+running sql-server and then cloning a database from it.
 
 We configure the remotesapi to run on the `sql-server` and run the sql-server process:
 

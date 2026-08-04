@@ -8,11 +8,11 @@ title: Supported SQL Commands
 
 | SQL Commands    | Parses | Works | Notes and limitations                    |
 |:----------------|:------:|:-----:|:-----------------------------------------|
-| ALTER TABLE     | ✅     | ✅    | Some ALTER TABLE statments not supported |
+| ALTER TABLE     | ✅     | 🟠    | SET SCHEMA and identity RESTART are not supported |
 | CREATE DATABASE | ✅     | ✅    |                                          |
-| CREATE TABLE    | ✅     | ✅    |                                          |
-| DROP DATABASE   | ✅     | ✅    |                                          |
-| DROP TABLE      | ✅     | ✅    |                                          |
+| CREATE TABLE    | ✅     | 🟠    | UNLOGGED, storage parameters, and TABLESPACE are not supported |
+| DROP DATABASE   | ✅     | 🟠    | WITH (FORCE) is not supported            |
+| DROP TABLE      | ✅     | 🟠    | RESTRICT and CASCADE are not supported   |
 
 ## Data Manipulation (DML)
 
@@ -21,7 +21,7 @@ title: Supported SQL Commands
 | CALL         |   ✅   |  ✅   |                       |
 | DELETE       |   ✅   |  ✅   | Supports RETURNING    |
 | INSERT       |   ✅   |  ✅   | Supports ON CONFLICT DO NOTHING / DO UPDATE and RETURNING |
-| SELECT       |   ✅   |  ✅   |                       |
+| SELECT       |   ✅   |  🟠   | Locking clauses (FOR UPDATE / FOR SHARE) are not supported |
 | UPDATE       |   ✅   |  ✅   | Supports RETURNING    |
 | VALUES       |   ✅   |  ✅   |                       |
 
@@ -80,7 +80,7 @@ title: Supported SQL Commands
 | ALTER STATISTICS                 |   ❌   |  ❌   |                       |
 | ALTER SUBSCRIPTION               |   ❌   |  ❌   |                       |
 | ALTER SYSTEM                     |   ❌   |  ❌   |                       |
-| ALTER TABLE                      |   ✅   |  ✅   |                       |
+| ALTER TABLE                      |   ✅   |  🟠   | SET SCHEMA and identity RESTART are not supported |
 | ALTER TABLESPACE                 |   ❌   |  ❌   |                       |
 | ALTER TEXT SEARCH CONFIGURATION  |   ❌   |  ❌   |                       |
 | ALTER TEXT SEARCH DICTIONARY     |   ❌   |  ❌   |                       |
@@ -117,7 +117,7 @@ title: Supported SQL Commands
 | CREATE SERVER                    |   ❌   |  ❌   |                       |
 | CREATE STATISTICS                |   ❌   |  ❌   |                       |
 | CREATE SUBSCRIPTION              |   ❌   |  ❌   |                       |
-| CREATE TABLE                     |   ✅   |  🟠   |                       |
+| CREATE TABLE                     |   ✅   |  🟠   | UNLOGGED, storage parameters, and TABLESPACE are not supported |
 | CREATE TABLE ... PARTITION       |   ✅   |  ❌   | PARTITIONs are parsed, but ignored|
 | CREATE TABLESPACE                |   ❌   |  ❌   |                       |
 | CREATE TEXT SEARCH CONFIGURATION |   ❌   |  ❌   |                       |
@@ -133,7 +133,7 @@ title: Supported SQL Commands
 | DROP CAST                        |   ✅   |  ✅   |                       |
 | DROP COLLATION                   |   ❌   |  ❌   |                       |
 | DROP CONVERSION                  |   ❌   |  ❌   |                       |
-| DROP DATABASE                    |   ✅   |  🟠   |                       |
+| DROP DATABASE                    |   ✅   |  🟠   | WITH (FORCE) is not supported |
 | DROP DOMAIN                      |   ✅   |  ✅   |                       |
 | DROP EVENT TRIGGER               |   ❌   |  ❌   |                       |
 | DROP EXTENSION                   |   ✅   |  ✅   |                       |
@@ -157,7 +157,7 @@ title: Supported SQL Commands
 | DROP SERVER                      |   ❌   |  ❌   |                       |
 | DROP STATISTICS                  |   ❌   |  ❌   |                       |
 | DROP SUBSCRIPTION                |   ❌   |  ❌   |                       |
-| DROP TABLE                       |   ✅   |  🟠   |                       |
+| DROP TABLE                       |   ✅   |  🟠   | RESTRICT and CASCADE are not supported |
 | DROP TABLESPACE                  |   ❌   |  ❌   |                       |
 | DROP TEXT SEARCH CONFIGURATION   |   ❌   |  ❌   |                       |
 | DROP TEXT SEARCH DICTIONARY      |   ❌   |  ❌   |                       |
@@ -189,7 +189,7 @@ title: Supported SQL Commands
 | MOVE                      |   ❌   |  ❌   |                       |
 | REFRESH MATERIALIZED VIEW |   ✅   |  ❌   |                       |
 | REINDEX                   |   ❌   |  ❌   |                       |
-| SELECT                    |   🟠   |  🟠   |                       |
+| SELECT                    |   ✅   |  🟠   | Locking clauses (FOR UPDATE / FOR SHARE) are not supported |
 | SELECT INTO               |   ❌   |  ❌   |                       |
 | TRUNCATE                  |   🟠   |  🟠   |                       |
 | UPDATE                    |   ✅   |  ✅   | Supports RETURNING    |
