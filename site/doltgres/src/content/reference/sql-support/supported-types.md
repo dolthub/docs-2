@@ -8,7 +8,7 @@ Most of the standard types with partial support are missing some functionality r
 Length and precision parameters are enforced for many types (for example `char` and `varchar` lengths),
 but some parameters (such as `timestamp` precision) may not be fully enforced yet.
 
-| SQL Type Name  | Implemented | Aliases                       |
+| SQL Type Name  | Supported   | Aliases                       |
 | :------------- | :---------: | :---------------------------- |
 | bit            |     ✅      |                               |
 | bit[]          |     ✅      |                               |
@@ -105,53 +105,53 @@ but some parameters (such as `timestamp` precision) may not be fully enforced ye
 
 ## Pseudo-Types
 
-| SQL Type Name           | Implemented |
-| :---------------------- | :---------: |
-| any                     |     ✅      |
-| anyarray                |     ✅      |
-| anycompatible           |     ❌      |
-| anycompatiblearray      |     ❌      |
-| anycompatiblemultirange |     ❌      |
-| anycompatiblenonarray   |     ❌      |
-| anycompatiblerange      |     ❌      |
-| anyelement              |     ✅      |
-| anyenum                 |     ✅      |
-| anymultirange           |     ❌      |
-| anynonarray             |     ✅      |
-| anyrange                |     ❌      |
-| cstring                 |     ✅      |
-| event_trigger           |     ❌      |
-| fdw_handler             |     ❌      |
-| index_am_handler        |     ❌      |
-| internal                |     ✅      |
-| language_handler        |     ❌      |
-| pg_ddl_command          |     ❌      |
-| record                  |     ✅      |
-| table_am_handler        |     ❌      |
-| trigger                 |     ✅      |
-| tsm_handler             |     ❌      |
-| unknown                 |     🟠      |
-| void                    |     ✅      |
+| SQL Type Name           | Supported | Notes and limitations |
+| :---------------------- | :-------: | :-------------------- |
+| any                     |    ✅     |                       |
+| anyarray                |    ✅     |                       |
+| anycompatible           |    ❌     |                       |
+| anycompatiblearray      |    ❌     |                       |
+| anycompatiblemultirange |    ❌     |                       |
+| anycompatiblenonarray   |    ❌     |                       |
+| anycompatiblerange      |    ❌     |                       |
+| anyelement              |    ✅     |                       |
+| anyenum                 |    ✅     |                       |
+| anymultirange           |    ❌     |                       |
+| anynonarray             |    ✅     |                       |
+| anyrange                |    ❌     |                       |
+| cstring                 |    ✅     |                       |
+| event_trigger           |    ❌     |                       |
+| fdw_handler             |    ❌     |                       |
+| index_am_handler        |    ❌     |                       |
+| internal                |    ✅     |                       |
+| language_handler        |    ❌     |                       |
+| pg_ddl_command          |    ❌     |                       |
+| record                  |    ✅     |                       |
+| table_am_handler        |    ❌     |                       |
+| trigger                 |    ✅     |                       |
+| tsm_handler             |    ❌     |                       |
+| unknown                 |    ✅     | Used internally for values whose type cannot be determined; not intended for direct use |
+| void                    |    ✅     |                       |
 
 ## OID Alias Types
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/datatype-oid.html).
 
-| SQL Type Name | Supported |
-| :------------ | :-------- |
-| oid           | ✅        |
-| oidvector     | ✅        |
-| cid           | ✅        |
-| tid           | ✅        |
-| xid           | 🟠        |
-| regclass      | ✅        |
-| regcollation  | ❌        |
-| regconfig     | ❌        |
-| regdictionary | ❌        |
-| regnamespace  | ❌        |
-| regoper       | ❌        |
-| regoperator   | ❌        |
-| regproc       | ✅        |
-| regprocedure  | ❌        |
-| regrole       | ❌        |
-| regtype       | ✅        |
+| SQL Type Name | Supported | Notes and limitations |
+| :------------ | :-------: | :-------------------- |
+| oid           | ✅        |                       |
+| oidvector     | ✅        |                       |
+| cid           | ✅        |                       |
+| tid           | ✅        |                       |
+| xid           | ✅        | The type works, but Doltgres does not expose real transaction IDs; the xmin/xmax system columns always return 0 |
+| regclass      | ✅        |                       |
+| regcollation  | ❌        |                       |
+| regconfig     | ❌        |                       |
+| regdictionary | ❌        |                       |
+| regnamespace  | ❌        |                       |
+| regoper       | ❌        |                       |
+| regoperator   | ❌        |                       |
+| regproc       | ✅        |                       |
+| regprocedure  | ❌        |                       |
+| regrole       | ❌        |                       |
+| regtype       | ✅        |                       |

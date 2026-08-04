@@ -126,7 +126,7 @@ This system variable should be set on replication primaries to name a remote to 
 [Replication](/reference/server/replication).
 
 ```sql
-select name from dolt_remotes;
+select name from dolt.remotes;
  name
 ---------
  remote1

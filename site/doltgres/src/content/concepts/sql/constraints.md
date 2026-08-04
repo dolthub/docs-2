@@ -66,37 +66,32 @@ create table pay (id int,
 insert into employees values (0, 'Smith', 'Ella', 34), (1, 'Baker', 'Jack', 27);
 insert into pay values (0, 50000);
 select dolt_commit('-am', 'Data for foreign key doc');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| kgjb1tdbqt3vsn2e3nv06n5a6jdaqtk8 |
-+----------------------------------+
+ hash
+----------------------------------
+ kgjb1tdbqt3vsn2e3nv06n5a6jdaqtk8
+(1 row)
 select dolt_checkout('-b', 'delete-parent');
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
+ status
+--------
+ 0
+(1 row)
 delete from employees where id=1;
 select dolt_commit('-am', 'Deleted Jack Baker, id=1');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| pd8r1j7or0aonincnc8iutsdjqnkmtsb |
-+----------------------------------+
+ hash
+----------------------------------
+ pd8r1j7or0aonincnc8iutsdjqnkmtsb
+(1 row)
 select dolt_checkout('main');
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
+ status
+--------
+ 0
+(1 row)
 insert into pay values (1, 48000);
 select dolt_commit('-am', 'Added salary for Jack Baker id=1');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| 44h9p2k59o59rc1lcenkg4dghe052um0 |
-+----------------------------------+
+ hash
+----------------------------------
+ 44h9p2k59o59rc1lcenkg4dghe052um0
+(1 row)
 select dolt_merge('delete-parent');
 ERROR: Constraint violation from merge detected, cannot commit transaction. Constraint violations from a merge must be resolved using the dolt_constraint_violations table before committing a transaction. To commit transactions with constraint violations run "SET dolt_force_transaction_commit TO on"
 ```

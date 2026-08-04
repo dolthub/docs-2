@@ -26,11 +26,9 @@ The two errors that merge can produce are conflicts and constraint-violations.
 If either error exists post-merge, the `conflicts` column will be set to `1`:
 
 ```
-+------+--------------+-----------+-----------------+
-| hash | fast_forward | conflicts | message         |
-+------+--------------+-----------+-----------------+
-|      | 0            | 1         | conflicts found |
-+------+--------------+-----------+-----------------+
+ hash | fast_forward | conflicts | message
+------+--------------+-----------+-----------------
+      | 0            | 1         | conflicts found
 ```
 
 If no conflicts/constraint-violations were encountered, the current transaction
@@ -38,12 +36,11 @@ will be completed, and a commit will be made. You can check the status of a
 merge using the [dolt.merge_status](/reference/version-control/dolt-system-tables#dolt.merge_status) system table:
 
 ```text
-> SELECT * from DOLT_MERGE_STATUS;
-+------------+--------+---------------+--------+-----------------+
-| is_merging | source | source_commit | target | unmerged_tables |
-+------------+--------+---------------+--------+-----------------+
-| false      | NULL   | NULL          | NULL   | NULL            |
-+------------+--------+---------------+--------+-----------------+
+SELECT * from dolt.merge_status;
+ is_merging | source | source_commit | target | unmerged_tables
+------------+--------+---------------+--------+-----------------
+ false      | NULL   | NULL          | NULL   | NULL
+(1 row)
 ```
 
 If conflicts/constraint-violations were encountered, the current transaction
@@ -62,25 +59,23 @@ Merges can generate conflicts on schema or data.
 ## Schema
 
 Merges with schema conflicts will prevent the merge from completing and populate schema conflicts
-rows into the `dolt_schema_conflicts` system table. This system table describes the conflicted
+rows into the `dolt.schema_conflicts` system table. This system table describes the conflicted
 table's schema on each side of the merge: `ours` and `theirs`. Additionally, it shows the table's
 schema at the common-ancestor and describes why the `ours` and `theirs` schemas cannot be
 automatically merged.
 
 ```sql
-> SELECT table_name, description, base_schema, our_schema, their_schema FROM dolt_schema_conflicts;
-+------------+--------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| table_name | description                          | base_schema                                                       | our_schema                                                        | their_schema                                                      |
-+------------+--------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| people     | different column definitions for our | CREATE TABLE "people" (                                           | CREATE TABLE "people" (                                           | CREATE TABLE "people" (                                           |
-|            | column age and their column age      |   "id" integer NOT NULL,                                          |   "id" integer NOT NULL,                                          |   "id" integer NOT NULL,                                          |
-|            |                                      |   "last_name" varchar(120),                                       |   "last_name" varchar(120),                                       |   "last_name" varchar(120),                                       |
-|            |                                      |   "first_name" varchar(120),                                      |   "first_name" varchar(120),                                      |   "first_name" varchar(120),                                      |
-|            |                                      |   "birthday" timestamp,                                           |   "birthday" timestamp,                                           |   "birthday" timestamp,                                           |
-|            |                                      |   "age" integer DEFAULT 0,                                        |   "age" real,                                                     |   "age" bigint,                                                   |
-|            |                                      |   PRIMARY KEY ("id")                                              |   PRIMARY KEY ("id")                                              |   PRIMARY KEY ("id")                                              |
-|            |                                      | );                                                                | );                                                                | );                                                                |
-+------------+--------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+SELECT table_name, description, base_schema, our_schema, their_schema FROM dolt.schema_conflicts;
+ table_name | description                          | base_schema                                                       | our_schema                                                        | their_schema
+------------+--------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------
+ people     | different column definitions for our | CREATE TABLE "people" (                                           | CREATE TABLE "people" (                                           | CREATE TABLE "people" (
+            | column age and their column age      |   "id" integer NOT NULL,                                          |   "id" integer NOT NULL,                                          |   "id" integer NOT NULL,
+            |                                      |   "last_name" varchar(120),                                       |   "last_name" varchar(120),                                       |   "last_name" varchar(120),
+            |                                      |   "first_name" varchar(120),                                      |   "first_name" varchar(120),                                      |   "first_name" varchar(120),
+            |                                      |   "birthday" timestamp,                                           |   "birthday" timestamp,                                           |   "birthday" timestamp,
+            |                                      |   "age" integer DEFAULT 0,                                        |   "age" real,                                                     |   "age" bigint,
+            |                                      |   PRIMARY KEY ("id")                                              |   PRIMARY KEY ("id")                                              |   PRIMARY KEY ("id")
+            |                                      | );                                                                | );                                                                | );
 ```
 
 Merges that result in schema conflicts will leave an active merge state until
@@ -94,16 +89,15 @@ are discarded with the resolution strategy. The schema and data changes still ex
 
 ## Data
 
-Merges with data conflicts can be resolved using SQL. Conflicts must be resolved in the same SQL transaction by default. You can find which tables are in conflict by querying the `dolt_conflicts`
+Merges with data conflicts can be resolved using SQL. Conflicts must be resolved in the same SQL transaction by default. You can find which tables are in conflict by querying the `dolt.conflicts`
 system table:
 
 ```sql
-SELECT * FROM dolt_conflicts;
-+--------+---------------+
-| table  | num_conflicts |
-+--------+---------------+
-| people |             3 |
-+--------+---------------+
+SELECT * FROM dolt.conflicts;
+ table  | num_conflicts
+--------+---------------
+ people |             3
+(1 row)
 ```
 
 Each database table has an associated `dolt_conflicts` table, which
@@ -113,34 +107,31 @@ conflict table looks like this:
 
 ```sql
 DESCRIBE dolt_conflicts_people;
-+------------------+-------------+------+------+---------+-------+
-| Field            | Type        | Null | Key  | Default | Extra |
-+------------------+-------------+------+------+---------+-------+
-| base_occupation  | varchar(32) | YES  |      |         |       |
-| base_last_name   | varchar(64) | YES  |      |         |       |
-| base_id          | integer     | YES  |      |         |       |
-| base_first_name  | varchar(32) | YES  |      |         |       |
-| base_age         | integer     | YES  |      |         |       |
-| our_occupation   | varchar(32) | YES  |      |         |       |
-| our_last_name    | varchar(64) | YES  |      |         |       |
-| our_id           | integer     | YES  |      |         |       |
-| our_first_name   | varchar(32) | YES  |      |         |       |
-| our_age          | integer     | YES  |      |         |       |
-| their_occupation | varchar(32) | YES  |      |         |       |
-| their_last_name  | varchar(64) | YES  |      |         |       |
-| their_id         | integer     | YES  |      |         |       |
-| their_first_name | varchar(32) | YES  |      |         |       |
-| their_age        | integer     | YES  |      |         |       |
-+------------------+-------------+------+------+---------+-------+
+ Field            | Type        | Null | Key  | Default | Extra
+------------------+-------------+------+------+---------+-------
+ base_occupation  | varchar(32) | YES  |      |         |
+ base_last_name   | varchar(64) | YES  |      |         |
+ base_id          | integer     | YES  |      |         |
+ base_first_name  | varchar(32) | YES  |      |         |
+ base_age         | integer     | YES  |      |         |
+ our_occupation   | varchar(32) | YES  |      |         |
+ our_last_name    | varchar(64) | YES  |      |         |
+ our_id           | integer     | YES  |      |         |
+ our_first_name   | varchar(32) | YES  |      |         |
+ our_age          | integer     | YES  |      |         |
+ their_occupation | varchar(32) | YES  |      |         |
+ their_last_name  | varchar(64) | YES  |      |         |
+ their_id         | integer     | YES  |      |         |
+ their_first_name | varchar(32) | YES  |      |         |
+ their_age        | integer     | YES  |      |         |
 
 SELECT * FROM dolt_conflicts_people;
-+-----------------+----------------+---------+-----------------+----------+----------------+---------------+--------+----------------+---------+------------------+-----------------+----------+------------------+-----------+
-| base_occupation | base_last_name | base_id | base_first_name | base_age | our_occupation | our_last_name | our_id | our_first_name | our_age | their_occupation | their_last_name | their_id | their_first_name | their_age |
-+-----------------+----------------+---------+-----------------+----------+----------------+---------------+--------+----------------+---------+------------------+-----------------+----------+------------------+-----------+
-| Homemaker       | Simpson        |       1 | Marge           |       37 | Homemaker      | Simpson       |      1 | Marge          |      36 | NULL             | NULL            |     NULL | NULL             |      NULL |
-| Bartender       | Szyslak        |       2 | Moe             |     NULL | Bartender      | Szyslak       |      2 | Moe            |      62 | Bartender        | Szyslak         |        2 | Moe              |        60 |
-| NULL            | NULL           |    NULL | NULL            |     NULL | Student        | Simpson       |      3 | Bart           |      10 | Student          | Simpson         |        3 | Lisa             |         8 |
-+-----------------+----------------+---------+-----------------+----------+----------------+---------------+--------+----------------+---------+------------------+-----------------+----------+------------------+-----------+
+ base_occupation | base_last_name | base_id | base_first_name | base_age | our_occupation | our_last_name | our_id | our_first_name | our_age | their_occupation | their_last_name | their_id | their_first_name | their_age
+-----------------+----------------+---------+-----------------+----------+----------------+---------------+--------+----------------+---------+------------------+-----------------+----------+------------------+-----------
+ Homemaker       | Simpson        |       1 | Marge           |       37 | Homemaker      | Simpson       |      1 | Marge          |      36 | NULL             | NULL            |     NULL | NULL             |      NULL
+ Bartender       | Szyslak        |       2 | Moe             |     NULL | Bartender      | Szyslak       |      2 | Moe            |      62 | Bartender        | Szyslak         |        2 | Moe              |        60
+ NULL            | NULL           |    NULL | NULL            |     NULL | Student        | Simpson       |      3 | Bart           |      10 | Student          | Simpson         |        3 | Lisa             |         8
+(3 rows)
 ```
 
 For each column in the database table, the `conflicts` table has three
@@ -279,13 +270,11 @@ SELECT DOLT_COMMIT('-Am', 'delete parent 1');
 When we merge, we see the `conflict` column has been set:
 
 ```sql
-> START TRANSACTION;
-> SELECT DOLT_MERGE('branch_to_merge');
-+------+--------------+-----------+-----------------+
-| hash | fast_forward | conflicts | message         |
-+------+--------------+-----------+-----------------+
-|      | 0            | 1         | conflicts found |
-+------+--------------+-----------+-----------------+
+START TRANSACTION;
+SELECT DOLT_MERGE('branch_to_merge');
+ hash | fast_forward | conflicts | message
+------+--------------+-----------+-----------------
+      | 0            | 1         | conflicts found
 ```
 
 And we can inspect what the constraint violations are using the
@@ -293,19 +282,17 @@ And we can inspect what the constraint violations are using the
 system table:
 
 ```sql
-> SELECT * from dolt_constraint_violations;
-+-------+----------------+
-| table | num_violations |
-+-------+----------------+
-| child | 1              |
-+-------+----------------+
+SELECT * from dolt.constraint_violations;
+ table | num_violations
+-------+----------------
+ child | 1
+(1 row)
 
-> select violation_type, pk, parent_fk from dolt_constraint_violations_child;
-+----------------+----+-----------+
-| violation_type | pk | parent_fk |
-+----------------+----+-----------+
-| foreign key    | 1  | 1         |
-+----------------+----+-----------+
+select violation_type, pk, parent_fk from dolt_constraint_violations_child;
+ violation_type | pk | parent_fk
+----------------+----+-----------
+ foreign key    | 1  | 1
+(1 row)
 ```
 
 Then we can fix the violation, clear it, and complete the merge:

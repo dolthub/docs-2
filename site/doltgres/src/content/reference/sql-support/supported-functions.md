@@ -196,8 +196,8 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | ascii                 | ✅         |                       |
 | chr                   | ✅         |                       |
 | concat                | ✅         |                       |
-| concat_ws             | 🟠        | Available with MySQL semantics via the underlying engine |
-| format                | 🟠        | Available with MySQL semantics via the underlying engine |
+| concat_ws             | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
+| format                | 🟠        | Available with MySQL semantics via the underlying engine: MySQL's FORMAT() does number formatting, not PostgreSQL-style printf string formatting |
 | initcap               | ✅         |                       |
 | left                  | ✅         |                       |
 | length                | ✅         |                       |
@@ -208,14 +208,14 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | quote_literal         | ❌         |                       |
 | quote_nullable        | ❌         |                       |
 | regexp_count          | ❌         |                       |
-| regexp_instr          | 🟠        | Available with MySQL semantics via the underlying engine |
-| regexp_like           | 🟠        | Available with MySQL semantics via the underlying engine |
+| regexp_instr          | ✅         | Available with MySQL semantics via the underlying engine; some POSIX regex syntax and flags may differ |
+| regexp_like           | ✅         | Available with MySQL semantics via the underlying engine; some POSIX regex syntax and flags may differ |
 | regexp_match          | ❌         |                       |
 | regexp_matches        | ❌         |                       |
-| regexp_replace        | 🟠        | Available with MySQL semantics via the underlying engine |
+| regexp_replace        | 🟠        | Available with MySQL semantics via the underlying engine: all matches are replaced by default (PostgreSQL replaces only the first), and PostgreSQL flag arguments are not supported |
 | regexp_split_to_array | ❌         |                       |
 | regexp_split_to_table | ❌         |                       |
-| regexp_substr         | 🟠        | Available with MySQL semantics via the underlying engine |
+| regexp_substr         | ✅         | Available with MySQL semantics via the underlying engine; some POSIX regex syntax and flags may differ |
 | repeat                | ✅         |                       |
 | replace               | ✅         |                       |
 | reverse               | ✅         |                       |
@@ -387,14 +387,14 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | justify_days          | ❌         |                                          |
 | justify_hours         | ❌         |                                          |
 | justify_interval      | ❌         |                                          |
-| localtime             | 🟠        | returns timestamp                        |
-| localtimestamp        | 🟠        | missing support for integer input option |
+| localtime             | ✅         | Returns a timestamp instead of a time value |
+| localtimestamp        | ✅         | The precision (integer) argument is not supported |
 | make_date             | ❌         |                                          |
 | make_interval         | ❌         |                                          |
 | make_time             | ❌         |                                          |
 | make_timestamp        | ✅         |                                          |
 | make_timestamptz      | ✅         |                                          |
-| now                   | 🟠        | missing timezone value                   |
+| now                   | ✅         | The returned value is missing the timezone |
 | statement_timestamp   | ❌         |                                          |
 | timeofday             | ✅         |                                          |
 | timezone              | ✅         |                                          |
@@ -923,7 +923,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | bit_xor                       | ❌         |                            |
 | bool_and                      | ✅         |                            |
 | bool_or                       | ✅         |                            |
-| count                         | 🟠        | count(*) is native; count(expression) is available with MySQL semantics via the underlying engine |
+| count                         | ✅         | count(*) is native; count(expression) is available with MySQL semantics via the underlying engine, which match PostgreSQL |
 | every                         | ❌         |                            |
 | json_agg                      | ❌         |                            |
 | json_agg_strict               | ❌         |                            |
@@ -933,8 +933,8 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | json_object_agg_strict        | ❌         |                            |
 | json_object_agg_unique        | ❌         |                            |
 | json_object_agg_unique_strict | ❌         |                            |
-| max                           | 🟠        | Available with MySQL semantics via the underlying engine |
-| min                           | 🟠        | Available with MySQL semantics via the underlying engine |
+| max                           | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
+| min                           | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
 | range_agg                     | ❌         |                            |
 | range_intersect_agg           | ❌         |                            |
 | string_agg                    | ✅         |                            |
@@ -959,11 +959,11 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | regr_sxx       | ❌         |                       |
 | regr_sxy       | ❌         |                       |
 | regr_syy       | ❌         |                       |
-| stddev         | 🟠        | Available with MySQL semantics via the underlying engine |
-| stddev_pop     | 🟠        | Available with MySQL semantics via the underlying engine |
-| stddev_samp    | 🟠        | Available with MySQL semantics via the underlying engine |
-| variance       | 🟠        | Available with MySQL semantics via the underlying engine |
-| var_pop        | 🟠        | Available with MySQL semantics via the underlying engine |
+| stddev         | 🟠        | Available with MySQL semantics via the underlying engine, which compute the population standard deviation; PostgreSQL computes the sample standard deviation |
+| stddev_pop     | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
+| stddev_samp    | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
+| variance       | 🟠        | Available with MySQL semantics via the underlying engine, which compute the population variance; PostgreSQL computes the sample variance |
+| var_pop        | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
 | var_samp       | ❌         |                       |
 
 ## Ordered-Set Aggregate Functions
@@ -1006,11 +1006,11 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | dense_rank   | ✅         |                       |
 | percent_rank | ✅         |                       |
 | cume_dist    | ❌         |                       |
-| ntile        | 🟠        | Available with MySQL semantics via the underlying engine |
-| lag          | 🟠        | Available with MySQL semantics via the underlying engine |
-| lead         | 🟠        | Available with MySQL semantics via the underlying engine |
-| first_value  | 🟠        | Available with MySQL semantics via the underlying engine |
-| last_value   | 🟠        | Available with MySQL semantics via the underlying engine |
+| ntile        | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
+| lag          | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
+| lead         | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
+| first_value  | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
+| last_value   | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
 | nth_value    | ❌         |                       |
 
 ## Merge Support Functions
@@ -1075,7 +1075,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | pg_jit_available                | ❌         |                              |
 | pg_listening_channels           | ❌         |                              |
 | pg_notification_queue_usage     | ❌         |                              |
-| pg_postmaster_start_time        | 🟠        | Parses, returns current time |
+| pg_postmaster_start_time        | ❌         | Executes, but returns the current time rather than the server start time |
 | pg_safe_snapshot_blocking_pids  | ❌         |                              |
 | pg_trigger_depth                | ❌         |                              |
 | session_user                    | ❌         |                              |
@@ -1153,22 +1153,22 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | format_type                        | ✅         |                         |
 | pg_basetype                        | ❌         |                         |
 | pg_char_to_encoding                | ✅         |                         |
-| pg_encoding_to_char                | 🟠        | Parses, not implemented |
+| pg_encoding_to_char                | ✅         | Always returns UTF8, the only encoding Doltgres uses |
 | pg_get_catalog_foreign_keys        | ❌         |                         |
 | pg_get_constraintdef               | ✅         |                         |
-| pg_get_expr                        | 🟠        | Parses, not implemented |
+| pg_get_expr                        | ❌         | Parses, but is not yet implemented |
 | pg_get_functiondef                 | ✅         | Returns stored definitions for user-created functions |
 | pg_get_function_arguments          | ✅         |                         |
-| pg_get_function_identity_arguments | 🟠        | Parses, not implemented |
+| pg_get_function_identity_arguments | ❌         | Executes, but always returns an empty string |
 | pg_get_function_result             | ✅         |                         |
-| pg_get_indexdef                    | 🟠        | Parses, not implemented |
+| pg_get_indexdef                    | ✅         | Pretty-printing is not supported |
 | pg_get_keywords                    | ❌         |                         |
-| pg_get_partkeydef                  | 🟠        | Parses, not implemented |
+| pg_get_partkeydef                  | ✅         | Always returns an empty result, since partitioned tables are not supported |
 | pg_get_ruledef                     | ✅         |                         |
 | pg_get_serial_sequence             | ✅         |                         |
 | pg_get_statisticsobjdef            | ❌         |                         |
-| pg_get_triggerdef                  | 🟠        | Parses, not implemented |
-| pg_get_userbyid                    | 🟠        | Parses, not implemented |
+| pg_get_triggerdef                  | ❌         | Executes, but always returns an empty string |
+| pg_get_userbyid                    | ❌         | Executes, but always returns `postgres` regardless of the role |
 | pg_get_viewdef                     | ✅         |                         |
 | pg_index_column_has_property       | ❌         |                         |
 | pg_index_has_property              | ❌         |                         |
@@ -1176,7 +1176,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | pg_options_to_table                | ❌         |                         |
 | pg_settings_get_flags              | ❌         |                         |
 | pg_tablespace_databases            | ❌         |                         |
-| pg_tablespace_location             | 🟠        | Parses, not implemented |
+| pg_tablespace_location             | ✅         | Always returns an empty string, since tablespaces are not supported |
 | pg_typeof                          | ✅         |                         |
 | COLLATION FOR                      | ❌         |                         |
 | to_regclass                        | ✅         |                         |
@@ -1207,9 +1207,9 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function          | Supported | Notes and limitations   |
 |:------------------|:----------|:------------------------|
-| col_description   | 🟠        | Parses, not implemented |
-| obj_description   | 🟠        | Parses, not implemented |
-| shobj_description | 🟠        | Parses, not implemented |
+| col_description   | ✅         | Always returns NULL, since COMMENT is not supported and comments are never stored |
+| obj_description   | ✅         | Always returns NULL, since COMMENT is not supported and comments are never stored |
+| shobj_description | ✅         | Always returns NULL, since COMMENT is not supported and comments are never stored |
 
 ## Data Validity Checking Functions
 
@@ -1262,7 +1262,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function            | Supported  | Notes and limitations                |
 |:--------------------|:-----------|:-------------------------------------|
-| version             | 🟠         | Includes version but not system info |
+| version             | ✅          | Includes version but not system info |
 | unicode_version     | ❌          |                                      |
 | icu_unicode_version | ❌          |                                      |
 
@@ -1283,7 +1283,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | Function         | Supported | Notes and limitations                                           |
 |:-----------------|:----------|:----------------------------------------------------------------|
 | current_setting  | ✅         |                                                                 |
-| set_config       | 🟠        | setting config for the current transaction is not supported yet |
+| set_config       | ✅         | Setting config for the current transaction only (is_local = true) is not supported yet |
 
 ## Server Signaling Functions
 
@@ -1321,7 +1321,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function                      | Supported | Notes and limitations    |
 |:------------------------------|:----------|:-------------------------|
-| pg_is_in_recovery             | 🟠        | Parses, not implemented  |
+| pg_is_in_recovery             | ✅         | Always returns false; Doltgres has no recovery mode |
 | pg_last_wal_receive_lsn       | ❌         |                          |
 | pg_last_wal_replay_lsn        | ❌         |                          |
 | pg_last_xact_replay_timestamp | ❌         |                          |
@@ -1388,13 +1388,13 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | pg_column_compression    | ❌         |                         |
 | pg_column_toast_chunk_id | ❌         |                         |
 | pg_database_size         | ❌         |                         |
-| pg_indexes_size          | 🟠        | Parses, not implemented |
-| pg_relation_size         | 🟠        | Parses, not implemented |
+| pg_indexes_size          | ❌         | Executes, but always returns 0 |
+| pg_relation_size         | ❌         | Executes, but always returns 0 |
 | pg_size_bytes            | ❌         |                         |
 | pg_size_pretty           | ❌         |                         |
-| pg_table_size            | 🟠        | Parses, not implemented |
+| pg_table_size            | ❌         | Executes, but always returns 0 |
 | pg_tablespace_size       | ❌         |                         |
-| pg_total_relation_size   | 🟠        | Parses, not implemented |
+| pg_total_relation_size   | ❌         | Executes, but always returns 0 |
 
 ## Database Object Location Functions
 
@@ -1524,7 +1524,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/9.1/mon
 | pg_stat_get_db_conflict_bufferpin            | ❌         |                         |
 | pg_stat_get_db_conflict_startup_deadlock     | ❌         |                         |
 | pg_stat_get_db_stat_reset_time               | ❌         |                         |
-| pg_stat_get_numscans                         | 🟠        | Parses, not implemented |
+| pg_stat_get_numscans                         | ❌         | Executes, but always returns 0 |
 | pg_stat_get_tuples_returned                  | ❌         |                         |
 | pg_stat_get_tuples_fetched                   | ❌         |                         |
 | pg_stat_get_tuples_inserted                  | ❌         |                         |

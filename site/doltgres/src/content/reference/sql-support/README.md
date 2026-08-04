@@ -12,8 +12,10 @@ Any deviation from the PostgreSQL 15 manual should be documented on this page,
 or else indicates a bug. Please [file issues](https://github.com/dolthub/doltgresql/issues)
 with any incompatibilities you discover.
 
-This series of documents shows:
+This series of documents uses a single "Supported" column to show:
 
-* ✅ Which SQL language features we support the same as PostgreSQL
-* 🟠 Where we support the feature but deviate from PostgreSQL in some way
-* ❌ Where we lack support for the SQL language feature.
+* ✅ SQL language features that work in Doltgres. Minor limitations, where they
+  exist, are described in the notes for each entry.
+* 🟠 Features that work but have a major limitation or deviation from PostgreSQL,
+  described in the notes, that may prevent you from using them successfully.
+* ❌ SQL language features that are not yet supported.

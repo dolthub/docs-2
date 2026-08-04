@@ -49,19 +49,17 @@ insert into docs values (10,10);
 select dolt_commit('-am', 'Added a row on a branch');
 select dolt_checkout('main');
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 1  | 1  |
-| 2  | 1  |
-+----+----+
+ pk | c1
+----+----
+ 1  | 1
+ 2  | 1
+(2 rows)
 select dolt_merge('check-out-new-branch');
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 1  | 1  |
-| 2  | 1  |
-| 10 | 10 |
-+----+----+
+ pk | c1
+----+----
+ 1  | 1
+ 2  | 1
+ 10 | 10
+(3 rows)
 ```

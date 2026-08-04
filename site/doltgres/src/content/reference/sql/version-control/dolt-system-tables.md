@@ -132,12 +132,12 @@ postgres=> select active_branch();
 
 `dolt.branches` only contains information about local branches. For
 branches on a remote you have fetched, see
-[`dolt.remote_branches`](#doltremote_branches).
+[`dolt.remote_branches`](#dolt.remote_branches).
 
 ### `dolt.remote_branches`
 
 `dolt.remote_branches` (also usable as `dolt_remote_branches`) contains information about branches on remotes
-you have fetched. It has a similar schema as `dolt_branches`, but the `remote`, `branch`, and `dirty` columns
+you have fetched. It has a similar schema as `dolt.branches`, but the `remote`, `branch`, and `dirty` columns
 don't make sense in this context and are not included. Only remote branches are included in this table.
 
 #### Schema
@@ -191,7 +191,7 @@ SELECT name, hash, latest_committer, latest_commit_date, latest_commit_message F
 postgres=> INSERT INTO dolt.docs VALUES ('README.md', '# README\nThis is more info about my README.');
 INSERT 0 1
 
-postgres> SELECT * FROM dolt.docs;
+postgres=> SELECT * FROM dolt.docs;
  doc_name  |                   doc_text
 -----------+----------------------------------------------
  README.md | # README\nThis is more info about my README.
@@ -213,14 +213,12 @@ than using this table directly.
 #### Schema
 
 ```text
-+-------------+----------+
-| field       | type     |
-+-------------+----------+
-| name        | longtext |
-| create_stmt | longtext |
-| created_at  | datetime |
-| modified_at | datetime |
-+-------------+----------+
+ field       | type
+-------------+----------
+ name        | longtext
+ create_stmt | longtext
+ created_at  | datetime
+ modified_at | datetime
 ```
 
 When using the standard `CREATE PROCEDURE` workflow, the `name` column
@@ -235,7 +233,7 @@ operations, such as `DROP PROCEDURE`.
 postgres=> CREATE PROCEDURE simple_proc1(x DOUBLE, y DOUBLE) AS SELECT x*y;
 postgres=> CREATE PROCEDURE simple_proc2() AS SELECT name FROM category;
 
-postgres> SELECT * FROM dolt.procedures;
+postgres=> SELECT * FROM dolt.procedures;
  name         |        create_stmt        |     created_at      |     modified_at
 --------------+---------------------------+---------------------+---------------------
  simple_proc1 | SELECT x*y                | 2024-11-14 00:11:39 | 2024-11-14 00:11:39
@@ -253,14 +251,12 @@ The `dolt.remotes` table is currently read only. Use the [`dolt_remote()` functi
 #### Schema
 
 ```text
-+-------------+------+------+-----+---------+-------+
-| Field       | Type | Null | Key | Default | Extra |
-+-------------+------+------+-----+---------+-------+
-| name        | text | NO   | PRI |         |       |
-| url         | text | NO   |     |         |       |
-| fetch_specs | json | YES  |     |         |       |
-| params      | json | YES  |     |         |       |
-+-------------+------+------+-----+---------+-------+
+ Field       | Type | Null | Key | Default | Extra
+-------------+------+------+-----+---------+-------
+ name        | text | NO   | PRI |         |
+ url         | text | NO   |     |         |
+ fetch_specs | json | YES  |     |         |
+ params      | json | YES  |     |         |
 ```
 
 #### Example Query
@@ -288,16 +284,14 @@ postgres=> SELECT * FROM dolt.remotes WHERE name = 'origin';
 #### Schema
 
 ```text
-+----------+----------+------+-----+---------+-------+
-| Field    | Type     | Null | Key | Default | Extra |
-+----------+----------+------+-----+---------+-------+
-| tag_name | text     | NO   | PRI | NULL    |       |
-| tag_hash | text     | NO   | PRI | NULL    |       |
-| tagger   | text     | NO   |     | NULL    |       |
-| email    | text     | NO   |     | NULL    |       |
-| date     | datetime | NO   |     | NULL    |       |
-| message  | text     | NO   |     | NULL    |       |
-+----------+----------+------+-----+---------+-------+
+ Field    | Type     | Null | Key | Default | Extra
+----------+----------+------+-----+---------+-------
+ tag_name | text     | NO   | PRI | NULL    |
+ tag_hash | text     | NO   | PRI | NULL    |
+ tagger   | text     | NO   |     | NULL    |
+ email    | text     | NO   |     | NULL    |
+ date     | datetime | NO   |     | NULL    |
+ message  | text     | NO   |     | NULL    |
 ```
 
 #### Example Query
@@ -336,13 +330,11 @@ commit of the database has a `NULL` parent. For merge commits, the merge base wi
 merged will have `parent_index` 1.
 
 ```text
-+--------------+------+------+-----+---------+-------+
-| Field        | Type | Null | Key | Default | Extra |
-+--------------+------+------+-----+---------+-------+
-| commit_hash  | text | NO   | PRI |         |       |
-| parent_hash  | text | NO   | PRI |         |       |
-| parent_index | int  | NO   | PRI |         |       |
-+--------------+------+------+-----+---------+-------+
+ Field        | Type | Null | Key | Default | Extra
+--------------+------+------+-----+---------+-------
+ commit_hash  | text | NO   | PRI |         |
+ parent_hash  | text | NO   | PRI |         |
+ parent_index | int  | NO   | PRI |         |
 ```
 
 #### Example Query
@@ -361,7 +353,7 @@ postgres=> SELECT * FROM dolt.commit_ancestors WHERE commit_hash=HASHOF('HEAD');
 
 The `dolt.commits` (also usable as `dolt_commits`) system table shows _ALL_ commits in a Dolt database.
 
-This is similar, but different from the `dolt.log` [system table](#doltlog)
+This is similar, but different from the `dolt.log` [system table](#dolt.log)
 and the `dolt log` [CLI command](https://dolthub.com/docs/cli-reference/cli#dolt-log).
 `dolt.log` shows you commit history for all commit ancestors reachable from the current `HEAD` of the
 checked out branch, whereas `dolt.commits` shows all commits from the entire database, no matter which branch is checked out.
@@ -431,7 +423,7 @@ The `dolt.diff` (also usable as `dolt_diff`) system table shows which tables in 
 
 #### Schema
 
-The `DOLT.DIFF` system table has the following columns
+The `dolt.diff` system table has the following columns
 
 ```sql
      Field     |    Type    | Null | Key | Default | Extra
@@ -458,7 +450,7 @@ between November 28 and December 3, 2024.
 
 ```sql
 postgres=> SELECT commit_hash, table_name, data_change, schema_change
-FROM dolt_diff
+FROM dolt.diff
 WHERE date BETWEEN '2024-11-28' AND '2024-12-03';
            commit_hash            |    table_name    | data_change | schema_change
 ----------------------------------+------------------+-------------+---------------
@@ -518,7 +510,7 @@ The following query uses the `dolt.column_diff` system table to find commits and
 
 ```sql
 postgres=> SELECT commit_hash, date
-FROM dolt_column_diff where column_name = 'start_date';
+FROM dolt.column_diff where column_name = 'start_date';
            commit_hash            |        date
 ----------------------------------+---------------------
  j5b0a0bvpgjgkva0mq8eft0nvl4394gn | 2024-12-02 21:36:17
@@ -891,7 +883,7 @@ To find who set the current values, we can query the `dolt_blame_employees` tabl
 ```sql
 postgres=> select * from public.dolt_blame_employees limit 5;
    id  |               commit             |     commit_date     | committer  |        email         |  message
--------+----------------------------------+---------------------+-----------------------------------+-------------
+-------+----------------------------------+---------------------+------------+----------------------+---------
  1     | o697ec6a39ocek9bq4vt87o3qd2bu8l0 | 2024-11-14 00:11:39 | postgres   | postgres@127.0.0.1   |  add table
  2     | o697ec6a39ocek9bq4vt87o3qd2bu8l0 | 2024-11-14 00:11:39 | postgres   | postgres@127.0.0.1   |  add table
  3     | o697ec6a39ocek9bq4vt87o3qd2bu8l0 | 2024-11-14 00:11:39 | postgres   | postgres@127.0.0.1   |  add table
@@ -1262,7 +1254,7 @@ And of course you can use any combination of `ours`, `theirs` and
 
 This system table shows you which rows have been changed in your workspace and if they are staged.
 It is the union of rows changed from HEAD to STAGED, and STAGED to WORKING. Any table listed in
-`dolt_status` table will have a non-empty corresponding `dolt_workspace_$TABLENAME` table. Changes
+`dolt.status` table will have a non-empty corresponding `dolt_workspace_$TABLENAME` table. Changes
 listed are all relative to the HEAD of the current branch.
 
 These tables can be modified in order to update what changes are staged for commit.
@@ -1409,4 +1401,5 @@ postgres=> SELECT * FROM dolt.status;
 ----------------------------+--------+-----------
  public.foo                 | t      | new table
  public.generated_exception | t      | new table
+(2 rows)
 ```

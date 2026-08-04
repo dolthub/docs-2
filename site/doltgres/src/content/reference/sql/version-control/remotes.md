@@ -181,7 +181,7 @@ This configuration stanza causes the `doltgres` server to open a remotesapi endp
 ```sql
 select dolt_clone('--user', 'exampleuser', 'https://localhost:8080/exampledb',  'exampledb');
 \c exampledb;
-select * from dolt_log;
+select * from dolt.log;
 ```
 
 The `--user` and `DOLT_REMOTE_PASSWORD` settings are not stored in the local state of the remote

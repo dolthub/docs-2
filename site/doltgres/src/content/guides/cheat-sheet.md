@@ -28,7 +28,7 @@ Click links in the comments section to read docs for the feature.
 
 | SQL                                       | Comments                                                                                                          |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `SELECT * FROM dolt_branches;`            | [Lists all branches](/reference/version-control/dolt-system-tables#dolt_branches)                        |
+| `SELECT * FROM dolt.branches;`            | [Lists all branches](/reference/version-control/dolt-system-tables#dolt.branches)                        |
 | `SELECT DOLT_BRANCH('myBranch');`         | [Creates a new branch](/reference/version-control/dolt-sql-functions#dolt_branch)                       |
 | `SELECT DOLT_CHECKOUT('myBranch');`       | [Switches to another branch](/reference/version-control/dolt-sql-functions#dolt_checkout)               |
 | `SELECT DOLT_CHECKOUT('-b', 'myBranch');` | [Creates a new branch and switches to it](/reference/version-control/dolt-sql-functions#dolt_checkout)  |
@@ -48,9 +48,9 @@ Click links in the comments section to read docs for the feature.
 
 | SQL                                           | Comments                                                                                                                |
 | --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `SELECT * FROM dolt_status;`                  | [Shows which tables are modified or staged](/reference/version-control/dolt-system-tables#dolt_status)         |
+| `SELECT * FROM dolt.status;`                  | [Shows which tables are modified or staged](/reference/version-control/dolt-system-tables#dolt.status)         |
 | `SELECT active_branch();`                     | [Shows the checked out branch](/reference/version-control/dolt-sql-functions#active_branch)                    |
-| `SELECT * FROM dolt_log;`                     | [Shows the commit history for the current branch](/reference/version-control/dolt-system-tables#dolt_log)      |
+| `SELECT * FROM dolt.log;`                     | [Shows the commit history for the current branch](/reference/version-control/dolt-system-tables#dolt.log)      |
 | `SELECT * FROM dolt_log('myBranch');`         | [Shows the commit history for myBranch](/reference/version-control/dolt-sql-functions#dolt_log)                |
 | `SELECT * FROM dolt_log('branchB..branchA');` | [Shows the commits on branchA that are not on branchB](/reference/version-control/dolt-sql-functions#dolt_log) |
 
@@ -68,7 +68,7 @@ Click links in the comments section to read docs for the feature.
 | SQL                                                      | Comments                                                                                                                        |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | `SELECT DOLT_REMOTE('add', 'myRemote', 'file:///backups/mydb');` | [Adds a new file-based remote](/reference/version-control/dolt-sql-functions#dolt_remote)                                |
-| `SELECT * FROM dolt_remotes;`                            | [Lists remotes](/reference/version-control/dolt-system-tables#dolt_remotes)                                            |
+| `SELECT * FROM dolt.remotes;`                            | [Lists remotes](/reference/version-control/dolt-system-tables#dolt.remotes)                                            |
 | `SELECT DOLT_FETCH();`                                   | [Fetches all branches from the remote](/reference/version-control/dolt-sql-functions#dolt_fetch)                      |
 | `SELECT DOLT_PULL();`                                    | [Fetch and merge commits from the remote tracking branch](/reference/version-control/dolt-sql-functions#dolt_pull)    |
 | `SELECT DOLT_PUSH('origin', 'myBranch');`                | [Push local commits of branch `myBranch` to remote `origin`](/reference/version-control/dolt-sql-functions#dolt_push) |
@@ -83,7 +83,7 @@ Click links in the comments section to read docs for the feature.
 | `SELECT * FROM dolt_diff('branch1...branch2');`                           | [Shows a three-dot diff](/reference/version-control/dolt-sql-functions#dolt_diff)                                                                |
 | `SELECT DOLT_REVERT('gtfv1qhr5le61njimcbses9oom0de41e');`                 | [Creates a new commit which reverts the changes in a prior commit](/reference/version-control/dolt-sql-functions#dolt_revert)                   |
 | `SELECT * FROM DOLT_PATCH('main', 'WORKING');`                            | [Creates SQL statements to apply a diff between two revisions](/reference/version-control/dolt-sql-functions#dolt_patch)                         |
-| `SELECT * FROM dolt_conflicts;`                                           | [Lists which tables have conflicts after a merge](/reference/version-control/dolt-system-tables#dolt_conflicts)                                  |
+| `SELECT * FROM dolt.conflicts;`                                           | [Lists which tables have conflicts after a merge](/reference/version-control/dolt-system-tables#dolt.conflicts)                                  |
 | `SELECT * FROM dolt_conflicts_mytable;`                                   | [Lists the rows in conflict for `mytable`](/reference/version-control/dolt-system-tables#dolt_conflicts_usdtablename)                            |
 | `SELECT DOLT_CONFLICTS_RESOLVE('--theirs', 'mytable');`                   | [Resolves conflicts in `mytable` by taking their changes](/reference/version-control/dolt-sql-functions#dolt_conflicts_resolve)                 |
 | `SELECT DOLT_TAG('tag1', 'myBranch');`                                    | [Creates a new tag at the HEAD of `mybranch`](/reference/version-control/dolt-sql-functions#dolt_tag)                                           |
@@ -93,7 +93,7 @@ Click links in the comments section to read docs for the feature.
 | `SELECT DOLT_GC();`                                                       | [Runs garbage collection to compact the size of the database on disk](/reference/version-control/dolt-sql-functions#dolt_gc)                    |
 | `SELECT DOLT_REBASE('--interactive', 'main');`                            | [Begins an interactive rebase session](/reference/version-control/dolt-sql-functions#dolt_rebase)                                               |
 | `SELECT * FROM dolt_reflog('mybranch');`                                  | [Shows the history of a ref, included deleted refs](/reference/version-control/dolt-sql-functions#dolt_reflog)                                   |
-| `SELECT * FROM dolt_commit_ancestors where commit_hash = HASHOF('main');` | [Shows the parent commit(s) of a commit](/reference/version-control/dolt-system-tables#dolt_commit_ancestors)                                    |
+| `SELECT * FROM dolt.commit_ancestors where commit_hash = HASHOF('main');` | [Shows the parent commit(s) of a commit](/reference/version-control/dolt-system-tables#dolt.commit_ancestors)                                    |
 | `SELECT DOLT_MERGE_BASE('main', 'feature');`                              | [Shows the common ancestor of two commits](/reference/version-control/dolt-sql-functions#dolt_merge_base)                                        |
-| `SELECT * FROM dolt_commits;`                                             | [Shows all commits on all branches](/reference/version-control/dolt-system-tables#dolt_commits)                                                  |
+| `SELECT * FROM dolt.commits;`                                             | [Shows all commits on all branches](/reference/version-control/dolt-system-tables#dolt.commits)                                                  |
 | `INSERT INTO dolt_ignore VALUES ('generated_*', true);`                   | [Ignores tables matching `generated*` (won't be added or committed)](/reference/version-control/dolt-system-tables#dolt_ignore)                  |

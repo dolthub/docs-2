@@ -199,24 +199,22 @@ Now back on the primary:
 ```sql
 insert into test values (2,2);
 select dolt_commit('-am', 'Inserted (2,2)');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| i97i9f1a3vrvd09pphiq0bbdeuf8riid |
-+----------------------------------+
+               hash
+----------------------------------
+ i97i9f1a3vrvd09pphiq0bbdeuf8riid
+(1 row)
 ```
 
 And back to the replica.
 
 ```sql
 select * from test;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+  0 |  0
+  1 |  1
+  2 |  2
+(3 rows)
 ```
 
 #### Replicate all branches
@@ -245,15 +243,14 @@ The read replica now has the change when I try and read the new branch.
 
 ```sql
 select dolt_checkout('branch1');
-select * from test;"
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 3  |
-+----+----+
+select * from test;
+ pk | c1
+----+----
+  0 |  0
+  1 |  1
+  2 |  2
+  3 |  3
+(4 rows)
 ```
 
 ### Replicating multiple databases

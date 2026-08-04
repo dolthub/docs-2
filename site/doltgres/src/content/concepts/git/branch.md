@@ -48,12 +48,11 @@ branches.
 ```sql
 SELECT dolt_branch('new-branch');
 SELECT dolt_checkout('-b', 'check-out-new-branch');
-select * from dolt_branches;
-+----------------------+----------------------------------+------------------+------------------------+-----------------------------------+------------------------------+
-| name                 | hash                             | latest_committer | latest_committer_email | latest_commit_date                | latest_commit_message        |
-+----------------------+----------------------------------+------------------+------------------------+-----------------------------------+------------------------------+
-| check-out-new-branch | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table |
-| main                 | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table |
-| new-branch           | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table |
-+----------------------+----------------------------------+------------------+------------------------+-----------------------------------+------------------------------+
+select * from dolt.branches;
+ name                 | hash                             | latest_committer | latest_committer_email | latest_commit_date                | latest_commit_message
+----------------------+----------------------------------+------------------+------------------------+-----------------------------------+------------------------------
+ check-out-new-branch | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table
+ main                 | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table
+ new-branch           | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table
+(3 rows)
 ```

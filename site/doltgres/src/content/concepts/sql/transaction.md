@@ -43,34 +43,31 @@ variable](/concepts/sql/system-variables),
 ```sql
 BEGIN;
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 0  |
-| 4  | 4  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+ 3  | 0
+ 4  | 4
+(5 rows)
 delete from docs where pk=4;
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 0  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+ 3  | 0
+(4 rows)
 database=# rollback;
 database=# select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 0  |
-| 4  | 4  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+ 3  | 0
+ 4  | 4
+(5 rows)
 ```

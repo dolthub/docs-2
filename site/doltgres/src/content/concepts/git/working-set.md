@@ -35,23 +35,21 @@ change was made to account for multiple users using the same branch in SQL serve
 
 ```sql
 insert into docs values (3,0);
-select * from dolt_status;
-+------------+--------+----------+
-| table_name | staged | status   |
-+------------+--------+----------+
-| docs       | false  | modified |
-+------------+--------+----------+
+select * from dolt.status;
+ table_name | staged | status
+------------+--------+----------
+ docs       | false  | modified
+(1 row)
 ```
 
 ### See what's changed in your working set
 
 ```sql
 select * from dolt_diff('HEAD', 'WORKING', 'docs');
-+-------+-------+-----------+----------------------------+---------+---------+-------------+-------------------------+-----------+
-| to_pk | to_c1 | to_commit | to_commit_date             | from_pk | from_c1 | from_commit | from_commit_date        | diff_type |
-+-------+-------+-----------+----------------------------+---------+---------+-------------+-------------------------+-----------+
-| 3     | 0     | WORKING   | 2024-04-30 22:59:20.504853 | NULL    | NULL    | HEAD        | 2024-04-30 22:57:42.846 | added     |
-+-------+-------+-----------+----------------------------+---------+---------+-------------+-------------------------+-----------+
+ to_pk | to_c1 | to_commit | to_commit_date             | from_pk | from_c1 | from_commit | from_commit_date        | diff_type
+-------+-------+-----------+----------------------------+---------+---------+-------------+-------------------------+-----------
+ 3     | 0     | WORKING   | 2024-04-30 22:59:20.504853 |         |         | HEAD        | 2024-04-30 22:57:42.846 | added
+(1 row)
 ```
 
 ### Reset a change to your working set
@@ -59,13 +57,12 @@ select * from dolt_diff('HEAD', 'WORKING', 'docs');
 ```sql
 select dolt_reset('--hard');
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+(3 rows)
 ```
 
 ### Checkout a branch
@@ -73,28 +70,25 @@ select * from docs;
 ```sql
 insert into docs values (4,4);
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 0  |
-| 4  | 4  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+ 3  | 0
+ 4  | 4
+(5 rows)
 select dolt_checkout('branch2');
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
+ status
+--------
+ 0
+(1 row)
 select * from docs ;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 0  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+ 3  | 0
+(4 rows)
 ```
