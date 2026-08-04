@@ -9,9 +9,8 @@ the feature you're looking for.
 
 The list is grouped by extension kind:
 
-- [Version-Control Functions](#version-control-functions) — write-side
-  operations equivalent to Dolt CLI commands (`dolt_commit`,
-  `dolt_merge`, `dolt_push`, …). Invoke with `SELECT`.
+- [Version-Control Functions](#version-control-functions) — functions to commit or alter versioned
+  data such as `dolt_commit`, `dolt_merge`, `dolt_push`, …). Invoke with `SELECT`.
 - [Informational Functions](#informational-functions) — scalar functions
   that return repository state (active branch, ref hashes, version, …).
 - [Table Functions](#table-functions) — used in a `FROM` clause to
@@ -26,9 +25,7 @@ sheet](/guides/cheat-sheet).
 
 ## Version-Control Functions
 
-Function equivalents of `dolt` CLI commands. These modify state — call
-each with `SELECT … FROM` (Doltgres-style) for the same effect that
-`CALL DOLT_X()` has in Dolt. Full details:
+These modify state — invoke each with `SELECT … FROM`. Full details:
 [Functions](/reference/version-control/dolt-sql-functions).
 
 | Name | Description |
@@ -127,6 +124,7 @@ Variables](/reference/version-control/dolt-sysvars).
 | [`dolt_allow_commit_conflicts`](/reference/version-control/dolt-sysvars#dolt_allow_commit_conflicts) | Permit committing a working set with unresolved conflicts. |
 | [`dolt_async_replication`](/reference/version-control/dolt-sysvars#dolt_async_replication) | Push to the replication remote asynchronously instead of synchronously. |
 | [`dolt_force_transaction_commit`](/reference/version-control/dolt-sysvars#dolt_force_transaction_commit) | Force the transaction commit even when it would violate constraints. |
+| [`dolt_log_level`](/reference/version-control/dolt-sysvars#dolt_log_level) | Doltgres's server-side log verbosity. |
 | [`dolt_override_schema`](/reference/version-control/dolt-sysvars#dolt_override_schema) | Use a specific schema name regardless of the working-set HEAD. |
 | [`dolt_read_replica_force_pull`](/reference/version-control/dolt-sysvars#dolt_read_replica_force_pull) | Force read replicas to fast-forward even on history divergence. |
 | [`dolt_read_replica_remote`](/reference/version-control/dolt-sysvars#dolt_read_replica_remote) | Configure this server as a read replica of the named remote. |

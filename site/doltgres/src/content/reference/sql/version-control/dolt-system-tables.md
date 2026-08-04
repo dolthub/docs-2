@@ -800,9 +800,6 @@ postgres=> select * from public.dolt_schemas;
 database statistics. This information is stored outside of the
 commit graph and is not subject to versioning semantics.
 
-> **Known limitation:** The `dolt_statistics` table is not yet queryable in Doltgres, although
-> `ANALYZE` itself works to collect statistics.
-
 #### Schema
 
 ```sql
@@ -962,12 +959,6 @@ that can be queried to see a diff of the data in the specified table between **a
 For example, you can use this system table to view the diff between two commits on different branches.
 The schema of the returned data from this system table is based on the schema of the underlying user table
 at the currently checked out branch.
-
-> **Known limitation:** Queries against `dolt_commit_diff_$TABLENAME` tables do not currently work
-> in Doltgres. These tables must be filtered to a single `to_commit` value, and that filtering is
-> currently broken. Use the [`dolt_diff()` table
-> function](/reference/version-control/dolt-sql-functions#dolt_diff) or the
-> [`dolt_diff_$TABLENAME`](#dolt_diff_usdtablename) system table instead.
 
 You must provide `from_commit` and `to_commit` in all queries to this system table in order to specify the
 to and from points for the diff of your table data. Each returned row describes how a row in the underlying

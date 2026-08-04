@@ -31,8 +31,9 @@ runs some simple queries, verifies the output comes back as expected, and closes
 
 ## Supported clients
 
-Doltgres client support and tests for compatibility are still being built out. If you have a
-particular client you would like to see supported, please let us know by [filing an
+The following clients are tested and known to work with Doltgres. Other clients will also probably
+work, but aren't yet tested by our integration test suite. If you discover the client or library you
+need doesn't work, please let us know by [filing an
 issue](https://github.com/dolthub/doltgresql/issues).
 
 ## Java

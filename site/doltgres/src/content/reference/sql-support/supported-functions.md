@@ -923,7 +923,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | bit_xor                       | ❌         |                            |
 | bool_and                      | ✅         |                            |
 | bool_or                       | ✅         |                            |
-| count                         | ✅         | count(*) is native; count(expression) is available with MySQL semantics via the underlying engine, which match PostgreSQL |
+| count                         | ✅         |  |
 | every                         | ❌         |                            |
 | json_agg                      | ❌         |                            |
 | json_agg_strict               | ❌         |                            |
@@ -933,8 +933,8 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | json_object_agg_strict        | ❌         |                            |
 | json_object_agg_unique        | ❌         |                            |
 | json_object_agg_unique_strict | ❌         |                            |
-| max                           | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
-| min                           | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
+| max                           | ✅         |  |
+| min                           | ✅         |  |
 | range_agg                     | ❌         |                            |
 | range_intersect_agg           | ❌         |                            |
 | string_agg                    | ✅         |                            |
@@ -960,10 +960,10 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | regr_sxy       | ❌         |                       |
 | regr_syy       | ❌         |                       |
 | stddev         | 🟠        | Available with MySQL semantics via the underlying engine, which compute the population standard deviation; PostgreSQL computes the sample standard deviation |
-| stddev_pop     | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
-| stddev_samp    | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
+| stddev_pop     | ✅         |  |
+| stddev_samp    | ✅         |  |
 | variance       | 🟠        | Available with MySQL semantics via the underlying engine, which compute the population variance; PostgreSQL computes the sample variance |
-| var_pop        | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL |
+| var_pop        | ✅         |  |
 | var_samp       | ❌         |                       |
 
 ## Ordered-Set Aggregate Functions
@@ -1001,17 +1001,17 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function     | Supported | Notes and limitations |
 |:-------------|:----------|:----------------------|
-| row_number   | ✅         |                       |
-| rank         | ✅         |                       |
-| dense_rank   | ✅         |                       |
-| percent_rank | ✅         |                       |
-| cume_dist    | ❌         |                       |
-| ntile        | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
-| lag          | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
-| lead         | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
-| first_value  | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
-| last_value   | ✅         | Available with MySQL semantics via the underlying engine, which match PostgreSQL for typical usage |
-| nth_value    | ❌         |                       |
+| row_number   | ✅        |                       |
+| rank         | ✅        |                       |
+| dense_rank   | ✅        |                       |
+| percent_rank | ✅        |                       |
+| cume_dist    | ❌        |                       |
+| ntile        | ✅        |                       |
+| lag          | ✅        |                       |
+| lead         | ✅        |                       |
+| first_value  | ✅        |                       |
+| last_value   | ✅        |                       |
+| nth_value    | ❌        |                       |
 
 ## Merge Support Functions
 
