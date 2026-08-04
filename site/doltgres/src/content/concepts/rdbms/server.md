@@ -30,8 +30,10 @@ to the same branch see the same branch state.
 
 ```bash
 doltgres
-Starting server with Config HP="localhost:3306"|T="28800000"|R="false"|L="info"
+INFO[0000] Server ready. Accepting connections.
 ```
+
+The server listens on port `5432` by default.
 
 ### Connect a client
 

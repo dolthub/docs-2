@@ -52,7 +52,7 @@ create table keyed (c1 int, c2 int, c3 int, c4 int, primary key(c1, c2));
 ### Alter a table's primary keys
 
 ```sql
-alter table keyed drop primary key;
+alter table keyed drop constraint keyed_pkey;
 alter table keyed add primary key(c1);
 ```
 
@@ -67,25 +67,22 @@ create table keyless (c1 int, c2 int, c3 int, c4 int);
 ```sql
 insert into keyed values (0,0,0,0), (1,1,1,1), (2,2,2,2);
 insert into keyless values (0,0,0,0), (1,1,1,1), (2,2,2,2);
-select dolt_commit('-am', 'Inserted values');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| 089j3jom08iauhbmbl0mhur8pgsai6nh |
-+----------------------------------+
+select * from dolt_commit('-am', 'Inserted values');
+               hash
+----------------------------------
+ 089j3jom08iauhbmbl0mhur8pgsai6nh
+(1 row)
 update keyed set c4=10 where c1=2;
 select * from dolt_diff_keyed where to_commit='WORKING';
-+-------+-------+-------+-------+-----------+----------------+---------+---------+---------+---------+----------------------------------+-------------------------+-----------+
-| to_c2 | to_c4 | to_c1 | to_c3 | to_commit | to_commit_date | from_c2 | from_c4 | from_c1 | from_c3 | from_commit                      | from_commit_date        | diff_type |
-+-------+-------+-------+-------+-----------+----------------+---------+---------+---------+---------+----------------------------------+-------------------------+-----------+
-| 2     | 10    | 2     | 2     | WORKING   | NULL           | 2       | 2       | 2       | 2       | 089j3jom08iauhbmbl0mhur8pgsai6nh | 2022-06-21 22:00:52.081 | modified  |
-+-------+-------+-------+-------+-----------+----------------+---------+---------+---------+---------+----------------------------------+-------------------------+-----------+
+ to_c2 | to_c4 | to_c1 | to_c3 | to_commit | to_commit_date | from_c2 | from_c4 | from_c1 | from_c3 | from_commit                      | from_commit_date        | diff_type
+-------+-------+-------+-------+-----------+----------------+---------+---------+---------+---------+----------------------------------+-------------------------+-----------
+ 2     | 10    | 2     | 2     | WORKING   |                | 2       | 2       | 2       | 2       | 089j3jom08iauhbmbl0mhur8pgsai6nh | 2022-06-21 22:00:52.081 | modified
+(1 row)
 update keyless set c4=10 where c1=2;
 select * from dolt_diff_keyless where to_commit='WORKING';
-+-------+-------+-------+-------+-----------+----------------+---------+---------+---------+---------+----------------------------------+-------------------------+-----------+
-| to_c2 | to_c4 | to_c3 | to_c1 | to_commit | to_commit_date | from_c2 | from_c4 | from_c3 | from_c1 | from_commit                      | from_commit_date        | diff_type |
-+-------+-------+-------+-------+-----------+----------------+---------+---------+---------+---------+----------------------------------+-------------------------+-----------+
-| NULL  | NULL  | NULL  | NULL  | WORKING   | NULL           | 2       | 2       | 2       | 2       | 089j3jom08iauhbmbl0mhur8pgsai6nh | 2022-06-21 22:00:52.081 | removed   |
-| 2     | 10    | 2     | 2     | WORKING   | NULL           | NULL    | NULL    | NULL    | NULL    | 089j3jom08iauhbmbl0mhur8pgsai6nh | 2022-06-21 22:00:52.081 | added     |
-+-------+-------+-------+-------+-----------+----------------+---------+---------+---------+---------+----------------------------------+-------------------------+-----------+
+ to_c2 | to_c4 | to_c3 | to_c1 | to_commit | to_commit_date | from_c2 | from_c4 | from_c3 | from_c1 | from_commit                      | from_commit_date        | diff_type
+-------+-------+-------+-------+-----------+----------------+---------+---------+---------+---------+----------------------------------+-------------------------+-----------
+       |       |       |       | WORKING   |                | 2       | 2       | 2       | 2       | 089j3jom08iauhbmbl0mhur8pgsai6nh | 2022-06-21 22:00:52.081 | removed
+ 2     | 10    | 2     | 2     | WORKING   |                |         |         |         |         | 089j3jom08iauhbmbl0mhur8pgsai6nh | 2022-06-21 22:00:52.081 | added
+(2 rows)
 ```

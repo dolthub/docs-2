@@ -20,11 +20,11 @@ Doltgres consumes CPU, Memory, and Disk. Consuming more of any of these resource
 
 ## Set your log level to DEBUG or TRACE
 
-To see queries being run against the server, query results, and query latency set your Doltgres log level to `DEBUG` or `TRACE`. This can be done by starting the server like so `doltgres sql-server --loglevel=debug` or by setting `log_level: debug` in your `config.yaml`. Your logs should be visible in the shell you started `doltgres sql-server` in.
+To see queries being run against the server, query results, and query latency set your Doltgres log level to `DEBUG` or `TRACE`. This can be done by setting `log_level: debug` in your `config.yaml`. Your logs should be visible in the shell you started `doltgres` in.
 
 ## Compare to Postgres
 
-Doltgres strives to be 100% Postgres compatible. If you run a query that works in Postgres but does not work in Doltgres, it is a Doltgres bug and you should [submit an issue](#submitting-issues). You can dump your Doltgres database using the `pg_dump` tool and import the resulting file into Doltgres. Then test the query you think should work using any Postgres client.
+Doltgres strives to be 100% Postgres compatible. If you run a query that works in Postgres but does not work in Doltgres, it is a Doltgres bug and you should [submit an issue](#submitting-issues). You can dump your Doltgres database using the `pg_dump` tool and import the resulting file into PostgreSQL. Then test the query you think should work against both servers using any Postgres client and compare the results.
 
 ## Submitting Issues
 
@@ -38,7 +38,7 @@ Doltgres operational issues usually manifest as slow SQL queries. In rare occasi
 
 Doltgres creates disk garbage on write. This can sometimes become a substantial portion of the disk Doltgres is consuming. Doltgres ships with a garbage collection function. Running the garbage collection function can free disk.
 
-To run garbage collection online, run [`select dolt_gc()`](https://dolthub.com/docs/sql-reference/version-control/dolt-sql-procedures#dolt_gc). We are working on having this procedure run periodically in the background.
+To run garbage collection online, run [`select dolt_gc()`](/reference/version-control/dolt-sql-functions#dolt_gc). [Automatic garbage collection](/reference/server/garbage-collection#automated-gc) also runs periodically in the background by default.
 
 Disk garbage is especially pronounced after imports. We recommend concluding imports with a `select dolt_gc()` call.
 

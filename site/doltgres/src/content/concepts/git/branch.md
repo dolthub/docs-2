@@ -10,7 +10,7 @@ running transaction. If you have a set of database changes that logically should
 or reviewed together, you make those changes on a branch.
 
 A branch is a named reference that starts with a parent commit. When creating a branch you define
-it's parent commit and then effectively you have created a new copy of the Doltgres
+its parent commit and then effectively you have created a new copy of the Doltgres
 database. Changes to the branch only effect that branch. As you commit to the branch the head of the
 branch changes to the new commit.
 
@@ -48,12 +48,11 @@ branches.
 ```sql
 SELECT dolt_branch('new-branch');
 SELECT dolt_checkout('-b', 'check-out-new-branch');
-select * from dolt_branches;
-+----------------------+----------------------------------+------------------+------------------------+-----------------------------------+------------------------------+
-| name                 | hash                             | latest_committer | latest_committer_email | latest_commit_date                | latest_commit_message        |
-+----------------------+----------------------------------+------------------+------------------------+-----------------------------------+------------------------------+
-| check-out-new-branch | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table |
-| main                 | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table |
-| new-branch           | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table |
-+----------------------+----------------------------------+------------------+------------------------+-----------------------------------+------------------------------+
+select * from dolt.branches;
+ name                 | hash                             | latest_committer | latest_committer_email | latest_commit_date                | latest_commit_message
+----------------------+----------------------------------+------------------+------------------------+-----------------------------------+------------------------------
+ check-out-new-branch | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table
+ main                 | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table
+ new-branch           | f0ga78jrh4llc0uus8h2refopp6n870m | Tim Sehn         | tim@dolthub.com        | 2021-12-06 13:39:57.705 -0800 PST | Removed row from no_pk table
+(3 rows)
 ```

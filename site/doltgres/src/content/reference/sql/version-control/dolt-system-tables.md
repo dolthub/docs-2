@@ -50,8 +50,7 @@ title: Dolt System Tables
 
   - [Database History](#database-history-system-tables-1)
 
-    <!-- TODO: Uncomment when blame view query works - [dolt_blame\_$tablename](#dolt_blame_usdtablename) -->
-
+    - [dolt_blame\_$tablename](#dolt_blame_usdtablename)
     - [dolt_history\_$tablename](#dolt_history_usdtablename)
 
   - [Database Diffs](#database-diffs-1)
@@ -133,12 +132,12 @@ postgres=> select active_branch();
 
 `dolt.branches` only contains information about local branches. For
 branches on a remote you have fetched, see
-[`dolt.remote_branches`](#doltremote_branches).
+[`dolt.remote_branches`](#dolt.remote_branches).
 
 ### `dolt.remote_branches`
 
 `dolt.remote_branches` (also usable as `dolt_remote_branches`) contains information about branches on remotes
-you have fetched. It has a similar schema as `dolt_branches`, but the `remote`, `branch`, and `dirty` columns
+you have fetched. It has a similar schema as `dolt.branches`, but the `remote`, `branch`, and `dirty` columns
 don't make sense in this context and are not included. Only remote branches are included in this table.
 
 #### Schema
@@ -192,7 +191,7 @@ SELECT name, hash, latest_committer, latest_commit_date, latest_commit_message F
 postgres=> INSERT INTO dolt.docs VALUES ('README.md', '# README\nThis is more info about my README.');
 INSERT 0 1
 
-postgres> SELECT * FROM dolt.docs;
+postgres=> SELECT * FROM dolt.docs;
  doc_name  |                   doc_text
 -----------+----------------------------------------------
  README.md | # README\nThis is more info about my README.
@@ -214,14 +213,12 @@ than using this table directly.
 #### Schema
 
 ```text
-+-------------+----------+
-| field       | type     |
-+-------------+----------+
-| name        | longtext |
-| create_stmt | longtext |
-| created_at  | datetime |
-| modified_at | datetime |
-+-------------+----------+
+ field       | type
+-------------+----------
+ name        | longtext
+ create_stmt | longtext
+ created_at  | datetime
+ modified_at | datetime
 ```
 
 When using the standard `CREATE PROCEDURE` workflow, the `name` column
@@ -236,7 +233,7 @@ operations, such as `DROP PROCEDURE`.
 postgres=> CREATE PROCEDURE simple_proc1(x DOUBLE, y DOUBLE) AS SELECT x*y;
 postgres=> CREATE PROCEDURE simple_proc2() AS SELECT name FROM category;
 
-postgres> SELECT * FROM dolt.procedures;
+postgres=> SELECT * FROM dolt.procedures;
  name         |        create_stmt        |     created_at      |     modified_at
 --------------+---------------------------+---------------------+---------------------
  simple_proc1 | SELECT x*y                | 2024-11-14 00:11:39 | 2024-11-14 00:11:39
@@ -254,14 +251,12 @@ The `dolt.remotes` table is currently read only. Use the [`dolt_remote()` functi
 #### Schema
 
 ```text
-+-------------+------+------+-----+---------+-------+
-| Field       | Type | Null | Key | Default | Extra |
-+-------------+------+------+-----+---------+-------+
-| name        | text | NO   | PRI |         |       |
-| url         | text | NO   |     |         |       |
-| fetch_specs | json | YES  |     |         |       |
-| params      | json | YES  |     |         |       |
-+-------------+------+------+-----+---------+-------+
+ Field       | Type | Null | Key | Default | Extra
+-------------+------+------+-----+---------+-------
+ name        | text | NO   | PRI |         |
+ url         | text | NO   |     |         |
+ fetch_specs | json | YES  |     |         |
+ params      | json | YES  |     |         |
 ```
 
 #### Example Query
@@ -270,7 +265,7 @@ The `dolt.remotes` table is currently read only. Use the [`dolt_remote()` functi
 postgres=> SELECT dolt_remote('add', 'origin', 'file:///go/github.com/dolthub/doltgres/rem1');
  dolt_remote
 -------------
- {0}
+ 0
 (1 row)
 
 postgres=> SELECT * FROM dolt.remotes WHERE name = 'origin';
@@ -289,16 +284,14 @@ postgres=> SELECT * FROM dolt.remotes WHERE name = 'origin';
 #### Schema
 
 ```text
-+----------+----------+------+-----+---------+-------+
-| Field    | Type     | Null | Key | Default | Extra |
-+----------+----------+------+-----+---------+-------+
-| tag_name | text     | NO   | PRI | NULL    |       |
-| tag_hash | text     | NO   | PRI | NULL    |       |
-| tagger   | text     | NO   |     | NULL    |       |
-| email    | text     | NO   |     | NULL    |       |
-| date     | datetime | NO   |     | NULL    |       |
-| message  | text     | NO   |     | NULL    |       |
-+----------+----------+------+-----+---------+-------+
+ Field    | Type     | Null | Key | Default | Extra
+----------+----------+------+-----+---------+-------
+ tag_name | text     | NO   | PRI | NULL    |
+ tag_hash | text     | NO   | PRI | NULL    |
+ tagger   | text     | NO   |     | NULL    |
+ email    | text     | NO   |     | NULL    |
+ date     | datetime | NO   |     | NULL    |
+ message  | text     | NO   |     | NULL    |
 ```
 
 #### Example Query
@@ -309,7 +302,7 @@ Create a tag using the `dolt_tag()` function.
 postgres=> SELECT DOLT_TAG('_migrationtest', 'head', '-m', 'savepoint for migration testing');
  dolt_tag
 ----------
- {0}
+ 0
 (1 row)
 ```
 
@@ -337,13 +330,11 @@ commit of the database has a `NULL` parent. For merge commits, the merge base wi
 merged will have `parent_index` 1.
 
 ```text
-+--------------+------+------+-----+---------+-------+
-| Field        | Type | Null | Key | Default | Extra |
-+--------------+------+------+-----+---------+-------+
-| commit_hash  | text | NO   | PRI |         |       |
-| parent_hash  | text | NO   | PRI |         |       |
-| parent_index | int  | NO   | PRI |         |       |
-+--------------+------+------+-----+---------+-------+
+ Field        | Type | Null | Key | Default | Extra
+--------------+------+------+-----+---------+-------
+ commit_hash  | text | NO   | PRI |         |
+ parent_hash  | text | NO   | PRI |         |
+ parent_index | int  | NO   | PRI |         |
 ```
 
 #### Example Query
@@ -362,7 +353,7 @@ postgres=> SELECT * FROM dolt.commit_ancestors WHERE commit_hash=HASHOF('HEAD');
 
 The `dolt.commits` (also usable as `dolt_commits`) system table shows _ALL_ commits in a Dolt database.
 
-This is similar, but different from the `dolt.log` [system table](#doltlog)
+This is similar, but different from the `dolt.log` [system table](#dolt.log)
 and the `dolt log` [CLI command](https://dolthub.com/docs/cli-reference/cli#dolt-log).
 `dolt.log` shows you commit history for all commit ancestors reachable from the current `HEAD` of the
 checked out branch, whereas `dolt.commits` shows all commits from the entire database, no matter which branch is checked out.
@@ -432,7 +423,7 @@ The `dolt.diff` (also usable as `dolt_diff`) system table shows which tables in 
 
 #### Schema
 
-The `DOLT.DIFF` system table has the following columns
+The `dolt.diff` system table has the following columns
 
 ```sql
      Field     |    Type    | Null | Key | Default | Extra
@@ -459,7 +450,7 @@ between November 28 and December 3, 2024.
 
 ```sql
 postgres=> SELECT commit_hash, table_name, data_change, schema_change
-FROM dolt_diff
+FROM dolt.diff
 WHERE date BETWEEN '2024-11-28' AND '2024-12-03';
            commit_hash            |    table_name    | data_change | schema_change
 ----------------------------------+------------------+-------------+---------------
@@ -519,7 +510,7 @@ The following query uses the `dolt.column_diff` system table to find commits and
 
 ```sql
 postgres=> SELECT commit_hash, date
-FROM dolt_column_diff where column_name = 'start_date';
+FROM dolt.column_diff where column_name = 'start_date';
            commit_hash            |        date
 ----------------------------------+---------------------
  j5b0a0bvpgjgkva0mq8eft0nvl4394gn | 2024-12-02 21:36:17
@@ -559,10 +550,10 @@ conflict.
 #### Schema
 
 ```sql
-     Field     |      Type       | Null | Key | Default | Extra
----------------+-----------------+------+-----+---------+-------
- table         | text            | NO   | PRI |         |
- num_conflicts | bigint unsigned | NO   |     |         |
+     Field     |  Type   | Null | Key | Default | Extra
+---------------+---------+------+-----+---------+-------
+ table         | text    | NO   | PRI |         |
+ num_conflicts | numeric | NO   |     |         |
 ```
 
 Query this table when resolving conflicts in a SQL session. For more information on resolving merge conflicts in SQL,
@@ -589,16 +580,16 @@ set that has an unresolved schema conflict.
 
 ```sql
 postgres=> SELECT table_name, description, base_schema, our_schema, their_schema FROM dolt.schema_conflicts;
- table_name |              description             |                            base_schema                            |                            our_schema                             |                             their_schema
-------------+--------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+--------------------------------------------------------------------
- people     | different column definitions for our | CREATE TABLE "people" (                                           | CREATE TABLE "people" (                                           | CREATE TABLE "people" (
-            | column age and their column age      |   "id" int NOT NULL,                                              |   "id" int NOT NULL,                                              |   "id" int NOT NULL,
-            |                                      |   "last_name" varchar(120),                                       |   "last_name" varchar(120),                                       |   "last_name" varchar(120),
-            |                                      |   "first_name" varchar(120),                                      |   "first_name" varchar(120),                                      |   "first_name" varchar(120),
-            |                                      |   "birthday" datetime(6),                                         |   "birthday" datetime(6),                                         |   "birthday" datetime(6),
-            |                                      |   "age" int DEFAULT '0',                                          |   "age" float,                                                    |   "age" bigint,
-            |                                      |   PRIMARY KEY ("id")                                              |   PRIMARY KEY ("id")                                              |   PRIMARY KEY ("id")
-            |                                      | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+ table_name |             description               |          base_schema          |          our_schema           |         their_schema
+------------+---------------------------------------+-------------------------------+-------------------------------+-------------------------------
+ people     | different column definitions for our  | CREATE TABLE "people" (       | CREATE TABLE "people" (       | CREATE TABLE "people" (
+            | column age and their column age       |   "id" integer NOT NULL,      |   "id" integer NOT NULL,      |   "id" integer NOT NULL,
+            |                                       |   "last_name" varchar(120),   |   "last_name" varchar(120),   |   "last_name" varchar(120),
+            |                                       |   "first_name" varchar(120),  |   "first_name" varchar(120),  |   "first_name" varchar(120),
+            |                                       |   "birthday" timestamp,       |   "birthday" timestamp,       |   "birthday" timestamp,
+            |                                       |   "age" integer DEFAULT 0,    |   "age" real,                 |   "age" bigint,
+            |                                       |   PRIMARY KEY ("id")          |   PRIMARY KEY ("id")          |   PRIMARY KEY ("id")
+            |                                       | );                            | );                            | );
 (1 row)
 ```
 
@@ -688,10 +679,10 @@ merge base could be referenced via a foreign key constraint by an added row in t
 #### Schema
 
 ```sql
-     Field      |      Type       | Null | Key | Default | Extra
-----------------+-----------------+------+-----+---------+-------
- table          | text            | NO   | PRI |         |
- num_violations | bigint unsigned | NO   |     |         |
+     Field      |  Type   | Null | Key | Default | Extra
+----------------+---------+------+-----+---------+-------
+ table          | text    | NO   | PRI |         |
+ num_violations | numeric | NO   |     |         |
 ```
 
 ## Rebasing Tables
@@ -766,17 +757,17 @@ than using this table directly.
 #### Schema
 
 ```sql
-  Field   |                  Type                   | Null | Key | Default | Extra
-----------+-----------------------------------------+------+-----+---------+-------
- type     | varchar(64) COLLATE utf8mb4_0900_ai_ci  | NO   | PRI |         |
- name     | varchar(64) COLLATE utf8mb4_0900_ai_ci  | NO   | PRI |         |
- fragment | longtext                                | YES  |     |         |
- extra    | json                                    | YES  |     |         |
- sql_mode | varchar(256) COLLATE utf8mb4_0900_ai_ci | YES  |     |         |
+  Field   | Type | Null | Key | Default | Extra
+----------+------+------+-----+---------+-------
+ type     | text | NO   | PRI |         |
+ name     | text | NO   | PRI |         |
+ fragment | text | YES  |     |         |
+ extra    | json | YES  |     |         |
+ sql_mode | text | YES  |     |         |
 ```
 
-Currently, all `VIEW`, `TRIGGER` and `EVENT` definitions are stored in the `dolt_schemas` table.
-The column `type` defines whether the fragment is `view`, `trigger` or `event`.
+Currently, `VIEW` definitions are stored in the `dolt_schemas` table, and the `type` column
+is always `view`.
 The column `name` is the fragment name as supplied in the `CREATE` statement.
 The column `fragment` stores the `CREATE` statement of the fragment. The column
 `json` is any additional important information such as `CreateAt` field
@@ -846,13 +837,13 @@ Tables without primary keys will not have an associated `dolt_blame_$tablename`.
 The `dolt_blame_$tablename` system view has the following columns:
 
 ```sql
-    Field    |   Type   | Null | Key | Default | Extra
--------------+----------+------+-----+---------+-------
- commit      | longtext | YES  |     |         |
- commit_date | datetime | YES  |     |         |
- committer   | text     | NO   |     |         |
- email       | text     | NO   |     |         |
- message     | text     | NO   |     |         |
+    Field    |   Type    | Null | Key | Default | Extra
+-------------+-----------+------+-----+---------+-------
+ commit      | text      | YES  |     |         |
+ commit_date | timestamp | YES  |     |         |
+ committer   | text      | NO   |     |         |
+ email       | text      | NO   |     |         |
+ message     | text      | NO   |     |         |
 [primary key cols]
 ```
 
@@ -889,7 +880,7 @@ To find who set the current values, we can query the `dolt_blame_employees` tabl
 ```sql
 postgres=> select * from public.dolt_blame_employees limit 5;
    id  |               commit             |     commit_date     | committer  |        email         |  message
--------+----------------------------------+---------------------+-----------------------------------+-------------
+-------+----------------------------------+---------------------+------------+----------------------+---------
  1     | o697ec6a39ocek9bq4vt87o3qd2bu8l0 | 2024-11-14 00:11:39 | postgres   | postgres@127.0.0.1   |  add table
  2     | o697ec6a39ocek9bq4vt87o3qd2bu8l0 | 2024-11-14 00:11:39 | postgres   | postgres@127.0.0.1   |  add table
  3     | o697ec6a39ocek9bq4vt87o3qd2bu8l0 | 2024-11-14 00:11:39 | postgres   | postgres@127.0.0.1   |  add table
@@ -909,11 +900,11 @@ Every Dolt history table contains columns for `commit_hash`, `committer`, and `c
 from the user table's schema at the current checked out branch.
 
 ```sql
-    Field    |                        Type                         | Null | Key | Default | Extra
--------------+-----------------------------------------------------+------+-----+---------+-------
- commit_hash | char(32) CHARACTER SET ascii COLLATE ascii_bin      | NO   | MUL |         |
- committer   | varchar(1024) CHARACTER SET ascii COLLATE ascii_bin | NO   |     |         |
- commit_date | datetime                                            | NO   |     |         |
+    Field    |   Type    | Null | Key | Default | Extra
+-------------+-----------+------+-----+---------+-------
+ commit_hash | text      | NO   | MUL |         |
+ committer   | text      | NO   |     |         |
+ commit_date | timestamp | NO   |     |         |
 [other cols]
 ```
 
@@ -930,12 +921,12 @@ Consider a table named `mytable` with the following schema:
 The schema for `dolt_history_states` would be:
 
 ```sql
-    Field    |                        Type                         | Null | Key | Default | Extra
--------------+-----------------------------------------------------+------+-----+---------+-------
- x           | integer                                             | NO   | PRI |         |
- commit_hash | char(32) CHARACTER SET ascii COLLATE ascii_bin      | NO   | MUL |         |
- committer   | varchar(1024) CHARACTER SET ascii COLLATE ascii_bin | NO   |     |         |
- commit_date | datetime                                            | NO   |     |         |
+    Field    |   Type    | Null | Key | Default | Extra
+-------------+-----------+------+-----+---------+-------
+ x           | integer   | NO   | PRI |         |
+ commit_hash | text      | NO   | MUL |         |
+ committer   | text      | NO   |     |         |
+ commit_date | timestamp | NO   |     |         |
 ```
 
 #### Example Query
@@ -992,11 +983,11 @@ instead of using the schema from the currently checked out branch.
 ```sql
       Field       |     Type      | Null | Key | Default | Extra
 ------------------+---------------+------+-----+---------+-------
- to_commit        | varchar(1023) | YES  | MUL |         |
- to_commit_date   | datetime(6)   | YES  |     |         |
- from_commit      | varchar(1023) | YES  |     |         |
- from_commit_date | datetime(6)   | YES  |     |         |
- diff_type        | varchar(1023) | YES  |     |         |
+ to_commit        | text          | YES  | MUL |         |
+ to_commit_date   | timestamp     | YES  |     |         |
+ from_commit      | text          | YES  |     |         |
+ from_commit_date | timestamp     | YES  |     |         |
+ diff_type        | text          | YES  |     |         |
  [other cols]
 ```
 
@@ -1021,12 +1012,12 @@ Based on the table's schema above, the schema of the `dolt_commit_diff_$TABLENAM
       Field       |     Type      | Null | Key | Default | Extra
 ------------------+---------------+------+-----+---------+-------
  to_x             | integer       | YES  |     |         |
- to_commit        | varchar(1023) | YES  | MUL |         |
- to_commit_date   | datetime(6)   | YES  |     |         |
+ to_commit        | text          | YES  | MUL |         |
+ to_commit_date   | timestamp     | YES  |     |         |
  from_x           | integer       | YES  |     |         |
- from_commit      | varchar(1023) | YES  |     |         |
- from_commit_date | datetime(6)   | YES  |     |         |
- diff_type        | varchar(1023) | YES  |     |         |
+ from_commit      | text          | YES  |     |         |
+ from_commit_date | timestamp     | YES  |     |         |
+ diff_type        | text          | YES  |     |         |
 ```
 
 #### Query Details
@@ -1069,7 +1060,7 @@ computes the closest ancestor E between `main` and `feature`.
 
 There is one special `to_commit` value `WORKING` which can be used to
 see what changes are in the working set that have yet to be committed
-to HEAD. It is often useful to use [the `HASHOF()` function](/reference/version-control/dolt-sql-functions#hashof)
+to HEAD. It is often useful to use [the `HASHOF()` function](/reference/version-control/dolt-sql-functions#dolt_hashof)
 to get the commit hash of a branch, or an ancestor commit. The above table
 requires both `from_commit` and `to_commit` to be filled.
 
@@ -1099,11 +1090,11 @@ Every Dolt diff table will have the columns
 ```sql
       Field       |     Type      | Null | Key | Default | Extra
 ------------------+---------------+------+-----+---------+-------
- to_commit        | varchar(1023) | YES  | MUL |         |
- to_commit_date   | datetime(6)   | YES  |     |         |
- from_commit      | varchar(1023) | YES  |     |         |
- from_commit_date | datetime(6)   | YES  |     |         |
- diff_type        | varchar(1023) | YES  |     |         |
+ to_commit        | text          | YES  | MUL |         |
+ to_commit_date   | timestamp     | YES  |     |         |
+ from_commit      | text          | YES  |     |         |
+ from_commit_date | timestamp     | YES  |     |         |
+ diff_type        | text          | YES  |     |         |
  [other cols]
 ```
 
@@ -1132,14 +1123,14 @@ The schema for `dolt_diff_states` would be:
  to_state         | varchar(2)    | YES  | UNI |         |
  to_population    | bigint        | YES  |     |         |
  to_area          | bigint        | YES  |     |         |
- to_commit        | varchar(1023) | YES  | UNI |         |
- to_commit_date   | datetime(6)   | YES  |     |         |
+ to_commit        | text          | YES  | UNI |         |
+ to_commit_date   | timestamp     | YES  |     |         |
  from_state       | varchar(2)    | YES  |     |         |
  from_population  | bigint        | YES  |     |         |
  from_area        | bigint        | YES  |     |         |
- from_commit      | varchar(1023) | YES  | UNI |         |
- from_commit_date | datetime(6)   | YES  |     |         |
- diff_type        | varchar(1023) | YES  |     |         |
+ from_commit      | text          | YES  | UNI |         |
+ from_commit_date | timestamp     | YES  |     |         |
+ diff_type        | text          | YES  |     |         |
 ```
 
 #### Query Details
@@ -1150,7 +1141,7 @@ history. Using `to_commit` or `from_commit` will limit the data to
 specific commits. There is one special `to_commit` value `WORKING`
 which can be used to see what changes are in the working set that have
 yet to be committed to HEAD. It is often useful to use the
-[`HASHOF()`](/reference/version-control/dolt-sql-functions#hashof)
+[`HASHOF()`](/reference/version-control/dolt-sql-functions#dolt_hashof)
 function to get the commit hash of a branch, or an ancestor
 commit. For example, to get the differences between the last commit and its parent
 you could use `to_commit=HASHOF('HEAD') and from_commit=HASHOF('HEAD^')`.
@@ -1218,12 +1209,13 @@ postgres=> delete from public.dolt_conflicts_mytable;
 If I wanted to keep all `their` values, I would first run this statement:
 
 ```sql
-postgres=> replace into mytable (select their_x, their_y from public.dolt_conflicts_mytable);
+postgres=> insert into mytable (select their_x, their_y from public.dolt_conflicts_mytable)
+           on conflict (x) do update set y = excluded.y;
 ```
 
 For convenience, you can also modify the `our_` columns of the
 `dolt_conflicts_mytable` to update the corresponding row in `mytable`. The above
-replace statement can be rewritten as:
+insert statement can be rewritten as:
 
 ```sql
 postgres=> update public.dolt_conflicts_mytable set our_x = their_x, our_y = their_y;
@@ -1253,7 +1245,7 @@ And of course you can use any combination of `ours`, `theirs` and
 
 This system table shows you which rows have been changed in your workspace and if they are staged.
 It is the union of rows changed from HEAD to STAGED, and STAGED to WORKING. Any table listed in
-`dolt_status` table will have a non-empty corresponding `dolt_workspace_$TABLENAME` table. Changes
+`dolt.status` table will have a non-empty corresponding `dolt_workspace_$TABLENAME` table. Changes
 listed are all relative to the HEAD of the current branch.
 
 These tables can be modified in order to update what changes are staged for commit.
@@ -1334,13 +1326,13 @@ For a hypothetical table `mytable` with the following schema:
 `dolt_constraint_violations_mytable` will have the following schema:
 
 ```sql
-     Field      |       Type      | Null | Key | Default | Extra
-----------------+-----------------+------+-----+---------+-------
- from_root_ish  | varchar(1023)   | YES  |     |         |
- violation_type | varchar(16)     | NO   | PRI |         |
- x              | integer         | NO   | PRI |         |
- y              | integer         | YES  |     |         |
- violation_info | json            | YES  |     |         |
+     Field      |    Type     | Null | Key | Default | Extra
+----------------+-------------+------+-----+---------+-------
+ from_root_ish  | text        | YES  |     |         |
+ violation_type | varchar(16) | NO   | PRI |         |
+ x              | integer     | NO   | PRI |         |
+ y              | integer     | YES  |     |         |
+ violation_info | json        | YES  |     |         |
 ```
 
 Each row in the table represents a row in the primary table that is in violation of one or more constraint violations.
@@ -1400,4 +1392,5 @@ postgres=> SELECT * FROM dolt.status;
 ----------------------------+--------+-----------
  public.foo                 | t      | new table
  public.generated_exception | t      | new table
+(2 rows)
 ```

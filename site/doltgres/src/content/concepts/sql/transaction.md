@@ -5,7 +5,7 @@ title: Transactions
 
 ## What is a Transaction?
 
-A transaction is the unit of change isolation is a database.
+A transaction is the unit of change isolation in a database.
 
 ## How to use Transactions
 
@@ -36,41 +36,38 @@ may not be merged.
 
 Note, you can make every transaction `COMMIT` a Doltgres commit by setting the [system
 variable](/concepts/sql/system-variables),
-[`@@dolt_transaction_commit`](/reference/version-control/dolt-sysvars#dolt_transaction_commit)
+[`dolt_transaction_commit`](/reference/version-control/dolt-sysvars#dolt_transaction_commit)
 
 ## Example
 
 ```sql
 BEGIN;
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 0  |
-| 4  | 4  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+ 3  | 0
+ 4  | 4
+(5 rows)
 delete from docs where pk=4;
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 0  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+ 3  | 0
+(4 rows)
 database=# rollback;
 database=# select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 0  |
-| 4  | 4  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+ 3  | 0
+ 4  | 4
+(5 rows)
 ```

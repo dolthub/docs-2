@@ -29,8 +29,8 @@ changed since the last time you read it, log is useful in verifying this.
 
 ## Difference between Git log and Doltgres log
 
-Conceptually and practically log on the command line is very similar between Git and Doltgres. A
-table is akin to a file in Git.
+Conceptually, log is very similar between Git and Doltgres. In Doltgres, you access the log with a
+SQL query like `SELECT * FROM dolt.log`. A table is akin to a file in Git.
 
 Doltgres has additional log functionality beyond Git. You can produce a log of any cell (i.e. row,
 column pair) in the database using a SQL query against the `dolt_history_<tablename>` system table.
@@ -40,26 +40,24 @@ column pair) in the database using a SQL query against the `dolt_history_<tablen
 ### Commit Log
 
 ```sql
-select * from dolt_log;
-+----------------------------------+-----------+------------------+-----------------------------------+----------------------------+
-| commit_hash                      | committer | email            | date                              | message                    |
-+----------------------------------+-----------+------------------+-----------------------------------+----------------------------+
-| u73s2mb1ho4mj1ldkof939vampo93bld | Tim Sehn  | tim@dolthub.com  | 2021-12-06 10:45:11.148 -0800 PST | This is a commit           |
-| bo318l76dq3bdvu1ie84d4nmv4hpi4km | Tim Sehn  | tim@dolthub.com | 2021-12-02 16:55:00.101 -0800 PST | This is a commit           |
-| jcj6q9c9nsveh72eadsms9i9k9ii1e55 | Tim Sehn  | tim@dolthub.com | 2021-12-02 16:54:35.87 -0800 PST  | Initialize data repository |
-+----------------------------------+-----------+------------------+-----------------------------------+----------------------------+
+select * from dolt.log;
+ commit_hash                      | committer | email           | date                              | message
+----------------------------------+-----------+-----------------+-----------------------------------+----------------------------
+ u73s2mb1ho4mj1ldkof939vampo93bld | Tim Sehn  | tim@dolthub.com | 2021-12-06 10:45:11.148 -0800 PST | This is a commit
+ bo318l76dq3bdvu1ie84d4nmv4hpi4km | Tim Sehn  | tim@dolthub.com | 2021-12-02 16:55:00.101 -0800 PST | This is a commit
+ jcj6q9c9nsveh72eadsms9i9k9ii1e55 | Tim Sehn  | tim@dolthub.com | 2021-12-02 16:54:35.87 -0800 PST  | Initialize data repository
+(3 rows)
 ```
 
 ### Cell History
 
 ```sql
 select * from dolt_history_employees where id=0 order by commit_date;
-+------+-----------+------------+------------+----------------------------------+-----------+-------------------------+
-| id   | last_name | first_name | start_date | commit_hash                      | committer | commit_date             |
-+------+-----------+------------+------------+----------------------------------+-----------+-------------------------+
-|    0 | Sehn      | Tim        | NULL       | 13qfqa5rojq18j84d1n2htjkm6fletg4 | Tim Sehn  | 2022-06-07 16:39:32.066 |
-|    0 | Sehn      | Timothy    | NULL       | uhkv57j4bp2v16vcnmev9lshgkqq8ppb | Tim Sehn  | 2022-06-07 16:41:49.847 |
-|    0 | Sehn      | Tim        | 2018-09-08 | pg3nfi0j1dpc5pf1rfgckpmlteaufdrt | Tim Sehn  | 2022-06-07 16:44:37.513 |
-|    0 | Sehn      | Timothy    | 2018-09-08 | vn9b0qcematsj2f6ka0hfoflhr5s6p0b | Tim Sehn  | 2022-06-07 17:10:02.07  |
-+------+-----------+------------+------------+----------------------------------+-----------+-------------------------+
+ id | last_name | first_name | start_date | commit_hash                      | committer | commit_date
+----+-----------+------------+------------+----------------------------------+-----------+-------------------------
+ 0  | Sehn      | Tim        |            | 13qfqa5rojq18j84d1n2htjkm6fletg4 | Tim Sehn  | 2022-06-07 16:39:32.066
+ 0  | Sehn      | Timothy    |            | uhkv57j4bp2v16vcnmev9lshgkqq8ppb | Tim Sehn  | 2022-06-07 16:41:49.847
+ 0  | Sehn      | Tim        | 2018-09-08 | pg3nfi0j1dpc5pf1rfgckpmlteaufdrt | Tim Sehn  | 2022-06-07 16:44:37.513
+ 0  | Sehn      | Timothy    | 2018-09-08 | vn9b0qcematsj2f6ka0hfoflhr5s6p0b | Tim Sehn  | 2022-06-07 17:10:02.07
+(4 rows)
 ```

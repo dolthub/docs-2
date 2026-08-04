@@ -25,5 +25,12 @@ yet supported, and running `select dolt_gc()` on the replica will fail.
 
 ## Automated GC
 
-Automated garbage collection is currently experimental and will be enabled by default in a release
-later this year. Check back for details.
+Automatic garbage collection is enabled by default: the server periodically runs garbage collection
+in the background without any configuration. If you want to disable it, set the following in your
+[config.yaml](/reference/server/configuration):
+
+```yaml
+behavior:
+  auto_gc_behavior:
+    enable: false
+```

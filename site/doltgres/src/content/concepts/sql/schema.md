@@ -48,4 +48,4 @@ now.
 
 Doltgres versions your schema and data. So, if you want to see the difference between the schema of
 two different versions, Doltgres provides this using `diff` functionality. See individual
-SQLconcepts for how Doltgres handles each individual schema element with regards to versioning.
+SQL concepts for how Doltgres handles each individual schema element with regards to versioning.

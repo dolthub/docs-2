@@ -12,7 +12,7 @@ commit, the commit will have multiple parents.
 
 ![](../../.gitbook/assets/dolt-commit-graph.png)
 
-Commit hashes are SHA-256 encoded hashes of the entire database. Commit hashes look like
+Commit hashes are truncated SHA-512 hashes of the entire database, encoded in base32. Commit hashes look like
 `t5d5inj4bpc1fltrdm9uoscjdsgebaih`. These are abbreviations of the entire hash that Doltgres
 understands. When referring to a specific commit, this is the identifier you use.
 
@@ -47,20 +47,18 @@ Git commits and Doltgres commits are very similar in purpose and practice.
 ```sql
 create table docs_sql (pk int, primary key(pk));
 select dolt_commit('-a', '-m', 'Added docs_sql example table. Use -a to stage all changes for commit ie. skip dolt add');
-+-------------------------------------------------------------------------------------------------------------------+
-| dolt_commit('-a', '-m', 'Added docs_sql example table. Use -a to stage all changes for commit ie. skip dolt add') |
-+-------------------------------------------------------------------------------------------------------------------+
-| v42og53ru3k3hak3decm23crp5p6kd2f                                                                                  |
-+-------------------------------------------------------------------------------------------------------------------+
+ dolt_commit
+-------------------------------------------------------------------------------------------------------------------
+ v42og53ru3k3hak3decm23crp5p6kd2f
+(1 row)
 ```
 
 ### Creating an empty commit
 
 ```sql
 select dolt_commit('--allow-empty', '-m', 'This is a commit');
-+--------------------------------------------------------------+
-| dolt_commit('-a', '--allow-empty', '-m', 'This is a commit') |
-+--------------------------------------------------------------+
-| u73s2mb1ho4mj1ldkof939vampo93bld                             |
-+--------------------------------------------------------------+
+ dolt_commit
+---------------------------------------------------------
+ u73s2mb1ho4mj1ldkof939vampo93bld
+(1 row)
 ```

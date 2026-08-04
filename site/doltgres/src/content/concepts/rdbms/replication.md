@@ -41,7 +41,7 @@ writes.
 
 The second mode is called [Direct-to-Standby
 Replication](/reference/server/replication#direct-to-standby-replication). In this mode,
-you configure a cluster of dolt sql-server instances to replicate **all** writes to each other. Each
+you configure a cluster of Doltgres sql-server instances to replicate **all** writes to each other. Each
 server is configured to replicate writes to all other servers in the cluster. One server is
 configured as the primary replica and it accepts writes. All other servers are configured as
 standbys and only accept read requests.

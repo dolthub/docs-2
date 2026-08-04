@@ -9,9 +9,8 @@ the feature you're looking for.
 
 The list is grouped by extension kind:
 
-- [Version-Control Functions](#version-control-functions) — write-side
-  operations equivalent to Dolt CLI commands (`dolt_commit`,
-  `dolt_merge`, `dolt_push`, …). Invoke with `SELECT`.
+- [Version-Control Functions](#version-control-functions) — functions to commit or alter versioned
+  data such as `dolt_commit`, `dolt_merge`, `dolt_push`, …). Invoke with `SELECT`.
 - [Informational Functions](#informational-functions) — scalar functions
   that return repository state (active branch, ref hashes, version, …).
 - [Table Functions](#table-functions) — used in a `FROM` clause to
@@ -26,9 +25,7 @@ sheet](/guides/cheat-sheet).
 
 ## Version-Control Functions
 
-Function equivalents of `dolt` CLI commands. These modify state — call
-each with `SELECT … FROM` (Doltgres-style) for the same effect that
-`CALL DOLT_X()` has in Dolt. Full details:
+These modify state — invoke each with `SELECT … FROM`. Full details:
 [Functions](/reference/version-control/dolt-sql-functions).
 
 | Name | Description |
@@ -112,7 +109,7 @@ table's name for `$TABLENAME`. Full details:
 | [`dolt_diff_$TABLENAME`](/reference/version-control/dolt-system-tables#dolt_diff_usdtablename) | Row-level history of a single user table. |
 | [`dolt_history_$TABLENAME`](/reference/version-control/dolt-system-tables#dolt_history_usdtablename) | A user table's contents as of every commit in history. |
 | [`dolt_ignore`](/reference/version-control/dolt-system-tables#dolt_ignore) | Table-name patterns that should be ignored from staging. |
-| [`dolt_schemas`](/reference/version-control/dolt-system-tables#dolt_schemas) | Stored schema fragments (views, triggers, events). |
+| [`dolt_schemas`](/reference/version-control/dolt-system-tables#dolt_schemas) | Stored schema fragments (currently views). |
 | [`dolt_statistics`](/reference/version-control/dolt-system-tables#dolt_statistics) | Index histograms used by the query planner. |
 | [`dolt_workspace_$TABLENAME`](/reference/version-control/dolt-system-tables#dolt_workspace_usdtablename) | Per-user-table view of pending modifications in the working set. |
 

@@ -16,9 +16,16 @@ Database users create triggers. Triggers are schema. Triggers are stored along w
 Triggers are a general tool, but they are most commonly used to enforce complex constraints that
 can't be expressed by foreign keys, nullness, types, or the `check` syntax.
 
-Triggers in Doltgres are not yet supported. Check back for updates.
+Doltgres supports row-level triggers. As in Postgres, you first define a trigger function, usually
+in PL/pgSQL, and then attach it to a table with
+`CREATE TRIGGER ... BEFORE | AFTER INSERT | UPDATE | DELETE ... FOR EACH ROW EXECUTE FUNCTION ...`.
+
+Some Postgres trigger features are not yet supported: constraint triggers, `DEFERRABLE`,
+`REFERENCING`, statement-level triggers (`FOR EACH STATEMENT`), `INSTEAD OF` triggers,
+`UPDATE OF <columns>`, and `TRUNCATE` events.
 
 ## Interaction with Doltgres Version Control
 
-Triggers are versioned in the `dolt_schemas` table just like [views](/concepts/sql/views). You add and commit
-that table just like any other changed table after you create or modify a trigger.
+Triggers are versioned in storage like other schema elements. You add and commit trigger changes
+just like any other schema change. Note that unlike [views](/concepts/sql/views), triggers do not appear in
+the `dolt_schemas` table.

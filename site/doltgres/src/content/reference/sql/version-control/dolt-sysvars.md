@@ -4,12 +4,12 @@ title: Dolt System Variables
 
 ## Table of contents
 
+- [Examining and setting system variables](#examining-and-setting-system-variables)
+
 - [General system setting variables](#general-system-setting-variables)
 
-  - [dbname_default_branch](#dbname_default_branch)
   - [dolt_allow_commit_conflicts](#dolt_allow_commit_conflicts)
   - [dolt_force_transaction_commit](#dolt_force_transaction_commit)
-  - [dolt_log_level](#dolt_log_level)
   - [dolt_override_schema](#dolt_override_schema)
   - [dolt_show_branch_databases](#dolt_show_branch_databases)
   - [dolt_show_system_tables](#dolt_show_system_tables)
@@ -33,6 +33,30 @@ title: Dolt System Variables
   - [dbname_head](#dbname_head)
   - [dbname_working](#dbname_working)
   - [dbname_staged](#dbname_staged)
+  
+## Examining and setting system variables
+
+Inspect the current value of any variable with `SHOW`, or the `CURRENT_SETTING` function:
+
+```sql
+SHOW postgres_head;
+     @@session.postgres_head
+----------------------------------
+ dkpg87c7lfn1t2cq1civ5hne2p6r0q30
+(1 row)
+
+select current_setting('dolt_log_level');
+ current_setting 
+-----------------
+ debug
+(1 row)
+```
+
+Set the value with the `SET` command:
+
+```sql
+SET dolt_force_transaction_commit = 1;
+```
 
 ## General system setting variables
 
@@ -147,7 +171,7 @@ This system variable should be set on replication primaries to name a remote to 
 [Replication](/reference/server/replication).
 
 ```sql
-select name from dolt_remotes;
+select name from dolt.remotes;
  name
 ---------
  remote1
@@ -239,7 +263,6 @@ a warning rather than causing queries to fail. Defaults to `0`.
 ```sql
 SET dolt_skip_replication_errors TO 1;
 ```
-
 ## Session metadata variables
 
 ### `dbname_head_ref`
@@ -249,7 +272,7 @@ session head. For a database called `mydb`, this variable
 will be called `mydb_head_ref` and be set to the current head.
 
 ```sql
-mydb=> select mydb_head_ref;
+show mydb_head_ref;
 mydb_head_ref
 ------------------
 refs/heads/main

@@ -15,7 +15,7 @@ as updates. Changes to primary key columns will appear as inserts and correspond
 If no primary key exists, all changes look like inserts and deletes. Effectively, for diff purposes,
 the keys of the table with no primary keys are the entire form.
 
-Doltgres can produce diffs on the command line, as tables, or as a SQL patch.
+Doltgres can produce diffs as SQL tables or as a SQL patch.
 
 Doltgres can produce diffs at scale because the Doltgres storage engine breaks the rows in the
 database down into chunks. Each chunk is content-addressed and stored in a tree called a Prolly
@@ -44,20 +44,18 @@ SQL. Doltgres diffs produce diffs for schema and data. There is no schema diff e
 
 ```sql
 select * from dolt_diff_docs;
-+-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------+
-| to_c1 | to_pk | to_commit                        | to_commit_date                    | from_c1 | from_pk | from_commit                      | from_commit_date                  | diff_type |
-+-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------+
-| 0     | 0     | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | NULL    | NULL    | v42og53ru3k3hak3decm23crp5p6kd2f | 2021-12-06 21:27:53.886 +0000 UTC | added     |
-| 1     | 1     | 5emu36fgedeurr6qk5uq6mj96k5j53j9 | 2021-12-06 21:36:02.076 +0000 UTC | 0       | 1       | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC | modified  |
-| NULL  | NULL  | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC | 0       | 0       | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | removed   |
-| 0     | 1     | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC | NULL    | NULL    | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | added     |
-| 1     | 2     | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC | NULL    | NULL    | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | added     |
-+-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------+
+ to_c1 | to_pk | to_commit                        | to_commit_date                    | from_c1 | from_pk | from_commit                      | from_commit_date                  | diff_type
+-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------
+ 0     | 0     | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC |         |         | v42og53ru3k3hak3decm23crp5p6kd2f | 2021-12-06 21:27:53.886 +0000 UTC | added
+ 1     | 1     | 5emu36fgedeurr6qk5uq6mj96k5j53j9 | 2021-12-06 21:36:02.076 +0000 UTC | 0       | 1       | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC | modified
+       |       | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC | 0       | 0       | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | removed
+ 0     | 1     | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC |         |         | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | added
+ 1     | 2     | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC |         |         | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | added
+(5 rows)
 
 select * from dolt_diff_docs where from_pk=0;
-+-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------+
-| to_c1 | to_pk | to_commit                        | to_commit_date                    | from_c1 | from_pk | from_commit                      | from_commit_date                  | diff_type |
-+-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------+
-| NULL  | NULL  | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC | 0       | 0       | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | removed   |
-+-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------+
+ to_c1 | to_pk | to_commit                        | to_commit_date                    | from_c1 | from_pk | from_commit                      | from_commit_date                  | diff_type
+-------+-------+----------------------------------+-----------------------------------+---------+---------+----------------------------------+-----------------------------------+-----------
+       |       | ne14m8g2trlunju5a2mu735kjioocmll | 2021-12-06 21:34:12.585 +0000 UTC | 0       | 0       | dmmkbaiq6g6mm0vruc07utpns47sjkv7 | 2021-12-06 21:31:54.041 +0000 UTC | removed
+(1 row)
 ```

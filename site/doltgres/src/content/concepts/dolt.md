@@ -51,4 +51,4 @@ you the Git experience in a SQL database.
 
 In this section of the documentation, we will explain [Git](/concepts/git/),
 [SQL](/concepts/sql/), and [Relational Database Management System (RDBMS)](/concepts/rdbms/)
-concepts and how we applied them in Dolt using the above axioms.
+concepts and how we applied them in Doltgres using the above axioms.

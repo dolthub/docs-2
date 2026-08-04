@@ -66,37 +66,32 @@ create table pay (id int,
 insert into employees values (0, 'Smith', 'Ella', 34), (1, 'Baker', 'Jack', 27);
 insert into pay values (0, 50000);
 select dolt_commit('-am', 'Data for foreign key doc');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| kgjb1tdbqt3vsn2e3nv06n5a6jdaqtk8 |
-+----------------------------------+
-select dolt_checkout('-b', 'delete-parent');
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
+           dolt_commit
+----------------------------------
+ kgjb1tdbqt3vsn2e3nv06n5a6jdaqtk8
+(1 row)
+select * from dolt_checkout('-b', 'delete-parent');
+ status |              message
+--------+------------------------------------
+      0 | Switched to branch 'delete-parent'
+(1 row)
 delete from employees where id=1;
 select dolt_commit('-am', 'Deleted Jack Baker, id=1');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| pd8r1j7or0aonincnc8iutsdjqnkmtsb |
-+----------------------------------+
-select dolt_checkout('main');
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
+           dolt_commit
+----------------------------------
+ pd8r1j7or0aonincnc8iutsdjqnkmtsb
+(1 row)
+select * from dolt_checkout('main');
+ status |          message
+--------+---------------------------
+      0 | Switched to branch 'main'
+(1 row)
 insert into pay values (1, 48000);
 select dolt_commit('-am', 'Added salary for Jack Baker id=1');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| 44h9p2k59o59rc1lcenkg4dghe052um0 |
-+----------------------------------+
+           dolt_commit
+----------------------------------
+ 44h9p2k59o59rc1lcenkg4dghe052um0
+(1 row)
 select dolt_merge('delete-parent');
-Error 1105: Constraint violation from merge detected, cannot commit transaction. Constraint violations from a merge must be resolved using the dolt_constraint_violations table before committing a transaction. To commit transactions with constraint violations set @@dolt_force_transaction_commit=1
+ERROR: Constraint violation from merge detected, cannot commit transaction. Constraint violations from a merge must be resolved using the dolt_constraint_violations table before committing a transaction. To commit transactions with constraint violations run "SET dolt_force_transaction_commit TO on"
 ```

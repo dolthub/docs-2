@@ -134,42 +134,38 @@ committed.
 
 ```sql
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+(3 rows)
 select dolt_branch('make-conflicts');
 update docs set c1=10 where pk=1;
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 10 |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 10
+ 2  | 2
+(3 rows)
 select dolt_commit('-Am', 'Made pk=1, c1=10');
 select dolt_checkout('make-conflicts');
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+(3 rows)
 update docs set c1=0 where pk=1;
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 0  |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 0
+ 2  | 2
+(3 rows)
 select dolt_commit('-m', 'Made pk=1, c1=0');
 select dolt_checkout('main');
 select dolt_merge('make-conflicts'); -- conflict created
@@ -180,12 +176,11 @@ select dolt_merge('make-conflicts'); -- conflict created
 ```sql
 select dolt_conflicts_resolve('--ours', 'docs');
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 10 |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 10
+ 2  | 2
+(3 rows)
 select dolt_commit('-m', 'Resolved conflict');
 ```
