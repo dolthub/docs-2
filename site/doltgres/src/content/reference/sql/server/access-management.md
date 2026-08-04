@@ -24,7 +24,7 @@ for all databases in a server.
 
 ### YAML Configuration Option
 
-Use the `auth_file: PATH` line to your [YAML config](/reference/server/configuration) to change where the
+Use the `auth_file: PATH` line to your [YAML config](configuration.md) to change where the
 privileges file is stored.
 
 ## Editing Users
