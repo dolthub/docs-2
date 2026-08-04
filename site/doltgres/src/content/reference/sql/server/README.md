@@ -14,7 +14,7 @@ Start the DoltgreSQL server by running the `doltgres` command:
 binary itself accepts only a small number of command line flags, most notably `--config` and
 `--data-dir`, plus a few utility flags. Run `doltgres --help` for the list of command line flags,
 and `doltgres -config-help` for the full list of `config.yaml` fields. See the
-[configuration docs](configuration.md) for more details.
+[configuration docs](/reference/server/configuration) for more details.
 
 ## Data location
 

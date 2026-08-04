@@ -5,7 +5,7 @@ title: Merges
 ## Merging branches
 
 To merge a branch into your current branch, use the [`DOLT_MERGE()`
-function](dolt-sql-functions.md#dolt_merge):
+function](/reference/version-control/dolt-sql-functions#dolt_merge):
 
 ```sql
 SELECT DOLT_MERGE('feature-branch');

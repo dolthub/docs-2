@@ -159,7 +159,7 @@ Due to the longest match rule, this entry will be ignored when a valid match is 
 ## Storage
 
 All data related to branch permissions is stored in the file `branch_control.db` under the dolt configuration directory (defaults to `.doltcfg`).
-The location of this file can be changed with the `branch_control_file` key in the [YAML config](configuration.md), similar to the `auth_file` key described in [access management](access-management.md).
+The location of this file can be changed with the `branch_control_file` key in the [YAML config](/reference/server/configuration), similar to the `auth_file` key described in [access management](/reference/server/access-management).
 
 ## Binlog
 
@@ -182,7 +182,7 @@ This handles starting the server, along with creating the database and users use
 As we are running these examples locally, we will use two terminal windows.
 The first window will contain the server, which we start by running `doltgres`.
 It is worth noting that the examples use the default host and port of `localhost:5432`.
-If these are already in use for your system, then you may change them with the `listener.host` and `listener.port` fields in a [config.yaml file](configuration.md).
+If these are already in use for your system, then you may change them with the `listener.host` and `listener.port` fields in a [config.yaml file](/reference/server/configuration).
 
 As explained in the [default state section](#default-state), we automatically add a row to the `dolt_branch_control` table that allows all users to modify all branches by default.
 For these examples, we remove that default row.

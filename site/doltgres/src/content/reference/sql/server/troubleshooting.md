@@ -38,7 +38,7 @@ Doltgres operational issues usually manifest as slow SQL queries. In rare occasi
 
 Doltgres creates disk garbage on write. This can sometimes become a substantial portion of the disk Doltgres is consuming. Doltgres ships with a garbage collection function. Running the garbage collection function can free disk.
 
-To run garbage collection online, run [`select dolt_gc()`](/reference/version-control/dolt-sql-functions#dolt_gc). [Automatic garbage collection](garbage-collection.md#automated-gc) also runs periodically in the background by default.
+To run garbage collection online, run [`select dolt_gc()`](/reference/version-control/dolt-sql-functions#dolt_gc). [Automatic garbage collection](/reference/server/garbage-collection#automated-gc) also runs periodically in the background by default.
 
 Disk garbage is especially pronounced after imports. We recommend concluding imports with a `select dolt_gc()` call.
 

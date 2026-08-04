@@ -27,7 +27,7 @@ yet supported, and running `select dolt_gc()` on the replica will fail.
 
 Automatic garbage collection is enabled by default: the server periodically runs garbage collection
 in the background without any configuration. If you want to disable it, set the following in your
-[config.yaml](configuration.md):
+[config.yaml](/reference/server/configuration):
 
 ```yaml
 behavior:

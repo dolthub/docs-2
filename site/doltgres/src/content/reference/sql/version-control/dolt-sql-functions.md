@@ -204,7 +204,7 @@ SELECT dolt_backup('restore', 'https://dolthub.com/some_organization/some_dolthu
 
 Create, delete, and rename branches.
 
-To list branches, use the [`dolt.branches` system table](dolt-system-tables.md#dolt.branches),
+To list branches, use the [`dolt.branches` system table](/reference/version-control/dolt-system-tables#dolt.branches),
 instead of the `DOLT_BRANCH()` function.
 
 To look up the current branch, use the `active_branch()` SQL function, as shown in the
@@ -931,7 +931,7 @@ commit on the target branch.
 If the merge causes conflicts or constraint violations, you must
 resolve them using the `dolt_conflicts` system tables before the
 transaction can be committed. See [Dolt system
-tables](dolt-system-tables.md#dolt_conflicts_usdtablename) for
+tables](/reference/version-control/dolt-system-tables#dolt_conflicts_usdtablename) for
 details.
 
 #### Output Schema
