@@ -28,7 +28,7 @@ First, we need to add a new remote:
 select dolt_remote('add', 'origin', 'file:///var/share/remotes');
  dolt_remote
 -------------
- {0}
+ 0
 (1 row)
 ```
 
@@ -38,7 +38,7 @@ And then we can push:
 select dolt_push('origin', 'main');
  dolt_push
 -----------
- {0,""}
+ (0,"")
 (1 row)
 ```
 

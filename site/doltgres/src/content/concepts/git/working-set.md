@@ -79,9 +79,9 @@ select * from docs;
  4  | 4
 (5 rows)
 select dolt_checkout('branch2');
- dolt_checkout
---------
- 0
+            dolt_checkout
+------------------------------------
+ (0,"Switched to branch 'branch2'")
 (1 row)
 select * from docs ;
  pk | c1

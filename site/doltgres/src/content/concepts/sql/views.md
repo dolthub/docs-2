@@ -46,7 +46,7 @@ select * from monthly_salaries order by monthly_pay asc;
 ```text
 select dolt_add('-A');
 select dolt_commit('-am', 'Created table and view');
- hash
+           dolt_commit
 ----------------------------------
  trj7dm02r8c94nqpbphjgolhhsk37rkj
 (1 row)

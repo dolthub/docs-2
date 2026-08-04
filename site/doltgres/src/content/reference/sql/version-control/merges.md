@@ -23,9 +23,11 @@ client. If merge produces an error in `AUTOCOMMIT` mode, the transaction will be
 automatically rolled back and any merged tables will be reset.
 
 The two errors that merge can produce are conflicts and constraint-violations.
-If either error exists post-merge, the `conflicts` column will be set to `1`:
+If either error exists post-merge, the `conflicts` column will be set to `1`. Invoke
+the function in a `FROM` clause to see its output columns individually:
 
-```
+```sql
+SELECT * FROM DOLT_MERGE('feature-branch');
  hash | fast_forward | conflicts | message
 ------+--------------+-----------+-----------------
       | 0            | 1         | conflicts found
@@ -271,7 +273,7 @@ When we merge, we see the `conflict` column has been set:
 
 ```sql
 START TRANSACTION;
-SELECT DOLT_MERGE('branch_to_merge');
+SELECT * FROM DOLT_MERGE('branch_to_merge');
  hash | fast_forward | conflicts | message
 ------+--------------+-----------+-----------------
       | 0            | 1         | conflicts found

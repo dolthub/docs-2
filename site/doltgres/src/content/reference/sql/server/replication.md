@@ -198,7 +198,7 @@ Now back on the primary:
 
 ```sql
 insert into test values (2,2);
-select dolt_commit('-am', 'Inserted (2,2)');
+select * from dolt_commit('-am', 'Inserted (2,2)');
                hash
 ----------------------------------
  i97i9f1a3vrvd09pphiq0bbdeuf8riid

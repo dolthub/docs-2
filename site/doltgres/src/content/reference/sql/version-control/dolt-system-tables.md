@@ -265,7 +265,7 @@ The `dolt.remotes` table is currently read only. Use the [`dolt_remote()` functi
 postgres=> SELECT dolt_remote('add', 'origin', 'file:///go/github.com/dolthub/doltgres/rem1');
  dolt_remote
 -------------
- {0}
+ 0
 (1 row)
 
 postgres=> SELECT * FROM dolt.remotes WHERE name = 'origin';
@@ -302,7 +302,7 @@ Create a tag using the `dolt_tag()` function.
 postgres=> SELECT DOLT_TAG('_migrationtest', 'head', '-m', 'savepoint for migration testing');
  dolt_tag
 ----------
- {0}
+ 0
 (1 row)
 ```
 

@@ -84,6 +84,21 @@ SELECT DOLT_ADD('.'); -- returns a status value
 CALL DOLT_ADD('.'); -- ERROR: Dolt stored procedure may only be invoked using SELECT
 ```
 
+These functions can be invoked in two ways. Invoked directly in a `SELECT` list, a function returns
+a single column named after the function. If the function's output schema has more than one column,
+the value is a record containing all of the output fields. Invoked in a `FROM` clause, the
+function's output schema expands into one named column per field, which can be selected
+individually:
+
+```sql
+SELECT dolt_checkout('mybranch');              -- one column, dolt_checkout: (0,"Switched to branch 'mybranch'")
+SELECT * FROM dolt_checkout('mybranch');       -- two columns: status, message
+SELECT message FROM dolt_checkout('mybranch'); -- just the message column
+```
+
+The `Output Schema` listed for each function below describes the columns returned when the
+function is invoked in a `FROM` clause.
+
 ### `DOLT_ADD()`
 
 Adds working changes to staged for this session.
@@ -459,10 +474,10 @@ We want to cherry-pick only the change introduced in commit hash
 SELECT DOLT_CHECKOUT('main');
 
 -- Cherry-pick the commit
-SELECT DOLT_CHERRY_PICK('k318tpmqn4l97ofpaerato9c3m70lc14');
- hash
-----------------------------------
- mh518gdgbsut8m705b7b5rie9neq9uaj
+SELECT * FROM DOLT_CHERRY_PICK('k318tpmqn4l97ofpaerato9c3m70lc14');
+ hash                             | data_conflicts | schema_conflicts | constraint_violations
+----------------------------------+----------------+------------------+-----------------------
+ mh518gdgbsut8m705b7b5rie9neq9uaj |              0 |                0 |                     0
 (1 row)
 
 SELECT * FROM mytable;
@@ -519,7 +534,7 @@ create table untracked (x int primary key);
 -- Commit the first table
 select dolt_add('committed');
 select dolt_commit('-m', 'commit a table');
- hash
+ dolt_commit
 ----------------------------------
  n7gle7jv6aqf72stbdicees6iduhuoo9
 (1 row)
@@ -1145,12 +1160,9 @@ SELECT DOLT_REMOTE('remove','existing_remote_name');
 #### Output Schema
 
 ```text
- Field                 | Type | Description
------------------------+------+----------------------------------------------------------
- hash                  | text | hash of the last revert commit created
- data_conflicts        | int  | number of data conflicts
- schema_conflicts      | int  | number of schema conflicts
- constraint_violations | int  | number of constraint violations
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -1618,7 +1630,7 @@ SELECT DOLT_COMMIT('-Am', 'delete parent 1');
 -- The merge introduces a foreign key constraint violation
 SELECT DOLT_MERGE('branch_to_merge');
 
-SELECT DOLT_VERIFY_CONSTRAINTS();
+SELECT * FROM DOLT_VERIFY_CONSTRAINTS();
 /*
  violations
 ------------
@@ -1655,8 +1667,8 @@ SELECT DOLT_VERIFY_CONSTRAINTS();
 /*
 No violations are returned since there are no changes in the working set.
 
- violations
-------------
+ dolt_verify_constraints
+-------------------------
  0
 (1 row)
 */
@@ -1668,7 +1680,7 @@ SELECT * from dolt_constraint_violations_child;
 (0 rows)
 */
 
-SELECT DOLT_VERIFY_CONSTRAINTS('--all');
+SELECT * FROM DOLT_VERIFY_CONSTRAINTS('--all');
 /*
 When all rows are considered, constraint violations are found.
 
@@ -1697,16 +1709,16 @@ DELETE FROM dolt_constraint_violations_child;
 
 SELECT DOLT_VERIFY_CONSTRAINTS('--all', 'parent');
 /*
- violations
-------------
+ dolt_verify_constraints
+-------------------------
  0
 (1 row)
 */
 
 SELECT DOLT_VERIFY_CONSTRAINTS('--all', 'child');
 /*
- violations
-------------
+ dolt_verify_constraints
+-------------------------
  1
 (1 row)
 */
@@ -1764,7 +1776,7 @@ to the current hash. For example, you can use this function to get the hash of a
 
 ```sql
 SELECT dolt_hashof_table('color');
- dolt_hashof_table('color')
+ dolt_hashof_table
 ----------------------------------
  q8t28sb3h5g2lnhiojacpi7s09p4csjv
 (1 row)
@@ -1783,7 +1795,7 @@ to the current hash. For example, you can use this function to get the hash of t
 
 ```sql
 SELECT dolt_hashof_db();
- dolt_hashof_db()
+ dolt_hashof_db
 ----------------------------------
  1q8t28sb3h5g2lnhiojacpi7s09p4csj
 (1 row)
@@ -1804,7 +1816,7 @@ binary.
 
 ```sql
 select dolt_version();
- dolt_version()
+ dolt_version
 ----------------
  0.40.4
 (1 row)
