@@ -51,19 +51,17 @@ location for your Doltgres remote.
 select dolt_clone('file:///var/share/doltgres-remotes/docs');
 \c docs;
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-+----+----+
+ pk | c1
+----+----
+(0 rows)
 insert into docs values (0,0),(1,1),(2,2);
 select * from docs;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+ 0  | 0
+ 1  | 1
+ 2  | 2
+(3 rows)
 select dolt_commit('-m', 'Committing inserts so I can push it to my remote');
 select dolt_push('origin', 'main');
 ```

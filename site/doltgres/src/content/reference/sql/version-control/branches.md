@@ -16,8 +16,7 @@ changes only visible to other clients connected to the same branch.
 ![A Doltgres database server with multiple heads](../../../.gitbook/assets/dolt-server-branches.png)
 
 A database server has a default branch, which is the checked-out branch at the time the server was
-started, and can be changed for new connections with a [system
-variable](/reference/version-control/dolt-sysvars#dbname_default_branch). Using database revision specifiers, clients can
+started. Using database revision specifiers, clients can
 choose a specific branch, tag, or commit to pin their queries to.
 
 ## Specify a database revision in the connection string
@@ -61,8 +60,8 @@ command:
 To switch to a read-only database at a commit hash or tag:
 
 ```sql
-\c `mydb/ia1ibijq8hq1llr7u85uivsi5lh3310p`
-\c `mydb/v1.0`
+\c mydb/ia1ibijq8hq1llr7u85uivsi5lh3310p
+\c mydb/v1.0
 ```
 
 ## Use fully-qualified references with database revisions
@@ -74,19 +73,19 @@ following query references a specific branch of a database by using a fully-qual
 includes a revision specification:
 
 ```sql
-insert into `mydatabase/feature-branch`.accounts (id) values (1);
+insert into "mydatabase/feature-branch".public.accounts (id) values (1);
 ```
 
 You can use the same syntax for specific commits:
 
 ```sql
-SELECT * from `mydatabase/ia1ibijq8hq1llr7u85uivsi5lh3310p`.accounts;
+SELECT * from "mydatabase/ia1ibijq8hq1llr7u85uivsi5lh3310p".public.accounts;
 ```
 
 and for tags:
 
 ```sql
-SELECT * from `mydatabase/v1.0`.accounts;
+SELECT * from "mydatabase/v1.0".public.accounts;
 ```
 
 ## Switch branches with the `DOLT_CHECKOUT()` function
@@ -130,8 +129,8 @@ rejected:
 
 ```sql
 start transaction;
-insert into `mydb/branch1`.t1 values (100);
-insert into `mydb/branch2`.t1 values (200);
+insert into "mydb/branch1".public.t1 values (100);
+insert into "mydb/branch2".public.t1 values (200);
 commit; -- ERROR: can only commit changes to one branch at a time
 ```
 

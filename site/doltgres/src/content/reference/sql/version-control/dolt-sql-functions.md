@@ -40,7 +40,7 @@ title: Dolt SQL Functions
   - [dolt_merge_base()](#dolt_merge_base)
   - [dolt_hashof()](#dolt_hashof)
   - [dolt_hashof_table()](#dolt_hashof_table)
-  - [dolt_hashof_db()](#dolt_hashof_table)
+  - [dolt_hashof_db()](#dolt_hashof_db)
   - [dolt_version()](#dolt_version)
   - [has_ancestor()](#has_ancestor)
 
@@ -76,17 +76,28 @@ SELECT DOLT_ADD('.');
 Version control features that only inspect the state of the database are modeled as [system
 tables](/reference/version-control/dolt-system-tables) or [table functions](#table-functions) instead.
 
-The functions in this section are also available as stored procedures. Whether you access them as
-functions or as procedures is up to you. The main difference is that in Postgres, stored procedures
-cannot return values, but functions can. This means that if your application needs the result of an
-operation, it must use the function version, rather than the procedure version.
-
-Otherwise, these statements are equivalent:
+The version control operations in this section are functions, and must be invoked with `SELECT`.
+Invoking them with `CALL` is not supported and will be rejected with an error:
 
 ```sql
 SELECT DOLT_ADD('.'); -- returns a status value
-CALL DOLT_ADD('.'); -- returns nothing, but will fail on an error
+CALL DOLT_ADD('.'); -- ERROR: Dolt stored procedure may only be invoked using SELECT
 ```
+
+These functions can be invoked in two ways. Invoked directly in a `SELECT` list, a function returns
+a single column named after the function. If the function's output schema has more than one column,
+the value is a record containing all of the output fields. Invoked in a `FROM` clause, the
+function's output schema expands into one named column per field, which can be selected
+individually:
+
+```sql
+SELECT dolt_checkout('mybranch');              -- one column, dolt_checkout: (0,"Switched to branch 'mybranch'")
+SELECT * FROM dolt_checkout('mybranch');       -- two columns: status, message
+SELECT message FROM dolt_checkout('mybranch'); -- just the message column
+```
+
+The `Output Schema` listed for each function below describes the columns returned when the
+function is invoked in a `FROM` clause.
 
 ### `DOLT_ADD()`
 
@@ -111,11 +122,9 @@ committed. The abbreviation '.' can be used to add all tables.
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -138,21 +147,41 @@ SELECT DOLT_COMMIT('-m', 'committing all changes');
 
 ### `DOLT_BACKUP()`
 
-Sync with a configured backup. Other backup commands not supported
-via SQL yet.
+Add or remove a configured backup, sync with a configured backup, sync a backup
+to a remote URL, restore a remote URL backup as a new database.
+
+To sync the current database to a configured backup:
 
 ```sql
 SELECT DOLT_BACKUP('sync', 'name');
 ```
 
-#### Output Schema
+To sync with a remote URL which is not configured as a backup:
+
+```sql
+SELECT DOLT_BACKUP('sync-url', 'https://dolthub.com/some_organization/some_dolthub_repository');
+```
+
+To add and remove a configured backup:
+
+```sql
+SELECT DOLT_BACKUP('add', 'dolthub', 'https://dolthub.com/some_organization/some_dolthub_repository');
+
+SELECT DOLT_BACKUP('remove', 'dolthub');
+```
+
+To restore a backup:
+
+```sql
+SELECT DOLT_BACKUP('restore', 'https://dolthub.com/some_organization/some_dolthub_repository', 'database_name');
+```
+
+### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -161,19 +190,24 @@ SELECT DOLT_BACKUP('sync', 'name');
 -- Set the current database for the session
 USE mydb;
 
--- Upload the current database contents to the named backup
-SELECT dolt_backup('sync', 'my-backup')
+-- Configure a backup to sync to.
+SELECT dolt_backup('add', 'my-backup', 'https://dolthub.com/some_organization/some_dolthub_repository');
+
+-- Upload the current database contents to that named backup
+SELECT dolt_backup('sync', 'my-backup');
+
+-- Restore the uploaded database to a new database name
+SELECT dolt_backup('restore', 'https://dolthub.com/some_organization/some_dolthub_repository', 'mydb_restored');
 ```
 
 ### `DOLT_BRANCH()`
 
 Create, delete, and rename branches.
 
-To list branches, use the [`DOLT_BRANCHES` system table](/reference/version-control/dolt-system-tables#dolt_branches),
+To list branches, use the [`dolt.branches` system table](/reference/version-control/dolt-system-tables#dolt.branches),
 instead of the `DOLT_BRANCH()` function.
 
-To look up the current branch, use the [`@@<dbname>_head_ref` system
-variable](/reference/version-control/dolt-sysvars#dbname_head_ref), or the `active_branch()` SQL function, as shown in the
+To look up the current branch, use the `active_branch()` SQL function, as shown in the
 examples section below.
 
 WARNING: In a multi-session server environment, Dolt will prevent you from deleting or renaming a
@@ -240,24 +274,21 @@ The `dolt_branch()` function implicitly commits the current transaction and begi
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Examples
 
 ```sql
 -- List the available branches
-SELECT * FROM DOLT_BRANCHES;
-+--------+----------------------------------+
-| name   | hash                             |
-+--------+----------------------------------+
-| backup | nsqtc86d54kafkuf0a24s4hqircvg68g |
-| main   | dvtsgnlg7n9squriob3nq6kve6gnhkf2 |
-+--------+----------------------------------+
+SELECT * FROM dolt.branches;
+ name   | hash
+--------+----------------------------------
+ backup | nsqtc86d54kafkuf0a24s4hqircvg68g
+ main   | dvtsgnlg7n9squriob3nq6kve6gnhkf2
+(2 rows)
 
 -- Create a new branch for development work from the tip of head and switch to it
 SELECT DOLT_BRANCH('myNewFeature');
@@ -265,11 +296,10 @@ SELECT DOLT_CHECKOUT('myNewFeature');
 
 -- View your current branch
 select active_branch();
-+----------------+
-| active_branch  |
-+----------------+
-| myNewFeature   |
-+----------------+
+ active_branch
+----------------
+ myNewFeature
+(1 row)
 
 -- Create a new branch from an existing branch
 SELECT DOLT_BRANCH('-c', 'backup', 'bugfix-3482');
@@ -307,7 +337,7 @@ SELECT DOLT_CHECKOUT('my-table');
 
 `DOLT_CHECKOUT()` with a branch argument has two side effects on your session state:
 
-1. The session's current database, as returned by `SELECT DATABASE()`, is now the unqualified
+1. The session's current database, as returned by `SELECT current_database()`, is now the unqualified
    database name.
 2. For the remainder of this session, references to the unqualified name of this database will
    resolve to the branch checked out.
@@ -337,12 +367,10 @@ insert into mydb.t1 values (3); -- modifying the `branch2` branch
 #### Output Schema
 
 ```text
-+---------+------+-----------------------------+
-| Field   | Type | Description                 |
-+---------+------+-----------------------------+
-| status  | int  | 0 if successful, 1 if not   |
-| message | text | success/failure information |
-+---------+------+-----------------------------+
+ Field   | Type | Description
+---------+------+-----------------------------
+ status  | int  | 0 if successful, 1 if not
+ message | text | success/failure information
 ```
 
 #### Example
@@ -384,14 +412,12 @@ No options for this function.
 #### Output Schema
 
 ```text
-+-----------------------+------+---------------------------------+
-| Field                 | Type | Description                     |
-+-----------------------+------+---------------------------------+
-| hash                  | text | hash of the applied commit      |
-| data_conflicts        | int  | number of data conflicts        |
-| schema_conflicts      | int  | number of schema conflicts      |
-| constraint_violations | int  | number of constraint violations |
-+-----------------------+------+---------------------------------+
+ Field                 | Type | Description
+-----------------------+------+---------------------------------
+ hash                  | text | hash of the applied commit
+ data_conflicts        | int  | number of data conflicts
+ schema_conflicts      | int  | number of schema conflicts
+ constraint_violations | int  | number of constraint violations
 ```
 
 #### Example
@@ -403,46 +429,40 @@ For the below example consider the following set up of `main` and `mybranch` bra
 SELECT DOLT_CHECKOUT('main');
 
 -- View a log of commits
-SELECT commit_hash, message FROM dolt_log;
-+----------------------------------+----------------------------+
-| commit_hash                      | message                    |
-+----------------------------------+----------------------------+
-| 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table         |
-| omuqq67att6vfnka94drdallu4983gnr | Initialize data repository |
-+----------------------------------+----------------------------+
-2 rows in set (0.00 sec)
+SELECT commit_hash, message FROM dolt.log;
+ commit_hash                      | message
+----------------------------------+----------------------------
+ 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table
+ omuqq67att6vfnka94drdallu4983gnr | Initialize data repository
+(2 rows)
 
 -- View the table
 SELECT * FROM mytable;
-Empty set (0.00 sec)
+(0 rows)
 
 -- Checkout new branch
 SELECT DOLT_CHECKOUT('mybranch');
 
 -- View a log of commits
-SELECT commit_hash, message FROM dolt_log;
-+----------------------------------+----------------------------+
-| commit_hash                      | message                    |
-+----------------------------------+----------------------------+
-| 577isdjbq1951k2q4dqhli06jlauo51p | add 3, 4, 5 to the table   |
-| k318tpmqn4l97ofpaerato9c3m70lc14 | add 1, 2 to the table      |
-| 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table         |
-| omuqq67att6vfnka94drdallu4983gnr | Initialize data repository |
-+----------------------------------+----------------------------+
-4 rows in set (0.00 sec)
+SELECT commit_hash, message FROM dolt.log;
+ commit_hash                      | message
+----------------------------------+----------------------------
+ 577isdjbq1951k2q4dqhli06jlauo51p | add 3, 4, 5 to the table
+ k318tpmqn4l97ofpaerato9c3m70lc14 | add 1, 2 to the table
+ 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table
+ omuqq67att6vfnka94drdallu4983gnr | Initialize data repository
+(4 rows)
 
 -- View the table
 SELECT * FROM mytable;
-+---+
-| a |
-+---+
-| 1 |
-| 2 |
-| 3 |
-| 4 |
-| 5 |
-+---+
-5 rows in set (0.00 sec)
+ a
+---
+ 1
+ 2
+ 3
+ 4
+ 5
+(5 rows)
 ```
 
 We want to cherry-pick only the change introduced in commit hash
@@ -454,32 +474,26 @@ We want to cherry-pick only the change introduced in commit hash
 SELECT DOLT_CHECKOUT('main');
 
 -- Cherry-pick the commit
-SELECT DOLT_CHERRY_PICK('k318tpmqn4l97ofpaerato9c3m70lc14');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| mh518gdgbsut8m705b7b5rie9neq9uaj |
-+----------------------------------+
-1 row in set (0.02 sec)
+SELECT * FROM DOLT_CHERRY_PICK('k318tpmqn4l97ofpaerato9c3m70lc14');
+ hash                             | data_conflicts | schema_conflicts | constraint_violations
+----------------------------------+----------------+------------------+-----------------------
+ mh518gdgbsut8m705b7b5rie9neq9uaj |              0 |                0 |                     0
+(1 row)
 
-mydb> SELECT * FROM mytable;
-+---+
-| a |
-+---+
-| 1 |
-| 2 |
-+---+
-2 rows in set (0.00 sec)
+SELECT * FROM mytable;
+ a
+---
+ 1
+ 2
+(2 rows)
 
-mydb> SELECT commit_hash, message FROM dolt_log;
-+----------------------------------+----------------------------+
-| commit_hash                      | message                    |
-+----------------------------------+----------------------------+
-| mh518gdgbsut8m705b7b5rie9neq9uaj | add 1, 2 to the table      |
-| 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table         |
-| omuqq67att6vfnka94drdallu4983gnr | Initialize data repository |
-+----------------------------------+----------------------------+
-3 rows in set (0.00 sec)
+SELECT commit_hash, message FROM dolt.log;
+ commit_hash                      | message
+----------------------------------+----------------------------
+ mh518gdgbsut8m705b7b5rie9neq9uaj | add 1, 2 to the table
+ 7e2q0hibo2m2af874i4e7isgnum74j4m | create a new table
+ omuqq67att6vfnka94drdallu4983gnr | Initialize data repository
+(3 rows)
 ```
 
 ### `DOLT_CLEAN()`
@@ -504,11 +518,9 @@ SELECT DOLT_CLEAN('--dry-run');
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -522,43 +534,39 @@ create table untracked (x int primary key);
 -- Commit the first table
 select dolt_add('committed');
 select dolt_commit('-m', 'commit a table');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| n7gle7jv6aqf72stbdicees6iduhuoo9 |
-+----------------------------------+
+ dolt_commit
+----------------------------------
+ n7gle7jv6aqf72stbdicees6iduhuoo9
+(1 row)
 
 -- Track the second table
 select dolt_add('tracked');
 
 -- Observe database status
-select * from dolt_status;
-+-------------------+--------+-----------+
-| table_name        | staged | status    |
-+-------------------+--------+-----------+
-| public.tracked    | 1      | new table |
-| public.untracked  | 0      | new table |
-+-------------------+--------+-----------+
+select * from dolt.status;
+ table_name        | staged | status
+-------------------+--------+-----------
+ public.tracked    | t      | new table
+ public.untracked  | f      | new table
+(2 rows)
 
 -- Clear untracked tables
 select dolt_clean('untracked');
 
 -- Observe final status
-select * from dolt_status;
-+-----------------+--------+-----------+
-| table_name      | staged | status    |
-+-----------------+--------+-----------+
-| public.tracked  | 1      | new table |
-+-----------------+--------+-----------+
+select * from dolt.status;
+ table_name      | staged | status
+-----------------+--------+-----------
+ public.tracked  | t      | new table
+(1 row)
 
 -- Committed and tracked tables are preserved
 select tablename from pg_tables;
-+----------------+
-| tablename      |
-+----------------+
-| committed      |
-| tracked        |
-+----------------+
+ tablename
+----------------
+ committed
+ tracked
+(2 rows)
 ```
 
 ### `DOLT_CLONE()`
@@ -588,11 +596,9 @@ SELECT DOLT_CLONE('file:///myDatabasesDir/database/.dolt/noms');
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Examples
@@ -604,13 +610,12 @@ SELECT DOLT_CLONE('file:///myDatabasesDir/us-jails/.dolt/noms');
 -- NOTE: quotes are required for database names with hyphens
 USE "us-jails";
 select tablename from pg_tables;
-+-----------------------------+
-| tablename                   |
-+-----------------------------+
-| incidents                   |
-| inmate_population_snapshots |
-| jails                       |
-+-----------------------------+
+ tablename
+-----------------------------
+ incidents
+ inmate_population_snapshots
+ jails
+(3 rows)
 ```
 
 ### `DOLT_COMMIT()`
@@ -650,11 +655,9 @@ author@example.com" format.
 #### Output Schema
 
 ```text
-+-------+------+----------------------------+
-| Field | Type | Description                |
-+-------+------+----------------------------+
-| hash  | text | hash of the commit created |
-+-------+------+----------------------------+
+ Field | Type | Description
+-------+------+----------------------------
+ hash  | text | hash of the commit created
 ```
 
 #### Examples
@@ -674,7 +677,7 @@ SELECT DOLT_COMMIT('-a', '-m', 'This is a commit', '--author', 'John Doe <johndo
 
 ### `DOLT_CONFLICTS_RESOLVE()`
 
-When a merge finds conflicting changes, it documents them in the dolt_conflicts table.
+When a merge finds conflicting changes, it documents them in the `dolt.conflicts` table.
 A conflict is between two versions: ours (the rows at the destination branch head) and theirs
 (the rows at the source branch head).
 `dolt conflicts resolve` will automatically resolve the conflicts by taking either
@@ -696,11 +699,9 @@ SELECT DOLT_CONFLICTS_RESOLVE('--theirs', <table>);
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Examples
@@ -713,7 +714,7 @@ USE mydb;
 SELECT DOLT_MERGE('feature-branch');
 
 -- Check for conflicts
-SELECT * FROM dolt_conflicts;
+SELECT * FROM dolt.conflicts;
 
 -- Resolve conflicts for tables t1 and t2 with rows from our branch.
 SELECT DOLT_CONFLICTS_RESOLVE('--ours', 't1', 't2');
@@ -737,12 +738,10 @@ SELECT DOLT_COUNT_COMMITS('--from', 'feature', '--to', 'main');
 #### Output Schema
 
 ```text
-+--------+--------+--------------------------------+
-| Field  | Type   | Description                    |
-+--------+--------+--------------------------------+
-| ahead  | bigint | commits in `from` not in `to`  |
-| behind | bigint | commits in `to` not in `from`  |
-+--------+--------+--------------------------------+
+ Field  | Type   | Description
+--------+--------+--------------------------------
+ ahead  | bigint | commits in `from` not in `to`
+ behind | bigint | commits in `to` not in `from`
 ```
 
 #### Example
@@ -772,11 +771,9 @@ No options for this function.
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -812,11 +809,9 @@ SELECT DOLT_GC('--shallow');
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 ### `DOLT_MERGE()`
@@ -873,14 +868,12 @@ details.
 #### Output Schema
 
 ```text
-+--------------+------+--------------------------------------+
-| Field        | Type | Description                          |
-+--------------+------+--------------------------------------+
-| hash         | text | hash of the merge commit             |
-| fast_forward | int  | whether the merge was a fast forward |
-| conflicts    | int  | number of conflicts created          |
-| message      | text | optional informational message       |
-+--------------+------+--------------------------------------+
+ Field        | Type | Description
+--------------+------+--------------------------------------
+ hash         | text | hash of the merge commit
+ fast_forward | int  | whether the merge was a fast forward
+ conflicts    | int  | number of conflicts created
+ message      | text | optional informational message
 ```
 
 #### Example
@@ -901,6 +894,9 @@ WHERE pk = 'key';
 SELECT DOLT_COMMIT('-a', '-m', 'committing all changes');
 
 -- Go back to main
+SELECT DOLT_CHECKOUT('main');
+
+-- Merge the feature branch into main
 SELECT DOLT_MERGE('feature-branch', '--author', 'John Doe <johndoe@example.com>');
 ```
 
@@ -935,19 +931,17 @@ commit on the target branch.
 If the merge causes conflicts or constraint violations, you must
 resolve them using the `dolt_conflicts` system tables before the
 transaction can be committed. See [Dolt system
-tables](/reference/version-control/dolt-system-tables##dolt_conflicts_usdtablename) for
+tables](/reference/version-control/dolt-system-tables#dolt_conflicts_usdtablename) for
 details.
 
 #### Output Schema
 
 ```text
-+--------------+------+-------------------------------------+
-| Field        | Type | Description                         |
-+--------------+------+-------------------------------------+
-| fast_forward | int  | whether the pull was a fast forward |
-| conflicts    | int  | number of conflicts created         |
-| message      | text | optional informational message      |
-+--------------+------+-------------------------------------+
+ Field        | Type | Description
+--------------+------+-------------------------------------
+ fast_forward | int  | whether the pull was a fast forward
+ conflicts    | int  | number of conflicts created
+ message      | text | optional informational message
 ```
 
 #### Example
@@ -962,7 +956,7 @@ SELECT DOLT_PULL('origin');
 SELECT DOLT_PULL('origin', 'some-branch');
 
 -- View a log of new commits
-SELECT * FROM dolt_log LIMIT 5;
+SELECT * FROM dolt.log LIMIT 5;
 ```
 
 ### `DOLT_PURGE_DROPPED_DATABASES()`
@@ -973,7 +967,7 @@ function](#dolt_undrop) can restore it. The `dolt_purge_dropped_databases()` fun
 holding area and permanently deletes any data from those databases. This action is not reversible,
 so callers should be cautious about using it. The main benefit of using this function is to reclaim
 disk space used by the temporary holding area. Because this is a destructive operation, callers must
-have `SUPER` privileges in order to execute it.
+have a `SUPERUSER` role in order to execute it.
 
 #### Example
 
@@ -1008,12 +1002,10 @@ SELECT DOLT_PUSH('--force', 'origin', 'main');
 #### Output Schema
 
 ```text
-+---------+------+--------------------------------+
-| Field   | Type | Description                    |
-+---------+------+--------------------------------+
-| status  | int  | 0 if successful, 1 if not      |
-| message | text | optional informational message |
-+---------+------+--------------------------------+
+ Field   | Type | Description
+---------+------+--------------------------------
+ status  | int  | 0 if successful, 1 if not
+ message | text | optional informational message
 ```
 
 #### Example
@@ -1074,19 +1066,17 @@ Currently only interactive rebases are supported, and there is no support for re
 
 `--interactive` or `-i`: Start an interactive rebase. Currently only interactive rebases are supported, so this option is required.
 
-`--continue`: Continue an interactive rebase after adjusting the rebase plan stored in `dolt_rebase`.
+`--continue`: Continue an interactive rebase after adjusting the rebase plan stored in the `dolt.rebase` system table.
 
 `--abort`: Abort a rebase in progress.
 
 #### Output Schema
 
 ```text
-+---------+------+-----------------------------+
-| Field   | Type | Description                 |
-+---------+------+-----------------------------+
-| status  | int  | 0 if successful, 1 if not   |
-| message | text | success/failure information |
-+---------+------+-----------------------------+
+ Field   | Type | Description
+---------+------+-----------------------------
+ status  | int  | 0 if successful, 1 if not
+ message | text | success/failure information
 ```
 
 #### Example
@@ -1113,7 +1103,7 @@ insert into t values (3);
 select dolt_commit('-am', 'inserting row 3');
 
 -- check out what our commit history on branch1 looks like before we rebase
-select commit_hash, message from dolt_log;
+select commit_hash, message from dolt.log;
            commit_hash            |          message
 ----------------------------------+----------------------------
  m2v3oajs9jesvvc44ihqlsu1uq2c8jf2 | inserting row 3
@@ -1127,7 +1117,7 @@ select commit_hash, message from dolt_log;
 -- start an interactive rebase and check out the default rebase plan; this will rebase
 -- all the new commits on this branch and move them to the tip of the main branch
 select dolt_rebase('-i', 'main');
-select * from dolt_rebase order by rebase_order;
+select * from dolt.rebase order by rebase_order;
  rebase_order | action |           commit_hash            | commit_message
 --------------+--------+----------------------------------+-----------------
          1.00 | pick   | tgltn67jjho1mp8a3jdl3jkip08jbbun | inserting row 1
@@ -1137,15 +1127,15 @@ select * from dolt_rebase order by rebase_order;
 
 -- adjust the rebase plan to reword the first commit, drop the commit that inserted row 2,
 -- and combine the third commit into the previous commit
-update dolt_rebase set action='reword', commit_message='insert rows' where rebase_order=1;
-update dolt_rebase set action='drop' where rebase_order=2;
-update dolt_rebase set action='fixup' where rebase_order=3;
+update dolt.rebase set action='reword', commit_message='insert rows' where rebase_order=1;
+update dolt.rebase set action='drop' where rebase_order=2;
+update dolt.rebase set action='fixup' where rebase_order=3;
 
 -- continue rebasing now that we've adjusted the rebase plan
 select dolt_rebase('--continue');
 
 -- check out the history
-select commit_hash, message from dolt_log;
+select commit_hash, message from dolt.log;
            commit_hash            |          message
 ----------------------------------+----------------------------
  8jc1dpj25fv6f2kn3bd47uokc8hs1vp0 | insert rows
@@ -1159,8 +1149,8 @@ select commit_hash, message from dolt_log;
 ### `DOLT_REMOTE()`
 
 Adds a remote for a database at given url, or removes an existing remote with its remote-tracking
-branches and configuration settings. To list existing remotes, use the [`dolt_remotes` system
-table](/reference/version-control/dolt-system-tables#dolt_remotes).
+branches and configuration settings. To list existing remotes, use the [`dolt.remotes` system
+table](/reference/version-control/dolt-system-tables#dolt.remotes).
 
 ```sql
 SELECT DOLT_REMOTE('add','remote_name','remote_url');
@@ -1170,11 +1160,9 @@ SELECT DOLT_REMOTE('remove','existing_remote_name');
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -1190,26 +1178,24 @@ SELECT DOLT_REMOTE('add','origin1','Dolthub/museum-collections');
 SELECT DOLT_REMOTE('add','origin2','file:///Users/jennifer/datasets/museum-collections');
 
 -- List remotes to check.
-SELECT * FROM dolt_remotes;
-+---------+--------------------------------------------------------------+-----------------------------------------+--------+
-| name    | url                                                          | fetch_specs                             | params |
-+---------+--------------------------------------------------------------+-----------------------------------------+--------+
-| origin  | https://doltremoteapi.dolthub.com/Dolthub/museum-collections | ["refs/heads/*:refs/remotes/origin/*"]  | {}     |
-| origin1 | https://doltremoteapi.dolthub.com/Dolthub/museum-collections | ["refs/heads/*:refs/remotes/origin1/*"] | {}     |
-| origin2 | file:///Users/jennifer/datasets/museum-collections           | ["refs/heads/*:refs/remotes/origin2/*"] | {}     |
-+---------+--------------------------------------------------------------+-----------------------------------------+--------+
+SELECT * FROM dolt.remotes;
+ name    | url                                                          | fetch_specs                             | params
+---------+--------------------------------------------------------------+-----------------------------------------+--------
+ origin  | https://doltremoteapi.dolthub.com/Dolthub/museum-collections | ["refs/heads/*:refs/remotes/origin/*"]  | {}
+ origin1 | https://doltremoteapi.dolthub.com/Dolthub/museum-collections | ["refs/heads/*:refs/remotes/origin1/*"] | {}
+ origin2 | file:///Users/jennifer/datasets/museum-collections           | ["refs/heads/*:refs/remotes/origin2/*"] | {}
+(3 rows)
 
 -- Remove a remote
 SELECT DOLT_REMOTE('remove','origin1');
 
 -- List remotes to check.
-SELECT * FROM dolt_remotes;
-+---------+--------------------------------------------------------------+-----------------------------------------+--------+
-| name    | url                                                          | fetch_specs                             | params |
-+---------+--------------------------------------------------------------+-----------------------------------------+--------+
-| origin  | https://doltremoteapi.dolthub.com/Dolthub/museum-collections | ["refs/heads/*:refs/remotes/origin/*"]  | {}     |
-| origin2 | file:///Users/jennifer/datasets/museum-collections           | ["refs/heads/*:refs/remotes/origin2/*"] | {}     |
-+---------+--------------------------------------------------------------+-----------------------------------------+--------+
+SELECT * FROM dolt.remotes;
+ name    | url                                                          | fetch_specs                             | params
+---------+--------------------------------------------------------------+-----------------------------------------+--------
+ origin  | https://doltremoteapi.dolthub.com/Dolthub/museum-collections | ["refs/heads/*:refs/remotes/origin/*"]  | {}
+ origin2 | file:///Users/jennifer/datasets/museum-collections           | ["refs/heads/*:refs/remotes/origin2/*"] | {}
+(2 rows)
 ```
 
 ### `DOLT_RESET()`
@@ -1247,11 +1233,9 @@ staged to be committed. This is the default behavior.
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -1298,11 +1282,12 @@ SELECT DOLT_REVERT('HEAD', '--author=reverter@rev.ert');
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field                 | Type | Description
+-----------------------+------+--------------------------------------
+ hash                  | text | hash of the created revert commit
+ data_conflicts        | int  | number of data conflicts
+ schema_conflicts      | int  | number of schema conflicts
+ constraint_violations | int  | number of constraint violations
 ```
 
 #### Example
@@ -1319,34 +1304,31 @@ SELECT dolt_commit('-am', 'Adding some more data');
 
 -- Examine the changes made in the commit immediately before the current HEAD commit
 SELECT to_pk, to_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=hashof('HEAD~1');
-+-------+------+----------------------------------+-----------+
-| to_pk | to_c | to_commit                        | diff_type |
-+-------+------+----------------------------------+-----------+
-| 1     | a    | fc4fks6jutcnee9ka6458nmuot7rl1r2 | added     |
-| 2     | b    | fc4fks6jutcnee9ka6458nmuot7rl1r2 | added     |
-| 3     | c    | fc4fks6jutcnee9ka6458nmuot7rl1r2 | added     |
-+-------+------+----------------------------------+-----------+
+ to_pk | to_c | to_commit                        | diff_type
+-------+------+----------------------------------+-----------
+ 1     | a    | fc4fks6jutcnee9ka6458nmuot7rl1r2 | added
+ 2     | b    | fc4fks6jutcnee9ka6458nmuot7rl1r2 | added
+ 3     | c    | fc4fks6jutcnee9ka6458nmuot7rl1r2 | added
+(3 rows)
 
 -- Revert the commit immediately before the current HEAD commit
 SELECT dolt_revert('HEAD~1');
 
 -- Check out the new commit created by dolt_revert
-SELECT commit_hash, message FROM dolt_log limit 1;
-+----------------------------------+---------------------------+
-| commit_hash                      | message                   |
-+----------------------------------+---------------------------+
-| vbevrdghj3in3napcgdsch0mq7f8en4v | Revert "Adding some data" |
-+----------------------------------+---------------------------+
+SELECT commit_hash, message FROM dolt.log limit 1;
+ commit_hash                      | message
+----------------------------------+---------------------------
+ vbevrdghj3in3napcgdsch0mq7f8en4v | Revert "Adding some data"
+(1 row)
 
 -- View the exact changes made by the revert commit
 SELECT from_pk, from_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=hashof('HEAD');
-+---------+--------+----------------------------------+-----------+
-| from_pk | from_c | to_commit                        | diff_type |
-+---------+--------+----------------------------------+-----------+
-| 1       | a      | vbevrdghj3in3napcgdsch0mq7f8en4v | removed   |
-| 2       | b      | vbevrdghj3in3napcgdsch0mq7f8en4v | removed   |
-| 3       | c      | vbevrdghj3in3napcgdsch0mq7f8en4v | removed   |
-+---------+--------+----------------------------------+-----------+
+ from_pk | from_c | to_commit                        | diff_type
+---------+--------+----------------------------------+-----------
+ 1       | a      | vbevrdghj3in3napcgdsch0mq7f8en4v | removed
+ 2       | b      | vbevrdghj3in3napcgdsch0mq7f8en4v | removed
+ 3       | c      | vbevrdghj3in3napcgdsch0mq7f8en4v | removed
+(3 rows)
 ```
 
 ### `DOLT_RM()`
@@ -1369,11 +1351,9 @@ tree tables, whether modified or not, are left alone.
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -1442,7 +1422,7 @@ Removes all stashes for the specified stash name.
 ### `DOLT_TAG()`
 
 Creates a new tag that points at specified commit ref, or deletes an existing tag. To list existing
-tags, use [`dolt_tags` system table](/reference/version-control/dolt-system-tables#dolt_tags).
+tags, use [`dolt.tags` system table](/reference/version-control/dolt-system-tables#dolt.tags).
 
 ```sql
 SELECT DOLT_TAG('tag_name', 'commit_ref');
@@ -1463,11 +1443,9 @@ author@example.com" format.
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -1501,11 +1479,9 @@ SELECT DOLT_THREAD_DUMP();
 #### Output Schema
 
 ```text
-+-------------+------+-------------------------------------+
-| Field       | Type | Description                         |
-+-------------+------+-------------------------------------+
-| thread_dump | text | the server's current goroutine dump |
-+-------------+------+-------------------------------------+
+ Field       | Type | Description
+-------------+------+-------------------------------------
+ thread_dump | text | the server's current goroutine dump
 ```
 
 ### `DOLT_UNDROP()`
@@ -1569,11 +1545,9 @@ avoid a confusing dirty working set with no visible diff.
 #### Output Schema
 
 ```text
-+--------+------+---------------------------+
-| Field  | Type | Description               |
-+--------+------+---------------------------+
-| status | int  | 0 if successful, 1 if not |
-+--------+------+---------------------------+
+ Field  | Type | Description
+--------+------+---------------------------
+ status | int  | 0 if successful, 1 if not
 ```
 
 #### Example
@@ -1587,13 +1561,15 @@ SELECT DOLT_COMMIT('-am', 'updating myTable.col1 tag');
 
 Verifies that working set changes (inserts, updates, and/or deletes) satisfy the
 defined table constraints. If any constraints are violated they are written to the
-[DOLT_CONSTRAINT_VIOLATIONS](/reference/version-control/dolt-system-tables#doltconstraintviolations) table.
+[`dolt.constraint_violations`](/reference/version-control/dolt-system-tables#dolt.constraint_violations) table.
 
 `DOLT_VERIFY_CONSTRAINTS` by default does not detect constraints for row changes
 that have been previously committed. The `--all` option can be specified if you
-wish to validate all rows in the database. If `FOREIGN_KEY_CHECKS` has been disabled in prior commits,
-you may want to use the `--all` option to ensure that the current state is
-consistent and no violated constraints are missed.
+wish to validate all rows in the database. Doltgres always enforces constraints for
+SQL statements, but operations such as merges can introduce constraint violations,
+which are recorded for later verification. If violating rows have been committed in
+prior commits, you may want to use the `--all` option to ensure that the current
+state is consistent and no violated constraints are missed.
 
 #### Arguments and Options
 
@@ -1604,17 +1580,15 @@ Verifies constraints against every row.
 
 `-o`, `--output-only`:
 Disables writing results to the
-[DOLT_CONSTRAINT_VIOLATIONS](/reference/version-control/dolt-system-tables#doltconstraintviolations)
+[`dolt.constraint_violations`](/reference/version-control/dolt-system-tables#dolt.constraint_violations)
 system table.
 
 #### Output Schema
 
 ```text
-+------------+------+-----------------------------------------+
-| Field      | Type | Description                             |
-+------------+------+-----------------------------------------+
-| violations | int  | 1 if violations were found, otherwise 0 |
-+------------+------+-----------------------------------------+
+ Field      | Type | Description
+------------+------+-----------------------------------------
+ violations | int  | 1 if violations were found, otherwise 0
 ```
 
 #### Example
@@ -1638,122 +1612,123 @@ A simple case:
 ```sql
 -- enable dolt_force_transaction_commit so that we can inspect the
 -- violation in our working set
-SET dolt_force_transaction_commit = ON;
-SET FOREIGN_KEY_CHECKS = OFF;
-INSERT INTO PARENT VALUES (1);
--- Violates child's foreign key constraint
-INSERT INTO CHILD VALUES (1, -1);
+SET dolt_force_transaction_commit TO ON;
 
-SELECT DOLT_VERIFY_CONSTRAINTS();
+-- Doltgres always enforces foreign key checks for SQL statements, so set up
+-- two branches whose merge violates child's foreign key constraint
+INSERT INTO parent VALUES (1);
+SELECT DOLT_COMMIT('-Am', 'setup');
+
+SELECT DOLT_CHECKOUT('-b', 'branch_to_merge');
+INSERT INTO child VALUES (1, 1);
+SELECT DOLT_COMMIT('-Am', 'add a child of parent 1');
+
+SELECT DOLT_CHECKOUT('main');
+DELETE FROM parent WHERE pk = 1;
+SELECT DOLT_COMMIT('-Am', 'delete parent 1');
+
+-- The merge introduces a foreign key constraint violation
+SELECT DOLT_MERGE('branch_to_merge');
+
+SELECT * FROM DOLT_VERIFY_CONSTRAINTS();
 /*
-+------------+
-| violations |
-+------------+
-| 1          |
-+------------+
+ violations
+------------
+ 1
+(1 row)
 */
 
-SELECT * from dolt_constraint_violations;
+SELECT * from dolt.constraint_violations;
 /*
-+-------+----------------+
-| table | num_violations |
-+-------+----------------+
-| child | 1              |
-+-------+----------------+
+ table | num_violations
+-------+----------------
+ child | 1
+(1 row)
 */
 
 SELECT violation_type, pk, parent_fk from dolt_constraint_violations_child;
 /*
-+----------------+----+-----------+
-| violation_type | pk | parent_fk |
-+----------------+----+-----------+
-| foreign key    | 1  | -1        |
-+----------------+----+-----------+
+ violation_type | pk | parent_fk
+----------------+----+-----------
+ foreign key    | 1  | -1
+(1 row)
 */
 ```
 
 Using `--all` to verify all rows:
 
 ```sql
-SET DOLT_FORCE_TRANSACTION_COMMIT = ON;
-SET FOREIGN_KEY_CHECKS = OFF;
-INSERT INTO PARENT VALUES (1);
-INSERT INTO CHILD VALUES (1, -1);
-SELECT DOLT_COMMIT('-am', 'violating rows');
+-- Continuing from the example above, clear the recorded violations, then
+-- force-commit the merged working set, which still contains violating rows
+DELETE FROM dolt_constraint_violations_child;
+SELECT DOLT_COMMIT('-a', '-f', '-m', 'commit rows that violate constraints');
 
 SELECT DOLT_VERIFY_CONSTRAINTS();
 /*
 No violations are returned since there are no changes in the working set.
 
-+------------+
-| violations |
-+------------+
-| 0          |
-+------------+
-*/
-
-SELECT * from dolt_constraints_violations_child;
-/*
-+----------------+----+-----------+----------------+
-| violation_type | pk | parent_fk | violation_info |
-+----------------+----+-----------+----------------+
-+----------------+----+-----------+----------------+
-*/
-
-SELECT DOLT_VERIFY_CONSTRAINTS('--all');
-/*
-When all rows are considered, constraint violations are found.
-
-+------------+
-| violations |
-+------------+
-| 1          |
-+------------+
+ dolt_verify_constraints
+-------------------------
+ 0
+(1 row)
 */
 
 SELECT * from dolt_constraint_violations_child;
 /*
-+----------------+----+-----------+
-| violation_type | pk | parent_fk |
-+----------------+----+-----------+
-| foreign key    | 1  | -1        |
-+----------------+----+-----------+
+ violation_type | pk | parent_fk | violation_info
+----------------+----+-----------+----------------
+(0 rows)
+*/
+
+SELECT * FROM DOLT_VERIFY_CONSTRAINTS('--all');
+/*
+When all rows are considered, constraint violations are found.
+
+ violations
+------------
+ 1
+(1 row)
+*/
+
+SELECT * from dolt_constraint_violations_child;
+/*
+ violation_type | pk | parent_fk
+----------------+----+-----------
+ foreign key    | 1  | -1
+(1 row)
 */
 ```
 
 Checking specific tables only:
 
 ```sql
-SET DOLT_FORCE_TRANSACTION_COMMIT = ON;
-SET FOREIGN_KEY_CHECKS = OFF;
-INSERT INTO PARENT VALUES (1);
-INSERT INTO CHILD VALUES (1, -1);
+-- Continuing from the example above, the violating row is still present in the
+-- child table. Clear the recorded violations, then verify each table
+-- individually by naming it as an argument.
+DELETE FROM dolt_constraint_violations_child;
 
-SELECT DOLT_VERIFY_CONSTRAINTS('parent');
+SELECT DOLT_VERIFY_CONSTRAINTS('--all', 'parent');
 /*
-+------------+
-| violations |
-+------------+
-| 0          |
-+------------+
+ dolt_verify_constraints
+-------------------------
+ 0
+(1 row)
 */
 
-SELECT DOLT_VERIFY_CONSTRAINTS('child');
+SELECT DOLT_VERIFY_CONSTRAINTS('--all', 'child');
 /*
-+------------+
-| violations |
-+------------+
-| 1          |
-+------------+
+ dolt_verify_constraints
+-------------------------
+ 1
+(1 row)
 */
 
 SELECT * from dolt_constraint_violations_child;
 /*
-+----------------+----+-----------+
-| violation_type | pk | parent_fk |
-+----------------+----+-----------+
-| foreign key    | 1  | -1        |
-+----------------+----+-----------+
+ violation_type | pk | parent_fk
+----------------+----+-----------
+ foreign key    | 1  | -1
+(1 row)
 */
 ```
 
@@ -1801,12 +1776,10 @@ to the current hash. For example, you can use this function to get the hash of a
 
 ```sql
 SELECT dolt_hashof_table('color');
-+----------------------------------+
-| dolt_hashof_table('color')       |
-+----------------------------------+
-| q8t28sb3h5g2lnhiojacpi7s09p4csjv |
-+----------------------------------+
-1 row in set (0.01 sec)
+ dolt_hashof_table
+----------------------------------
+ q8t28sb3h5g2lnhiojacpi7s09p4csjv
+(1 row)
 ```
 
 ### `DOLT_HASHOF_DB()`
@@ -1821,12 +1794,11 @@ This function can be used to watch for changes in the database by storing previo
 to the current hash. For example, you can use this function to get the hash of the entire database like so:
 
 ```sql
-mysql> SELECT dolt_hashof_db();
-+----------------------------------+
-| dolt_hashof_db()                 |
-+----------------------------------+
-| 1q8t28sb3h5g2lnhiojacpi7s09p4csj |
-+----------------------------------+
+SELECT dolt_hashof_db();
+ dolt_hashof_db
+----------------------------------
+ 1q8t28sb3h5g2lnhiojacpi7s09p4csj
+(1 row)
 ```
 
 It should be noted that if you are connected to branch 'main' and you call `dolt_hashof_db('feature')`, the hash may be different
@@ -1844,16 +1816,15 @@ binary.
 
 ```sql
 select dolt_version();
-+----------------+
-| dolt_version() |
-+----------------+
-| 0.40.4         |
-+----------------+
+ dolt_version
+----------------
+ 0.40.4
+(1 row)
 ```
 
 ### `HAS_ANCESTOR()`
 
-The `HASH_ANCESTOR(target, ancestor)` function returns a `boolean` indicating whether a
+The `HAS_ANCESTOR(target, ancestor)` function returns a `boolean` indicating whether a
 candidate `ancestor` commit is in the commit graph of the `target` ref.
 
 Consider the example commit graph from above:
@@ -1872,7 +1843,7 @@ select has_ancestor('feature', 'A'); -- true
 select has_ancestor('feature', 'E'); -- true
 select has_ancestor('feature', 'F'); -- false
 select has_ancestor('main', 'E');    -- true
-select has_ancestor('G', 'main');    -- true
+select has_ancestor('main', 'G');    -- true
 ```
 
 ## Table Functions
@@ -1925,16 +1896,14 @@ The `DOLT_DIFF()` table function takes either two or three required arguments:
 #### Schema
 
 ```sql
-+------------------+----------+
-| field            | type     |
-+------------------+----------+
-| from_commit      | TEXT     |
-| from_commit_date | DATETIME |
-| to_commit        | TEXT     |
-| to_commit_date   | DATETIME |
-| diff_type        | TEXT     |
-| other cols       |          |
-+------------------+----------+
+ field            | type
+------------------+----------
+ from_commit      | TEXT
+ from_commit_date | DATETIME
+ to_commit        | TEXT
+ to_commit_date   | DATETIME
+ diff_type        | TEXT
+ other cols       |
 ```
 
 The remaining columns are dependent on the schema of the user table as it existed at the `from_commit` and at
@@ -1954,47 +1923,41 @@ to see how our data has changed on the feature branch.
 Here is the schema of `inventory` at the tip of `main`:
 
 ```sql
-+----------+------+
-| field    | type |
-+----------+------+
-| pk       | int  |
-| name     | text |
-| quantity | int  |
-+----------+------+
+ field    | type
+----------+------
+ pk       | int
+ name     | text
+ quantity | int
 ```
 
 Here is the schema of `inventory` at the tip of `feature_branch`:
 
 ```sql
-+----------+------+
-| field    | type |
-+----------+------+
-| pk       | int  |
-| name     | text |
-| color    | text |
-| size     | int  |
-+----------+------+
+ field    | type
+----------+------
+ pk       | int
+ name     | text
+ color    | text
+ size     | int
 ```
 
 Based on the schemas at the two revision above, the resulting schema from `DOLT_DIFF()` will be:
 
 ```sql
-+------------------+----------+
-| field            | type     |
-+------------------+----------+
-| from_pk          | int      |
-| from_name        | text     |
-| from_quantity    | int      |
-| from_commit      | TEXT     |
-| from_commit_date | DATETIME |
-| to_pk            | int      |
-| to_name          | text     |
-| to_color         | text     |
-| to_size          | int      |
-| to_commit        | TEXT     |
-| to_commit_date   | DATETIME |
-| diff_type        | text     |
-+------------------+----------+
+ field            | type
+------------------+----------
+ from_pk          | int
+ from_name        | text
+ from_quantity    | int
+ from_commit      | TEXT
+ from_commit_date | DATETIME
+ to_pk            | int
+ to_name          | text
+ to_color         | text
+ to_size          | int
+ to_commit        | TEXT
+ to_commit_date   | DATETIME
+ diff_type        | text
 ```
 
 To calculate the diff and view the results, we run the following query:
@@ -2006,14 +1969,13 @@ SELECT * FROM DOLT_DIFF('main', 'feature_branch', 'inventory')
 The results from `DOLT_DIFF()` show how the data has changed going from `main` to `feature_branch`:
 
 ```sql
-+---------+-------+---------+----------+----------------+-----------------------------------+-----------+---------+---------------+-------------+-----------------------------------+-----------+
-| to_name | to_pk | to_size | to_color | to_commit      | to_commit_date                    | from_name | from_pk | from_quantity | from_commit | from_commit_date                  | diff_type |
-+---------+-------+---------+----------+----------------+-----------------------------------+-----------+---------+---------------+-------------+-----------------------------------+-----------+
-| shirt   | 1     | 15      | false    | feature_branch | 2022-03-23 18:57:38.476 +0000 UTC | shirt     | 1       | 70            | main        | 2022-03-23 18:51:48.333 +0000 UTC | modified  |
-| shoes   | 2     | 9       | brown    | feature_branch | 2022-03-23 18:57:38.476 +0000 UTC | shoes     | 2       | 200           | main        | 2022-03-23 18:51:48.333 +0000 UTC | modified  |
-| pants   | 3     | 30      | blue     | feature_branch | 2022-03-23 18:57:38.476 +0000 UTC | pants     | 3       | 150           | main        | 2022-03-23 18:51:48.333 +0000 UTC | modified  |
-| hat     | 4     | 6       | grey     | feature_branch | 2022-03-23 18:57:38.476 +0000 UTC | NULL      | NULL    | NULL          | main        | 2022-03-23 18:51:48.333 +0000 UTC | added     |
-+---------+-------+---------+----------+----------------+-----------------------------------+-----------+---------+---------------+-------------+-----------------------------------+-----------+
+ to_name | to_pk | to_size | to_color | to_commit      | to_commit_date                    | from_name | from_pk | from_quantity | from_commit | from_commit_date                  | diff_type
+---------+-------+---------+----------+----------------+-----------------------------------+-----------+---------+---------------+-------------+-----------------------------------+-----------
+ shirt   | 1     | 15      | false    | feature_branch | 2022-03-23 18:57:38.476 +0000 UTC | shirt     | 1       | 70            | main        | 2022-03-23 18:51:48.333 +0000 UTC | modified
+ shoes   | 2     | 9       | brown    | feature_branch | 2022-03-23 18:57:38.476 +0000 UTC | shoes     | 2       | 200           | main        | 2022-03-23 18:51:48.333 +0000 UTC | modified
+ pants   | 3     | 30      | blue     | feature_branch | 2022-03-23 18:57:38.476 +0000 UTC | pants     | 3       | 150           | main        | 2022-03-23 18:51:48.333 +0000 UTC | modified
+ hat     | 4     | 6       | grey     | feature_branch | 2022-03-23 18:57:38.476 +0000 UTC | NULL      | NULL    | NULL          | main        | 2022-03-23 18:51:48.333 +0000 UTC | added
+(4 rows)
 ```
 
 #### Three dot `DOLT_DIFF`
@@ -2074,22 +2036,20 @@ The `DOLT_DIFF_STAT()` table function takes three arguments:
 #### Schema
 
 ```sql
-+-----------------+--------+
-| field           | type   |
-+-----------------+--------+
-| table_name      | TEXT   |
-| rows_unmodified | BIGINT |
-| rows_added      | BIGINT |
-| rows_deleted    | BIGINT |
-| rows_modified   | BIGINT |
-| cells_added     | BIGINT |
-| cells_deleted   | BIGINT |
-| cells_modified  | BIGINT |
-| old_row_count   | BIGINT |
-| new_row_count   | BIGINT |
-| old_cell_count  | BIGINT |
-| new_cell_count  | BIGINT |
-+-----------------+--------+
+ field           | type
+-----------------+--------
+ table_name      | TEXT
+ rows_unmodified | BIGINT
+ rows_added      | BIGINT
+ rows_deleted    | BIGINT
+ rows_modified   | BIGINT
+ cells_added     | BIGINT
+ cells_deleted   | BIGINT
+ cells_modified  | BIGINT
+ old_row_count   | BIGINT
+ new_row_count   | BIGINT
+ old_cell_count  | BIGINT
+ new_cell_count  | BIGINT
 ```
 
 #### Example
@@ -2101,24 +2061,21 @@ commits.
 Here is the schema of `inventory` at the tip of `main`:
 
 ```sql
-+----------+-------------+------+-----+---------+-------+
-| Field    | Type        | Null | Key | Default | Extra |
-+----------+-------------+------+-----+---------+-------+
-| pk       | int         | NO   | PRI | NULL    |       |
-| name     | varchar(50) | YES  |     | NULL    |       |
-| quantity | int         | YES  |     | NULL    |       |
-+----------+-------------+------+-----+---------+-------+
+ Field    | Type        | Null | Key | Default | Extra
+----------+-------------+------+-----+---------+-------
+ pk       | int         | NO   | PRI | NULL    |
+ name     | varchar(50) | YES  |     | NULL    |
+ quantity | int         | YES  |     | NULL    |
 ```
 
 Here is what table `inventory` has at the tip of `main`:
 
 ```sql
-+----+-------+----------+
-| pk | name  | quantity |
-+----+-------+----------+
-| 1  | shirt | 15       |
-| 2  | shoes | 10       |
-+----+-------+----------+
+ pk | name  | quantity
+----+-------+----------
+ 1  | shirt | 15
+ 2  | shoes | 10
+(2 rows)
 ```
 
 We perform some changes to the `inventory` table and create new keyless table:
@@ -2134,13 +2091,12 @@ INSERT INTO items VALUES ('shirt'),('pants');
 Here is what table `inventory` has in the current working set:
 
 ```sql
-+----+-------+----------+-------+
-| pk | name  | quantity | color |
-+----+-------+----------+-------+
-| 1  | shirt | 0        | NULL  |
-| 2  | shoes | 10       | NULL  |
-| 3  | hat   | 6        | red   |
-+----+-------+----------+-------+
+ pk | name  | quantity | color
+----+-------+----------+-------
+ 1  | shirt | 0        | NULL
+ 2  | shoes | 10       | NULL
+ 3  | hat   | 6        | red
+(3 rows)
 ```
 
 To calculate the diff and view the results, we run the following query:
@@ -2152,12 +2108,11 @@ SELECT * FROM DOLT_DIFF_STAT('main', 'WORKING');
 The results from `DOLT_DIFF_STAT()` show how the data has changed going from tip of `main` to our current working set:
 
 ```sql
-+-------------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------+
-| table_name        | rows_unmodified | rows_added | rows_deleted | rows_modified | cells_added | cells_deleted | cells_modified | old_row_count | new_row_count | old_cell_count | new_cell_count |
-+-------------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------+
-| public.inventory  | 1               | 1          | 0            | 1             | 6           | 0             | 1              | 2             | 3             | 6              | 12             |
-| public.items      | NULL            | 2          | 0            | NULL          | NULL        | NULL          | NULL           | NULL          | NULL          | NULL           | NULL           |
-+-------------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------+
+ table_name        | rows_unmodified | rows_added | rows_deleted | rows_modified | cells_added | cells_deleted | cells_modified | old_row_count | new_row_count | old_cell_count | new_cell_count
+-------------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------
+ public.inventory  | 1               | 1          | 0            | 1             | 6           | 0             | 1              | 2             | 3             | 6              | 12
+ public.items      | NULL            | 2          | 0            | NULL          | NULL        | NULL          | NULL           | NULL          | NULL          | NULL           | NULL
+(2 rows)
 ```
 
 To get a table specific changes going from the current working set to tip of `main`, we run the following query:
@@ -2169,11 +2124,10 @@ SELECT * FROM DOLT_DIFF_STAT('WORKING', 'main', 'inventory');
 With result of single row:
 
 ```sql
-+-------------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------+
-| table_name        | rows_unmodified | rows_added | rows_deleted | rows_modified | cells_added | cells_deleted | cells_modified | old_row_count | new_row_count | old_cell_count | new_cell_count |
-+-------------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------+
-| public.inventory  | 1               | 0          | 1            | 1             | 0           | 6             | 1              | 3             | 2             | 12             | 6              |
-+-------------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------+
+ table_name        | rows_unmodified | rows_added | rows_deleted | rows_modified | cells_added | cells_deleted | cells_modified | old_row_count | new_row_count | old_cell_count | new_cell_count
+-------------------+-----------------+------------+--------------+---------------+-------------+---------------+----------------+---------------+---------------+----------------+----------------
+ public.inventory  | 1               | 0          | 1            | 1             | 0           | 6             | 1              | 3             | 2             | 12             | 6
+(1 row)
 ```
 
 ### `DOLT_DIFF_SUMMARY()`
@@ -2219,15 +2173,13 @@ The `DOLT_DIFF_SUMMARY()` table function takes three arguments:
 #### Schema
 
 ```sql
-+-----------------+---------+
-| field           | type    |
-+-----------------+---------+
-| from_table_name | TEXT    |
-| to_table_name   | TEXT    |
-| diff_type       | TEXT    |
-| data_change     | BOOLEAN |
-| schema_change   | BOOLEAN |
-+-----------------+---------+
+ field           | type
+-----------------+---------
+ from_table_name | TEXT
+ to_table_name   | TEXT
+ diff_type       | TEXT
+ data_change     | BOOLEAN
+ schema_change   | BOOLEAN
 ```
 
 #### Example
@@ -2239,24 +2191,21 @@ table data or all tables with data changes across specific commits.
 Here is the schema of `inventory` at the tip of `main`:
 
 ```sql
-+----------+-------------+------+-----+---------+-------+
-| Field    | Type        | Null | Key | Default | Extra |
-+----------+-------------+------+-----+---------+-------+
-| pk       | int         | NO   | PRI | NULL    |       |
-| name     | varchar(50) | YES  |     | NULL    |       |
-| quantity | int         | YES  |     | NULL    |       |
-+----------+-------------+------+-----+---------+-------+
+ Field    | Type        | Null | Key | Default | Extra
+----------+-------------+------+-----+---------+-------
+ pk       | int         | NO   | PRI | NULL    |
+ name     | varchar(50) | YES  |     | NULL    |
+ quantity | int         | YES  |     | NULL    |
 ```
 
 Here is what table `inventory` has at the tip of `main`:
 
 ```sql
-+----+-------+----------+
-| pk | name  | quantity |
-+----+-------+----------+
-| 1  | shirt | 15       |
-| 2  | shoes | 10       |
-+----+-------+----------+
+ pk | name  | quantity
+----+-------+----------
+ 1  | shirt | 15
+ 2  | shoes | 10
+(2 rows)
 ```
 
 We perform some changes to the `inventory` table and create new keyless table:
@@ -2271,13 +2220,12 @@ CREATE TABLE items (name varchar(50));
 Here is what table `inventory` has in the current working set:
 
 ```sql
-+----+-------+----------+-------+
-| pk | name  | quantity | color |
-+----+-------+----------+-------+
-| 1  | shirt | 0        | NULL  |
-| 2  | shoes | 10       | NULL  |
-| 3  | hat   | 6        | red   |
-+----+-------+----------+-------+
+ pk | name  | quantity | color
+----+-------+----------+-------
+ 1  | shirt | 0        | NULL
+ 2  | shoes | 10       | NULL
+ 3  | hat   | 6        | red
+(3 rows)
 ```
 
 To calculate the diff and view the results, we run the following query:
@@ -2290,12 +2238,11 @@ The results from `DOLT_DIFF_SUMMARY()` show how the data has changed going from 
 `main` to our current working set:
 
 ```sql
-+-------------------+-------------------+-----------+-------------+---------------+
-| from_table_name   | to_table_name     | diff_type | data_change | schema_change |
-+-------------------+-------------------+-----------+-------------+---------------+
-| public.inventory  | public.inventory  | modified  | 1           | 1             |
-| public.items      | public.items      | added     | 0           | 1             |
-+-------------------+-------------------+-----------+-------------+---------------+
+ from_table_name   | to_table_name     | diff_type | data_change | schema_change
+-------------------+-------------------+-----------+-------------+---------------
+ public.inventory  | public.inventory  | modified  | 1           | 1
+ public.items      | public.items      | added     | 0           | 1
+(2 rows)
 ```
 
 To get a table specific changes going from the current working set to tip of `main`, we
@@ -2308,11 +2255,10 @@ SELECT * FROM DOLT_DIFF_SUMMARY('WORKING', 'main', 'inventory');
 With result of single row:
 
 ```sql
-+-------------------+-------------------+-----------+-------------+---------------+
-| from_table_name   | to_table_name     | diff_type | data_change | schema_change |
-+-------------------+-------------------+-----------+-------------+---------------+
-| public.inventory  | public.inventory  | modified  | 1           | 1             |
-+-------------------+-------------------+-----------+-------------+---------------+
+ from_table_name   | to_table_name     | diff_type | data_change | schema_change
+-------------------+-------------------+-----------+-------------+---------------
+ public.inventory  | public.inventory  | modified  | 1           | 1
+(1 row)
 ```
 
 ### `DOLT_LOG()`
@@ -2356,17 +2302,15 @@ The `DOLT_LOG()` table function takes any number of optional revision arguments:
 #### Schema
 
 ```sql
-+-------------+----------+
-| field       | type     |
-+-------------+--------- +
-| commit_hash | text     |
-| committer   | text     |
-| email       | text     |
-| date        | datetime |
-| message     | text     |
-| parents     | text     | -- column hidden unless `--parents` flag provided
-| refs        | text     | -- column hidden unless `--decorate` is "short" or "full"
-+-------------+--------- +
+ field       | type
+-------------+----------
+ commit_hash | text
+ committer   | text
+ email       | text
+ date        | datetime
+ message     | text
+ parents     | text       -- column hidden unless `--parents` flag provided
+ refs        | text       -- column hidden unless `--decorate` is "short" or "full"
 ```
 
 #### Example
@@ -2389,14 +2333,13 @@ And it would return commits in reverse-chronological order - `D`,`C`, `B`, and `
 output will look something like:
 
 ```sql
-+----------------------------------+-----------+--------------------+-----------------------------------+---------------+
-| commit_hash                      | committer | email              | date                              | message       |
-+----------------------------------+-----------+--------------------+-----------------------------------+---------------+
-| qi331vjgoavqpi5am334cji1gmhlkdv5 | bheni     | brian@dolthub.com | 2019-06-07 00:22:24.856 +0000 UTC | update rating  |
-| 137qgvrsve1u458briekqar5f7iiqq2j | bheni     | brian@dolthub.com | 2019-04-04 22:43:00.197 +0000 UTC | change rating  |
-| rqpd7ga1nic3jmc54h44qa05i8124vsp | bheni     | brian@dolthub.com | 2019-04-04 21:07:36.536 +0000 UTC | fixes          |
-| qfk3bpan8mtrl05n8nihh2e3t68t3hrk | bheni     | brian@dolthub.com | 2019-04-04 21:01:16.649 +0000 UTC | test           |
-+----------------------------------+-----------+--------------------+-----------------------------------+---------------+
+ commit_hash                      | committer | email              | date                              | message
+----------------------------------+-----------+--------------------+-----------------------------------+---------------
+ qi331vjgoavqpi5am334cji1gmhlkdv5 | bheni     | brian@dolthub.com | 2019-06-07 00:22:24.856 +0000 UTC | update rating
+ 137qgvrsve1u458briekqar5f7iiqq2j | bheni     | brian@dolthub.com | 2019-04-04 22:43:00.197 +0000 UTC | change rating
+ rqpd7ga1nic3jmc54h44qa05i8124vsp | bheni     | brian@dolthub.com | 2019-04-04 21:07:36.536 +0000 UTC | fixes
+ qfk3bpan8mtrl05n8nihh2e3t68t3hrk | bheni     | brian@dolthub.com | 2019-04-04 21:01:16.649 +0000 UTC | test
+(4 rows)
 ```
 
 To get the commit log for the `feature` branch, we can change the revision in the above
@@ -2473,16 +2416,14 @@ The `DOLT_PATCH()` table function takes the following arguments:
 #### Schema
 
 ```sql
-+------------------+--------+
-| field            | type   |
-+------------------+--------+
-| statement_order  | BIGINT |
-| from_commit_hash | TEXT   |
-| to_commit_hash   | TEXT   |
-| table_name       | TEXT   |
-| diff_type        | TEXT   |
-| statement        | TEXT   |
-+------------------+--------+
+ field            | type
+------------------+--------
+ statement_order  | BIGINT
+ from_commit_hash | TEXT
+ to_commit_hash   | TEXT
+ table_name       | TEXT
+ diff_type        | TEXT
+ statement        | TEXT
 ```
 
 #### Example
@@ -2494,24 +2435,21 @@ commits.
 Here is the schema of `inventory` at the tip of `main`:
 
 ```sql
-+----------+-------------+------+-----+---------+-------+
-| Field    | Type        | Null | Key | Default | Extra |
-+----------+-------------+------+-----+---------+-------+
-| pk       | int         | NO   | PRI | NULL    |       |
-| name     | varchar(50) | YES  |     | NULL    |       |
-| quantity | int         | YES  |     | NULL    |       |
-+----------+-------------+------+-----+---------+-------+
+ Field    | Type        | Null | Key | Default | Extra
+----------+-------------+------+-----+---------+-------
+ pk       | int         | NO   | PRI | NULL    |
+ name     | varchar(50) | YES  |     | NULL    |
+ quantity | int         | YES  |     | NULL    |
 ```
 
 Here is what table `inventory` has at the tip of `main`:
 
 ```sql
-+----+-------+----------+
-| pk | name  | quantity |
-+----+-------+----------+
-| 1  | shirt | 15       |
-| 2  | shoes | 10       |
-+----+-------+----------+
+ pk | name  | quantity
+----+-------+----------
+ 1  | shirt | 15
+ 2  | shoes | 10
+(2 rows)
 ```
 
 We perform some changes to the `inventory` table and create new keyless table:
@@ -2526,13 +2464,12 @@ INSERT INTO items VALUES ('shirt'),('pants');
 Here is what table `inventory` has in the current working set:
 
 ```sql
-+----+-------+----------+
-| pk | name  | quantity |
-+----+-------+----------+
-| 1  | shirt | 0        |
-| 2  | shoes | 10       |
-| 3  | hat   | 6        |
-+----+-------+----------+
+ pk | name  | quantity
+----+-------+----------
+ 1  | shirt | 0
+ 2  | shoes | 10
+ 3  | hat   | 6
+(3 rows)
 ```
 
 To get SQL patch statements, we run the following query:
@@ -2544,17 +2481,15 @@ SELECT * FROM DOLT_PATCH('main', 'WORKING');
 The results from `DOLT_PATCH()` show how the data has changed going from tip of `main` to our current working set:
 
 ```sql
-+-----------------+----------------------------------+----------------+-------------------+-----------+----------------------------------------------------------------------+
-| statement_order | from_commit_hash                 | to_commit_hash | table_name        | diff_type | statement                                                            |
-+-----------------+----------------------------------+----------------+-------------------+-----------+----------------------------------------------------------------------+
-| 1               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.inventory  | data      | UPDATE `inventory` SET `quantity`=0 WHERE `pk`=1;                    |
-| 2               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.inventory  | data      | INSERT INTO `inventory` (`pk`,`name`,`quantity`) VALUES (3,'hat',6); |
-| 3               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.items      | schema    | CREATE TABLE `items` (                                               |
-|                 |                                  |                |                   |           |   `name` varchar(50)                                                 |
-|                 |                                  |                |                   |           | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;    |
-| 4               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.items      | data      | INSERT INTO `items` (`name`) VALUES ('shirt');                       |
-| 5               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.items      | data      | INSERT INTO `items` (`name`) VALUES ('pants');                       |
-+-----------------+----------------------------------+----------------+-------------------+-----------+----------------------------------------------------------------------+
+ statement_order | from_commit_hash                 | to_commit_hash | table_name        | diff_type | statement
+-----------------+----------------------------------+----------------+-------------------+-----------+----------------------------------------------------------------------
+ 1               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.inventory  | data      | UPDATE "inventory" SET "quantity"=0 WHERE "pk"=1;
+ 2               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.inventory  | data      | INSERT INTO "inventory" ("pk","name","quantity") VALUES (3,'hat',6);
+ 3               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.items      | schema    | CREATE TABLE "items" (
+                 |                                  |                |                   |           |   "name" varchar(50)
+                 |                                  |                |                   |           | );
+ 4               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.items      | data      | INSERT INTO "items" ("name") VALUES ('shirt');
+ 5               | gg4kasjl6tgrtoag8tnn1der09sit4co | WORKING        | public.items      | data      | INSERT INTO "items" ("name") VALUES ('pants');
 ```
 
 To get a table specific schema patch going from the current working set to tip of `main`, we run the following query:
@@ -2566,11 +2501,10 @@ SELECT * FROM DOLT_PATCH('WORKING', 'main', 'items') WHERE diff_type = 'schema';
 With result of single row:
 
 ```sql
-+-----------------+------------------+----------------------------------+---------------+-----------+---------------------+
-| statement_order | from_commit_hash | to_commit_hash                   | table_name    | diff_type | statement           |
-+-----------------+------------------+----------------------------------+---------------+-----------+---------------------+
-| 1               | WORKING          | gg4kasjl6tgrtoag8tnn1der09sit4co | public.items  | schema    | DROP TABLE `items`; |
-+-----------------+------------------+----------------------------------+---------------+-----------+---------------------+
+ statement_order | from_commit_hash | to_commit_hash                   | table_name    | diff_type | statement
+-----------------+------------------+----------------------------------+---------------+-----------+---------------------
+ 1               | WORKING          | gg4kasjl6tgrtoag8tnn1der09sit4co | public.items  | schema    | DROP TABLE "items";
+(1 row)
 ```
 
 ### `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()`
@@ -2597,13 +2531,11 @@ The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function takes two required a
 #### Schema
 
 ```text
-+---------------------+--------+
-| field               | type   |
-+---------------------+--------+
-| table               | TEXT   |
-| num_data_conflicts  | BIGINT |
-| num_schema_conflicts| BIGINT |
-+---------------------+--------+
+ field               | type
+---------------------+--------
+ table               | TEXT
+ num_data_conflicts  | BIGINT
+ num_schema_conflicts| BIGINT
 ```
 
 #### Example
@@ -2617,13 +2549,12 @@ SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY('main', 'feature_branch');
 This might return results like:
 
 ```text
-+----------+--------------------+---------------------+
-| table    | num_data_conflicts | num_schema_conflicts|
-+----------+--------------------+---------------------+
-| users    | 3                  | 0                   |
-| orders   | 1                  | 0                   |
-| products | NULL               | 2                   |
-+----------+--------------------+---------------------+
+ table    | num_data_conflicts | num_schema_conflicts
+----------+--------------------+---------------------
+ users    | 3                  | 0
+ orders   | 1                  | 0
+ products | NULL               | 2
+(3 rows)
 ```
 
 Note that if there are schema conflicts the data conflicts are not able to be calculated and that column will be null.
@@ -2671,14 +2602,12 @@ The schema of the `DOLT_PREVIEW_MERGE_CONFLICTS()` function depends on the schem
 Additionally, the result set includes these metadata columns:
 
 ```text
-+------------------+--------+
-| field            | type   |
-+------------------+--------+
-| from_root_ish    | TEXT   |
-| our_diff_type    | TEXT   |
-| their_diff_type  | TEXT   |
-| dolt_conflict_id | TEXT   |
-+------------------+--------+
+ field            | type
+------------------+--------
+ from_root_ish    | TEXT
+ our_diff_type    | TEXT
+ their_diff_type  | TEXT
+ dolt_conflict_id | TEXT
 ```
 
 Where:
@@ -2698,12 +2627,11 @@ SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS('main', 'feature_branch', 'users');
 This might return results like:
 
 ```text
-+----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
-| from_root_ish                    | base_id | base_name | base_email     | our_id  | our_name  | our_email        | our_diff_type | their_id  | their_name| their_email       | their_diff_type | dolt_conflict_id       |
-+----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
-| abc123def456789012345678901234567 | 1       | John      | john@email.com | 1       | John Doe  | john@email.com   | modified      | 1         | John      | john@newemail.com | modified        | abc123def456           |
-| abc123def456789012345678901234567 | NULL    | NULL      | NULL           | 2       | Jane      | jane@email.com   | added         | 2         | Jane Doe  | jane@email.com    | added           | def789ghi012           |
-+----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
+ from_root_ish                    | base_id | base_name | base_email     | our_id  | our_name  | our_email        | our_diff_type | their_id  | their_name| their_email       | their_diff_type | dolt_conflict_id
+----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------
+ abc123def456789012345678901234567 | 1       | John      | john@email.com | 1       | John Doe  | john@email.com   | modified      | 1         | John      | john@newemail.com | modified        | abc123def456
+ abc123def456789012345678901234567 | NULL    | NULL      | NULL           | 2       | Jane      | jane@email.com   | added         | 2         | Jane Doe  | jane@email.com    | added           | def789ghi012
+(2 rows)
 ```
 
 This output shows:
@@ -2725,13 +2653,11 @@ For keyless tables (tables without primary keys), the behavior is slightly diffe
 Keyless tables include additional columns not present in tables with primary keys:
 
 ```text
-+-------------------+--------+
-| field             | type   |
-+-------------------+--------+
-| base_cardinality  | BIGINT |
-| our_cardinality   | BIGINT |
-| their_cardinality | BIGINT |
-+-------------------+--------+
+ field             | type
+-------------------+--------
+ base_cardinality  | BIGINT
+ our_cardinality   | BIGINT
+ their_cardinality | BIGINT
 ```
 
 - `base_cardinality` — the number of occurrences of the conflicting row in the merge ancestor commit
@@ -2747,11 +2673,10 @@ SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS('main', 'feature_branch', 'logs');
 This might return results like:
 
 ```text
-+----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
-| from_root_ish                    | base_timestamp      | base_level  | base_message     | our_timestamp       | our_level   | our_message      | our_diff_type | their_timestamp     | their_level | their_message    | their_diff_type | dolt_conflict_id       | base_cardinality | our_cardinality   | their_cardinality   |
-+----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
-| abc123def456789012345678901234567 | 2023-01-01 10:00:00 | ERROR       | Database timeout | 2023-01-01 10:00:00 | ERROR       | Database timeout | modified      | 2023-01-01 10:00:00 | ERROR       | Database timeout | modified        | xyz789abc123           | 1                | 3                 | 2                   |
-+----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
+ from_root_ish                    | base_timestamp      | base_level  | base_message     | our_timestamp       | our_level   | our_message      | our_diff_type | their_timestamp     | their_level | their_message    | their_diff_type | dolt_conflict_id       | base_cardinality | our_cardinality   | their_cardinality
+----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------
+ abc123def456789012345678901234567 | 2023-01-01 10:00:00 | ERROR       | Database timeout | 2023-01-01 10:00:00 | ERROR       | Database timeout | modified      | 2023-01-01 10:00:00 | ERROR       | Database timeout | modified        | xyz789abc123           | 1                | 3                 | 2
+(1 row)
 ```
 
 In this example, the same log entry exists once in the base branch, but appears 3 times in our branch and 2 times in their branch, creating a conflict about cardinality (how many times the row should appear).
@@ -2764,7 +2689,7 @@ This detailed view allows you to examine the exact differences that would cause 
 
 ### `DOLT_REFLOG()`
 
-The `DOLT_REFLOG()` table function shows the history of named refs (e.g. branches and tags), which is useful when you want to understand how a branch or tag has changed over time to reference different commits, particularly for information that isn't surfaced through the `dolt_log` system table or `dolt_log()` table function. For example, if you use `dolt_reset()` to change the commit a branch points to, you can use `dolt_reflog()` to see what commit the branch was pointing to before it was moved to that commit. Another common use case for `dolt_reflog()` is to recreate a branch or tag that was accidentally deleted. The example section below shows how to recreate a deleted branch.
+The `DOLT_REFLOG()` table function shows the history of named refs (e.g. branches and tags), which is useful when you want to understand how a branch or tag has changed over time to reference different commits, particularly for information that isn't surfaced through the `dolt.log` system table or `dolt_log()` table function. For example, if you use `dolt_reset()` to change the commit a branch points to, you can use `dolt_reflog()` to see what commit the branch was pointing to before it was moved to that commit. Another common use case for `dolt_reflog()` is to recreate a branch or tag that was accidentally deleted. The example section below shows how to recreate a deleted branch.
 
 The data from Dolt's reflog comes from [Dolt's journaling chunk store](https://www.dolthub.com/blog/2023-03-08-dolt-chunk-journal/). This data is local to a Dolt database and never included when pushing, pulling, or cloning a Dolt database. This means when you clone a Dolt database, it will not have any reflog data until you perform operations that change what commit branches or tags reference.
 
@@ -2791,14 +2716,12 @@ The `dolt_reflog()` table function can also be called with the `--all` flag to s
 #### Schema
 
 ```sql
-+-----------------------+-----------+
-| field                 | type      |
-+-----------------------+-----------+
-| ref                   | TEXT      |
-| ref_timestamp         | TIMESTAMP |
-| commit_hash           | TEXT      |
-| commit_message        | TEXT      |
-+-----------------------+-----------+
+ field                 | type
+-----------------------+-----------
+ ref                   | TEXT
+ ref_timestamp         | TIMESTAMP
+ commit_hash           | TEXT
+ commit_message        | TEXT
 ```
 
 #### Example
@@ -2813,14 +2736,13 @@ select dolt_branch('-D', 'prodBranch');
 -- where the branch was deleted to see what commits the prodBranch branch has referenced. Using the same Dolt
 -- instance is important, since reflog information is always local and not included when pushing/pulling databases.
 select * from dolt_reflog('prodBranch');
-+-----------------------+---------------------+----------------------------------+-------------------------------+
-| ref                   | ref_timestamp       | commit_hash                      | commit_message                |
-+-----------------------+---------------------+----------------------------------+-------------------------------+
-| refs/heads/prodBranch | 2023-10-25 20:54:37 | v531ptpmv2tquig8v591tsjghtj84ksg | inserting row 42              |
-| refs/heads/prodBranch | 2023-10-25 20:53:12 | rvt34lqrbtdr3dhnjchruu73lik4e398 | inserting row 100000          |
-| refs/heads/prodBranch | 2023-10-25 20:53:06 | v531ptpmv2tquig8v591tsjghtj84ksg | inserting row 42              |
-| refs/heads/prodBranch | 2023-10-25 20:52:43 | ihuj1l7fmqq37sjhtlrgpup5n76gfhju | inserting row 1 into table xy |
-+-----------------------+---------------------+----------------------------------+-------------------------------+
+ ref                   | ref_timestamp       | commit_hash                      | commit_message
+-----------------------+---------------------+----------------------------------+-------------------------------
+ refs/heads/prodBranch | 2023-10-25 20:54:37 | v531ptpmv2tquig8v591tsjghtj84ksg | inserting row 42
+ refs/heads/prodBranch | 2023-10-25 20:53:12 | rvt34lqrbtdr3dhnjchruu73lik4e398 | inserting row 100000
+ refs/heads/prodBranch | 2023-10-25 20:53:06 | v531ptpmv2tquig8v591tsjghtj84ksg | inserting row 42
+ refs/heads/prodBranch | 2023-10-25 20:52:43 | ihuj1l7fmqq37sjhtlrgpup5n76gfhju | inserting row 1 into table xy
+(4 rows)
 
 -- The last commit prodBranch pointed to was v531ptpmv2tquig8v591tsjghtj84ksg, so to restore our branch, we
 -- just need to create a branch with the same name, pointing to that last commit.
@@ -2858,14 +2780,12 @@ The `DOLT_SCHEMA_DIFF()` table function takes three arguments:
 #### Schema
 
 ```sql
-+-----------------------+------+
-| field                 | type |
-+-----------------------+------+
-| from_table_name       | TEXT |
-| to_table_name         | TEXT |
-| from_create_statement | TEXT |
-| to_create_statement   | TEXT |
-+-----------------------+------+
+ field                 | type
+-----------------------+------
+ from_table_name       | TEXT
+ to_table_name         | TEXT
+ from_create_statement | TEXT
+ to_create_statement   | TEXT
 ```
 
 #### Example
@@ -2884,32 +2804,30 @@ SELECT * FROM DOLT_SCHEMA_DIFF('main', 'feature_branch')
 The results from `DOLT_SCHEMA_DIFF()` show how the schema for all tables has changed going from tip of `main` to tip of `feature_branch`:
 
 ```sql
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| from_table_name   | to_table_name     | from_create_statement                                             | to_create_statement                                               |
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| public.employees  |                   | CREATE TABLE `employees` (                                        |                                                                   |
-|                   |                   |   `pk` int NOT NULL,                                              |                                                                   |
-|                   |                   |   `name` varchar(50),                                             |                                                                   |
-|                   |                   |   PRIMARY KEY (`pk`)                                              |                                                                   |
-|                   |                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |                                                                   |
-| public.inventory  | public.inventory  | CREATE TABLE `inventory` (                                        | CREATE TABLE `inventory` (                                        |
-|                   |                   |   `pk` int NOT NULL,                                              |   `pk` int NOT NULL,                                              |
-|                   |                   |   `name` varchar(50),                                             |   `name` varchar(50),                                             |
-|                   |                   |   `quantity` int,                                                 |   `color` varchar(10),                                            |
-|                   |                   |   PRIMARY KEY (`pk`)                                              |   PRIMARY KEY (`pk`)                                              |
-|                   |                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
-|                   | public.photos     |                                                                   | CREATE TABLE `photos` (                                           |
-|                   |                   |                                                                   |   `pk` int NOT NULL,                                              |
-|                   |                   |                                                                   |   `name` varchar(50),                                             |
-|                   |                   |                                                                   |   `dt` datetime(6),                                               |
-|                   |                   |                                                                   |   PRIMARY KEY (`pk`)                                              |
-|                   |                   |                                                                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
-| public.vacations  | public.trips      | CREATE TABLE `vacations` (                                        | CREATE TABLE `trips` (                                            |
-|                   |                   |   `pk` int NOT NULL,                                              |   `pk` int NOT NULL,                                              |
-|                   |                   |   `name` varchar(50),                                             |   `name` varchar(50),                                             |
-|                   |                   |   PRIMARY KEY (`pk`)                                              |   PRIMARY KEY (`pk`)                                              |
-|                   |                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+ from_table_name   | to_table_name     | from_create_statement       | to_create_statement
+-------------------+-------------------+-----------------------------+-----------------------------
+ public.employees  |                   | CREATE TABLE "employees" (  |
+                   |                   |   "pk" integer NOT NULL,    |
+                   |                   |   "name" varchar(50),       |
+                   |                   |   PRIMARY KEY ("pk")        |
+                   |                   | );                          |
+ public.inventory  | public.inventory  | CREATE TABLE "inventory" (  | CREATE TABLE "inventory" (
+                   |                   |   "pk" integer NOT NULL,    |   "pk" integer NOT NULL,
+                   |                   |   "name" varchar(50),       |   "name" varchar(50),
+                   |                   |   "quantity" integer,       |   "color" varchar(10),
+                   |                   |   PRIMARY KEY ("pk")        |   PRIMARY KEY ("pk")
+                   |                   | );                          | );
+                   | public.photos     |                             | CREATE TABLE "photos" (
+                   |                   |                             |   "pk" integer NOT NULL,
+                   |                   |                             |   "name" varchar(50),
+                   |                   |                             |   "dt" timestamp,
+                   |                   |                             |   PRIMARY KEY ("pk")
+                   |                   |                             | );
+ public.vacations  | public.trips      | CREATE TABLE "vacations" (  | CREATE TABLE "trips" (
+                   |                   |   "pk" integer NOT NULL,    |   "pk" integer NOT NULL,
+                   |                   |   "name" varchar(50),       |   "name" varchar(50),
+                   |                   |   PRIMARY KEY ("pk")        |   PRIMARY KEY ("pk")
+                   |                   | );                          | );
 ```
 
 Let's look at the returned data.
@@ -2940,16 +2858,14 @@ SELECT * FROM DOLT_SCHEMA_DIFF('main', 'feature_branch', 'inventory')
 We will see this set of results:
 
 ```sql
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| from_table_name   | to_table_name     | from_create_statement                                             | to_create_statement                                               |
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| public.inventory  | public.inventory  | CREATE TABLE `inventory` (                                        | CREATE TABLE `inventory` (                                        |
-|                   |                   |   `pk` int NOT NULL,                                              |   `pk` int NOT NULL,                                              |
-|                   |                   |   `name` varchar(50),                                             |   `name` varchar(50),                                             |
-|                   |                   |   `quantity` int,                                                 |   `color` varchar(10),                                            |
-|                   |                   |   PRIMARY KEY (`pk`)                                              |   PRIMARY KEY (`pk`)                                              |
-|                   |                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+ from_table_name   | to_table_name     | from_create_statement       | to_create_statement
+-------------------+-------------------+-----------------------------+-----------------------------
+ public.inventory  | public.inventory  | CREATE TABLE "inventory" (  | CREATE TABLE "inventory" (
+                   |                   |   "pk" integer NOT NULL,    |   "pk" integer NOT NULL,
+                   |                   |   "name" varchar(50),       |   "name" varchar(50),
+                   |                   |   "quantity" integer,       |   "color" varchar(10),
+                   |                   |   PRIMARY KEY ("pk")        |   PRIMARY KEY ("pk")
+                   |                   | );                          | );
 ```
 
 When a table is renamed, we can specify either the "old" table name, or the "new" table name, and we will receive the same results. The following two queries will provide the same results:
@@ -2962,15 +2878,13 @@ SELECT * FROM DOLT_SCHEMA_DIFF('main', 'feature_branch', 'vacations');
 Here are the results:
 
 ```sql
-+-------------------+---------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| from_table_name   | to_table_name | from_create_statement                                             | to_create_statement                                               |
-+-------------------+---------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| public.vacations  | public.trips  | CREATE TABLE `vacations` (                                        | CREATE TABLE `trips` (                                            |
-|                   |               |   `pk` int NOT NULL,                                              |   `pk` int NOT NULL,                                              |
-|                   |               |   `name` varchar(50),                                             |   `name` varchar(50),                                             |
-|                   |               |   PRIMARY KEY (`pk`)                                              |   PRIMARY KEY (`pk`)                                              |
-|                   |               | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
-+-------------------+---------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+ from_table_name   | to_table_name | from_create_statement       | to_create_statement
+-------------------+---------------+-----------------------------+-----------------------------
+ public.vacations  | public.trips  | CREATE TABLE "vacations" (  | CREATE TABLE "trips" (
+                   |               |   "pk" integer NOT NULL,    |   "pk" integer NOT NULL,
+                   |               |   "name" varchar(50),       |   "name" varchar(50),
+                   |               |   PRIMARY KEY ("pk")        |   PRIMARY KEY ("pk")
+                   |               | );                          | );
 ```
 
 Finally, we can flip the order of the revisions to get the schema diff in the opposite direction.
@@ -2982,32 +2896,30 @@ select * from dolt_schema_diff('feature_branch', 'main');
 The above query will produce this output:
 
 ```sql
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| from_table_name   | to_table_name     | from_create_statement                                             | to_create_statement                                               |
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
-| public.photos     |                   | CREATE TABLE `photos` (                                           |                                                                   |
-|                   |                   |   `pk` int NOT NULL,                                              |                                                                   |
-|                   |                   |   `name` varchar(50),                                             |                                                                   |
-|                   |                   |   `dt` datetime(6),                                               |                                                                   |
-|                   |                   |   PRIMARY KEY (`pk`)                                              |                                                                   |
-|                   |                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |                                                                   |
-|                   | public.employees  |                                                                   | CREATE TABLE `employees` (                                        |
-|                   |                   |                                                                   |   `pk` int NOT NULL,                                              |
-|                   |                   |                                                                   |   `name` varchar(50),                                             |
-|                   |                   |                                                                   |   PRIMARY KEY (`pk`)                                              |
-|                   |                   |                                                                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
-| public.inventory  | public.inventory  | CREATE TABLE `inventory` (                                        | CREATE TABLE `inventory` (                                        |
-|                   |                   |   `pk` int NOT NULL,                                              |   `pk` int NOT NULL,                                              |
-|                   |                   |   `name` varchar(50),                                             |   `name` varchar(50),                                             |
-|                   |                   |   `color` varchar(10),                                            |   `quantity` int,                                                 |
-|                   |                   |   PRIMARY KEY (`pk`)                                              |   PRIMARY KEY (`pk`)                                              |
-|                   |                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
-| public.trips      | public.vacations  | CREATE TABLE `trips` (                                            | CREATE TABLE `vacations` (                                        |
-|                   |                   |   `pk` int NOT NULL,                                              |   `pk` int NOT NULL,                                              |
-|                   |                   |   `name` varchar(50),                                             |   `name` varchar(50),                                             |
-|                   |                   |   PRIMARY KEY (`pk`)                                              |   PRIMARY KEY (`pk`)                                              |
-|                   |                   | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; | ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin; |
-+-------------------+-------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+ from_table_name   | to_table_name     | from_create_statement       | to_create_statement
+-------------------+-------------------+-----------------------------+-----------------------------
+ public.photos     |                   | CREATE TABLE "photos" (     |
+                   |                   |   "pk" integer NOT NULL,    |
+                   |                   |   "name" varchar(50),       |
+                   |                   |   "dt" timestamp,           |
+                   |                   |   PRIMARY KEY ("pk")        |
+                   |                   | );                          |
+                   | public.employees  |                             | CREATE TABLE "employees" (
+                   |                   |                             |   "pk" integer NOT NULL,
+                   |                   |                             |   "name" varchar(50),
+                   |                   |                             |   PRIMARY KEY ("pk")
+                   |                   |                             | );
+ public.inventory  | public.inventory  | CREATE TABLE "inventory" (  | CREATE TABLE "inventory" (
+                   |                   |   "pk" integer NOT NULL,    |   "pk" integer NOT NULL,
+                   |                   |   "name" varchar(50),       |   "name" varchar(50),
+                   |                   |   "color" varchar(10),      |   "quantity" integer,
+                   |                   |   PRIMARY KEY ("pk")        |   PRIMARY KEY ("pk")
+                   |                   | );                          | );
+ public.trips      | public.vacations  | CREATE TABLE "trips" (      | CREATE TABLE "vacations" (
+                   |                   |   "pk" integer NOT NULL,    |   "pk" integer NOT NULL,
+                   |                   |   "name" varchar(50),       |   "name" varchar(50),
+                   |                   |   PRIMARY KEY ("pk")        |   PRIMARY KEY ("pk")
+                   |                   | );                          | );
 ```
 
 Note the difference between this select and the previous `dolt_schema_diff('main', 'feature_branch')` invocation:
@@ -3027,6 +2939,9 @@ You can try calling `DOLT_SCHEMA_DIFF()` against the [DoltHub docs_examples DB](
 
 The `DOLT_QUERY_DIFF()` table function calculates the data difference between any two queries, producing a table similar to the `DOLT_DIFF()` table function.
 
+> **Known limitation:** `DOLT_QUERY_DIFF()` does not currently work in Doltgres. The examples below
+> show the intended behavior once support is added.
+
 #### Privileges
 
 `DOLT_QUERY_DIFF()` table function requires `SELECT` privilege on all tables in the database (e.g. `GRANT SELECT ON mydb.*`).
@@ -3038,41 +2953,37 @@ For this example, we have the table `t` in two branches `main` and `other`.
 On `main`, the table `t` has the following data:
 
 ```sql
-+---+----+
-| i | j  |
-+---+----+
-| 0 | 0  |
-| 1 | 10 |
-| 3 | 3  |
-| 4 | 4  |
-+---+----+
+ i | j
+---+----
+ 0 | 0
+ 1 | 10
+ 3 | 3
+ 4 | 4
+(4 rows)
 ```
 
 On `other`, the table `t` has the following data:
 
 ```sql
-+---+---+
-| i | j |
-+---+---+
-| 0 | 0 |
-| 1 | 1 |
-| 2 | 2 |
-| 4 | 4 |
-+---+---+
+ i | j
+---+---
+ 0 | 0
+ 1 | 1
+ 2 | 2
+ 4 | 4
+(4 rows)
 ```
 
 We can use the `DOLT_QUERY_DIFF()` table function to calculate the difference between the two tables:
 
 ```sql
-dolt> select * from dolt_query_diff('select * from t as of main', 'select * from t as of other');
-+--------+--------+------+------+-----------+
-| from_i | from_j | to_i | to_j | diff_type |
-+--------+--------+------+------+-----------+
-| 1      | 10     | 1    | 1    | modified  |
-| NULL   | NULL   | 2    | 2    | added     |
-| 3      | 3      | NULL | NULL | deleted   |
-+--------+--------+------+------+-----------+
-3 rows in set (0.00 sec)
+select * from dolt_query_diff('select * from t as of main', 'select * from t as of other');
+ from_i | from_j | to_i | to_j | diff_type
+--------+--------+------+------+-----------
+ 1      | 10     | 1    | 1    | modified
+ NULL   | NULL   | 2    | 2    | added
+ 3      | 3      | NULL | NULL | deleted
+(3 rows)
 ```
 
 ### Note

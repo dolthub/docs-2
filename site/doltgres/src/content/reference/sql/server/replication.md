@@ -20,7 +20,7 @@ when you do **not** need the hot-standby support of Direct-to-Standby Replicatio
 Remote Replication](/reference/server/replication#direct-vs.-remote-replication) for more details on the
 differences between Remote-Based Replication and Hot Standby Replication.
 
-In **Direct-to-Standby Replication**, the primary dolt sql-server instance replicates all writes to
+In **Direct-to-Standby Replication**, the primary Doltgres server instance replicates all writes to
 a set of configured standby servers. In this mode, there is no intermediate
 [remote](/concepts/git/remotes) and all SQL transaction commits are replicated, not
 just Doltgres commits.
@@ -78,15 +78,19 @@ Set the appropriate server variables:
 
 ```sql
 select dolt_remote('add', 'origin', 'file:///var/share/myremote/');
-ALTER SYSTEM SET dolt_replicate_to_remote 'origin';
+SET dolt_replicate_to_remote TO 'origin';
 ```
-
-> **Note**
 
 ### Note
 
-The `ALTER SYSTEM SET` syntax is not yet supported. For the time being, you must set system
-variables in the `config.yaml` file.
+Postgres's `ALTER SYSTEM SET` syntax is not supported. Setting a global-only Dolt system variable
+with a plain `SET` statement applies it at the global scope. To make a setting persist across
+server restarts, set it under the `system_variables:` key in your `config.yaml` file:
+
+```yaml
+system_variables:
+  dolt_replicate_to_remote: origin
+```
 
 
 
@@ -107,7 +111,7 @@ After a `DOLT_COMMIT()`, changes are pushed to the configured remote.
 To stop replication unset the configuration variable.
 
 ```sql
-ALTER SYSTEM SET dolt_replicate_to_remote '';
+SET dolt_replicate_to_remote TO '';
 ```
 
 Note, you must restart the server after changing replication configuration for changes to take
@@ -122,15 +126,19 @@ commit by setting the [system variable](/concepts/sql/system-variables),
 this setting, you lose the ability to enter commit messages.
 
 ```sql
-ALTER SYSTEM SET dolt_transaction_commit TO 1;
+SET dolt_transaction_commit TO 1;
 ```
-
-> **Note**
 
 ### Note
 
-The `ALTER SYSTEM SET` syntax is not yet supported. For the time being, you must set system
-variables in the `config.yaml` file.
+A plain `SET` applies `dolt_transaction_commit` to the current session only. To enable it for all
+sessions and persist it across server restarts, set it under the `system_variables:` key in your
+`config.yaml` file:
+
+```yaml
+system_variables:
+  dolt_transaction_commit: 1
+```
 
 
 
@@ -144,7 +152,7 @@ setting will increase the speed of Dolt commits, but make read
 replicas eventually consistent.
 
 ```sql
-ALTER SYSTEM SET dolt_async_replication TO 1
+SET dolt_async_replication TO 1;
 ```
 
 ### Configuring a Replica
@@ -167,42 +175,46 @@ to pick specific branches or
 to replicate all branches.
 
 ```sql
-ALTER SYSTEM SET dolt_replicate_heads TO 'main';
-ALTER SYSTEM SET dolt_read_replica_remote TO 'origin';
+SET dolt_replicate_heads TO 'main';
+SET dolt_read_replica_remote TO 'origin';
 select * from test;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-+----+----+
+ pk | c1
+----+----
+  0 |  0
+  1 |  1
+(2 rows)
 ```
 
-You must restart the replica server for changes to take effect.
+You must restart the replica server for changes to take effect. To make these settings survive the
+restart, set them under the `system_variables:` key in your `config.yaml`:
+
+```yaml
+system_variables:
+  dolt_replicate_heads: main
+  dolt_read_replica_remote: origin
+```
 
 Now back on the primary:
 
 ```sql
 insert into test values (2,2);
-select dolt_commit('-am', 'Inserted (2,2)');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| i97i9f1a3vrvd09pphiq0bbdeuf8riid |
-+----------------------------------+
+select * from dolt_commit('-am', 'Inserted (2,2)');
+               hash
+----------------------------------
+ i97i9f1a3vrvd09pphiq0bbdeuf8riid
+(1 row)
 ```
 
 And back to the replica.
 
 ```sql
 select * from test;
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-+----+----+
+ pk | c1
+----+----
+  0 |  0
+  1 |  1
+  2 |  2
+(3 rows)
 ```
 
 #### Replicate all branches
@@ -215,8 +227,8 @@ can be set at a time. So I unset `@@dolt_replicate_heads` and set
 `@@dolt_replicate_all_heads`.
 
 ```sql
-ALTER SYSTEM SET dolt_replicate_heads TO '';
-ALTER SYSTEM SET dolt_replicate_all_heads TO 1"
+SET dolt_replicate_heads TO '';
+SET dolt_replicate_all_heads TO 1;
 ```
 
 Now I'm going to make a new branch on the primary and insert a new value on it.
@@ -231,15 +243,14 @@ The read replica now has the change when I try and read the new branch.
 
 ```sql
 select dolt_checkout('branch1');
-select * from test;"
-+----+----+
-| pk | c1 |
-+----+----+
-| 0  | 0  |
-| 1  | 1  |
-| 2  | 2  |
-| 3  | 3  |
-+----+----+
+select * from test;
+ pk | c1
+----+----
+  0 |  0
+  1 |  1
+  2 |  2
+  3 |  3
+(4 rows)
 ```
 
 ### Replicating multiple databases
@@ -264,9 +275,9 @@ using the URL template provided and begin pushing to it.
 URL, with the replacement token `{database}` in it. Some examples:
 
 ```sql
-ALTER SYSTEM SET dolt_replication_remote_url_template = 'file:///share/doltRemotes/{database}'; -- file based remote
-ALTER SYSTEM SET dolt_replication_remote_url_template = 'aws://dynamo-table:s3-bucket/{database}'; -- AWS remote
-ALTER SYSTEM SET dolt_replication_remote_url_template = 'gs://mybucket/remotes/{database}'; -- GCP remote
+SET dolt_replication_remote_url_template TO 'file:///share/doltRemotes/{database}'; -- file based remote
+SET dolt_replication_remote_url_template TO 'aws://dynamo-table:s3-bucket/{database}'; -- AWS remote
+SET dolt_replication_remote_url_template TO 'gs://mybucket/remotes/{database}'; -- GCP remote
 ```
 
 For some remotes, additional configuration for authorization may be
@@ -291,13 +302,13 @@ instead](/reference/server/replication#direct-to-standby-replication).
 
 ### Multi-Primary
 
-We do not have specific solutions or documentation to run Dolt as an
+We do not have specific solutions or documentation to run Doltgres as an
 OLTP database with multiple primaries. It is possible to connect
 several write targets with a common remote middleman, but they would
-need to reconcile merge conflicts in the same way an offline Dolt
+need to reconcile merge conflicts in the same way an offline Doltgres
 database does. Providing a transactional layer to enforce multi-primary
 (to avoid merge conflicts) or a way to automatically resolve merge
-conflicts is necessary to run Dolt as a multi-primary database
+conflicts is necessary to run Doltgres as a multi-primary database
 effectively.
 
 ## Direct to Standby Replication
@@ -357,10 +368,10 @@ bootstrap configuration.
 
 ### Bootstrap Remotes
 
-If databases already exist when the `doltgres sql-server` instance is started, they will need to
+If databases already exist when the `doltgres` instance is started, they will need to
 have corresponding remotes as configured in the `cluster.standby_remotes` configuration. Any
-database created database through SQL `CREATE DATABASE` will automatically have remotes created
-corresponding to the `remote_url_templates`. The recommended way to run `doltgres sql-server` in cluster
+database created through SQL `CREATE DATABASE` will automatically have remotes created
+corresponding to the `remote_url_templates`. The recommended way to run `doltgres` in cluster
 mode is in a newly empty directory with:
 
 ```sh
@@ -465,7 +476,7 @@ In the configured example, if you run the first statement on `dolt-1.db` and
 the second statement on `dolt-2.db`, you will have performed an orderly failover
 from `dolt-1.db` to make `dolt-2.db` the new primary.
 
-### Atomatic Role Transitions
+### Automatic Role Transitions
 
 It can happen that server instances learn about new role configuration from
 their peers as they attempt to replicate writes or when they receive a
@@ -513,31 +524,30 @@ The current role and configuration epoch can be accessed through global session
 variables.
 
 ```sql
-show dolt_cluster_role;
-+----------------------------+
-|          dolt_cluster_role |
-+----------------------------+
-| primary                    |
-+----------------------------+
-show dolt_cluster_role_epoch;
-+----------------------------------+
-|          dolt_cluster_role_epoch |
-+----------------------------------+
-|                               15 |
-+----------------------------------+
+SELECT current_setting('dolt_cluster_role');
+ current_setting
+-----------------
+ primary
+(1 row)
 
+SELECT current_setting('dolt_cluster_role_epoch');
+ current_setting
+-----------------
+ 15
+(1 row)
 ```
 
-The current status of replication to the standby can be queried in a system
-table of a system database, `dolt_cluster.dolt_cluster_status`.
+The current status of replication to the standby can be queried through the
+`dolt_cluster_status` system table in the `dolt_cluster` system database.
+Connect to the `dolt_cluster` database first, then query the table:
 
 ```sql
-select * from dolt_cluster.dolt_cluster_status;
-+----------+----------------+---------+-------+------------------------+----------------------------+---------------+
-| database | standby_remote | role    | epoch | replication_lag_millis | last_update                | current_error |
-+----------+----------------+---------+-------+------------------------+----------------------------+---------------+
-| appdb    | standby        | primary |    15 |                      0 | 2022-10-17 19:07:38.366702 | NULL          |
-+----------+----------------+---------+-------+------------------------+----------------------------+---------------+
+\c dolt_cluster
+select * from dolt_cluster_status;
+ database | standby_remote |  role   | epoch | replication_lag_millis |        last_update         | current_error
+----------+----------------+---------+-------+------------------------+----------------------------+---------------
+ appdb    | standby        | primary |    15 |                      0 | 2022-10-17 19:07:38.366702 |
+(1 row)
 ```
 
 For monitoring the health of replication, we recommend alerting on:
@@ -552,8 +562,8 @@ For monitoring the health of replication, we recommend alerting on:
 
 ## A Note on Security
 
-Enabling cluster replication on a dolt sql-server exposes a remotesapi port on
-the sql-server instance. Attempts are made to authenticate and authorize the
+Enabling cluster replication on a Doltgres server exposes a remotesapi port on
+the server instance. Attempts are made to authenticate and authorize the
 traffic on this port so that only servers which are configured to replicate to
 each other can communicate over it.
 
@@ -585,8 +595,8 @@ cluster:
     remote_url_template: https://standby_replica_one.svc.cluster.local:50051/{database}
   - name: standby_replica_two
     remote_url_template: https://standby_replica_two.svc.cluster.local:50051/{database}
-  boostrap_role: ...
-  boostrap_epoch: ...
+  bootstrap_role: ...
+  bootstrap_epoch: ...
   remotesapi:
     # The listening address. By default all listenable interfaces.
     address: "127.0.0.1" | "::1" | "..."
@@ -633,12 +643,12 @@ certificates themselves.
 ## Direct vs. Remote Replication
 
 The above presents two different ways of achieving replication and running
-read-replicas with dolt sql-server. For some use cases, either one might meet
+read-replicas with Doltgres. For some use cases, either one might meet
 your needs, but they are somewhat different architecturally. Here are some
 things to consider when choosing how to configure replication.
 
 1. Direct replication is designed to allow for controlled failover from a
-   primary to a standby. Some inflight requests will fail, but all commited writes
+   primary to a standby. Some inflight requests will fail, but all committed writes
    will be present on the standby after `SELECT dolt_assume_cluster_role('standby',
 ...)` succeeds on the primary. After that the standby can be promoted to
    primary. On the other hand, replication through a remote does not currently
@@ -662,7 +672,7 @@ things to consider when choosing how to configure replication.
    itself is responsible for pushing each write to each standby server. For read
    replicas, read latency for direct replication is always faster, since no
    communication to a remote must take place. You can expect increased read latency
-   on every transaction start of aremote-based read replica.
+   on every transaction start of a remote-based read replica.
 
 4. The ability to replicate writes with direct replication is not coupled with
    the creation of dolt commits on a dolt branch. This may make it more

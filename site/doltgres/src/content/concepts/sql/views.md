@@ -15,7 +15,7 @@ Views allow you to derive tables using SQL instead of storing a copy of all the 
 to derive. As a simple example, in a table of employee's salaries, you may store yearly salary but
 when using the table to calculate monthly salary, you use a view that divides the yearly salary by 12.
 
-Note, accessing views is be slower than accessing a table itself because the database must compute
+Note, accessing views can be slower than accessing a table itself because the database must compute
 the values returned.
 
 ## Difference between Postgres Views and Doltgres Views
@@ -33,13 +33,12 @@ create table salaries (name varchar(255), salary int, primary key(name));
 insert into salaries values ('Jim', 120000), ('Bob', 240000), ('Sally', 360000);
 create view monthly_salaries as select name, salary/12 as monthly_pay from salaries;
 select * from monthly_salaries order by monthly_pay asc;
-+-------+-------------+
-| name  | monthly_pay |
-+-------+-------------+
-| Jim   | 10000       |
-| Bob   | 20000       |
-| Sally | 30000       |
-+-------+-------------+
+ name  | monthly_pay
+-------+-------------
+ Jim   | 10000
+ Bob   | 20000
+ Sally | 30000
+(3 rows)
 ```
 
 ### Using `as of` with Views
@@ -47,27 +46,24 @@ select * from monthly_salaries order by monthly_pay asc;
 ```text
 select dolt_add('-A');
 select dolt_commit('-am', 'Created table and view');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| trj7dm02r8c94nqpbphjgolhhsk37rkj |
-+----------------------------------+
+           dolt_commit
+----------------------------------
+ trj7dm02r8c94nqpbphjgolhhsk37rkj
+(1 row)
 insert into salaries values ('Tim', 480000);
 select * from monthly_salaries order by monthly_pay asc;
-+-------+-------------+
-| name  | monthly_pay |
-+-------+-------------+
-| Jim   | 10000       |
-| Bob   | 20000       |
-| Sally | 30000       |
-| Tim   | 40000       |
-+-------+-------------+
+ name  | monthly_pay
+-------+-------------
+ Jim   | 10000
+ Bob   | 20000
+ Sally | 30000
+ Tim   | 40000
+(4 rows)
 select * from monthly_salaries as of 'HEAD' order by monthly_pay asc;
-+-------+-------------+
-| name  | monthly_pay |
-+-------+-------------+
-| Jim   | 10000       |
-| Bob   | 20000       |
-| Sally | 30000       |
-+-------+-------------+
+ name  | monthly_pay
+-------+-------------
+ Jim   | 10000
+ Bob   | 20000
+ Sally | 30000
+(3 rows)
 ```

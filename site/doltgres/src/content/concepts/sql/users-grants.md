@@ -17,6 +17,9 @@ assign users roles using `GRANT` statements.
 
 ## Difference between Postgres Users & Grants and Doltgres Users & Grants
 
-The goal is for Doltgres users and grants to match Doltgres users and grants exactly. This
-functionality is not yet implemented, and Doltgres has a single user and password. [Submit an
-issue](https://github.com/dolthub/doltgresql/issues) if you need more functionality.
+The goal is for Doltgres users and grants to match Postgres users and grants exactly. Doltgres
+implements Postgres-style roles, including `CREATE ROLE`, `CREATE USER`, `ALTER`, and `DROP`
+statements. `GRANT` and `REVOKE` are supported for privileges on databases, schemas, tables,
+sequences, and routines. Some forms are not yet supported, such as grants on specific columns and
+cross-database grants. [Submit an issue](https://github.com/dolthub/doltgresql/issues) if you need
+more functionality.

@@ -55,6 +55,8 @@ Of those core statements, some are fully supported, while others only offer part
 ### Fully Supported
 
 - `CREATE ROLE`
+- `ALTER ROLE`
+- `ALTER USER`
 - `DROP ROLE`
 - `DROP USER`
 
@@ -63,18 +65,16 @@ Of those core statements, some are fully supported, while others only offer part
 - `CREATE USER`
   - Not all options are supported
 - `GRANT`
-  - The form `GRANT <privileges> ON <privilege_level> TO <users...>` does not yet support columns, an object type (tables only), or assuming a different user
+  - The form `GRANT <privileges> ON <privilege_level> TO <users...>` supports tables, schemas,
+    databases, sequences, and functions/procedures, as well as `WITH GRANT OPTION` and
+    `GRANTED BY`. Column-level grants and grants on objects in other databases are not yet
+    supported.
   - The form `GRANT <roles...> TO <users...> [WITH ADMIN OPTION]` is fully supported
 - `REVOKE`
-  - The form `REVOKE <privileges...> ON <privilege_level> FROM <users...>` does not yet support columns or an object type (tables only)
+  - The form `REVOKE <privileges...> ON <privilege_level> FROM <users...>` supports tables,
+    schemas, databases, sequences, and functions/procedures. Column-level revokes and revokes on
+    objects in other databases are not yet supported.
   - The form `REVOKE <roles...> FROM <users...>` is fully supported
-  - The form `REVOKE PROXY ...` is not yet supported
-  - The form `REVOKE ALL PRIVILEGES ...` is not yet supported, which differs from `REVOKE ALL ON ...` in functionality
-
-### Not Yet Supported
-
-- `ALTER USER`
-- `ALTER ROLE`
 
 ## pg_catalog Access to Users and Grants
 

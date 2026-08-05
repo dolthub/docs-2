@@ -6,7 +6,7 @@ title: Branch Permissions
 ## What are Branch Permissions?
 
 Branch permissions are a way of managing how users may interact with branches when running Doltgres
-as a server (via `doltgres sql-server`). The branch permissions model is composed of two system
+as a server (via the `doltgres` command). The branch permissions model is composed of two system
 tables: `dolt_branch_control` and `dolt_branch_namespace_control`. The former table handles branch
 modification, while the latter table handles branch creation.
 
@@ -17,22 +17,25 @@ Each column is composed of a string that represents a pattern-matching expressio
 
 ### `dolt_branch_control`
 
-| Column      | Type                          | Collation          |
-| :---------- | :---------------------------- | :----------------- |
-| database    | VARCHAR(16383)                | utf8mb4_0900_ai_ci |
-| branch      | VARCHAR(16383)                | utf8mb4_0900_ai_ci |
-| user        | VARCHAR(16383)                | utf8mb4_0900_bin   |
-| host        | VARCHAR(16383)                | utf8mb4_0900_ai_ci |
-| permissions | SET('admin', 'write', 'read') | utf8mb4_0900_ai_ci |
+| Column      | Type | Case Sensitive |
+| :---------- | :--- | :------------- |
+| database    | TEXT | No             |
+| branch      | TEXT | No             |
+| user        | TEXT | Yes            |
+| host        | TEXT | No             |
+| permissions | TEXT | No             |
+
+The `permissions` column accepts a comma-separated combination of the values `admin`, `write`, and
+`read`.
 
 ### `dolt_branch_namespace_control`
 
-| Column   | Type           | Collation          |
-| :------- | :------------- | :----------------- |
-| database | VARCHAR(16383) | utf8mb4_0900_ai_ci |
-| branch   | VARCHAR(16383) | utf8mb4_0900_ai_ci |
-| user     | VARCHAR(16383) | utf8mb4_0900_bin   |
-| host     | VARCHAR(16383) | utf8mb4_0900_ai_ci |
+| Column   | Type | Case Sensitive |
+| :------- | :--- | :------------- |
+| database | TEXT | No             |
+| branch   | TEXT | No             |
+| user     | TEXT | Yes            |
+| host     | TEXT | No             |
 
 ### Available Permissions
 
@@ -87,15 +90,10 @@ This allows all users to freely create a branch with any name.
 ### Editing the System Tables
 
 The modification of both system tables are controlled by two entities: the privileges system and the `dolt_branch_control` table itself.
-Any user that satisfies the privilege requirements may edit the appropriate entries in both system tables.
+In Doltgres, modifying the branch control system tables requires a role with the `SUPERUSER` attribute (such as the default `postgres` user).
+A superuser may edit any entry in either table, including entries containing special characters.
 
-| Scope        | Privileges                                                         | Remarks                                                                                                                                                 |
-| :----------- | :----------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `*.*`        | SUPER, GRANT OPTION                                                | Considered a global admin. May edit any entry in either table, including entries containing special characters.                                         |
-| `*.*`        | CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, EXECUTE, GRANT OPTION | Same as above.                                                                                                                                          |
-| `database.*` | CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, EXECUTE, GRANT OPTION | Considered a database admin. May edit entries only for their specific database. This also excludes all databases that contain _any_ special characters. |
-
-It is important to note that global and database admins do **not** have an implicit permission to modify branches.
+It is important to note that superusers do **not** have an implicit permission to modify branches.
 They must insert their own row if they do not match a pre-existing row on their desired database and branch.
 This ensures that the table is the single source-of-truth regarding which users may modify branches.
 
@@ -161,7 +159,7 @@ Due to the longest match rule, this entry will be ignored when a valid match is 
 ## Storage
 
 All data related to branch permissions is stored in the file `branch_control.db` under the dolt configuration directory (defaults to `.doltcfg`).
-The rules for selecting a `branch_control.db` file [are the same as for the privileges file](/reference/server/access-management).
+The location of this file can be changed with the `branch_control_file` key in the [YAML config](/reference/server/configuration), similar to the `auth_file` key described in [access management](/reference/server/access-management).
 
 ## Binlog
 
@@ -180,43 +178,46 @@ Feel free to use your desired Postgres client.
 
 ### Setup
 
-This handles the creation of the directory, along with starting the server.
+This handles starting the server, along with creating the database and users used in the examples.
 As we are running these examples locally, we will use two terminal windows.
-The first window will contain the server, which we are starting here.
-It is worth noting that the examples use the default host and port of `localhost:3306`.
-If these are already in use for your system, then you may supply the arguments `--host="<your_host_here>"` and `--port=<your_port_here>` to change them.
+The first window will contain the server, which we start by running `doltgres`.
+It is worth noting that the examples use the default host and port of `localhost:5432`.
+If these are already in use for your system, then you may change them with the `listener.host` and `listener.port` fields in a [config.yaml file](/reference/server/configuration).
 
 As explained in the [default state section](#default-state), we automatically add a row to the `dolt_branch_control` table that allows all users to modify all branches by default.
 For these examples, we remove that default row.
 This allows us to demonstrate the desired functionality a bit more easily.
 
-By supplying the argument `--user=root`, we add a password-less user named `root` that has every global privilege.
-This makes it very easy to get your database set up, and we will be taking advantage of this user in these examples.
-We also, however, want a user that does _not_ have every privilege, and is more representative of a standard user.
+The first time the server runs, it creates a superuser named `postgres` (with the password `password`), and we will be taking advantage of this user in these examples.
+We also, however, want a user that is _not_ a superuser, and is more representative of a standard user.
 We name that user `testuser` in the examples.
-Although it appears that we grant them every global privilege, this is not the case, as they are still missing the `GRANT OPTION` privilege.
-This means that they are not considered an admin, however we do not have to worry about assigning privileges to allow for basic table operations.
+We grant `testuser` broad privileges so that we do not have to worry about assigning privileges to allow for basic table operations, however they are still not a superuser, and therefore may not edit the branch control system tables directly.
 [You may read more about this behavior in an earlier section.](#editing-the-system-tables)
 
+In the second terminal window, connect as `postgres` and run the setup statements:
+
 ```sql
+$ psql -h localhost -U postgres
+CREATE DATABASE example;
+\c example
 DELETE FROM dolt_branch_control;
-CREATE USER testuser@localhost;
-GRANT ALL ON *.* TO testuser@localhost;
+CREATE USER testuser PASSWORD 'pass';
+GRANT ALL PRIVILEGES ON SCHEMA public TO testuser;
 ```
 
 ### The `write` Permission
 
 Please refer to the [setup section](#setup) before continuing this example.
 This example shows the `write` permission in action.
-We add the `write` permission to the `testuser` user, which allows that user to modify the contents of our `main` (default) branch, while the `root` user does not have the permission and cannot make any modifications.
+We add the `write` permission to the `testuser` user, which allows that user to modify the contents of our `main` (default) branch, while the `postgres` user does not have the permission and cannot make any modifications.
 
 ```sql
-$ psql --user=root
+$ psql -h localhost -U postgres example
 INSERT INTO dolt_branch_control VALUES ('%', 'main', 'testuser', '%', 'write');
 CREATE TABLE test (pk BIGINT PRIMARY KEY);
-Error 1105: `root`@`%` does not have the correct permissions on branch `main`
+ERROR:  `postgres`@`127.0.0.1` does not have the correct permissions on branch `main`
 
-$ psql --user=testuser
+$ psql -h localhost -U testuser example
 CREATE TABLE test (pk BIGINT PRIMARY KEY);
 ```
 
@@ -226,24 +227,24 @@ Please refer to the [setup section](#setup) before continuing this example.
 This example shows the `admin` permission in action.
 `admin` functions similarly to the `write` permission, however it also allows the user to `INSERT`/`UPDATE`/`DELETE` entries that match the database and branch (or the resulting set of potential matches from the database and branch match expressions are a subset of the one that contains the `admin` permission).
 We show this by demonstrating that `testuser` cannot modify the `main` (default) branch at first, nor can they modify the `dolt_branch_control` and `dolt_branch_namespace_control` tables.
-We then switch to `root` (who is a [global admin](#editing-the-system-tables)) and give `testuser` an `admin` permission over the `main%` branch.
+We then switch to `postgres` (who is a [superuser](#editing-the-system-tables)) and give `testuser` an `admin` permission over the `main%` branch.
 The [special "zero or more" character](#pattern-matching) means that they may add additional entries of `main`, as well as other branches that begin with `main`.
 The users added are all fake, and are just used to demonstrate the capability.
 We end by showing that this only applies to the exact match expression, as the very similar `_main` branch name is still off-limits.
 
 ```sql
-$ psql --user=testuser
+$ psql -h localhost -U testuser example
 CREATE TABLE test (pk BIGINT PRIMARY KEY);
-Error 1105: `testuser`@`localhost` does not have the correct permissions on branch `main`
+ERROR:  `testuser`@`127.0.0.1` does not have the correct permissions on branch `main`
 INSERT INTO dolt_branch_control VALUES ('example', 'main', 'newuser', '%', 'write');
-Error 1105: `testuser`@`localhost` cannot add the row ["example", "main", "newuser", "%", "write"]
+ERROR:  `testuser`@`127.0.0.1` cannot add the row ["example", "main", "newuser", "%", "write"]
 INSERT INTO dolt_branch_namespace_control VALUES ('example', 'main', 'newuser', '%');
-Error 1105: `testuser`@`localhost` cannot add the row ["example", "main", "newuser", "%"]
+ERROR:  `testuser`@`127.0.0.1` cannot add the row ["example", "main", "newuser", "%"]
 
-$ psql --user=root
+$ psql -h localhost -U postgres example
 INSERT INTO dolt_branch_control VALUES ('example', 'main%', 'testuser', '%', 'admin');
 
-$ psql --user=testuser
+$ psql -h localhost -U testuser example
 CREATE TABLE test (pk BIGINT PRIMARY KEY);
 INSERT INTO dolt_branch_control VALUES ('example', 'main', 'newuser', '%', 'write');
 INSERT INTO dolt_branch_control VALUES ('example', 'main_new', 'otheruser', '%', 'write');
@@ -259,64 +260,59 @@ Please refer to the [setup section](#setup) before continuing this example. This
 to [restrict which users are able to use branch names](#branch-creation) with the `main` prefix. To
 do this, we insert a `main%` entry into the `dolt_branch_namespace_control` table, assigning the
 `testuser` user. We create another entry with `mainroot%` as the branch name, and assign that to
-`root`. This means that `root` is able to create any branches with names that **do not** start with
-`main`, but is unable to create branches that **do** start with `main`. The exception being
-`mainroot`, which while having `main` as a prefix, it is considered [the longest
+`postgres`. This means that `postgres` is able to create any branches with names that **do not**
+start with `main`, but is unable to create branches that **do** start with `main`. The exception
+being `mainroot`, which while having `main` as a prefix, it is considered [the longest
 match](#longest-match), and therefore takes precedence over the `main%` entry. Consequently,
 `testuser` cannot use `mainroot` as a prefix, as [the longest match](#longest-match) overrides their
 `main%` entry.
 
 ```sql
-USE example;
+$ psql -h localhost -U postgres example
 INSERT INTO dolt_branch_namespace_control VALUES ('%', 'main%', 'testuser', '%');
-INSERT INTO dolt_branch_namespace_control VALUES ('%', 'mainroot%', 'root', '%');
+INSERT INTO dolt_branch_namespace_control VALUES ('%', 'mainroot%', 'postgres', '%');
 SELECT DOLT_BRANCH('does_not_start_with_main');
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
+ dolt_branch
+-------------
+           0
+(1 row)
 
 SELECT DOLT_BRANCH('main1');
-Error 1105: `root`@`%` cannot create a branch named `main1`
+ERROR:  `postgres`@`127.0.0.1` cannot create a branch named `main1`
 SELECT DOLT_BRANCH('mainroot');
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
-1 row in set (0.00 sec)
+ dolt_branch
+-------------
+           0
+(1 row)
 
-example=# exit;
+example=# \q
 
-$ psql --user=testuser
+$ psql -h localhost -U testuser example
 SELECT DOLT_BRANCH('main1');
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
-1 row in set (0.00 sec)
+ dolt_branch
+-------------
+           0
+(1 row)
 
 SELECT DOLT_BRANCH('mainroot1');
-Error 1105: `testuser`@`localhost` cannot create a branch named `mainroot1`
+ERROR:  `testuser`@`127.0.0.1` cannot create a branch named `mainroot1`
 ```
 
 ### Multiple Databases
 
 Please refer to the [setup section](#setup) before continuing this example.
 This example simply shows how an entry in each system table is scoped to a database.
-Our pre-existing database is `example`, as Doltgres uses the directory's name for its database name.
-Therefore, we create another database named `newdb`, which the user `root` will not have any permissions on.
+Our pre-existing database is `example`, which we created in the [setup section](#setup).
+Therefore, we create another database named `newdb`, which the user `postgres` will not have any permissions on.
 
-```bash
-psql --user=root
+```
+$ psql -h localhost -U postgres example
 CREATE TABLE test (pk BIGINT PRIMARY KEY);
-Error 1105: `root`@`%` does not have the correct permissions on branch `main`
-INSERT INTO dolt_branch_control VALUES ('example', '%', 'root', '%', 'write');
+ERROR:  `postgres`@`127.0.0.1` does not have the correct permissions on branch `main`
+INSERT INTO dolt_branch_control VALUES ('example', '%', 'postgres', '%', 'write');
 CREATE TABLE test (pk BIGINT PRIMARY KEY);
 DROP TABLE test;
 CREATE DATABASE newdb;
-USE newdb;
+\c newdb
 CREATE TABLE test2 (pk BIGINT PRIMARY KEY);
 ```

@@ -20,7 +20,7 @@ revisions of a database via the `AS OF` clause:
 SELECT * FROM myTable AS OF 'kfvpgcf8pkd6blnkvv8e0kle8j6lug7a';
 SELECT * FROM myTable AS OF 'myBranch';
 SELECT * FROM myTable AS OF 'HEAD^2';
-SELECT * FROM myTable AS OF TIMESTAMP('2020-01-01');
+SELECT * FROM myTable AS OF SYSTEM TIME 'myBranch';
 SELECT * FROM myTable AS OF 'myBranch' JOIN myTable AS OF 'yourBranch' AS foo;
 ```
 
@@ -29,8 +29,8 @@ commit hash, branch name, or other reference. Timestamp / date values
 are also supported. Each table in a query can use a different `AS OF`
 clause.
 
-In addition to this `AS OF` syntax for `SELECT` statements, Dolt also
-supports various extensions to the standard MySQL syntax to examine
+In addition to this `AS OF` syntax for `SELECT` statements, Doltgres also
+supports various extensions to the standard Postgres syntax to examine
 the schemas of snapshots:
 
 ```sql
@@ -48,7 +48,7 @@ dolt_commit()` or similar are not visible via this syntax.
 You can connect to any commit in the database history by including its commit hash in the name of
 the database, like this:
 
-`postgres://127.0.0.1:3306/mydb/ia1ibijq8hq1llr7u85uivsi5lh3310p`
+`postgres://127.0.0.1:5432/mydb/ia1ibijq8hq1llr7u85uivsi5lh3310p`
 
 The database will be read-only in this case. You can do the same thing on an existing connection
 with a `USE` statement.
@@ -62,7 +62,7 @@ to `AS OF`, but works in some queries where the `AS OF` syntax is not
 supported.
 
 ```sql
-show create table `mydb/ia1ibijq8hq1llr7u85uivsi5lh3310p`.myTable;
+show create table "mydb/ia1ibijq8hq1llr7u85uivsi5lh3310p".public.myTable;
 ```
 
 There are other variations on this as well. See the docs on [using
@@ -84,15 +84,14 @@ a table.
 ```sql
 SELECT * FROM dolt_history_mytable
 WHERE state = 'Virginia'
-ORDER BY 'commit_date'
+ORDER BY commit_date
 
-+----------+------------+----------+-------------+-----------+---------------------------------+
-| state    | population | capital  | commit_hash | committer | commit_date                     |
-+----------+------------+----------+-------------+-----------+---------------------------------+
-| Virginia | 691937     | NULL     | ...         | billybob  | 1790-01-09 00:00:00.0 +0000 UTC |
-| Virginia | 807557     | Richmond | ...         | billybob  | 1800-01-01 00:00:00.0 +0000 UTC |
-| Virginia | 877683     | NULL     | ...         | billybob  | 1810-01-01 00:00:00.0 +0000 UTC |
-+----------+------------+----------+-------------+-----------+---------------------------------+
+ state    | population | capital  | commit_hash | committer | commit_date
+----------+------------+----------+-------------+-----------+---------------------------------
+ Virginia | 691937     | NULL     | ...         | billybob  | 1790-01-09 00:00:00.0 +0000 UTC
+ Virginia | 807557     | Richmond | ...         | billybob  | 1800-01-01 00:00:00.0 +0000 UTC
+ Virginia | 877683     | NULL     | ...         | billybob  | 1810-01-01 00:00:00.0 +0000 UTC
+(3 rows)
 ```
 
 To query how rows changed between two commits, use the
@@ -130,59 +129,52 @@ Consider this example:
 
 ```sql
 -- Past data
-view_test> select * from t1 as of '81223g1cpmib215gmov8686b6310p37d';
-+---+---+
-| a | b |
-+---+---+
-| 1 | 1 |
-| 2 | 2 |
-+---+---+
+view_test=> select * from t1 as of '81223g1cpmib215gmov8686b6310p37d';
+ a | b
+---+---
+ 1 | 1
+ 2 | 2
+(2 rows)
 -- Past view definition
-view_test> show create table `view_test/81223g1cpmib215gmov8686b6310p37d`.v1;
-+------+--------------------------------------+
-| View | Create View                          |
-+------+--------------------------------------+
-| v1   | CREATE VIEW `v1` AS select * from t1 |
-+------+--------------------------------------+
+view_test=> show create table "view_test/81223g1cpmib215gmov8686b6310p37d".public.v1;
+ View | Create View
+------+--------------------------------------
+ v1   | CREATE VIEW "v1" AS select * from t1
+(1 row)
 -- Current data
-view_test> select * from t1;
-+---+---+
-| a | b |
-+---+---+
-| 1 | 1 |
-| 2 | 2 |
-| 3 | 3 |
-+---+---+
+view_test=> select * from t1;
+ a | b
+---+---
+ 1 | 1
+ 2 | 2
+ 3 | 3
+(3 rows)
 -- Current view definition
-view_test> show create table v1;
-+------+-----------------------------------------------+
-| View | Create View                                   |
-+------+-----------------------------------------------+
-| v1   | CREATE VIEW `v1` AS select a+10, b+10 from t1 |
-+------+-----------------------------------------------+
+view_test=> show create table v1;
+ View | Create View
+------+-----------------------------------------------
+ v1   | CREATE VIEW "v1" AS select a+10, b+10 from t1
+(1 row)
 -- Select past data using current view definition
-view_test> select * from v1 as of '81223g1cpmib215gmov8686b6310p37d';
-+------+------+
-| a+10 | b+10 |
-+------+------+
-| 11   | 11   |
-| 12   | 12   |
-+------+------+
+view_test=> select * from v1 as of '81223g1cpmib215gmov8686b6310p37d';
+ a+10 | b+10
+------+------
+ 11   | 11
+ 12   | 12
+(2 rows)
 -- Select past data using past view definition
-view_test> select * from `view_test/81223g1cpmib215gmov8686b6310p37d`.v1;
-+---+---+
-| a | b |
-+---+---+
-| 1 | 1 |
-| 2 | 2 |
-+---+---+
+view_test=> select * from "view_test/81223g1cpmib215gmov8686b6310p37d".public.v1;
+ a | b
+---+---
+ 1 | 1
+ 2 | 2
+(2 rows)
 -- Select past data using past view definition by checking out a new branch
-view_test> select dolt_checkout('-b', 'old-view-def', '81223g1cpmib215gmov8686b6310p37d');
-view_test> select * from v1;
-+---+---+
-| a | b |
-+---+---+
-| 1 | 1 |
-| 2 | 2 |
-+---+---+
+view_test=> select dolt_checkout('-b', 'old-view-def', '81223g1cpmib215gmov8686b6310p37d');
+view_test=> select * from v1;
+ a | b
+---+---
+ 1 | 1
+ 2 | 2
+(2 rows)
 ```

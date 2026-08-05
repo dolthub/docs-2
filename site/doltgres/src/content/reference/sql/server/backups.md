@@ -4,7 +4,7 @@ title: Backups
 
 
 There are several ways to safely backup Doltgres databases. If you are using [Hosted
-Doltgres(https://hosted.doltdb.com), then you get automatic backups without having to configure
+Doltgres](https://hosted.doltdb.com), then you get automatic backups without having to configure
 anything. If you are running your own Doltgres SQL server, then you need to handle your own backups
 using one of the approaches below.
 
@@ -13,11 +13,11 @@ level](#point-in-time-snapshots-on-block-devices) is often the easiest approach 
 recommended if this works for your setup. Backing up by [copying files at a file system
 level](#copying-files-on-file-systems) can also work in some cases, but requires that no Doltgres
 processes are reading or writing any data while the file copy operation is in progress. You can also
-roll your own custom solutions by [pushing to remotes](#pushing-to-remotes) or using the [Doltgres
-backup command](#dolt-backup-command). Make sure you include [all additional configuration
-files](#additional-sql-server-configuration) needed to fully restore your Doltgres SQL server
-environment. As with any backup solution, it is important that you regularly test your backup and
-restore processes.
+roll your own custom solutions by [pushing to remotes](#pushing-to-remotes) or using the
+[`dolt_backup()` function](#full-server-backups). Make sure you include all additional configuration
+files (such as `config.yaml`, `auth.db`, and `branch_control.db`) needed to fully restore your
+Doltgres SQL server environment. As with any backup solution, it is important that you regularly
+test your backup and restore processes.
 
 ## Point-in-Time Snapshots on Block Devices
 
@@ -25,7 +25,7 @@ If you are running a Doltgres SQL server with the data directory (i.e. the direc
 databases are stored) on a block device that supports point-in-time snapshots, such as AWS Elastic
 Block Store (EBS), then you can take advantage of these snapshots for backing up your databases and
 configuration. In most cases, this will handle the versioned content of your databases as well as
-[all additional configuration files](#additional-sql-server-configuration). Because of how
+all additional configuration files. Because of how
 point-in-time snapshots work, this operation is consistent and safe to perform, even when the
 Doltgres SQL server is running. Because of its simplicity and safety, this is our recommended
 approach for backing up your Doltgres SQL server.
@@ -63,24 +63,34 @@ select dolt_remote('add', 'backup', 'file:///var/share/backup/');
 ### Backup by Pushing a Branch
 
 ```sql
-use backup_example;
+\c backup_example
 create table test (pk int, c1 int, primary key(pk));
 insert into test values (0,0);
 select dolt_add('test');
 select dolt_commit('-m', 'Created table and inserted values to be backed up');
-+----------------------------------+
-| hash                             |
-+----------------------------------+
-| slm5cql6ri8l4vd7uemvqhj6p2e2g98k |
-+----------------------------------+
-select dolt_push('backup', 'main');
-+---------+
-| success |
-+---------+
-| 1       |
-+---------+
+           dolt_commit
+----------------------------------
+ slm5cql6ri8l4vd7uemvqhj6p2e2g98k
+(1 row)
+
+select * from dolt_push('backup', 'main');
+ status | message
+--------+---------
+      0 |
+(1 row)
 ```
 
 ## Full Server Backups
 
-Full server backups are not yet supported but are coming soon.
+Doltgres supports full backups of a database via the [`dolt_backup()`
+function](/reference/version-control/dolt-sql-functions#dolt_backup). Unlike pushing to a remote, syncing
+to a backup uploads the entire state of the database, including all branches, working sets, and
+tags. Use `select dolt_backup('add', ...)` to configure a named backup, `select dolt_backup('sync',
+...)` (or `'sync-url'`) to upload the database state to it, and `select dolt_backup('restore', ...)`
+to restore a database from a backup. Backups can be removed with `'remove'`. See the
+[`dolt_backup()` documentation](/reference/version-control/dolt-sql-functions#dolt_backup) for details
+and examples.
+
+Note that backups made this way cover the versioned contents of a database, but not server
+configuration files such as `config.yaml`, `auth.db`, or `branch_control.db`. Those files must be
+backed up separately to fully restore a Doltgres SQL server environment.
