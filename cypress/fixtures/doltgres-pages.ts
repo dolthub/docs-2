@@ -10,6 +10,34 @@ export type { DocPage };
 export const introductionPages: DocPage[] = [
   { path: "/introduction/installation", title: "Installation" },
   { path: "/introduction/getting-started", title: "Getting Started" },
+  {
+    path: "/introduction/getting-started/version-control",
+    title: "Using Version Control",
+  },
+  { path: "/introduction/use-cases", title: "Use Cases" },
+  { path: "/introduction/use-cases/data-sharing", title: "Data Sharing" },
+  {
+    path: "/introduction/use-cases/data-and-model-quality",
+    title: "Data and Model Quality Control",
+  },
+  {
+    path: "/introduction/use-cases/manual-data-curation",
+    title: "Manual Data Curation",
+  },
+  {
+    path: "/introduction/use-cases/vc-your-app",
+    title: "Version Control for your Application",
+  },
+  {
+    path: "/introduction/use-cases/versioned-replica",
+    title: "Versioned Postgres Replica",
+  },
+  { path: "/introduction/use-cases/audit", title: "Audit" },
+  {
+    path: "/introduction/use-cases/configuration-management",
+    title: "Configuration Management",
+  },
+  { path: "/introduction/use-cases/offline-first", title: "Offline First" },
 ];
 
 export const conceptsPages: DocPage[] = [
@@ -24,6 +52,7 @@ export const conceptsPages: DocPage[] = [
   { path: "/concepts/git/working-set", title: "Working Set" },
   { path: "/concepts/sql", title: "SQL" },
   { path: "/concepts/sql/databases", title: "Databases" },
+  { path: "/concepts/sql/schemas", title: "Schemas" },
   { path: "/concepts/sql/schema", title: "Schema" },
   { path: "/concepts/sql/table", title: "Tables" },
   { path: "/concepts/sql/primary-key", title: "Primary Keys" },
@@ -31,6 +60,7 @@ export const conceptsPages: DocPage[] = [
   { path: "/concepts/sql/indexes", title: "Indexes" },
   { path: "/concepts/sql/views", title: "Views" },
   { path: "/concepts/sql/constraints", title: "Constraints" },
+  { path: "/concepts/sql/sequences", title: "Sequences" },
   { path: "/concepts/sql/triggers", title: "Triggers" },
   { path: "/concepts/sql/functions", title: "Functions" },
   { path: "/concepts/sql/procedures", title: "Procedures" },
@@ -45,6 +75,7 @@ export const conceptsPages: DocPage[] = [
 
 export const guidesPages: DocPage[] = [
   { path: "/guides/cheat-sheet", title: "Cheat Sheet" },
+  { path: "/guides/import", title: "Importing Data" },
   {
     path: "/guides/replication-from-postgres",
     title: "Replication from Postgres",
@@ -64,6 +95,10 @@ export const referencePages: DocPage[] = [
   { path: "/reference/server/replication", title: "Replication" },
   { path: "/reference/server/troubleshooting", title: "Troubleshooting" },
   { path: "/reference/version-control", title: "Version Control Features" },
+  {
+    path: "/reference/version-control/sql-extensions",
+    title: "SQL Extensions Index",
+  },
   { path: "/reference/version-control/branches", title: "Using Branches" },
   { path: "/reference/version-control/merges", title: "Merges" },
   {
@@ -97,11 +132,18 @@ export const referencePages: DocPage[] = [
     path: "/reference/sql-support/system-catalog-schema",
     title: "System Catalog Schema",
   },
+  { path: "/reference/sql-support/extensions", title: "Extensions" },
   { path: "/reference/supported-clients", title: "Supported Clients" },
   { path: "/reference/supported-clients/clients", title: "Programmatic" },
+  { path: "/reference/supported-clients/sql-editors", title: "SQL Editors" },
   { path: "/reference/benchmarks", title: "Benchmarks" },
   { path: "/reference/benchmarks/correctness", title: "Correctness" },
   { path: "/reference/benchmarks/latency", title: "Latency" },
+];
+
+export const otherPages: DocPage[] = [
+  { path: "/other/faq", title: "FAQ" },
+  { path: "/other/roadmap", title: "Roadmap" },
 ];
 
 export const allDoltgresPages: DocPage[] = [
@@ -109,4 +151,5 @@ export const allDoltgresPages: DocPage[] = [
   ...conceptsPages,
   ...guidesPages,
   ...referencePages,
+  ...otherPages,
 ];

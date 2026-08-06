@@ -6,6 +6,7 @@ import {
   conceptsPages,
   guidesPages,
   referencePages,
+  otherPages,
 } from "../../fixtures/doltgres-pages";
 
 function checkPagesExist(pages: DocPage[]) {
@@ -41,6 +42,12 @@ describe("Doltgres docs — all pages exist (HTTP 200)", () => {
   context("Reference", () => {
     it("all reference pages exist", () => {
       checkPagesExist(referencePages);
+    });
+  });
+
+  context("Other", () => {
+    it("all other pages exist", () => {
+      checkPagesExist(otherPages);
     });
   });
 });
