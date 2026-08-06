@@ -46,7 +46,7 @@ We built Doltgres using the following axioms:
    will be system tables.
 
 In order to achieve the above at scale, we needed to start at the bottom; the storage engine of the
-database. [Doltgres is built from the storage engine up](https://docs.dolthub.com/architecture/architecture) to offer
+database. [Doltgres is built from the storage engine up](https://dolthub.com/docs/architecture/architecture) to offer
 you the Git experience in a SQL database.
 
 In this section of the documentation, we will explain [Git](/concepts/git/),
