@@ -126,7 +126,6 @@ const nav: NavSection[] = [
           { title: "Supported Types", href: "/reference/sql-support/supported-types" },
           { title: "Supported SQL Commands", href: "/reference/sql-support/supported-commands" },
           { title: "System Catalog Schema", href: "/reference/sql-support/system-catalog-schema" },
-          { title: "Extensions", href: "/reference/sql-support/extensions" },
         ],
       },
       {
@@ -134,7 +133,6 @@ const nav: NavSection[] = [
         href: "/reference/supported-clients",
         children: [
           { title: "Programmatic", href: "/reference/supported-clients/clients" },
-          { title: "SQL Editors", href: "/reference/supported-clients/sql-editors" },
         ],
       },
       {
