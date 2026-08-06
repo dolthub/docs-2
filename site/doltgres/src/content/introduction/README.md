@@ -1,33 +1,39 @@
 ---
 title: "Overview"
-description: What Doltgres is — a Postgres-compatible, version-controlled database — and how it differs from Dolt and from vanilla Postgres.
+description: What Doltgres is — a Postgres-compatible, version-controlled SQL database.
 ---
 
 ## What is Doltgres?
 
-![](../.gitbook/assets/doltgres-preview.png)
+![](../../../public/images/logo.png)
 
-DoltgreSQL, or Doltgres for short, is a Postgres-compatible version of [Dolt](https://www.doltdb.com). It is currently in [pre-alpha release](#doltgres-is-pre-alpha). Dolt is the world's first version controlled SQL database. It is like Git and MySQL had a baby. Doltgres is like Git and Postgres had a baby.
+DoltgreSQL, or Doltgres for short, is the Postgres-compatible version of
+[Dolt](https://www.doltdb.com), the world's first version controlled SQL database. Doltgres is like
+Git and Postgres had a baby.
 
-Download the latest DoltgreSQL [here](https://github.com/dolthub/doltgresql/releases/latest).
+To install on your Linux or Mac system, run:
 
-For instructions on how to install and run DoltgreSQL, checkout our [installation guide](/introduction/installation).
+```bash
+sudo bash -c 'curl -L https://github.com/dolthub/doltgresql/releases/latest/download/install.sh | bash'
+```
+
+Or on Docker:
+
+```bash
+$ docker run -e DOLTGRES_PASSWORD=myPassword -p 5432:5432 dolthub/doltgresql:latest
+```
+
+For more details on how to run DoltgreSQL, check out our [installation
+guide](/introduction/installation).
 
 ## Differences from Dolt
 
-Dolt and Doltgres share the same [storage engine](https://dolthub.com/docs/architecture/storage-engine) and implement the same version control interfaces in SQL. Only the SQL dialect/implementation is different. Thus, you can refer to the [documentation for the Dolt SQL server](https://dolthub.com/docs/sql-reference/server) to understand how to run and use DoltgreSQL and its features. Just connect with a Postgres-compatible client instead of a MySQL-compatible client.
+Dolt and Doltgres share the same [storage
+engine](https://dolthub.com/docs/architecture/storage-engine) and implement the same version control
+interfaces in SQL. Only the SQL dialect/implementation is different. Just connect with a
+Postgres-compatible client instead of a MySQL-compatible client.
 
 So, what is different?
-
-### Doltgres is beta
-
-Dolt is 1.0 and production ready. Doltgres is still in very active development and many required
-features are missing. See [our SQL support documentation for the latest
-compatibility](/reference/sql-support/). If you are a potential user and need something
-missing, please [create an issue](https://github.com/dolthub/doltgresql/issues).
-
-Check back often for progress. We are investing heavily in Doltgres. You can also follow our
-[blog](/introduction/?q=doltgres) for updates, where we publish Doltgres blogs every week.
 
 ### Doltgres does not have a CLI
 
@@ -49,3 +55,8 @@ function](/reference/version-control/dolt-sql-functions):
 Refer to the docs for [version control
 features](/reference/version-control/dolt-sql-functions) for details on supported functions
 and system tables.
+
+### Doltgres has schemas, sequences, and other Postgres-only features
+
+Postgres has features and syntax that MySQL doesn't, which means Doltgres has features and syntax
+that Dolt doesn't. Refer to the rest of the documentation site for more details.
