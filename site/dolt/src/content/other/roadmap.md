@@ -15,7 +15,7 @@ Roadmap last updated Aug 2026, next update Oct 2026.
 # Major releases in 2026
 
 [Dolt 2.0](https://www.dolthub.com/blog/2026-05-11-dolt-2-dot-0/) launched in May. It is the second
-major-version release of the database,and represents a new level of performance, features, and
+major-version release of the database, and represents a new level of performance, features, and
 stability for our growing pool of production server customers.
 
 [Doltgres 1.0](https://www.dolthub.com/blog/2026-08-06-doltgres-1-0/) launched in August. Doltgres
@@ -54,12 +54,12 @@ Dolt and Doltgres share an engine, so most features on the Dolt roadmap also app
 | Feature                                                          | Estimate |
 |------------------------------------------------------------------|----------|
 | PostGIS support                                                  | Q4 2026  |
-| pg_vector support                                                | Q4 2026  |
+| pgvector support                                                 | Q4 2026  |
 | Collation support                                                | 2027     |
 | Custom indexing (anything not built in)                          | 2027     |
 | Custom aggregate functions                                       | 2027     |
 | More built-in function support                                   | Ongoing  |
-| Additional DDL statements (e.g. `ALTER SEQUENCE`,  `COMMENT ON`) | Ongoing  |
+| Additional DDL statements (e.g. `ALTER SEQUENCE`, `COMMENT ON`)  | Ongoing  |
 | Better pg_catalog support                                        | Ongoing  |
 
 # Selection of recent feature launches
