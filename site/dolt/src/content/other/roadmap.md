@@ -69,6 +69,39 @@ Dolt and Doltgres share an engine, so most features on the Dolt roadmap also app
 
 | Feature                                                                                                                            | Launch Date |
 |------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| [dolt_squash_history() procedure](https://www.dolthub.com/blog/2026-07-31-squash-history/)                                         | Jul 2026    |
+| [DoltHub API v2](https://www.dolthub.com/blog/2026-07-09-dolthub-api-v2/)                                                          | Jul 2026    |
+| [Functional indexes in Doltgres](https://www.dolthub.com/blog/2026-06-01-announcing-functional-index-support-in-doltgres/)         | Jun 2026    |
+| [Dolt 2.0](https://www.dolthub.com/blog/2026-05-11-dolt-2-dot-0/)                                                                  | May 2026    |
+| [DumboDB, a MongoDB-compatible frontend for Dolt](https://www.dolthub.com/blog/2026-05-07-announcing-dumbodb/)                     | May 2026    |
+| [Azure Private Link for Hosted Dolt](https://www.dolthub.com/blog/2026-05-06-azure-private-link-networking/)                       | May 2026    |
+| [Doltgres agent mode in Dolt Workbench](https://www.dolthub.com/blog/2026-04-30-doltgres-agent-mode/)                              | Apr 2026    |
+| [Functional indexes in Dolt](https://www.dolthub.com/blog/2026-04-29-announcing-functional-indexes-in-dolt/)                       | Apr 2026    |
+| [Incremental garbage collection](https://www.dolthub.com/blog/2026-04-28-introducing-incremental-garbage-collection/)              | Apr 2026    |
+| [Doltgres support in the Dolt MCP server](https://www.dolthub.com/blog/2026-04-23-doltgres-mcp-server/)                            | Apr 2026    |
+| [Hosted Dolt on Azure](https://www.dolthub.com/blog/2026-04-13-hosted-dolt-on-azure/)                                              | Apr 2026    |
+| [Revert with conflict resolution](https://www.dolthub.com/blog/2026-04-10-revert-conflict-resolution/)                             | Apr 2026    |
+| [DoltLite, a SQLite-compatible version-controlled database](https://www.dolthub.com/blog/2026-03-25-doltlite/)                     | Mar 2026    |
+| [SSH remotes](https://www.dolthub.com/blog/2026-03-17-announcing-ssh-remotes/)                                                     | Mar 2026    |
+| [Branch permissions in the Hosted Dolt Workbench](https://www.dolthub.com/blog/2026-03-12-hosted-branch-permissions/)              | Mar 2026    |
+| [Azure remotes](https://www.dolthub.com/blog/2026-02-24-azure-remotes/)                                                            | Feb 2026    |
+| [Doltgres set-returning functions (RETURNS TABLE)](https://www.dolthub.com/blog/2026-02-18-doltgres-returns-table-udf/)            | Feb 2026    |
+| [Git remotes as Dolt remotes](https://www.dolthub.com/blog/2026-02-13-announcing-git-remote-support-in-dolt/)                      | Feb 2026    |
+| [Commit verification](https://www.dolthub.com/blog/2026-02-12-commit-verification/)                                                | Feb 2026    |
+| [Agent mode in Dolt Workbench](https://www.dolthub.com/blog/2026-02-09-introducing-agent-mode/)                                    | Feb 2026    |
+| [Edit commits during interactive rebase](https://www.dolthub.com/blog/2026-02-04-sql-rebase-edit/)                                 | Feb 2026    |
+| [MCP support for Hosted Dolt](https://www.dolthub.com/blog/2026-02-03-hosted-dolt-mcp/)                                            | Feb 2026    |
+| [Prometheus metrics for Hosted Dolt](https://www.dolthub.com/blog/2026-01-21-hosted-dolt-metrics/)                                 | Jan 2026    |
+| [Doltgres Docker images](https://www.dolthub.com/blog/2025-12-05-announcing-doltgres-docker-image/)                                | Dec 2025    |
+| [DoltLab on Kubernetes](https://www.dolthub.com/blog/2025-12-02-announcing-doltlab-on-kubernetes/)                                 | Dec 2025    |
+| [Require client certificates](https://www.dolthub.com/blog/2025-12-01-require-client-cert/)                                        | Dec 2025    |
+| [DOLT_JSON_DIFF() for diffing documents](https://www.dolthub.com/blog/2025-11-24-announcing-dolt-json-diff/)                       | Nov 2025    |
+| [Mutual TLS authentication](https://www.dolthub.com/blog/2025-11-20-client-cert-auth/)                                             | Nov 2025    |
+| [DoltLab on Podman](https://www.dolthub.com/blog/2025-11-05-announcing-doltlab-on-podman/)                                         | Nov 2025    |
+| [dolt_branch_activity system table](https://www.dolthub.com/blog/2025-10-27-branch-activity/)                                      | Oct 2025    |
+| [AutoGC and archival storage on by default (Dolt 1.75)](https://www.dolthub.com/blog/2025-10-20-dolt-1-75/)                        | Oct 2025    |
+| [MariaDB client support](https://www.dolthub.com/blog/2025-10-14-mariadb-client-support/)                                          | Oct 2025    |
+| [Faster CLI access to large databases with mmap](https://www.dolthub.com/blog/2025-10-13-faster-large-db-access-with-mmap/)        | Oct 2025    |
 | [Non-local tables](https://www.dolthub.com/blog/2025-10-06-nonlocal-tables/)                                                       | Oct 2025    |
 | [Foreign keys on system tables](https://www.dolthub.com/blog/2025-09-16-foreign-keys-to-system-tables-/)                           | Sep 2025    |
 | [Skinny diffs](https://www.dolthub.com/blog/2025-09-15-focused-diffs-with-skinny-and-include-cols/)                                | Sep 2025    |
@@ -89,9 +122,8 @@ Dolt and Doltgres share an engine, so most features on the Dolt roadmap also app
 | [Doltgres Beta release](https://www.dolthub.com/blog/2025-04-16-doltgres-goes-beta/)                                               | Apr 2025    |
 | [Virtual private cloud for Google Cloud in hosted deployments](https://www.dolthub.com/blog/2025-03-28-hosted-dolt-using-psc/)     | Mar 2025    |
 | [Doltgres TOAST types](https://www.dolthub.com/blog/2025-04-14-adaptive-encoding/)                                                 | Apr 2025    |
-| [Doltges Beta release](https://www.dolthub.com/blog/2025-04-16-doltgres-goes-beta/)                                                | Apr 2025    |
 | [Automatic garbage collection](https://www.dolthub.com/blog/2025-02-28-announcing-automatic-gc-in-sql-server/)                     | Mar 2025    |
-| Doltgres user defined functions                                                                                                    | Feb 2024    |
+| Doltgres user defined functions                                                                                                    | Feb 2025    |
 | [dolt_help table](https://www.dolthub.com/blog/2025-02-12-dolt-help-table/)                                                        | Feb 2025    |
 | [Hosted Doltgres](https://www.dolthub.com/blog/2025-02-07-hosted-doltgres/)                                                        | Feb 2025    |
 | Doltgres user defined types                                                                                                        | Jan 2025    |
