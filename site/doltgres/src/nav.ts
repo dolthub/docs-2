@@ -6,7 +6,27 @@ const nav: NavSection[] = [
     items: [
       { title: "What is Doltgres?", href: "/introduction" },
       { title: "Installation", href: "/introduction/installation" },
-      { title: "Getting Started", href: "/introduction/getting-started" },
+      {
+        title: "Getting Started",
+        href: "/introduction/getting-started",
+        children: [
+          { title: "Using Version Control", href: "/introduction/getting-started/version-control" },
+        ],
+      },
+      {
+        title: "Use Cases",
+        href: "/introduction/use-cases",
+        children: [
+          { title: "Data Sharing", href: "/introduction/use-cases/data-sharing" },
+          { title: "Data and Model Quality Control", href: "/introduction/use-cases/data-and-model-quality" },
+          { title: "Manual Data Curation", href: "/introduction/use-cases/manual-data-curation" },
+          { title: "Version Control for your Application", href: "/introduction/use-cases/vc-your-app" },
+          { title: "Versioned Postgres Replica", href: "/introduction/use-cases/versioned-replica" },
+          { title: "Audit", href: "/introduction/use-cases/audit" },
+          { title: "Configuration Management", href: "/introduction/use-cases/configuration-management" },
+          { title: "Offline First", href: "/introduction/use-cases/offline-first" },
+        ],
+      },
     ],
   },
   {
@@ -31,6 +51,7 @@ const nav: NavSection[] = [
         href: "/concepts/sql",
         children: [
           { title: "Databases", href: "/concepts/sql/databases" },
+          { title: "Schemas", href: "/concepts/sql/schemas" },
           { title: "Schema", href: "/concepts/sql/schema" },
           { title: "Tables", href: "/concepts/sql/table" },
           { title: "Primary Keys", href: "/concepts/sql/primary-key" },
@@ -38,6 +59,7 @@ const nav: NavSection[] = [
           { title: "Indexes", href: "/concepts/sql/indexes" },
           { title: "Views", href: "/concepts/sql/views" },
           { title: "Constraints", href: "/concepts/sql/constraints" },
+          { title: "Sequences", href: "/concepts/sql/sequences" },
           { title: "Triggers", href: "/concepts/sql/triggers" },
           { title: "Functions", href: "/concepts/sql/functions" },
           { title: "Procedures", href: "/concepts/sql/procedures" },
@@ -61,6 +83,7 @@ const nav: NavSection[] = [
     section: "Guides",
     items: [
       { title: "Cheat Sheet", href: "/guides/cheat-sheet" },
+      { title: "Importing Data", href: "/guides/import" },
       { title: "Replication from Postgres", href: "/guides/replication-from-postgres" },
     ],
   },
@@ -120,6 +143,13 @@ const nav: NavSection[] = [
           { title: "Latency", href: "/reference/benchmarks/latency" },
         ],
       },
+    ],
+  },
+  {
+    section: "Other",
+    items: [
+      { title: "FAQ", href: "/other/faq" },
+      { title: "Roadmap", href: "/other/roadmap" },
     ],
   },
 ];
