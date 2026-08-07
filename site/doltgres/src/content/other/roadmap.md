@@ -12,7 +12,7 @@ implemented first.
 
 Roadmap last updated Aug 2026, next update Oct 2026.
 
-# Major releases in 2026
+## Major releases in 2026
 
 [Dolt 2.0](https://www.dolthub.com/blog/2026-05-11-dolt-2-dot-0/) launched in May. It is the second
 major-version release of the database, and represents a new level of performance, features, and
@@ -23,18 +23,19 @@ is the Postgres-compatible version of Dolt. This launch signals that Doltgres ha
 of compatibility and stability comparable to Dolt's 1.0 release and is ready for production use
 cases. Try it and let us know what you think.
 
-# Upcoming features
+## Upcoming features
 
 Work to improve the performance and availability of Dolt and Doltgres is a constant theme and not
 called out explicitly unless it's a major separable effort.
 
-## Dolt
+### Dolt
 
 | Feature                                                                                  | Estimate    |
 |------------------------------------------------------------------------------------------|-------------|
 | [User-defined functions](https://github.com/dolthub/dolt/issues/6193)                    | Q4 2026     |
 | Update multiple branches in a transaction                                                | Q4 2026     |
 | Row-level locking (`SELECT FOR UPDATE`)                                                  | Q4 2026     |
+| SQL query engine planner overhaul                                                        | 2027        |
 | [Transaction isolation levels](https://github.com/dolthub/dolt/issues/2007)              | Unscheduled |
 | [Rebase schema conflict resolution support](https://github.com/dolthub/dolt/issues/7820) | Unscheduled |
 | [Multiple DBs in one repo](https://github.com/dolthub/dolt/issues/3043)                  | Unscheduled |
@@ -47,7 +48,7 @@ called out explicitly unless it's a major separable effort.
 | Encryption at rest                                                                       | Unscheduled |
 | Pipeline query processing                                                                | Unscheduled |
 
-## Doltgres
+### Doltgres
 
 Dolt and Doltgres share an engine, so most features on the Dolt roadmap also apply to Doltgres.
 
@@ -62,7 +63,7 @@ Dolt and Doltgres share an engine, so most features on the Dolt roadmap also app
 | Additional DDL statements (e.g. `ALTER SEQUENCE`, `COMMENT ON`)  | Ongoing  |
 | Better pg_catalog support                                        | Ongoing  |
 
-# Selection of recent feature launches
+## Selection of recent feature launches
 
 | Feature                                                                                                                            | Launch Date |
 |------------------------------------------------------------------------------------------------------------------------------------|-------------|
