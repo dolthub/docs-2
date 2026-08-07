@@ -34,7 +34,7 @@ new dolt commit on the current branch. It's the same as if you run
 We are glad you asked! This is a common use case, and giving each user
 their own branch is something we've spent a lot of time getting
 right. For more details on how to use this pattern effectively, see
-[using branches](/sql-reference/version-control/branches).
+[using branches](/reference/version-control/branches).
 
 ## Does Doltgres support transactions?
 
@@ -42,12 +42,12 @@ Yes, it should exactly work the same as Postgres, but with fewer locks for compe
 
 It's also possible for different sessions to connect to different
 branches on the same server. See [using
-branches](/sql-reference/version-control/branches) for details.
+branches](/reference/version-control/branches) for details.
 
 ## What SQL features / syntax are supported?
 
 Most of them! Check out [the docs for the full list of supported
-features](/sql-reference/sql-support/supported-statements).
+features](/reference/sql-support/).
 
 You can check out what we're working on next on our
 [roadmap](/other/roadmap). Paying customers get their feature requests
@@ -55,7 +55,7 @@ bumped to the front of the line.
 
 ## Does Doltgres support my favorite SQL workbench / tool?
 
-Probably! Have you tried it? We have [blogs and sample code](/guides/dolt-tested-apps)
+Probably! Have you tried it? We have [blogs and sample code](/reference/supported-clients/clients)
 for many popular ORMs and tools.
 
 If you try it and it doesn't work, [let
