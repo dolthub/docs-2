@@ -244,6 +244,22 @@ const nav: NavSection[] = [
           { title: "Infrastructure", href: "/products/hosted/infrastructure" },
           { title: "Private Networking", href: "/products/hosted/private-networking" },
           { title: "SSO", href: "/products/hosted/sso" },
+          {
+            title: "API",
+            href: "/products/hosted/api",
+            children: [
+              {
+                title: "v1",
+                href: "/products/hosted/api/v1",
+                children: [
+                  { title: "Authentication", href: "/products/hosted/api/v1/authentication" },
+                  { title: "User", href: "/products/hosted/api/v1/user" },
+                  { title: "Deployment", href: "/products/hosted/api/v1/deployment" },
+                  { title: "Models", href: "/products/hosted/api/v1/models" },
+                ],
+              },
+            ],
+          },
         ],
       },
       {
