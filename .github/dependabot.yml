@@ -1,0 +1,24 @@
+version: 2
+updates:
+  # Root package.json declares `workspaces: ["site/*"]` and the root lockfile
+  # covers site/dolt, site/doltgres, site/doltlab, and site/shared, so a single
+  # npm entry here updates every site. (site/package.json is a separate project
+  # but declares no dependencies, so there is nothing there to update.)
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: monthly
+      time: "08:30"
+      timezone: America/Los_Angeles
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+      time: "08:30"
+      timezone: America/Los_Angeles
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
