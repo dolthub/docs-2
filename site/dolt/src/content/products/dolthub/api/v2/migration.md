@@ -5,7 +5,7 @@ description: How to migrate your integrations from the DoltHub v1alpha1 API to v
 
 # Migrating from v1alpha1
 
-This page covers the mechanical changes needed to move an existing v1alpha1 integration to v2. Read it alongside the [v2 overview](../v2) and the per-resource pages.
+This page covers the mechanical changes needed to move an existing v1alpha1 integration to v2. Read it alongside the [v2 overview](/products/dolthub/api/v2) and the per-resource pages.
 
 ## 1. Base URL
 
@@ -54,7 +54,7 @@ v1alpha1 responses are flat and ad-hoc — each endpoint has its own top-level s
 
 ## 3. Error model
 
-v1alpha1 error shapes vary by endpoint. v2 uses [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457) for every non-2xx response. See [Models → Problem](models#model-problem).
+v1alpha1 error shapes vary by endpoint. v2 uses [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457) for every non-2xx response. See [Models → Problem](/products/dolthub/api/v2/models#model-problem).
 
 ```json
 {
@@ -104,7 +104,7 @@ v2 uses a single unified protocol: any async mutation returns `202` with an `Ope
 }
 ```
 
-Poll `GET /api/v2/operations/{operation_id}` until `status` is `succeeded` or `failed`. See [Operations](operations#getOperation).
+Poll `GET /api/v2/operations/{operation_id}` until `status` is `succeeded` or `failed`. See [Operations](/products/dolthub/api/v2/operations#getOperation).
 
 ```sh
 curl 'https://www.dolthub.com/api/v2/operations/owners/dolthub/repos/us-jails/jobs/abc123' \
@@ -117,29 +117,29 @@ curl 'https://www.dolthub.com/api/v2/operations/owners/dolthub/repos/us-jails/jo
 
 | v1alpha1 | v2 |
 |---|---|
-| `GET /user` | [`GET /user`](user#getCurrentUser) |
-| `POST /database` | [`POST /databases`](database#createDatabase) |
-| `GET /{owner}/{database}?q=` | [`GET /databases/{owner}/{database}/sql?q=`](database#runSqlReadQuery) |
-| `GET /{owner}/{database}/{ref}?q=` | [`GET /databases/{owner}/{database}/sql?q=&ref=`](database#runSqlReadQuery) |
-| `POST /{owner}/{database}/write/{from_branch}/{to_branch}` | [`POST /databases/{owner}/{database}/sql-writes`](database#runSqlWriteQuery) |
-| `GET /{owner}/{database}/write` | Poll [`GET /operations/{id}`](operations#getOperation) |
-| `GET /{owner}/{database}/forks` | [`GET /databases/{owner}/{database}/forks`](database#listForks) |
-| `GET /{owner}/{database}/branches` | [`GET /databases/{owner}/{database}/branches`](database#listBranches) |
-| `POST /{owner}/{database}/branches` | [`POST /databases/{owner}/{database}/branches`](database#createBranch) |
-| `GET /{owner}/{database}/pulls` | [`GET /databases/{owner}/{database}/pulls`](database#listPulls) |
-| `POST /{owner}/{database}/pulls` | [`POST /databases/{owner}/{database}/pulls`](database#createPull) |
-| `GET /{owner}/{database}/pulls/{id}` | [`GET /databases/{owner}/{database}/pulls/{pull_number}`](database#getPull) |
-| `PATCH /{owner}/{database}/pulls/{id}` | [`PATCH /databases/{owner}/{database}/pulls/{pull_number}`](database#updatePull) |
-| `POST /{owner}/{database}/pulls/{id}/comments` | [`POST /databases/{owner}/{database}/pulls/{pull_number}/comments`](database#createPullComment) |
-| `POST /{owner}/{database}/pulls/{id}/merge` | [`POST /databases/{owner}/{database}/pulls/{pull_number}/merge`](database#mergePull) |
-| `GET /{owner}/{database}/pulls/{id}/merge` | Poll [`GET /operations/{id}`](operations#getOperation) |
-| `GET /{owner}/{database}/releases` | [`GET /databases/{owner}/{database}/releases`](database#listReleases) |
-| `POST /{owner}/{database}/releases` | [`POST /databases/{owner}/{database}/releases`](database#createRelease) |
-| `GET /{owner}/{database}/tags` | [`GET /databases/{owner}/{database}/tags`](database#listTags) |
-| `POST /{owner}/{database}/tags` | [`POST /databases/{owner}/{database}/tags`](database#createTag) |
-| `POST /{owner}/{database}/upload` | [`POST .../imports/uploads`](database#createImportUpload) then [`POST .../imports`](database#createImport) |
-| `GET /{owner}/{database}/upload` | Poll [`GET /operations/{id}`](operations#getOperation) |
-| `POST /fork` | [`POST /databases/{owner}/{database}/forks`](database#createFork) |
-| `GET /fork` | Poll [`GET /operations/{id}`](operations#getOperation) |
-| `GET /{owner}/{database}/jobs` | [`GET /databases/{owner}/{database}/operations`](operations#listOperations) |
-| `GET /users/{username}/operations` | [`GET /databases/{owner}/{database}/operations`](operations#listOperations) |
+| `GET /user` | [`GET /user`](/products/dolthub/api/v2/user#getCurrentUser) |
+| `POST /database` | [`POST /databases`](/products/dolthub/api/v2/database#createDatabase) |
+| `GET /{owner}/{database}?q=` | [`GET /databases/{owner}/{database}/sql?q=`](/products/dolthub/api/v2/database#runSqlReadQuery) |
+| `GET /{owner}/{database}/{ref}?q=` | [`GET /databases/{owner}/{database}/sql?q=&ref=`](/products/dolthub/api/v2/database#runSqlReadQuery) |
+| `POST /{owner}/{database}/write/{from_branch}/{to_branch}` | [`POST /databases/{owner}/{database}/sql-writes`](/products/dolthub/api/v2/database#runSqlWriteQuery) |
+| `GET /{owner}/{database}/write` | Poll [`GET /operations/{id}`](/products/dolthub/api/v2/operations#getOperation) |
+| `GET /{owner}/{database}/forks` | [`GET /databases/{owner}/{database}/forks`](/products/dolthub/api/v2/database#listForks) |
+| `GET /{owner}/{database}/branches` | [`GET /databases/{owner}/{database}/branches`](/products/dolthub/api/v2/database#listBranches) |
+| `POST /{owner}/{database}/branches` | [`POST /databases/{owner}/{database}/branches`](/products/dolthub/api/v2/database#createBranch) |
+| `GET /{owner}/{database}/pulls` | [`GET /databases/{owner}/{database}/pulls`](/products/dolthub/api/v2/database#listPulls) |
+| `POST /{owner}/{database}/pulls` | [`POST /databases/{owner}/{database}/pulls`](/products/dolthub/api/v2/database#createPull) |
+| `GET /{owner}/{database}/pulls/{id}` | [`GET /databases/{owner}/{database}/pulls/{pull_number}`](/products/dolthub/api/v2/database#getPull) |
+| `PATCH /{owner}/{database}/pulls/{id}` | [`PATCH /databases/{owner}/{database}/pulls/{pull_number}`](/products/dolthub/api/v2/database#updatePull) |
+| `POST /{owner}/{database}/pulls/{id}/comments` | [`POST /databases/{owner}/{database}/pulls/{pull_number}/comments`](/products/dolthub/api/v2/database#createPullComment) |
+| `POST /{owner}/{database}/pulls/{id}/merge` | [`POST /databases/{owner}/{database}/pulls/{pull_number}/merge`](/products/dolthub/api/v2/database#mergePull) |
+| `GET /{owner}/{database}/pulls/{id}/merge` | Poll [`GET /operations/{id}`](/products/dolthub/api/v2/operations#getOperation) |
+| `GET /{owner}/{database}/releases` | [`GET /databases/{owner}/{database}/releases`](/products/dolthub/api/v2/database#listReleases) |
+| `POST /{owner}/{database}/releases` | [`POST /databases/{owner}/{database}/releases`](/products/dolthub/api/v2/database#createRelease) |
+| `GET /{owner}/{database}/tags` | [`GET /databases/{owner}/{database}/tags`](/products/dolthub/api/v2/database#listTags) |
+| `POST /{owner}/{database}/tags` | [`POST /databases/{owner}/{database}/tags`](/products/dolthub/api/v2/database#createTag) |
+| `POST /{owner}/{database}/upload` | [`POST .../imports/uploads`](/products/dolthub/api/v2/database#createImportUpload) then [`POST .../imports`](/products/dolthub/api/v2/database#createImport) |
+| `GET /{owner}/{database}/upload` | Poll [`GET /operations/{id}`](/products/dolthub/api/v2/operations#getOperation) |
+| `POST /fork` | [`POST /databases/{owner}/{database}/forks`](/products/dolthub/api/v2/database#createFork) |
+| `GET /fork` | Poll [`GET /operations/{id}`](/products/dolthub/api/v2/operations#getOperation) |
+| `GET /{owner}/{database}/jobs` | [`GET /databases/{owner}/{database}/operations`](/products/dolthub/api/v2/operations#listOperations) |
+| `GET /users/{username}/operations` | [`GET /databases/{owner}/{database}/operations`](/products/dolthub/api/v2/operations#listOperations) |
