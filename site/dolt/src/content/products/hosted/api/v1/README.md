@@ -66,7 +66,7 @@ List endpoints put the pagination cursor in `meta`:
 }
 ```
 
-When `meta.next_page_token` is present, pass it back as the `page_token` query parameter to fetch the next page. An absent or empty token means there are no further results.
+When `meta.next_page_token` is present, pass it back as the `page_token` query parameter to fetch the next page. On the last page `meta` is omitted entirely, so checking whether the token is present is all a client needs — it is never returned present but empty.
 
 ## Errors
 

@@ -92,7 +92,7 @@ Deployment names are unique within an owner, so a create is idempotent by name �
 
 `instance_type_id` and `volume_type_id` take the **ids** from the deployment options endpoint, not the display names a deployment reports back on a read.
 
-A `5xx` from this endpoint does not guarantee the deployment was *not* created: the response body is read back after provisioning is accepted, so a failure in that read surfaces as an error for a create that succeeded. Retrying is the correct response — it returns `409` if the deployment now exists, and `GET` confirms either way.
+As with any create, a `5xx` or a dropped connection does not tell you whether the deployment was created — the call can succeed remotely and fail on the way back. Retry: it returns `409` if the deployment now exists, and `GET` confirms either way.
 
 **Creating a deployment incurs cost.**
 
@@ -171,7 +171,7 @@ Returns the deployments belonging to `{owner}` that the caller can see, newest c
 
 Items are `DeploymentSummary`, not the full `Deployment` — the backing RPC returns a narrower shape for lists. Fetch `GET /api/v1/deployments/{owner}/{deployment}` for the complete resource.
 
-Pagination is cursor-based: when `meta.next_page_token` is present, pass it back as `page_token` to fetch the next page. An absent or empty token means there are no further results.
+Pagination is cursor-based: when `meta.next_page_token` is present, pass it back as `page_token` to fetch the next page. On the last page `meta` is omitted entirely, so presence of the token is the only check a client needs.
 
 
 **Parameters**

@@ -48,7 +48,7 @@ Response metadata carried alongside the primary `data` payload. All fields are o
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `next_page_token` | `string` | no | Opaque cursor for the next page of a list response. Absent or empty when there are no further results; otherwise pass it back as the `page_token` query parameter to fetch the next page. |
+| `next_page_token` | `string` | no | Opaque cursor for the next page of a list response. Absent when there are no further results — never present and empty — otherwise pass it back as the `page_token` query parameter to fetch the next page. |
 
 ---
 
