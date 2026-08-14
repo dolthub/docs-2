@@ -1,0 +1,10 @@
+# Code owners are how reviewers get requested on Dependabot PRs: the
+# dependabot.yml `reviewers` option was removed on 2025-05-20, and GitHub's
+# replacement is this file.
+#
+# Scoped to dependency manifests and CI config rather than the whole repo, so
+# this doesn't put a reviewer on every docs content PR.
+
+package.json       @tbantle22
+package-lock.json  @tbantle22
+/.github/          @tbantle22

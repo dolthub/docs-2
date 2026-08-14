@@ -1,9 +1,11 @@
 import { Footer } from "@dolthub/react-components";
-import { FaDiscord } from "@react-icons/all-files/fa/FaDiscord";
-import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
-import { FaLinkedin } from "@react-icons/all-files/fa/FaLinkedin";
-import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
-import { FaYoutube } from "@react-icons/all-files/fa/FaYoutube";
+import {
+  FaDiscord,
+  FaGithub,
+  FaLinkedin,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
 import React from "react";
 
 // "" (no base) or e.g. "/docs" — docs are served under this base path.
