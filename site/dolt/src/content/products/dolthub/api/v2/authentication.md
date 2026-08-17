@@ -37,4 +37,4 @@ Most write operations and all operations on private databases require authentica
 
 Endpoints that require authentication will return `401 Unauthorized` if no valid credential is supplied, and `403 Forbidden` if the credential is valid but lacks permission.
 
-See [Models → Problem](models#model-problem) for the error response format.
+See [Models → Problem](/products/dolthub/api/v2/models#model-problem) for the error response format.

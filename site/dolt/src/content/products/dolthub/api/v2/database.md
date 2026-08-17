@@ -37,13 +37,13 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases' \
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `201` | The newly-created database. | [`Database`](models#model-database) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `201` | The newly-created database. | [`Database`](/products/dolthub/api/v2/models#model-database) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `201`**
 
@@ -88,12 +88,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}' \
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The database's metadata. | [`Database`](models#model-database) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The database's metadata. | [`Database`](/products/dolthub/api/v2/models#model-database) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -137,7 +137,7 @@ Public databases are readable without authentication; private databases require 
 **Example request**
 
 ```sh
-curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
+curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql?ref=main&q=SELECT%20name%2C%20year%20FROM%20jails%20LIMIT%2010' \
   -H 'Authorization: Bearer YOUR_TOKEN'
 ```
 
@@ -145,12 +145,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The query result. SQL-level errors live in `status` + `message`. | [`QueryResult`](models#model-queryresult) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The query result. SQL-level errors live in `status` + `message`. | [`QueryResult`](/products/dolthub/api/v2/models#model-queryresult) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -228,12 +228,12 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql' \
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The read query result. SQL-level errors live in `status` + `message`. | [`QueryResult`](models#model-queryresult) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The read query result. SQL-level errors live in `status` + `message`. | [`QueryResult`](/products/dolthub/api/v2/models#model-queryresult) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -310,13 +310,13 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/sql-wr
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `202` | The write operation has been accepted and is queued. | [`OperationRef`](models#model-operationref) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `202` | The write operation has been accepted and is queued. | [`OperationRef`](/products/dolthub/api/v2/models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 
 ## Branches
@@ -346,12 +346,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/branche
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The database's branches. | [`Branch[]`](models#model-branch) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The database's branches. | [`Branch[]`](/products/dolthub/api/v2/models#model-branch) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -405,14 +405,14 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/branch
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `201` | The newly-created branch. | [`Branch`](models#model-branch) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `201` | The newly-created branch. | [`Branch`](/products/dolthub/api/v2/models#model-branch) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `201`**
 
@@ -454,12 +454,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/tags' \
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The database's tags. | [`Tag[]`](models#model-tag) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The database's tags. | [`Tag[]`](/products/dolthub/api/v2/models#model-tag) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -515,14 +515,14 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/tags' 
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `201` | The newly-created tag. | [`Tag`](models#model-tag) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `201` | The newly-created tag. | [`Tag`](/products/dolthub/api/v2/models#model-tag) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `201`**
 
@@ -564,12 +564,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/forks' 
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The database's direct fork children (immediate forks only). | [`DatabaseRef[]`](models#model-databaseref) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The database's direct fork children (immediate forks only). | [`DatabaseRef[]`](/products/dolthub/api/v2/models#model-databaseref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -621,14 +621,14 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/forks'
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `202` | The fork operation has been accepted and is queued. | [`OperationRef`](models#model-operationref) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `422` | The request was well-formed but semantically invalid. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `202` | The fork operation has been accepted and is queued. | [`OperationRef`](/products/dolthub/api/v2/models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 
 ## Releases
@@ -658,12 +658,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/release
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The database's releases. | [`Release[]`](models#model-release) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The database's releases. | [`Release[]`](/products/dolthub/api/v2/models#model-release) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -723,14 +723,14 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/releas
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `201` | The newly-created release. | [`Release`](models#model-release) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `201` | The newly-created release. | [`Release`](/products/dolthub/api/v2/models#model-release) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `201`**
 
@@ -775,12 +775,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls' 
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The database's pull requests. | [`PullSummary[]`](models#model-pullsummary) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The database's pull requests. | [`PullSummary[]`](/products/dolthub/api/v2/models#model-pullsummary) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -839,14 +839,14 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls'
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `201` | The newly-created pull request. | [`Pull`](models#model-pull) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `201` | The newly-created pull request. | [`Pull`](/products/dolthub/api/v2/models#model-pull) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `201`**
 
@@ -904,12 +904,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/{
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The requested pull request. | [`Pull`](models#model-pull) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The requested pull request. | [`Pull`](/products/dolthub/api/v2/models#model-pull) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -976,13 +976,13 @@ curl -X PATCH 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The updated pull request. | [`Pull`](models#model-pull) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The updated pull request. | [`Pull`](/products/dolthub/api/v2/models#model-pull) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -1040,12 +1040,12 @@ curl -X GET 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/{
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The pull request's comments. | [`PullComment[]`](models#model-pullcomment) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The pull request's comments. | [`PullComment[]`](/products/dolthub/api/v2/models#model-pullcomment) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 
@@ -1101,13 +1101,13 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `201` | The newly-created comment. | [`PullComment`](models#model-pullcomment) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `201` | The newly-created comment. | [`PullComment`](/products/dolthub/api/v2/models#model-pullcomment) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `201`**
 
@@ -1151,14 +1151,14 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/pulls/
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `202` | The merge operation has been accepted and is queued. | [`OperationRef`](models#model-operationref) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `422` | The request was well-formed but semantically invalid. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `202` | The merge operation has been accepted and is queued. | [`OperationRef`](/products/dolthub/api/v2/models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 
 ## Imports
@@ -1197,13 +1197,13 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/import
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `201` | The multipart upload session. | [`ImportUpload`](models#model-importupload) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `201` | The multipart upload session. | [`ImportUpload`](/products/dolthub/api/v2/models#model-importupload) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 ---
 
@@ -1252,11 +1252,11 @@ curl -X POST 'https://www.dolthub.com/api/v2/databases/{owner}/{database}/import
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `202` | The import operation has been accepted and is queued. | [`OperationRef`](models#model-operationref) |
-| `400` | The request was malformed or failed input validation. | [`Problem`](models#model-problem) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](models#model-problem) |
-| `404` | The requested resource does not exist. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `202` | The import operation has been accepted and is queued. | [`OperationRef`](/products/dolthub/api/v2/models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 

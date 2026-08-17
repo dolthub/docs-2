@@ -244,6 +244,20 @@ const nav: NavSection[] = [
           { title: "Infrastructure", href: "/products/hosted/infrastructure" },
           { title: "Private Networking", href: "/products/hosted/private-networking" },
           { title: "SSO", href: "/products/hosted/sso" },
+          {
+            // Only one API version exists, so the sections sit directly under
+            // API rather than behind a "v1" node. The paths keep /v1/ so a
+            // future v2 can be added without moving any of these URLs.
+            title: "API",
+            href: "/products/hosted/api",
+            children: [
+              { title: "Overview", href: "/products/hosted/api/v1" },
+              { title: "Authentication", href: "/products/hosted/api/v1/authentication" },
+              { title: "User", href: "/products/hosted/api/v1/user" },
+              { title: "Deployment", href: "/products/hosted/api/v1/deployment" },
+              { title: "Models", href: "/products/hosted/api/v1/models" },
+            ],
+          },
         ],
       },
       {
