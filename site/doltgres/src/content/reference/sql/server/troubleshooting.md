@@ -6,7 +6,7 @@ Debugging a running Doltgres server can be challenging. This document covers the
 
 ## Basics
 
-## Make sure you are running the latest Doltgres version
+### Make sure you are running the latest Doltgres version
 
 Doltgres is constantly evolving. We release a new Doltgres approximately once a week. Connect to the
 SQL server and run `select dolt_version()`. Make sure the version matches the latest as seen on the
@@ -14,15 +14,15 @@ SQL server and run `select dolt_version()`. Make sure the version matches the la
 
 To upgrade the server, download the latest Doltgres binary for your platform and replace the Doltgres binary on your `PATH` with the downloaded one. Running the install process on most platforms again will do this for you. Restart the Doltgres server using `doltgres` to have your running server start using the latest binary.
 
-## Examine your CPU, Memory, and Disk usage
+### Examine your CPU, Memory, and Disk usage
 
 Doltgres consumes CPU, Memory, and Disk. Consuming more of any of these resources than the host has available can lead to degraded performance. Use your system's built in resource monitoring systems to inspect Doltgres's usage of these resources. You may need a larger host or additional [read replicas](/reference/server/replication) to support your load.
 
-## Set your log level to DEBUG or TRACE
+### Set your log level to DEBUG or TRACE
 
 To see queries being run against the server, query results, and query latency set your Doltgres log level to `DEBUG` or `TRACE`. This can be done by setting `log_level: debug` in your `config.yaml`. Your logs should be visible in the shell you started `doltgres` in.
 
-## Compare to Postgres
+### Compare to Postgres
 
 Doltgres strives to be 100% Postgres compatible. If you run a query that works in Postgres but does not work in Doltgres, it is a Doltgres bug and you should [submit an issue](#submitting-issues). You can dump your Doltgres database using the `pg_dump` tool and import the resulting file into PostgreSQL. Then test the query you think should work against both servers using any Postgres client and compare the results.
 
@@ -34,7 +34,7 @@ If you run into any issues requiring engineering attention, please submit a [Git
 
 Doltgres operational issues usually manifest as slow SQL queries. In rare occasions, Doltgres may consume more of your system's resources than you expect. In these cases, this document has some recommendations.
 
-## Server Consuming Disk
+### Server Consuming Disk
 
 Doltgres creates disk garbage on write. This can sometimes become a substantial portion of the disk Doltgres is consuming. Doltgres ships with a garbage collection function. Running the garbage collection function can free disk.
 
@@ -47,7 +47,7 @@ Another potential cause is a commit-heavy workflow that uses a database design t
 - Using primary keys with random values. Inserts into indexes with random values guarantees that edits will occur all throughout the index instead of being clustered around the same key space. This results in a rewrite of the prolly tree thereby increasing storage disproportionately to the delta of the changes.
 - Adding a column to a table. A new column forks the storage of the table resulting in a loss of structural sharing. Doltgres is row major and builds chunks for each primary key, row values pair. The row values encodes the schema length so every row now requires a new chunk.
 
-## Server Consuming Memory
+### Server Consuming Memory
 
 Serving Doltgres databases requires a fair amount of memory. As a general rule, we recommend a minimum
 of 2GB available RAM for any production use case. Larger databases or heavier workloads should start
@@ -67,7 +67,7 @@ then frees the memory upon restart, you have discoverd a memory leak. Again, ple
 issue](https://github.com/dolthub/doltgresql/issues). Memory leaks should be rare and we treat memory leak
 fixes as high priority.
 
-## Server Consuming CPU
+### Server Consuming CPU
 
 Under too much concurrent load, Doltgres may consume all the CPU on a host. This is likely caused by too
 much read concurrency. In this case, create more [read replicas](/reference/server/replication) and load balance
@@ -76,7 +76,7 @@ your reads among your replicas.
 If you discover a query consuming all of your CPU, please submit a [GitHub
 Issue](https://github.com/dolthub/doltgresql/issues). On rare occasions, this could be a Doltgres bug.
 
-## Too much write concurrency
+### Too much write concurrency
 
 Currently, Doltgres is not a high-throughput database for writes. The current transaction model
 serializes all writes, which means that after a certain threshold of writer concurrency, you'll
