@@ -2,7 +2,6 @@
 // Workspaces hoist deps to the root, so this file can import the plugins
 // directly (resolution walks up from shared/ to the hoisted root).
 import { defineConfig } from "astro/config";
-import tailwind from "@astrojs/tailwind";
 import react from "@astrojs/react";
 import { unified } from "@astrojs/markdown-remark";
 import rehypeSlug from "rehype-slug";
@@ -52,7 +51,12 @@ export function buildAstroConfig(site, siteDir) {
     site,
     base,
     outDir: `./dist${base}`,
-    integrations: [tailwind(), react()],
+    integrations: [react()],
+    // Astro 7 changed the default to 'jsx', which strips whitespace between
+    // inline elements the way React does — so prose like `<em>x</em> <code>y</code>`
+    // would lose the space between them. Docs pages are almost entirely prose,
+    // so keep the HTML-aware compression Astro 6 did.
+    compressHTML: true,
     markdown: {
       shikiConfig,
       processor: unified({

@@ -1,0 +1,8 @@
+/* Tailwind's base, component, and utility layers.
+ *
+ * @astrojs/tailwind used to inject these automatically (applyBaseStyles). That
+ * integration was dropped in the Astro 7 migration, so the directives live here
+ * and DocsLayout imports this file once for every page. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
