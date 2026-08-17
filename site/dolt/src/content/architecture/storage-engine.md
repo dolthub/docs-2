@@ -54,7 +54,7 @@ Databases are built on top of [Search Trees](https://en.wikipedia.org/wiki/Searc
 
 Dolt is built on a novel Search Tree, closely related to a B-tree, called a Probabilistic B-Tree, or Prolly Tree for short. As far as we can tell, Prolly Trees were [invented by the Noms team specifically for database version control](https://github.com/attic-labs/noms/blob/master/doc/intro) and they also coined the term.
 
-## B-Trees
+### B-Trees
 
 Most SQL databases you are familiar with, like [Postgres](https://www.postgresql.org/) or [MySQL](https://www.mysql.com/), are built on [B-tree](https://www.dolthub.com/blog/2020-04-01-how-dolt-stores-table-data/#b-tree-review) storage. Tables are represented as a map of primary keys to values and the keys of that map are stored in a B-tree. Values are stored in the leaf nodes. 
 
@@ -66,7 +66,7 @@ However, finding the differences between two B-trees requires scanning both tree
 
 Also, writes to B-trees are not history independent, the order of the writes internally changes the structure of the tree. Thus, storage cannot be easily shared between two versions of the same tree.
 
-## Prolly Trees
+### Prolly Trees
 
 A Prolly Tree, or Probabilistic B-tree, is a content-addressed B-tree. 
 
@@ -82,7 +82,7 @@ Moreover, sections of the tree that share the same root hash can share storage b
 
 Prolly trees are described in more detail [here](/architecture/storage-engine/prolly-tree).
 
-## Comparison
+### Comparison
 
 [The Noms documentation](https://github.com/attic-labs/noms/blob/master/doc/intro#some-properties-of-prolly-trees) provides the following useful algorithmic, big O() comparison of B-trees and Prolly Trees:
 
