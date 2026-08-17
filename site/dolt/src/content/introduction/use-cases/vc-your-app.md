@@ -25,11 +25,11 @@ In the past applications that needed these features required [slowly changing di
 
 ## Dolt replaces
 
-## Soft Deletes
+### Soft Deletes
 
 A common technique to version your database is to use [soft deletes](https://www.dolthub.com/blog/2022-11-03-soft-deletes/). When your application would make an update or a delete, you application instead makes an insert and marks the old row invalid. Dolt obviates the need for this technique. You can keep your existing database schema and Dolt ensures every write is non-destructive. Queries against soft deleted rows become Dolt history queries against [system tables](/sql-reference/version-control/dolt-system-tables). 
 
-## Slowly Changing Dimension
+### Slowly Changing Dimension
 
 A more advanced technique for versioning databases is [slowly changing dimension](https://www.dolthub.com/blog/2023-06-22-slowly-changing-dimension/). Slowly Changing Dimension is similar to soft deletes. Additional database columns are added to tables to manage versioning. Dolt is slowly changing dimension on every table by default. Queries involving the slowly changing dimension become Dolt history queries against [system tables](/sql-reference/version-control/dolt-system-tables). Moreover, complicated [merge](/concepts/dolt/git/merge) processes can happen at the database layer. Merges must handled by custom code at the application layer with slowly changing dimension.
 
