@@ -33,7 +33,7 @@ analytics query. [Clone](/cli-reference/cli#dolt-clone) makes it easy to get a l
 copy of your Hosted database with one command. Do whatever potentially destructive or
 performance-degrading operations on your laptop while respecting your production database.
 
-## 1. Expose remotesapi endpoint
+### 1. Expose remotesapi endpoint
 
 In order to enable cloning from your Hosted database, first expose the [remotesapi
 endpoint](/cli-reference/cli#dolt-sql-server). This will set the port for a server
@@ -48,7 +48,7 @@ deployment will also work.
 
 ![](../../.gitbook/assets/hosted-create-deployment-remotesapi.png)
 
-## 2. Set remote password and run clone command with user flag
+### 2. Set remote password and run clone command with user flag
 
 To authenticate against it, you have to set a `DOLT_REMOTE_PASSWORD` environment variable
 and pass along a `--user` flag to the `dolt clone` command. You can find these
@@ -92,7 +92,7 @@ cloning https://dolthub-us-housing.dbs.hosted.doltdb.com/us-housing-prices
 +----------+
 ```
 
-## 3. Sync your local copy with upstream changes
+### 3. Sync your local copy with upstream changes
 
 Now we can run whatever queries or schema migrations we want without affecting production.
 If there are updates to the database, easily sync your local copy using [`dolt
@@ -107,7 +107,7 @@ commands to your remotesapi endpoint in the same way by passing the `--user` fla
 % dolt fetch --user "[username]"
 ```
 
-## 4. Sync your upstream with changes from local copy
+### 4. Sync your upstream with changes from local copy
 
 If you make any changes on your local copy, you can push them to your upstream using
 [`dolt push`](/cli-reference/cli#dolt-push). Push to a feature branch rather than
@@ -127,7 +127,7 @@ You can also push straight to `main` if you'd rather skip review, subject to any
 % dolt push origin --user "[username]" HEAD:main
 ```
 
-## 5. Open a pull request
+### 5. Open a pull request
 
 Hosted Dolt doesn't have forks — that's a DoltHub and DoltLab feature. To contribute
 a change for review, push a feature branch to the deployment (as in step 4 above) and
