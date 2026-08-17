@@ -18,7 +18,7 @@ The following sections will introduce you to how CI works with Dolt, DoltHub and
 
 CI configuration for a DoltHub or DoltLab database is stored in the database itself. At the time of this writing, in order to add CI configuration to a DoltHub or DoltLab database, you will need to have a local Dolt client version >= [v1.45.3](https://github.com/dolthub/dolt/releases/tag/v1.45.3) and will have to clone a copy of the the database. In order to configure CI on the database, you will use Dolt's CI CLI commands.
 
-## Dolt CI Commands
+### Dolt CI Commands
 
 The primary interface for creating and editing CI configuration in a Dolt database is via the `dolt ci` CLI command. These commands aim to simplify CI configuration in Dolt, so that users do not need to manually interact with the underlying CI tables directly.
 
@@ -57,7 +57,7 @@ A workflow Job is made up of a series of Steps. A step, in its current form, is 
 
 For more information on Steps, please see the [workflow reference](/products/dolthub/continuous-integration/reference).
 
-## Saved Query
+### Saved Query
 
 A [Saved Query](/sql-reference/version-control/saved-queries) is a SQL query that is stored and versioned in a Dolt database. For the purpose of DoltHub and DoltLab CI, this allows users to write a SQL query that will be executed on command at a later time, during a CI run.
 
