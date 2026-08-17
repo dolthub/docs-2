@@ -37,11 +37,11 @@ $ dolt sql --disable-auto-gc
 
 Garbage collection can be run offline using [`dolt gc`](/cli-reference/cli#dolt-gc) or online using [`call dolt_gc()`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc).
 
-## Offline
+### Offline
 
 If you have access to the server where your Dolt database is located and a Dolt sql-server is not running, navigate to the directory your database is stored in and run `dolt gc`. This will cycle through all the needed chunks in your database and delete those that are unnecessary. This process is CPU and memory intensive.
 
-## Online, with Automatic GC disabled
+### Online, with Automatic GC disabled
 
 If you have disabled Automatic GC, you can run garbage collection on your running SQL server using [`call dolt_gc`](/sql-reference/version-control/dolt-sql-procedures#dolt_gc) through any connected client. To prevent concurrent
 writes potentially referencing garbage collected chunks, running
