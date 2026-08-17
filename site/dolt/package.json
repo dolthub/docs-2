@@ -7,7 +7,8 @@
     "dev": "astro dev --port 4321",
     "build": "node ../../scripts/check-content-frontmatter.mjs src/content && astro build && cp _redirects dist/_redirects && cp _headers dist/_headers && cp dist/docs/404.html dist/404.html && cp dist/docs/llms.txt dist/llms.txt && npx pagefind --site dist/docs",
     "preview": "astro preview --port 4321",
-    "generate-api-v2": "node ../../scripts/generate-api-v2.mjs"
+    "generate-api-v2": "node ../../scripts/generate-api-v2.mjs",
+    "generate-hosted-api-v1": "node ../../scripts/generate-hosted-api-v1.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.2",

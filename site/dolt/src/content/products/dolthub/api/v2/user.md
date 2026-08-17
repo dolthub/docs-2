@@ -24,10 +24,10 @@ curl -X GET 'https://www.dolthub.com/api/v2/user' \
 
 | Status | Description | Schema |
 |--------|-------------|--------|
-| `200` | The authenticated user's profile. | [`User`](models#model-user) |
-| `401` | Authentication credentials were missing or invalid. | [`Problem`](models#model-problem) |
-| `405` | The HTTP method is not supported for this resource. | [`Problem`](models#model-problem) |
-| `500` | An unexpected server error occurred. | [`Problem`](models#model-problem) |
+| `200` | The authenticated user's profile. | [`User`](/products/dolthub/api/v2/models#model-user) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/dolthub/api/v2/models#model-problem) |
 
 **Example response `200`**
 

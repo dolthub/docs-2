@@ -1,0 +1,1508 @@
+# Hosted Public API v1 — OpenAPI contract.
+#
+# This is the single source of truth for the v1 API. TypeScript DTO types,
+# runtime/contract-test JSON Schemas, and the public docs are all generated
+# from this file — never hand-edited downstream.
+#
+# The error model, envelope, and pagination conventions below are deliberately
+# identical to DoltHub's v2 spec (web/packages/dolthub/openapi/v2.yaml) apart
+# from the docs URL. Two public APIs from the same company that disagree about
+# error bodies is a worse outcome than either individual choice.
+openapi: 3.1.0
+
+info:
+  title: Hosted API
+  version: 1.0.0
+  summary: The public REST API for Hosted Dolt deployments.
+  description: |
+    The Hosted v1 API is an explicit, versioned, OpenAPI-defined contract for the Hosted
+    control plane: deployments and their instances, backups, credentials, configuration,
+    and access.
+
+    This document is the contract: it is the source of truth for the implementation, the
+    generated types, and the rendered reference docs.
+
+    **Scope.** v1 covers the control plane only. Querying the data inside a deployment is
+    not part of this API — every deployment exposes a SQL endpoint that callers connect to
+    directly with their own credentials.
+  contact:
+    name: DoltHub Support
+    url: https://hosted.doltdb.com/contact
+    email: dolt-interest@dolthub.com
+  license:
+    name: Hosted Dolt Terms of Service
+    url: https://hosted.doltdb.com/terms
+  termsOfService: https://hosted.doltdb.com/terms
+
+servers:
+  - url: https://hosted.doltdb.com
+    description: Production
+
+# Default: every operation requires an API token. Individual operations may override this
+# once paths are added. API tokens are the only credential in v1 — the scheme list is a
+# sequence so an `oauth2` scheme can be added later without a breaking change.
+security:
+  - apiToken: []
+
+# Operation tags are registered here so renderers group operations consistently.
+tags:
+  - name: User
+    description: The authenticated user.
+  - name: Deployment
+    description: Hosted Dolt deployments and their lifecycle.
+
+paths:
+  /api/v1/user:
+    get:
+      operationId: getCurrentUser
+      summary: Get the authenticated user.
+      description: >-
+        Returns the profile of the user identified by the request's credentials. Useful as a
+        credential check: a `200` confirms the token is valid and shows whose access it
+        carries.
+      tags:
+        - User
+      security:
+        - apiToken: []
+      responses:
+        "200":
+          description: The authenticated user's profile.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/User"
+              examples:
+                default:
+                  summary: An authenticated user's profile.
+                  value:
+                    data:
+                      username: acme-ops
+                      display_name: Acme Operations
+                      company: Acme Corp
+                      email_addresses:
+                        - address: ops@acme.com
+                          is_verified: true
+                          is_primary: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/deployment-options:
+    get:
+      operationId: getDeploymentOptions
+      summary: List the options a deployment can be created with.
+      description: >-
+        Returns the zones, instance types, and storage options available for a cloud, so a
+        caller can construct a valid `POST /api/v1/deployments` request.
+
+
+        The options narrow in steps, because each depends on the one before it. Supply
+        `cloud` alone for its zones; add `zone` to also get that zone's instance types; add
+        `instance_type_id` to also get the storage options compatible with that instance.
+        Fields you haven't narrowed enough to determine are absent rather than empty.
+
+
+        Each list is filtered to what you selected: supplying `zone` narrows `zones` to that
+        zone, and supplying `instance_type_id` narrows `instance_types` to that instance
+        type. A fully narrowed request therefore describes one combination rather than
+        repeating the whole catalogue.
+
+
+        A `zone` or `instance_type_id` that doesn't exist is a `422` rather than an empty
+        result, so a typo can't be mistaken for a combination with nothing available.
+        `instance_type_id` requires `zone`; supplying it alone is a `400`.
+
+
+        The `id` of an instance type or storage option is what
+        `POST /api/v1/deployments` accepts; `name` is for display.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: cloud
+          in: query
+          required: true
+          description: The cloud to list options for.
+          schema:
+            $ref: "#/components/schemas/CloudProvider"
+        - name: zone
+          in: query
+          required: false
+          description: >-
+            A zone from this cloud's `zones`. Supply it to receive `instance_types`.
+          schema:
+            type: string
+            minLength: 1
+          example: us-east-1
+        - name: instance_type_id
+          in: query
+          required: false
+          description: >-
+            An instance type `id` from `instance_types`. Supply it, together with `zone`,
+            to receive `storage_options`.
+          schema:
+            type: string
+            minLength: 1
+          example: aws.t2.medium
+      responses:
+        "200":
+          description: The available options, narrowed by the supplied parameters.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DeploymentOptions"
+              examples:
+                default:
+                  summary: Fully narrowed options for one instance type.
+                  value:
+                    data:
+                      cloud: aws
+                      zones:
+                        - us-east-1
+                      instance_types:
+                        - id: aws.t2.medium
+                          name: t2.medium
+                          cpus: 2
+                          memory_gb: 4
+                          description: Trial tier, the lowest spec that runs a Dolt SQL server.
+                          hourly_cost_usd: 0.06849315
+                      storage_options:
+                        - id: aws.ebs.gp3_50
+                          name: Trial 50GB EBS
+                          description: Trial tier storage capped at 50GB
+                          min_size_gb: 50
+                          max_size_gb: 50
+                          monthly_cost_usd_per_gb: 0
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments:
+    post:
+      operationId: createDeployment
+      summary: Create a deployment.
+      description: >-
+        Provisions a new deployment and returns `202` with the deployment in its `starting`
+        state. Provisioning continues after the response: poll
+        `GET /api/v1/deployments/{owner}/{deployment}` until `state` becomes `started`.
+
+
+        Deployment names are unique within an owner, so a create is idempotent by name — a
+        retry after an ambiguous failure returns `409` rather than provisioning a second
+        deployment. Callers should still treat `409` as "it already exists", not as a
+        different failure.
+
+
+        `instance_type_id` and `volume_type_id` take the **ids** from the deployment options
+        endpoint, not the display names a deployment reports back on a read.
+
+
+        As with any create, a `5xx` or a dropped connection does not tell you whether the
+        deployment was created — the call can succeed remotely and fail on the way back.
+        Retry: it returns `409` if the deployment now exists, and `GET` confirms either way.
+
+
+        **Creating a deployment incurs cost.**
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      requestBody:
+        required: true
+        description: The provisioning parameters for the new deployment.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDeploymentRequest"
+            examples:
+              default:
+                summary: A single-instance Dolt deployment on AWS.
+                value:
+                  owner: acme
+                  name: analytics
+                  cloud: aws
+                  zone: us-east-1
+                  instance_type_id: aws.t2.medium
+                  volume_type_id: aws.ebs.gp3_50
+                  volume_size_gb: 50
+      responses:
+        "202":
+          description: >-
+            The deployment has been accepted and is provisioning. `state` is `starting`.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Deployment"
+              examples:
+                default:
+                  summary: A deployment accepted and provisioning.
+                  value:
+                    data:
+                      owner: acme
+                      name: analytics
+                      state: starting
+                      cloud: aws
+                      zone: us-east-1
+                      cluster_type: dolt
+                      instance_type_name: t2.medium
+                      volume_type_name: Trial 50GB EBS
+                      volume_size_gb: 50
+                      replicas: 0
+                      host: ""
+                      port: 3306
+                      caller_role: admin
+                      created_by: acme-ops
+                      created_at: "2026-08-11T09:14:00Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}:
+    get:
+      operationId: listDeployments
+      summary: List an owner's deployments.
+      description: >-
+        Returns the deployments belonging to `{owner}` that the caller can see, newest
+        cursor page first. Requires a credential with access to the owner.
+
+
+        Items are `DeploymentSummary`, not the full `Deployment` — the backing RPC returns a
+        narrower shape for lists. Fetch
+        `GET /api/v1/deployments/{owner}/{deployment}` for the complete resource.
+
+
+        Pagination is cursor-based: when `meta.next_page_token` is present, pass it back as
+        `page_token` to fetch the next page. On the last page `meta` is omitted entirely, so
+        presence of the token is the only check a client needs.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization whose deployments to list. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: page_token
+          in: query
+          required: false
+          description: >-
+            The `meta.next_page_token` from a previous response. Omit for the first page.
+          schema:
+            type: string
+          example: eyJvZmZzZXQiOjI1fQ
+        - name: state
+          in: query
+          required: false
+          description: Return only deployments in this state. Omit for all states.
+          schema:
+            $ref: "#/components/schemas/DeploymentState"
+      responses:
+        "200":
+          description: The owner's deployments.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        description: The page of deployments.
+                        items:
+                          $ref: "#/components/schemas/DeploymentSummary"
+              examples:
+                default:
+                  summary: One page of deployments.
+                  value:
+                    data:
+                      - owner: acme
+                        name: analytics
+                        state: started
+                        cloud: aws
+                        zone: us-west-2
+                        cluster_type: dolt
+                        instance_type_name: m5.large
+                        volume_type_name: gp3
+                        volume_size_gb: 100
+                        replicas: 0
+                        database_version: 1.58.4
+                        hourly_cost_usd: 0.192
+                        webpki_cert: true
+                    meta:
+                      next_page_token: eyJvZmZzZXQiOjI1fQ
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/deployments/{owner}/{deployment}:
+    get:
+      operationId: getDeployment
+      summary: Get a deployment.
+      description: >-
+        Returns the deployment `{owner}/{deployment}`. Requires a credential with at least
+        read access; a deployment the caller cannot see returns `404` rather than `403`, so
+        its existence isn't leaked.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      responses:
+        "200":
+          description: The deployment.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Deployment"
+              examples:
+                default:
+                  summary: A running deployment.
+                  value:
+                    data:
+                      owner: acme
+                      name: analytics
+                      state: started
+                      cloud: aws
+                      zone: us-east-1
+                      cluster_type: dolt
+                      instance_type_name: t2.medium
+                      volume_type_name: Trial 50GB EBS
+                      volume_size_gb: 50
+                      replicas: 0
+                      database_version: 1.58.4
+                      host: analytics.dbs.hosted.doltdb.com
+                      port: 3306
+                      hourly_cost_usd: 0.06849315
+                      webpki_cert: true
+                      expose_remotesapi_endpoint: false
+                      expose_mcp: false
+                      expose_stats: false
+                      disable_automatic_dolt_updates: false
+                      caller_role: admin
+                      created_by: acme-ops
+                      created_at: "2026-07-01T18:22:04Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}/{deployment}/instances:
+    get:
+      operationId: listDeploymentInstances
+      summary: List a deployment's instances.
+      description: >-
+        Returns the instances backing `{owner}/{deployment}` — one for a single-instance
+        deployment, or a primary plus its read replicas.
+
+
+        Stopped instances are not listed; starting, started, and stopping ones all are. So
+        an instance appearing here is part of the deployment but not necessarily serving
+        traffic, and an empty array means it has none outside the stopped state — normal
+        while a deployment is itself `starting`.
+
+
+        The list is not paginated: a deployment has a primary and its replicas, a set small
+        enough to return whole.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      responses:
+        "200":
+          description: The deployment's non-stopped instances.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        description: The deployment's non-stopped instances.
+                        items:
+                          $ref: "#/components/schemas/DeploymentInstance"
+              examples:
+                default:
+                  summary: A primary with one read replica.
+                  value:
+                    data:
+                      - id: 9b1f5c2e-4d3a-4f8b-9c0d-1e2f3a4b5c6d
+                        index: 0
+                        is_primary: true
+                        host: analytics-0.dbs.hosted.doltdb.com
+                        instance_type_name: t2.medium
+                        volume_type_name: Trial 50GB EBS
+                        volume_size_gb: 50
+                        hourly_cost_usd: 0.06849315
+                      - id: 2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e
+                        index: 1
+                        is_primary: false
+                        host: analytics-1.dbs.hosted.doltdb.com
+                        instance_type_name: t2.medium
+                        volume_type_name: Trial 50GB EBS
+                        volume_size_gb: 50
+                        hourly_cost_usd: 0.06849315
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+components:
+  headers:
+    RequestId:
+      description: >-
+        The request identifier — echoed on every response (including 2xx). Reuse
+        the inbound `x-request-id` from the caller / edge proxy when present;
+        otherwise the server mints a `req_<UUID>` value.
+      schema:
+        type: string
+        examples:
+          - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+
+  securitySchemes:
+    apiToken:
+      type: http
+      scheme: bearer
+      description: >-
+        A Hosted API token, sent as `Authorization: Bearer <token>`. Create one from the
+        Tokens section of your account settings. Tokens carry the full permissions of the
+        user who created them and expire on a date chosen at creation.
+
+  schemas:
+    # --- Error model ---------------------------------------------------------------------
+    # Every non-2xx response uses Problem (RFC 9457).
+    ErrorCode:
+      type: string
+      title: ErrorCode
+      description: >-
+        A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on
+        this value, never on the human-readable `title`/`detail` prose. The baseline codes
+        below cover the standard HTTP failure categories; endpoint-specific codes (e.g.
+        `DEPLOYMENT_NOT_FOUND`) are appended to this enum alongside the endpoints that emit
+        them, which is an additive, non-breaking change under the v1 stability policy.
+      enum:
+        - VALIDATION_FAILED # 400 — malformed request or failed input validation
+        - UNAUTHENTICATED # 401 — missing or invalid credentials
+        - PERMISSION_DENIED # 403 — authenticated but not permitted
+        - NOT_FOUND # 404 — resource does not exist
+        - METHOD_NOT_ALLOWED # 405 — HTTP method not supported for this resource
+        - CONFLICT # 409 — conflicts with current state (e.g. already exists)
+        - UNPROCESSABLE # 422 — well-formed but semantically invalid
+        - RATE_LIMITED # 429 — rate limit exceeded
+        - INTERNAL # 500 — unexpected server fault
+        - SERVICE_UNAVAILABLE # 503 — temporarily unavailable
+        - OPERATION_FAILED # operation reached terminal failure state
+      examples:
+        - NOT_FOUND
+
+    Problem:
+      type: object
+      title: Problem
+      description: >-
+        A structured error body returned for every non-2xx response, following RFC 9457
+        (Problem Details for HTTP APIs). This is the single error model for the entire v1
+        API — there are no ad-hoc error shapes.
+      required:
+        # `type` is required even though RFC 9457 permits omitting it: this API always emits
+        # it, and leaving it optional made the spec disagree with the generated DTO (which
+        # marks it non-optional because of the `default`).
+        - type
+        - title
+        - status
+        - code
+        - request_id
+      properties:
+        type:
+          type: string
+          format: uri
+          default: about:blank
+          description: >-
+            A URI identifying the problem type; when dereferenced it points at
+            human-readable documentation for the error.
+          examples:
+            - https://docs.dolthub.com/products/hosted/api/v1/models/#model-errorcode
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type.
+          examples:
+            - Not found
+        status:
+          type: integer
+          format: int32
+          minimum: 400
+          maximum: 599
+          description: The HTTP status code, repeated in the body for convenience.
+          examples:
+            - 404
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+            - "Deployment 'analytics' does not exist for owner 'acme'"
+        instance:
+          type: string
+          format: uri-reference
+          description: A URI reference identifying the specific occurrence (typically the request path).
+          examples:
+            - /api/v1/deployments/acme/analytics
+        code:
+          $ref: "#/components/schemas/ErrorCode"
+        request_id:
+          type: string
+          description: >-
+            The request identifier, echoed on every response. Include it when contacting
+            support so a request can be traced end-to-end.
+          examples:
+            - req_01HZX9P7Q5N2M8
+      additionalProperties: true
+
+    # --- Success envelope ----------------------------------------------------------------
+    Meta:
+      type: object
+      title: Meta
+      description: >-
+        Response metadata carried alongside the primary `data` payload. All fields are
+        optional; list endpoints populate `next_page_token` for cursor pagination.
+      properties:
+        next_page_token:
+          type: string
+          description: >-
+            Opaque cursor for the next page of a list response. Absent when there are no
+            further results — never present and empty — otherwise pass it back as the
+            `page_token` query parameter to fetch the next page.
+          examples:
+            - eyJvZmZzZXQiOjI1fQ
+      additionalProperties: true
+      examples:
+        - next_page_token: eyJvZmZzZXQiOjI1fQ
+
+    Envelope:
+      type: object
+      title: Envelope
+      description: >-
+        The success envelope wrapping every 2xx response body: the resource or list of
+        resources under `data`, with optional `meta`. This is the single success shape for
+        the API — there are no unenveloped success bodies. Endpoints narrow `data` to a
+        concrete resource via `allOf`; the base leaves `data` unconstrained so that
+        composition works.
+      required:
+        - data
+      properties:
+        data:
+          type: [object, array]
+          # Required for `data` to actually be unconstrained. Without it, openapi-typescript
+          # emits `Record<string, never>` — an object permitting no properties — and the
+          # composed `Envelope & { data: Resource }` becomes unassignable, so nothing can use
+          # the generated response type.
+          additionalProperties: true
+          description: The primary response payload — a resource, or an array of resources for list endpoints.
+        meta:
+          $ref: "#/components/schemas/Meta"
+      examples:
+        - data:
+            username: acme-ops
+          meta:
+            next_page_token: eyJvZmZzZXQiOjI1fQ
+
+    # --- Resources ----------------------------------------------------------------------
+    # Resource schemas are the public DTO surface — what the v1 contract guarantees to
+    # integrators. Field names are snake_case. Fields are added additively under the v1
+    # stability policy; renames or removals require v2.
+    UserEmailAddress:
+      type: object
+      title: UserEmailAddress
+      description: An email address belonging to a user.
+      required:
+        - address
+        - is_verified
+        - is_primary
+      properties:
+        address:
+          type: string
+          description: The email address.
+          examples:
+            - ops@acme.com
+        is_verified:
+          type: boolean
+          description: Whether the address has completed email verification.
+        is_primary:
+          type: boolean
+          description: >-
+            Whether this is the user's primary address. Exactly one address is primary.
+    User:
+      type: object
+      title: User
+      description: >-
+        A Hosted user. `GET /api/v1/user` returns the authenticated user's profile. v1
+        returns only public-facing profile fields — the identity provider the account signs
+        in with, session state, and credential metadata are never included.
+      required:
+        - username
+        - email_addresses
+      properties:
+        username:
+          type: string
+          description: The user's Hosted username (unique handle).
+          examples:
+            - acme-ops
+        display_name:
+          type: string
+          description: The user's display name. May be empty.
+          examples:
+            - Acme Operations
+        company:
+          type: string
+          description: The user's stated company. May be empty.
+          examples:
+            - Acme Corp
+        email_addresses:
+          type: array
+          description: >-
+            The user's email addresses. Returned only for the authenticated user
+            themselves; empty for any other caller.
+          items:
+            $ref: "#/components/schemas/UserEmailAddress"
+
+    InstanceType:
+      type: object
+      title: InstanceType
+      description: A compute instance type a deployment can run on.
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: >-
+            The identifier `POST /api/v1/deployments` accepts as `instance_type_id`.
+          examples:
+            - aws.t2.medium
+        name:
+          type: string
+          description: The display name. A deployment reports this as `instance_type_name`.
+          examples:
+            - t2.medium
+        cpus:
+          type: integer
+          format: int32
+          description: Virtual CPUs.
+          examples:
+            - 2
+        memory_gb:
+          type: integer
+          format: int32
+          description: Memory, in gigabytes.
+          examples:
+            - 4
+        description:
+          type: string
+          description: A human-readable summary of what the instance suits.
+          examples:
+            - Trial tier, the lowest spec that runs a Dolt SQL server.
+        hourly_cost_usd:
+          type: number
+          format: float
+          description: >-
+            Cost per hour in US dollars. Absent when no hourly price is published for this
+            instance type.
+          examples:
+            - 0.06849315
+
+    StorageOption:
+      type: object
+      title: StorageOption
+      description: A storage type a deployment's volume can use.
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: >-
+            The identifier `POST /api/v1/deployments` accepts as `volume_type_id`.
+          examples:
+            - aws.ebs.gp3_50
+        name:
+          type: string
+          description: The display name. A deployment reports this as `volume_type_name`.
+          examples:
+            - Trial 50GB EBS
+        description:
+          type: string
+          description: A human-readable summary of the storage type.
+          examples:
+            - Trial tier storage capped at 50GB
+        min_size_gb:
+          type: integer
+          format: int32
+          description: >-
+            Smallest volume size this type supports, in gigabytes. `volume_size_gb` on a
+            create request must be at least this.
+          examples:
+            - 50
+        max_size_gb:
+          type: integer
+          format: int32
+          description: >-
+            Largest volume size this type supports, in gigabytes.
+          examples:
+            - 50
+        monthly_cost_usd_per_gb:
+          type: number
+          format: float
+          description: Cost per gigabyte per month, in US dollars.
+          examples:
+            - 0
+
+    DeploymentInstance:
+      type: object
+      title: DeploymentInstance
+      description: >-
+        One instance backing a deployment. A deployment has a primary and, when it has read
+        replicas, one instance per replica.
+      required:
+        - id
+        - index
+        - is_primary
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The instance's identifier, unique within the deployment.
+          examples:
+            - 9b1f5c2e-4d3a-4f8b-9c0d-1e2f3a4b5c6d
+        index:
+          type: integer
+          format: int32
+          description: >-
+            The instance's position in the deployment. `0` is the first instance; replicas
+            take the following indices.
+          examples:
+            - 0
+        is_primary:
+          type: boolean
+          description: >-
+            Whether this instance is currently the primary. Exactly one instance of a
+            started deployment is primary, and which one can change over the deployment's
+            life.
+          examples:
+            - true
+        host:
+          type: string
+          description: >-
+            The hostname for this specific instance. Connect to the deployment's own `host`
+            unless you mean to address one instance directly.
+          examples:
+            - analytics-0.dbs.hosted.doltdb.com
+        instance_type_name:
+          type: string
+          description: The display name of this instance's type.
+          examples:
+            - t2.medium
+        volume_type_name:
+          type: string
+          description: The display name of this instance's storage type.
+          examples:
+            - Trial 50GB EBS
+        volume_size_gb:
+          type: integer
+          format: int32
+          description: The size of this instance's storage volume, in gigabytes.
+          examples:
+            - 50
+        hourly_cost_usd:
+          type: number
+          format: float
+          description: >-
+            This instance's cost per hour, in US dollars. A deployment's total is the sum
+            across its instances.
+          examples:
+            - 0.06849315
+
+    DeploymentOptions:
+      type: object
+      title: DeploymentOptions
+      description: >-
+        The options available for creating a deployment, narrowed by the query parameters
+        supplied. `instance_types` and `storage_options` are absent until enough of the
+        chain has been supplied to determine them.
+      required:
+        - cloud
+        - zones
+      properties:
+        cloud:
+          $ref: "#/components/schemas/CloudProvider"
+        zones:
+          type: array
+          description: The zones this cloud supports.
+          items:
+            type: string
+          examples:
+            - ["us-east-1", "us-west-2", "eu-west-2"]
+        instance_types:
+          type: array
+          description: >-
+            Instance types available in the requested `zone`. Absent when `zone` wasn't
+            supplied.
+          items:
+            $ref: "#/components/schemas/InstanceType"
+        storage_options:
+          type: array
+          description: >-
+            Storage types compatible with the requested `instance_type_id`. Absent when
+            `zone` and `instance_type_id` weren't both supplied.
+          items:
+            $ref: "#/components/schemas/StorageOption"
+
+    CreateDeploymentRequest:
+      type: object
+      title: CreateDeploymentRequest
+      description: >-
+        The provisioning parameters for a new deployment.
+
+
+        v1.0 exposes the core parameters only. Restoring from a backup, cloning an existing
+        deployment, workbench user settings, and private networking are all settable on the
+        internal API but are not part of this request; each is its own feature with its own
+        contract, and adding them is additive. The internal deployment test flag is
+        deliberately not exposed at all.
+      required:
+        - owner
+        - name
+        - cloud
+        - zone
+        - instance_type_id
+        - volume_type_id
+        - volume_size_gb
+      properties:
+        owner:
+          type: string
+          description: >-
+            The user or organization that will own the deployment. The caller must have
+            permission to create deployments for it. 3–32 characters of letters, digits,
+            hyphens, and underscores.
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          examples:
+            - acme
+        name:
+          type: string
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          examples:
+            - analytics
+        cloud:
+          $ref: "#/components/schemas/CloudProvider"
+        zone:
+          type: string
+          description: The cloud region to provision in, as listed by the deployment options.
+          minLength: 1
+          examples:
+            - us-east-1
+        cluster_type:
+          $ref: "#/components/schemas/ClusterType"
+        instance_type_id:
+          type: string
+          description: >-
+            The **id** of the instance type, from the deployment options endpoint. Note a
+            deployment reports `instance_type_name` on a read — the id and the display name
+            are different values.
+          minLength: 1
+          examples:
+            - aws.t2.medium
+        volume_type_id:
+          type: string
+          description: >-
+            The **id** of the storage type, from the deployment options endpoint. As with
+            `instance_type_id`, this is the id rather than the display name.
+          minLength: 1
+          examples:
+            - aws.ebs.gp3_50
+        volume_size_gb:
+          type: integer
+          format: int32
+          description: >-
+            The size of the storage volume, in gigabytes. Must fall within the selected
+            storage type's supported range.
+          minimum: 1
+          examples:
+            - 50
+        replicas:
+          type: integer
+          format: int32
+          description: The number of read replicas. Defaults to `0` when omitted.
+          minimum: 0
+          examples:
+            - 2
+        webpki_cert:
+          type: boolean
+          description: >-
+            Serve a publicly-trusted (WebPKI) TLS certificate rather than a Hosted-issued
+            one. Defaults to `false` when omitted.
+          examples:
+            - true
+        expose_remotesapi_endpoint:
+          type: boolean
+          description: Expose a Dolt remotes API endpoint. Defaults to `false` when omitted.
+          examples:
+            - false
+        expose_mcp:
+          type: boolean
+          description: Expose an MCP endpoint. Defaults to `false` when omitted.
+          examples:
+            - false
+        expose_stats:
+          type: boolean
+          description: Expose a statistics endpoint. Defaults to `false` when omitted.
+          examples:
+            - false
+
+    DeploymentState:
+      type: string
+      title: DeploymentState
+      description: >-
+        The deployment's lifecycle state. `starting` covers both initial provisioning and
+        a restart; poll this field to observe a create or a resize reaching `started`.
+      enum:
+        - starting
+        - started
+        - stopping
+        - stopped
+      examples:
+        - started
+
+    CloudProvider:
+      type: string
+      title: CloudProvider
+      description: The cloud the deployment runs in.
+      enum:
+        - aws
+        - gcp
+        - azure
+      examples:
+        - aws
+
+    ClusterType:
+      type: string
+      title: ClusterType
+      description: >-
+        The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL
+        primary with Dolt read replicas.
+      enum:
+        - dolt
+        - doltgres
+        - mysql_with_dolt_replicas
+      examples:
+        - dolt
+
+    DeploymentRole:
+      type: string
+      title: DeploymentRole
+      description: >-
+        The authenticated caller's role on this deployment. Always present on a read, since
+        a caller without at least read access cannot retrieve the deployment at all.
+      enum:
+        - admin
+        - writer
+        - reader
+        - reader_and_pulls
+      examples:
+        - admin
+
+    DeploymentSummary:
+      type: object
+      title: DeploymentSummary
+      description: >-
+        A deployment as it appears in a list.
+
+
+        This is deliberately not the same shape as `Deployment`. The list RPC returns a
+        narrower record — it omits connection details, the caller's role, and the creation
+        audit fields, and it adds the last-backup figures shown in fleet views. Read the
+        deployment itself for the full resource. As with `Deployment`, database credentials
+        are never included.
+      required:
+        - owner
+        - name
+        - state
+        - cloud
+        - zone
+        - cluster_type
+      properties:
+        owner:
+          type: string
+          description: The user or organization that owns the deployment.
+          examples:
+            - acme
+        name:
+          type: string
+          description: The deployment name, unique within the owner.
+          examples:
+            - analytics
+        state:
+          $ref: "#/components/schemas/DeploymentState"
+        cloud:
+          $ref: "#/components/schemas/CloudProvider"
+        zone:
+          type: string
+          description: The cloud region the deployment runs in.
+          examples:
+            - us-west-2
+        cluster_type:
+          $ref: "#/components/schemas/ClusterType"
+        instance_type_name:
+          type: string
+          description: The display name of the deployment's instance type.
+          examples:
+            - m5.large
+        volume_type_name:
+          type: string
+          description: The display name of the deployment's storage type.
+          examples:
+            - gp3
+        volume_size_gb:
+          type: integer
+          format: int32
+          description: The size of the deployment's storage volume, in gigabytes.
+          examples:
+            - 100
+        replicas:
+          type: integer
+          format: int32
+          description: The number of read replicas. `0` for a single-instance deployment.
+          examples:
+            - 0
+        database_version:
+          type: string
+          description: >-
+            The version of the database engine the deployment is running — a Dolt version
+            for a `dolt` cluster, a Doltgres version for a `doltgres` one.
+          examples:
+            - 1.58.4
+        hourly_cost_usd:
+          type: number
+          format: float
+          description: The deployment's current cost per hour, in US dollars.
+          examples:
+            - 0.192
+        webpki_cert:
+          type: boolean
+          description: >-
+            Whether the deployment serves a publicly-trusted (WebPKI) TLS certificate.
+          examples:
+            - true
+        last_backup_size_bytes:
+          type: integer
+          format: int64
+          description: >-
+            Size of the most recent backup, in bytes. Absent when no backup has been taken
+            or its size has not been computed yet.
+          examples:
+            - 1048576
+        last_backup_time:
+          type: string
+          format: date-time
+          description: >-
+            When the most recent backup was taken. Absent when no backup has been taken.
+          examples:
+            - "2026-08-10T02:00:00Z"
+
+    Deployment:
+      type: object
+      title: Deployment
+      description: >-
+        A Hosted Dolt deployment.
+
+
+        v1 returns configuration and lifecycle state only. The deployment's database
+        credentials are deliberately **not** part of this resource — they are issued and
+        rotated through the deployment credentials endpoints, so that reading a deployment
+        is never a credential-disclosing operation.
+
+
+        Provider-specific private-networking configuration (AWS PrivateLink, GCP Private
+        Service Connect, Azure Private Link) is not included in v1.0. Each carries its own
+        endpoint collection and provisioning state, and will land as its own sub-resource;
+        adding it is additive under the stability policy.
+      required:
+        - owner
+        - name
+        - state
+        - cloud
+        - zone
+        - cluster_type
+        - caller_role
+        - created_at
+      properties:
+        owner:
+          type: string
+          description: The user or organization that owns the deployment.
+          examples:
+            - acme
+        name:
+          type: string
+          description: The deployment name, unique within the owner.
+          examples:
+            - analytics
+        state:
+          $ref: "#/components/schemas/DeploymentState"
+        cloud:
+          $ref: "#/components/schemas/CloudProvider"
+        zone:
+          type: string
+          description: The cloud region the deployment runs in.
+          examples:
+            - us-east-1
+        cluster_type:
+          $ref: "#/components/schemas/ClusterType"
+        instance_type_name:
+          type: string
+          description: >-
+            The display name of the deployment's instance type. Note this is the *name*, not
+            the id that `POST /api/v1/deployments` accepts; both are listed by the deployment
+            options endpoint.
+          examples:
+            - t2.medium
+        volume_type_name:
+          type: string
+          description: >-
+            The display name of the deployment's storage type. As with `instance_type_name`,
+            this is the name rather than the id used to create a deployment.
+          examples:
+            - Trial 50GB EBS
+        volume_size_gb:
+          type: integer
+          format: int32
+          description: The size of the deployment's storage volume, in gigabytes.
+          examples:
+            - 50
+        replicas:
+          type: integer
+          format: int32
+          description: The number of read replicas. `0` for a single-instance deployment.
+          examples:
+            - 0
+        database_version:
+          type: string
+          description: >-
+            The version of the database engine the deployment is running — a Dolt version
+            for a `dolt` cluster, a Doltgres version for a `doltgres` one.
+          examples:
+            - 1.58.4
+        host:
+          type: string
+          description: >-
+            The hostname clients connect to. Empty until the deployment reaches `started`.
+          examples:
+            - analytics.dbs.hosted.doltdb.com
+        port:
+          type: integer
+          format: int32
+          description: The port clients connect to.
+          examples:
+            - 3306
+        hourly_cost_usd:
+          type: number
+          format: float
+          description: The deployment's current cost per hour, in US dollars.
+          examples:
+            - 0.06849315
+        webpki_cert:
+          type: boolean
+          description: >-
+            Whether the deployment serves a publicly-trusted (WebPKI) TLS certificate rather
+            than a Hosted-issued one.
+        expose_remotesapi_endpoint:
+          type: boolean
+          description: Whether the deployment exposes a Dolt remotes API endpoint.
+        expose_mcp:
+          type: boolean
+          description: Whether the deployment exposes an MCP endpoint.
+        expose_stats:
+          type: boolean
+          description: Whether the deployment exposes a statistics endpoint.
+        disable_automatic_dolt_updates:
+          type: boolean
+          description: >-
+            Whether automatic Dolt version updates are disabled for this deployment.
+        caller_role:
+          $ref: "#/components/schemas/DeploymentRole"
+        created_by:
+          type: string
+          description: The username of the user who created the deployment.
+          examples:
+            - acme-ops
+        created_at:
+          type: string
+          format: date-time
+          description: When the deployment was created.
+          examples:
+            - "2026-07-01T18:22:04Z"
+        destroy_at:
+          type: string
+          format: date-time
+          description: >-
+            When the deployment is scheduled to be destroyed. Absent unless a destroy has
+            been scheduled.
+          examples:
+            - "2026-09-01T00:00:00Z"
+        destroyed_by:
+          type: string
+          description: >-
+            The username of the user who destroyed the deployment. Absent unless it has been
+            destroyed.
+          examples:
+            - acme-ops
+
+  responses:
+    BadRequest:
+      description: The request was malformed or failed input validation.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Unauthorized:
+      description: Authentication credentials were missing or invalid.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Forbidden:
+      description: Authenticated, but not permitted to perform this action.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    NotFound:
+      description: The requested resource does not exist.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    MethodNotAllowed:
+      description: The HTTP method is not supported for this resource.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+        Allow:
+          description: The HTTP methods supported by this resource.
+          schema:
+            type: string
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    Conflict:
+      description: The request conflicts with the current state of the resource (e.g. it already exists).
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    UnprocessableEntity:
+      description: The request was well-formed but semantically invalid.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    TooManyRequests:
+      description: The client has exceeded its rate limit.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+        Retry-After:
+          description: The number of seconds to wait before retrying the request.
+          schema:
+            type: integer
+            format: int32
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    InternalServerError:
+      description: An unexpected server error occurred.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    ServiceUnavailable:
+      description: The service is temporarily unavailable.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"

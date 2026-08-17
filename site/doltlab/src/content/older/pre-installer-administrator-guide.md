@@ -29,7 +29,7 @@ DoltLab persists all data to local disk using Docker volumes. To backup or resto
 
 DoltLab <= `v0.8.4` uses PostgreSQL as its database and DoltLab `v1.0.0`+ uses Dolt. To backup the PostgreSQL server we recommend dumping the database with `pg_dump` and restoring the database from the dump using `psql`. To backup the Dolt server we recommend using Docker's volume backup and restore process, or Dolt's built-in backup and restore features.
 
-## Backing up and restoring remote data, user uploaded data, and Dolt server data with Docker
+### Backing up and restoring remote data, user uploaded data, and Dolt server data with Docker
 
 To backup DoltLab's remote data, the database data for all database on a given DoltLab instance, leave DoltLab's services up and run:
 
@@ -141,7 +141,7 @@ docker run --rm --volumes-from doltlab_doltlabdb_1 -v $(pwd):/backup ubuntu bash
 
 You can now restart DoltLab, and should see all data restored from the `tar` files.
 
-## Backing up and restoring PostgreSQL data
+### Backing up and restoring PostgreSQL data
 
 For DoltLab versions <= `v0.8.4`, to backup data from DoltLab's postgres server, we recommend executing a data dump with `pg_dump`. To do so, keep DoltLab's services up and run:
 
@@ -197,7 +197,7 @@ SET session_replication_role = replica;
 docker run --rm --network doltlab_doltlab -e PGPASSWORD=<POSTGRES_PASSWORD> -v $(pwd):/doltlab-db-dumps postgres:13-bullseye bash -c "psql --host=doltlab_doltlabdb_1 --port=5432 --username=dolthubadmin dolthubapi < /doltlab-db-dumps/postgres-dump.sql"
 ```
 
-## Backing up and restoring the Dolt server with `dolt backup`
+### Backing up and restoring the Dolt server with `dolt backup`
 
 DoltLab `v1.0.0`+ uses Dolt as its database. To back up the Dolt server of DoltLab using Dolt's built-in backup and restore features, keep DoltLab's services up and open a connection to the database. The quickest way to do this is with the `./shell-db.sh` script included with DoltLab:
 
@@ -592,7 +592,7 @@ Starting with DoltLab `v1.0.0`, DoltLab can be configured to use a [Hosted Dolt]
 
 To configure a DoltLab to use a Hosted Dolt, follow the steps below as we create a sample DoltLab Hosted Dolt instance called `my-doltlab-db-1`.
 
-## Create a Hosted Dolt deployment
+### Create a Hosted Dolt deployment
 
 To begin, you'll need to create a Hosted Dolt deployment that your DoltLab instance will connect to. We've created a [video tutorial](https://www.dolthub.com/blog/2022-05-20-hosted-dolt-howto/) for how to create your first Hosted Dolt deployment, but briefly, you'll need to create an account on [hosted.doltdb.com](https://hosted.doltdb.com) and then click the "Create Deployment" button.
 
@@ -639,7 +639,7 @@ You can do this by running these statements from the Hosted workbench SQL consol
 
 This instance is now ready for a DoltLab connection.
 
-## Edit DoltLab's Docker Compose file
+### Edit DoltLab's Docker Compose file
 
 To connect DoltLab to `my-doltlab-db-1`, ensure that your DoltLab instance is stopped, and remove references to `doltlabdb` in DoltLab's `docker-compose.yaml` file.
 

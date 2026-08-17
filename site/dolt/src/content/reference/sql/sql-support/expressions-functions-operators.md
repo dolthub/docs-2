@@ -3,8 +3,6 @@ title: "Expressions, Functions, and Operators"
 description: Supported scalar functions, operators, and expressions.
 ---
 
-## Expressions, Functions, Operators
-
 ## Statements
 
 | Component         | Supported | Notes and limitations                                       |

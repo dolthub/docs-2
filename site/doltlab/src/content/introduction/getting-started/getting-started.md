@@ -80,7 +80,7 @@ ubuntu@ip-10-2-0-24:~/doltlab$ ./ubuntu_install.sh
 
 There are a few dependencies. This will take a couple minutes.
 
-## Make sure Docker works
+### Make sure Docker works
 
 DoltLab uses Docker to run all of its services. After the bootstrap script is done, make sure Docker works with sudo by running:
 
@@ -197,7 +197,7 @@ The DoltLab instance ships with a default user configured called `admin`. It has
 
 ## Basic Configuration
 
-## Single user
+### Single user
 
 A configured email server is required to create new users. If you try to create a user, you'll get an error that looks like this:
 
@@ -207,7 +207,7 @@ So, you only have a single admin user to play with for now.
 
 > UPDATE: as of DoltLab v2.2.0, an email server is no longer required to create new users on a DoltLab instance. New users will be able to create accounts on an a DoltLab instance openly, unless [account whitelisting](/guides/basic#prevent-unauthorized-user-account-creation) has been enabled by the administrator. Additionally, email server configuration is now an exclusive [DoltLab Enterprise feature](/guides/enterprise#connect-doltlab-to-an-smtp-server).
 
-## Create/Modify databases
+### Create/Modify databases
 
 You can build whatever database you can imagine using the web user interface. The built in SQL workbench can be used to create and edit tables. You can import CSVs. You can edit a table using the spreadsheet editor. You can make branches and Pull Requests.
 
@@ -215,7 +215,7 @@ Here's a simple test database I created using SQL.
 
 ![](../../.gitbook/assets/getting-started/doltlab-admin-db.png)
 
-## Clone Databases
+### Clone Databases
 
 DoltLab is a remote so you can clone databases from it. The remote API is exposed on port 50051. I made my test database public so I don't need any permissions to clone it.
 
@@ -236,7 +236,7 @@ $ dolt sql -q "select * from t"
 
 I now have the test database I created on my DoltLab locally.
 
-## Push Databases
+### Push Databases
 
 To push databases you need your Dolt client authenticated against your DoltLab instance. You can run a fresh `dolt login` against DoltLab using something like this:
 
@@ -279,26 +279,26 @@ You're now ready to try out all the Dolt and DoltLab experiences like Pull Reque
 
 ## Adding Additional Functionality
 
-## Create new users
+### Create new users
 
 As discussed in [the single user section](#single-user), creating users in DoltLab <= `v2.1.6` requires a working SMTP server to send emails. However, DoltLab >= `v2.2.0` does not require an SMTP server connection in order for new users to create accounts on your DoltLab instance. In this newer version, an SMTP server connection can only be made with DoltLab Enterprise. For more information, consult [this guide to set up an email server for DoltLab](/guides/enterprise#set-up-a-smtp-server-using-any-gmail-address).
 
-## Receive Email Notifications
+### Receive Email Notifications
 
 DoltLab Enterprise sends emails for password resets, pull request and issue status, and a few other use cases. Obviously, these also won't work without a running email server. Consult [this guide to set up an email server for DoltLab](/guides/enterprise#set-up-a-smtp-server-using-any-gmail-address).
 
-## HTTPS
+### HTTPS
 
 Your DoltLab is currently set up to only use HTTP which is fairly insecure. If it's running on your internal network and you have other threat mitigations, this may be OK. But having it sit on the public internet on AWS without HTTPS is probably not what you want. Native HTTPS support is available in DoltLab Enterprise. [Learn how to set up HTTPS on your DoltLab here](/guides/enterprise#serve-doltlab-over-https-natively).
 
-## Custom URL
+### Custom URL
 
 Right now, you're stuck hitting the IP address of your host. In order to use a custom URL on the internet, you need a static IP for your EC2 host and a domain name. If your host is running on an internal network, you may need to follow a different process.
 
-## Custom Logo/Colors
+### Custom Logo/Colors
 
 Yay! Our first DoltLab Enterprise feature. If you would like a custom logo and color scheme for your DoltLab instance, you are going to need [DoltLab Enterprise](/guides/enterprise). DoltLab Enterprise is $5,000/month for unlimited users. It comes with Enterprise Support for Dolt as well. Among [other features](/guides/enterprise), DoltLab Enterprise allows you to customize the look and feel of your DoltLab instance. Learn how to [configure your DoltLab as Enterprise](/guides/enterprise) and [set up your custom look and feel here](/guides/enterprise#use-custom-logo).
 
-## Scalability
+### Scalability
 
 Lastly, your DoltLab is running on a single host. All the components will scale to the size of that host including storing all the databases that are created. Storage and compute requirements can get big quickly. In order to break your DoltLab up into multiple instances and use cloud storage to store your databases, you need [DoltLab Enterprise](/guides/enterprise). Learn [how to set up Enterprise here](/guides/enterprise).
