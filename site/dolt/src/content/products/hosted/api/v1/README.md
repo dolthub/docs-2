@@ -46,6 +46,9 @@ See [Authentication](/products/hosted/api/v1/authentication) for how to create a
 | **GET** | `/api/v1/deployments/{owner}` | [List an owner's deployments](/products/hosted/api/v1/deployment#listDeployments) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}` | [Get a deployment](/products/hosted/api/v1/deployment#getDeployment) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/instances` | [List a deployment's instances](/products/hosted/api/v1/deployment#listDeploymentInstances) |
+| **GET** | `/api/v1/deployments/{owner}/{deployment}/config` | [Get a deployment's configuration](/products/hosted/api/v1/deployment#getDeploymentConfig) |
+| **GET** | `/api/v1/deployments/{owner}/{deployment}/backups` | [List a deployment's backups](/products/hosted/api/v1/deployment#listDeploymentBackups) |
+| **POST** | `/api/v1/deployments/{owner}/{deployment}/disable` | [Disable a deployment](/products/hosted/api/v1/deployment#disableDeployment) |
 
 ## Response shape
 
@@ -92,9 +95,11 @@ Every response, including successful ones, carries an `x-request-id` header, ech
 
 Creating a deployment returns `202 Accepted` with the deployment in its `starting` state — provisioning continues after the response. Poll [Get a deployment](/products/hosted/api/v1/deployment#getDeployment) until `state` becomes `started`.
 
+[Disabling a deployment](/products/hosted/api/v1/deployment#disableDeployment) works the same way: `202 Accepted` with the deployment in `stopping`, then poll until `state` is `stopped`.
+
 Deployment names are unique within an owner, which makes creates idempotent by name: retrying after an ambiguous failure returns `409 Conflict` rather than provisioning a second deployment.
 
-> **Creating a deployment incurs cost.**
+> **Creating a deployment incurs cost.** Disabling one tears down its instances and their storage — [take a backup first](/products/hosted/api/v1/deployment#listDeploymentBackups) if you want the data.
 
 ## Stability
 

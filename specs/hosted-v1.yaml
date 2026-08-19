@@ -598,6 +598,269 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/deployments/{owner}/{deployment}/backups:
+    get:
+      operationId: listDeploymentBackups
+      summary: List a deployment's backups.
+      description: >-
+        Returns the backups held for `{owner}/{deployment}`, newest first. Deleted backups
+        are not included.
+
+
+        The list is not paginated: a deployment's retained backups are a bounded set.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      responses:
+        "200":
+          description: The deployment's backups.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        description: The deployment's backups.
+                        items:
+                          $ref: "#/components/schemas/Backup"
+              examples:
+                default:
+                  summary: Two retained backups.
+                  value:
+                    data:
+                      - id: 20260812T020000.000
+                        databases:
+                          - analytics
+                          - staging
+                        instance_index: 0
+                        created_at: "2026-08-12T02:00:00Z"
+                      - id: 20260811T020000.000
+                        databases:
+                          - analytics
+                          - staging
+                        size_bytes: 1048576
+                        instance_index: 0
+                        created_at: "2026-08-11T02:00:00Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}/{deployment}/config:
+    get:
+      operationId: getDeploymentConfig
+      summary: Get a deployment's configuration.
+      description: >-
+        Returns the deployment's effective database configuration: every setting Hosted
+        supports, carrying the deployment's own value where it has overridden one and the
+        default otherwise. This is what the deployment's Configuration page shows.
+
+
+        `is_overridden` distinguishes the two, and `default` is always reported, so a caller
+        can tell what has been changed and what it would revert to.
+
+
+        Values are strings as stored, including numeric and boolean settings.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      responses:
+        "200":
+          description: >-
+            The deployment's effective configuration — every supported setting, at the value
+            it is running.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DeploymentConfig"
+              examples:
+                default:
+                  summary: One overridden setting and one on its default.
+                  value:
+                    data:
+                      settings:
+                        - key: listener_max_connections
+                          value: "500"
+                          default: "100"
+                          is_overridden: true
+                        - key: behavior_read_only
+                          value: "false"
+                          default: "false"
+                          is_overridden: false
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}/{deployment}/disable:
+    post:
+      operationId: disableDeployment
+      summary: Disable a deployment.
+      description: >-
+        Shuts the deployment down, tearing down its instances and their storage. Returns
+        `202` with the deployment in `stopping`; poll
+        `GET /api/v1/deployments/{owner}/{deployment}` until `state` is `stopped`.
+
+
+        **Take a backup first if you want the data.**
+
+
+        The deployment itself is not deleted. It stays readable with `disabled_at` and
+        `disabled_by` set — which is why this is a `POST` to an action rather than a
+        `DELETE` — and can be brought back by adding an instance with
+        `POST /api/v1/deployments/{owner}/{deployment}/instances`; give that request a
+        `backup_name` to restore the data, or it comes back empty.
+
+
+        Not idempotent: disabling a deployment that is already stopping or stopped returns
+        `422`. The `202` only confirms acceptance — `GET` the deployment for its full
+        state.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      responses:
+        "202":
+          description: >-
+            The teardown has been accepted. `state` is `stopping`.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DisableAccepted"
+              examples:
+                default:
+                  summary: A deployment accepted for teardown.
+                  value:
+                    data:
+                      owner: acme
+                      name: analytics
+                      state: stopping
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
 components:
   headers:
     RequestId:
@@ -905,6 +1168,65 @@ components:
           examples:
             - 0
 
+    ConfigSetting:
+      type: object
+      title: ConfigSetting
+      description: >-
+        One database setting and the value this deployment runs it at.
+      required:
+        - key
+        - value
+        - default
+        - is_overridden
+      properties:
+        key:
+          type: string
+          description: The setting's name.
+          examples:
+            - listener_max_connections
+        value:
+          type: string
+          description: >-
+            The value in effect — the deployment's override when it has one, otherwise the
+            default. A string even for numeric and boolean settings, as stored.
+          examples:
+            - "500"
+        default:
+          type: string
+          description: >-
+            The value this setting takes when not overridden, and what it reverts to if the
+            override is removed.
+          examples:
+            - "100"
+        is_overridden:
+          type: boolean
+          description: >-
+            Whether the deployment has overridden this setting. When `false`, `value` equals
+            `default`.
+          examples:
+            - true
+
+    DeploymentConfig:
+      type: object
+      title: DeploymentConfig
+      description: >-
+        A deployment's effective configuration — every supported setting, with the value it
+        is running at.
+
+
+        Settings are wrapped in an object rather than returned as a bare list so the
+        resource can gain fields without a breaking change.
+      required:
+        - settings
+      properties:
+        settings:
+          type: array
+          description: >-
+            Every setting Hosted supports for this deployment, in the order the catalogue
+            reports them.
+          items:
+            $ref: "#/components/schemas/ConfigSetting"
+
     DeploymentInstance:
       type: object
       title: DeploymentInstance
@@ -1123,6 +1445,55 @@ components:
       examples:
         - started
 
+    Backup:
+      type: object
+      title: Backup
+      description: A stored backup of a deployment's databases.
+      required:
+        - id
+        - databases
+        - instance_index
+        - created_at
+      properties:
+        id:
+          type: string
+          description: >-
+            The backup's identifier, unique within the deployment. Derived from the time it
+            was taken.
+          examples:
+            - 20260811T020000.000
+        databases:
+          type: array
+          description: >-
+            The databases captured in this backup. Empty if the deployment had none at the
+            time.
+          items:
+            type: string
+          examples:
+            - ["analytics", "staging"]
+        size_bytes:
+          type: integer
+          format: int64
+          description: >-
+            The backup's size in bytes. Absent until it has been measured, which happens
+            asynchronously after the backup is taken — so a recent backup legitimately has
+            no size yet.
+          examples:
+            - 1048576
+        instance_index:
+          type: integer
+          format: int32
+          description: >-
+            The index of the deployment instance the backup was taken from.
+          examples:
+            - 0
+        created_at:
+          type: string
+          format: date-time
+          description: When the backup was taken.
+          examples:
+            - "2026-08-11T02:00:00Z"
+
     CloudProvider:
       type: string
       title: CloudProvider
@@ -1259,6 +1630,30 @@ components:
           examples:
             - "2026-08-10T02:00:00Z"
 
+    DisableAccepted:
+      type: object
+      title: DisableAccepted
+      description: >-
+        Confirmation that a deployment's shutdown was accepted. Deliberately minimal: it
+        reports only what is certain once the shutdown commits. `GET` the deployment for its
+        full state.
+      required:
+        - owner
+        - name
+        - state
+      properties:
+        owner:
+          type: string
+          description: The user or organization that owns the deployment.
+          examples:
+            - acme
+        name:
+          type: string
+          description: The deployment name.
+          examples:
+            - analytics
+        state:
+          $ref: "#/components/schemas/DeploymentState"
     Deployment:
       type: object
       title: Deployment
@@ -1390,19 +1785,19 @@ components:
           description: When the deployment was created.
           examples:
             - "2026-07-01T18:22:04Z"
-        destroy_at:
+        disabled_at:
           type: string
           format: date-time
           description: >-
-            When the deployment is scheduled to be destroyed. Absent unless a destroy has
-            been scheduled.
+            When the deployment is scheduled to shut down. Absent unless it has been
+            disabled.
           examples:
             - "2026-09-01T00:00:00Z"
-        destroyed_by:
+        disabled_by:
           type: string
           description: >-
-            The username of the user who destroyed the deployment. Absent unless it has been
-            destroyed.
+            The username of the user who disabled the deployment. Absent unless it has been
+            disabled.
           examples:
             - acme-ops
 

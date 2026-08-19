@@ -88,6 +88,20 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
   // Examples
   // -------------------------------------------------------------------------
 
+  // The JSON body of a request or response. Error responses are served as
+  // `application/problem+json` (RFC 9457) rather than `application/json`, so
+  // looking only at the latter silently drops the Problem schema from every
+  // error row. Fall back to any JSON-suffixed media type.
+  function jsonBody(carrier) {
+    const content = carrier?.content;
+    if (!content) return undefined;
+    return (
+      content["application/json"] ??
+      content["application/problem+json"] ??
+      Object.entries(content).find(([type]) => /\bjson\b|\+json$/.test(type))?.[1]
+    );
+  }
+
   // OpenAPI 3.1 permits a media type to carry named `examples`. Prefer the one
   // named `default`, else the first — a hand-written example beats anything
   // synthesized from the schema.
@@ -102,7 +116,7 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
   }
 
   function requestExample(operation) {
-    const media = operation.requestBody?.content?.["application/json"];
+    const media = jsonBody(operation.requestBody);
     const authored = mediaTypeExample(media);
     if (authored !== undefined) return authored;
 
@@ -178,7 +192,7 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
 
     const rawResp = rawResponses[successCode];
     const resp = rawResp.$ref ? resolveRef(rawResp.$ref) : rawResp;
-    const media = resp.content?.["application/json"];
+    const media = jsonBody(resp);
 
     // An example authored on the response wins outright — it shows the whole
     // envelope, including any `meta`, exactly as the API returns it.
@@ -247,7 +261,7 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
 
   function requestBodySection(requestBody) {
     if (!requestBody) return "";
-    const schema = requestBody.content?.["application/json"]?.schema;
+    const schema = jsonBody(requestBody)?.schema;
     if (!schema) return "";
     const resolved = deref(schema);
     const required = resolved.required ?? [];
@@ -286,7 +300,7 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
         // Resolve top-level $ref (e.g. $ref: "#/components/responses/Unauthorized")
         const resp = rawResp.$ref ? resolveRef(rawResp.$ref) : rawResp;
         const desc = escapeMarkdown(resp.description ?? "");
-        const schema = resp.content?.["application/json"]?.schema;
+        const schema = jsonBody(resp)?.schema;
         const name = responseSchemaName(schema);
         const schemaLink = name
           ? `[\`${name}\`](${modelsHref}#model-${name.replace("[]", "").toLowerCase()})`

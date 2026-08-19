@@ -113,6 +113,29 @@ A storage type a deployment's volume can use.
 
 ---
 
+## ConfigSetting {#model-configsetting}
+One database setting and the value this deployment runs it at.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `key` | `string` | yes | The setting's name. |
+| `value` | `string` | yes | The value in effect — the deployment's override when it has one, otherwise the default. A string even for numeric and boolean settings, as stored. |
+| `default` | `string` | yes | The value this setting takes when not overridden, and what it reverts to if the override is removed. |
+| `is_overridden` | `boolean` | yes | Whether the deployment has overridden this setting. When `false`, `value` equals `default`. |
+
+---
+
+## DeploymentConfig {#model-deploymentconfig}
+A deployment's effective configuration — every supported setting, with the value it is running at.
+
+Settings are wrapped in an object rather than returned as a bare list so the resource can gain fields without a breaking change.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `settings` | `array` | yes | Every setting Hosted supports for this deployment, in the order the catalogue reports them. |
+
+---
+
 ## DeploymentInstance {#model-deploymentinstance}
 One instance backing a deployment. A deployment has a primary and, when it has read replicas, one instance per replica.
 
@@ -175,6 +198,19 @@ The deployment's lifecycle state. `starting` covers both initial provisioning an
 | `started` |
 | `stopping` |
 | `stopped` |
+
+---
+
+## Backup {#model-backup}
+A stored backup of a deployment's databases.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The backup's identifier, unique within the deployment. Derived from the time it was taken. |
+| `databases` | `array` | yes | The databases captured in this backup. Empty if the deployment had none at the time. |
+| `size_bytes` | `integer` | no | The backup's size in bytes. Absent until it has been measured, which happens asynchronously after the backup is taken — so a recent backup legitimately has no size yet. |
+| `instance_index` | `integer` | yes | The index of the deployment instance the backup was taken from. |
+| `created_at` | `string` | yes | When the backup was taken. |
 
 ---
 
@@ -243,6 +279,17 @@ This is deliberately not the same shape as `Deployment`. The list RPC returns a 
 
 ---
 
+## DisableAccepted {#model-disableaccepted}
+Confirmation that a deployment's shutdown was accepted. Deliberately minimal: it reports only what is certain once the shutdown commits. `GET` the deployment for its full state.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `owner` | `string` | yes | The user or organization that owns the deployment. |
+| `name` | `string` | yes | The deployment name. |
+| `state` | `string` | yes | The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`. |
+
+---
+
 ## Deployment {#model-deployment}
 A Hosted Dolt deployment.
 
@@ -274,6 +321,6 @@ Provider-specific private-networking configuration (AWS PrivateLink, GCP Private
 | `caller_role` | `string` | yes | The authenticated caller's role on this deployment. Always present on a read, since a caller without at least read access cannot retrieve the deployment at all. |
 | `created_by` | `string` | no | The username of the user who created the deployment. |
 | `created_at` | `string` | yes | When the deployment was created. |
-| `destroy_at` | `string` | no | When the deployment is scheduled to be destroyed. Absent unless a destroy has been scheduled. |
-| `destroyed_by` | `string` | no | The username of the user who destroyed the deployment. Absent unless it has been destroyed. |
+| `disabled_at` | `string` | no | When the deployment is scheduled to shut down. Absent unless it has been disabled. |
+| `disabled_by` | `string` | no | The username of the user who disabled the deployment. Absent unless it has been disabled. |
 

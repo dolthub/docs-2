@@ -41,12 +41,12 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployment-options?cloud=aws' \
 | Status | Description | Schema |
 |--------|-------------|--------|
 | `200` | The available options, narrowed by the supplied parameters. | [`DeploymentOptions`](/products/hosted/api/v1/models#model-deploymentoptions) |
-| `400` | The request was malformed or failed input validation. |  |
-| `401` | Authentication credentials were missing or invalid. |  |
-| `405` | The HTTP method is not supported for this resource. |  |
-| `422` | The request was well-formed but semantically invalid. |  |
-| `500` | An unexpected server error occurred. |  |
-| `503` | The service is temporarily unavailable. |  |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 
 **Example response `200`**
 
@@ -129,14 +129,14 @@ curl -X POST 'https://hosted.doltdb.com/api/v1/deployments' \
 | Status | Description | Schema |
 |--------|-------------|--------|
 | `202` | The deployment has been accepted and is provisioning. `state` is `starting`. | [`Deployment`](/products/hosted/api/v1/models#model-deployment) |
-| `400` | The request was malformed or failed input validation. |  |
-| `401` | Authentication credentials were missing or invalid. |  |
-| `403` | Authenticated, but not permitted to perform this action. |  |
-| `405` | The HTTP method is not supported for this resource. |  |
-| `409` | The request conflicts with the current state of the resource (e.g. it already exists). |  |
-| `422` | The request was well-formed but semantically invalid. |  |
-| `500` | An unexpected server error occurred. |  |
-| `503` | The service is temporarily unavailable. |  |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 
 **Example response `202`**
 
@@ -194,12 +194,12 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}' \
 | Status | Description | Schema |
 |--------|-------------|--------|
 | `200` | The owner's deployments. | [`DeploymentSummary[]`](/products/hosted/api/v1/models#model-deploymentsummary) |
-| `400` | The request was malformed or failed input validation. |  |
-| `401` | Authentication credentials were missing or invalid. |  |
-| `403` | Authenticated, but not permitted to perform this action. |  |
-| `404` | The requested resource does not exist. |  |
-| `405` | The HTTP method is not supported for this resource. |  |
-| `500` | An unexpected server error occurred. |  |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 
 **Example response `200`**
 
@@ -255,12 +255,12 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}' 
 | Status | Description | Schema |
 |--------|-------------|--------|
 | `200` | The deployment. | [`Deployment`](/products/hosted/api/v1/models#model-deployment) |
-| `400` | The request was malformed or failed input validation. |  |
-| `401` | Authentication credentials were missing or invalid. |  |
-| `404` | The requested resource does not exist. |  |
-| `405` | The HTTP method is not supported for this resource. |  |
-| `500` | An unexpected server error occurred. |  |
-| `503` | The service is temporarily unavailable. |  |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 
 **Example response `200`**
 
@@ -324,12 +324,12 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/i
 | Status | Description | Schema |
 |--------|-------------|--------|
 | `200` | The deployment's non-stopped instances. | [`DeploymentInstance[]`](/products/hosted/api/v1/models#model-deploymentinstance) |
-| `400` | The request was malformed or failed input validation. |  |
-| `401` | Authentication credentials were missing or invalid. |  |
-| `404` | The requested resource does not exist. |  |
-| `405` | The HTTP method is not supported for this resource. |  |
-| `500` | An unexpected server error occurred. |  |
-| `503` | The service is temporarily unavailable. |  |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 
 **Example response `200`**
 
@@ -357,6 +357,186 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/i
       "hourly_cost_usd": 0.06849315
     }
   ]
+}
+```
+
+---
+
+## List a deployment's backups {#listDeploymentBackups}
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/backups</code>
+
+Returns the backups held for `{owner}/{deployment}`, newest first. Deleted backups are not included.
+
+The list is not paginated: a deployment's retained backups are a bounded set.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Example request**
+
+```sh
+curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/backups' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `200` | The deployment's backups. | [`Backup[]`](/products/hosted/api/v1/models#model-backup) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `200`**
+
+```json
+{
+  "data": [
+    {
+      "id": "20260812T020000.000",
+      "databases": [
+        "analytics",
+        "staging"
+      ],
+      "instance_index": 0,
+      "created_at": "2026-08-12T02:00:00Z"
+    },
+    {
+      "id": "20260811T020000.000",
+      "databases": [
+        "analytics",
+        "staging"
+      ],
+      "size_bytes": 1048576,
+      "instance_index": 0,
+      "created_at": "2026-08-11T02:00:00Z"
+    }
+  ]
+}
+```
+
+---
+
+## Get a deployment's configuration {#getDeploymentConfig}
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/config</code>
+
+Returns the deployment's effective database configuration: every setting Hosted supports, carrying the deployment's own value where it has overridden one and the default otherwise. This is what the deployment's Configuration page shows.
+
+`is_overridden` distinguishes the two, and `default` is always reported, so a caller can tell what has been changed and what it would revert to.
+
+Values are strings as stored, including numeric and boolean settings.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Example request**
+
+```sh
+curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/config' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `200` | The deployment's effective configuration — every supported setting, at the value it is running. | [`DeploymentConfig`](/products/hosted/api/v1/models#model-deploymentconfig) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `200`**
+
+```json
+{
+  "data": {
+    "settings": [
+      {
+        "key": "listener_max_connections",
+        "value": "500",
+        "default": "100",
+        "is_overridden": true
+      },
+      {
+        "key": "behavior_read_only",
+        "value": "false",
+        "default": "false",
+        "is_overridden": false
+      }
+    ]
+  }
+}
+```
+
+---
+
+## Disable a deployment {#disableDeployment}
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/disable</code>
+
+Shuts the deployment down, tearing down its instances and their storage. Returns `202` with the deployment in `stopping`; poll `GET /api/v1/deployments/{owner}/{deployment}` until `state` is `stopped`.
+
+**Take a backup first if you want the data.**
+
+The deployment itself is not deleted. It stays readable with `disabled_at` and `disabled_by` set — which is why this is a `POST` to an action rather than a `DELETE` — and can be brought back by adding an instance with `POST /api/v1/deployments/{owner}/{deployment}/instances`; give that request a `backup_name` to restore the data, or it comes back empty.
+
+Not idempotent: disabling a deployment that is already stopping or stopped returns `422`. The `202` only confirms acceptance — `GET` the deployment for its full state.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Example request**
+
+```sh
+curl -X POST 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/disable' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `202` | The teardown has been accepted. `state` is `stopping`. | [`DisableAccepted`](/products/hosted/api/v1/models#model-disableaccepted) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `202`**
+
+```json
+{
+  "data": {
+    "owner": "acme",
+    "name": "analytics",
+    "state": "stopping"
+  }
 }
 ```
 
