@@ -107,6 +107,64 @@ This same URL can then be used to clone this database by another user.
 select dolt_clone('aws://[dolt_remotes:dolt_remotes_storage]/menus')
 ```
 
+If you would rather not run a DynamoDB table, the `s3://` protocol below stores
+the manifest in the bucket itself and works against S3 as well.
+
+## S3-compatible
+
+The `s3://` protocol works against any object store that implements the S3 API
+with conditional writes, including AWS S3 itself, Cloudflare R2, and MinIO. It
+stores the manifest as an ordinary object and uses conditional writes to update
+it atomically, so unlike `aws://` it needs no DynamoDB table.
+
+```sql
+select dolt_remote('add', 'origin', 's3://BUCKET/path/for/remote')
+```
+
+Credentials come from the standard AWS SDK chain as seen by the Doltgres server
+process: environment variables, the shared credentials file, SSO, or an
+instance role. They are never accepted in the URL, since the URL is stored with
+the remote in plain text.
+
+Against AWS S3 nothing further is needed, because the SDK resolves the endpoint
+from the server's configured region.
+
+### Addressing another provider
+
+A non-AWS provider is reached by adding query parameters to the URL:
+
+| Parameter    | Meaning                                                                  |
+| ------------ | ------------------------------------------------------------------------ |
+| `endpoint`   | The provider's S3 API host, e.g. an R2 or MinIO endpoint                 |
+| `region`     | The signing region. Some providers want a fixed value; R2 uses `auto`    |
+| `path-style` | `true` to address buckets as a path segment instead of a hostname prefix |
+
+`endpoint` and `region` fall back to the SDK's own resolution when omitted, so
+`AWS_ENDPOINT_URL_S3`, `AWS_REGION`, and the shared config file all work as
+usual. `path-style` has no such fallback and can only be set in the URL. Leave
+it off unless your provider needs it; MinIO generally does, because it has no
+wildcard DNS to serve `bucket.host` addresses, while R2 does not.
+
+Because the parameters travel in the URL, they are stored with the remote and
+survive clone, push, and pull without any extra configuration. One database can
+therefore address several providers at once.
+
+Cloudflare R2, where the endpoint is your account's S3 API host:
+
+```sql
+select dolt_remote('add', 'origin', 's3://my-bucket/menus?endpoint=https://ACCOUNT_ID.r2.cloudflarestorage.com&region=auto')
+```
+
+MinIO, which needs path-style addressing:
+
+```sql
+select dolt_clone('s3://my-bucket/menus?endpoint=http://minio.internal:9000&region=us-east-1&path-style=true')
+```
+
+An unrecognized parameter is an error rather than being ignored, so a typo such
+as `entpoint=` is reported when the remote is added instead of failing later
+with a confusing connection error.
+
 ## GCS
 
 Google Cloud Platform remotes use Google Cloud Storage (GCS). You can create or use an existing GCS bucket to host one or more Doltgres remotes. To add a GCP remote provide a URL with the `gs://` protocol like so:
