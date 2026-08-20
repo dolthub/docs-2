@@ -1885,6 +1885,17 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
 components:
+  headers:
+    RequestId:
+      description: >-
+        The request identifier — echoed on every response (including 2xx). Reuse the
+        inbound `x-request-id` from the caller / edge proxy when present; otherwise the
+        server mints a `req_<UUID>` value.
+      schema:
+        type: string
+        examples:
+          - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+
   # securitySchemes model the credential types the v2 auth layer accepts. Personal
   # access tokens and OAuth access tokens are both presented in the `Authorization` header.
   # The public API does not support browser session cookies.
@@ -1943,6 +1954,10 @@ components:
         (Problem Details for HTTP APIs). This is the single error model for the entire v2
         API — there are no ad-hoc error shapes.
       required:
+        # `type` is required even though RFC 9457 permits omitting it: this API always emits
+        # it, and leaving it optional made the spec disagree with the generated DTO (which
+        # marks it non-optional because of the `default`).
+        - type
         - title
         - status
         - code
@@ -2051,6 +2066,11 @@ components:
       properties:
         data:
           type: [object, array]
+          # Required for `data` to actually be unconstrained. Without it, openapi-typescript
+          # emits `Record<string, never>` — an object permitting no properties — and the
+          # composed `Envelope & { data: Resource }` becomes unassignable, so nothing can use
+          # the generated response type.
+          additionalProperties: true
           description: The primary response payload — a resource, or an array of resources for list endpoints.
         meta:
           $ref: "#/components/schemas/Meta"
@@ -3479,72 +3499,100 @@ components:
   responses:
     BadRequest:
       description: The request was malformed or failed input validation.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     Unauthorized:
       description: Authentication credentials were missing or invalid.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     Forbidden:
       description: Authenticated, but not permitted to perform this action.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     NotFound:
       description: The requested resource does not exist.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     MethodNotAllowed:
       description: The HTTP method is not supported for this resource.
       headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
         Allow:
           description: The HTTP methods supported by this resource.
           schema:
             type: string
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     Conflict:
       description: The request conflicts with the current state of the resource (e.g. it already exists).
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     UnprocessableEntity:
       description: The request was well-formed but semantically invalid.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     TooManyRequests:
       description: The client has exceeded its rate limit.
       headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
         Retry-After:
           description: The number of seconds to wait before retrying the request.
           schema:
             type: integer
             format: int32
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     InternalServerError:
       description: An unexpected server error occurred.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
     ServiceUnavailable:
       description: The service is temporarily unavailable.
+      headers:
+        x-request-id:
+          $ref: "#/components/headers/RequestId"
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: "#/components/schemas/Problem"
