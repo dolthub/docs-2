@@ -33,7 +33,7 @@ A structured error body returned for every non-2xx response, following RFC 9457 
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `type` | `string` | no | A URI identifying the problem type; when dereferenced it points at human-readable documentation for the error. |
+| `type` | `string` | yes | A URI identifying the problem type; when dereferenced it points at human-readable documentation for the error. |
 | `title` | `string` | yes | A short, human-readable summary of the problem type. |
 | `status` | `integer` | yes | The HTTP status code, repeated in the body for convenience. |
 | `detail` | `string` | no | A human-readable explanation specific to this occurrence of the problem. |
