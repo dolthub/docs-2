@@ -305,6 +305,13 @@ Stopped instances are not listed; starting, started, and stopping ones all are. 
 The list is not paginated: a deployment has a primary and its replicas, a set small enough to return whole.
 
 
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
 **Example request**
 
 ```sh
@@ -370,6 +377,13 @@ As with any create, a `5xx` does not tell you whether the instance was added. Li
 
 **Adding a replica incurs cost.**
 
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
 
 **Request body**
 
@@ -610,6 +624,14 @@ Instances can only be removed when the deployment is settled. If it is stopping,
 
 **This removes a database server and the data on its volume.** It is meant for removing a read replica, so check `is_primary` on the instances list before picking an id: removing the primary shuts the deployment down. To do that, use `POST /api/v1/deployments/{owner}/{deployment}/disable`, which records `disabled_at` and `disabled_by` — removing the instance leaves the deployment with nothing running and no record of why.
 
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `id` | path | string | yes | The instance's id, as reported by the instances list. |
 
 **Example request**
 

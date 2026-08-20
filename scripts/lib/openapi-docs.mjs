@@ -169,8 +169,8 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
     return `?${pairs.join("&")}`;
   }
 
-  function curlExample(method, path, operation) {
-    const url = `${baseUrl}${path}${requiredQueryString(operation.parameters)}`;
+  function curlExample(method, path, operation, params) {
+    const url = `${baseUrl}${path}${requiredQueryString(params ?? operation.parameters)}`;
     const lines = [
       `curl -X ${METHOD_LABELS[method] ?? method.toUpperCase()} '${url}'`,
       `  -H 'Authorization: Bearer ${tokenPlaceholder}'`,
@@ -311,7 +311,26 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
     return `\n**Responses**\n\n| Status | Description | Schema |\n|--------|-------------|--------|\n${rows}\n`;
   }
 
-  function endpointBlock(method, path, operation, headingLevel = "###") {
+  // Parameters declared on the path item apply to every operation under it
+  // (OpenAPI 3.1 §4.8.9) — a spec typically hoists them there once a path has
+  // more than one method. Operation-level entries override an inherited one
+  // with the same name and location.
+  function effectiveParameters(pathParams, opParams) {
+    const merged = [];
+    const seen = new Map(); // "in:name" -> index in merged
+    for (const raw of [...(pathParams ?? []), ...(opParams ?? [])]) {
+      const p = deref(raw);
+      const key = `${p.in}:${p.name}`;
+      if (seen.has(key)) merged[seen.get(key)] = p;
+      else {
+        seen.set(key, merged.length);
+        merged.push(p);
+      }
+    }
+    return merged;
+  }
+
+  function endpointBlock(method, path, operation, headingLevel = "###", pathParams) {
     const anchor = `{#${operation.operationId}}`;
     const title = operation.summary
       ? operation.summary.replace(/\.$/, "")
@@ -323,11 +342,12 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
       operation.description.trim() !== (operation.summary ?? "").trim()
         ? `${operation.description.trim()}\n\n`
         : "";
-    const params = parametersSection(operation.parameters);
+    const allParams = effectiveParameters(pathParams, operation.parameters);
+    const params = parametersSection(allParams);
     const body = requestBodySection(deref(operation.requestBody ?? {}));
     const responses = responsesSection(operation.responses);
     const successExample = successExampleBlock(operation.responses);
-    const curl = `\n**Example request**\n\n\`\`\`sh\n${curlExample(method, path, operation)}\n\`\`\`\n`;
+    const curl = `\n**Example request**\n\n\`\`\`sh\n${curlExample(method, path, operation, allParams)}\n\`\`\`\n`;
     return [
       heading,
       methodPath,
@@ -426,14 +446,20 @@ export function generateApiDocs(config) {
     modelsHref: models.href,
   });
 
-  // Collect operations by tag.
-  const byTag = {}; // tag → [{ method, path, operation }]
+  // Collect operations by tag. pathParams carries the path item's own
+  // parameters, which every operation under it inherits.
+  const byTag = {}; // tag → [{ method, path, operation, pathParams }]
   for (const [path, pathItem] of Object.entries(spec.paths ?? {})) {
     for (const method of HTTP_METHODS) {
       const op = pathItem[method];
       if (!op) continue;
       for (const tag of op.tags ?? ["Untagged"]) {
-        (byTag[tag] ??= []).push({ method, path, operation: op });
+        (byTag[tag] ??= []).push({
+          method,
+          path,
+          operation: op,
+          pathParams: pathItem.parameters,
+        });
       }
     }
   }
@@ -457,7 +483,7 @@ export function generateApiDocs(config) {
         .map((g) => {
           const endpoints = grouped[g]
             .map((item) =>
-              endpointBlock(item.method, item.path, item.operation, "###")
+              endpointBlock(item.method, item.path, item.operation, "###", item.pathParams)
             )
             .join("\n---\n\n");
           return `## ${g}\n\n${endpoints}`;
@@ -467,7 +493,9 @@ export function generateApiDocs(config) {
     }
 
     const content = items
-      .map((item) => endpointBlock(item.method, item.path, item.operation, "##"))
+      .map((item) =>
+        endpointBlock(item.method, item.path, item.operation, "##", item.pathParams)
+      )
       .join("\n---\n\n");
     return `${frontmatter}\n\n${intro}${content}\n`;
   }
