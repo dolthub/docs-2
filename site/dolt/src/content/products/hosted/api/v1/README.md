@@ -46,6 +46,8 @@ See [Authentication](/products/hosted/api/v1/authentication) for how to create a
 | **GET** | `/api/v1/deployments/{owner}` | [List an owner's deployments](/products/hosted/api/v1/deployment#listDeployments) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}` | [Get a deployment](/products/hosted/api/v1/deployment#getDeployment) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/instances` | [List a deployment's instances](/products/hosted/api/v1/deployment#listDeploymentInstances) |
+| **POST** | `/api/v1/deployments/{owner}/{deployment}/instances` | [Add a read replica to a deployment](/products/hosted/api/v1/deployment#addDeploymentInstance) |
+| **DELETE** | `/api/v1/deployments/{owner}/{deployment}/instances/{id}` | [Remove an instance from a deployment](/products/hosted/api/v1/deployment#deleteDeploymentInstance) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/config` | [Get a deployment's configuration](/products/hosted/api/v1/deployment#getDeploymentConfig) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/backups` | [List a deployment's backups](/products/hosted/api/v1/deployment#listDeploymentBackups) |
 | **POST** | `/api/v1/deployments/{owner}/{deployment}/disable` | [Disable a deployment](/products/hosted/api/v1/deployment#disableDeployment) |
@@ -96,6 +98,8 @@ Every response, including successful ones, carries an `x-request-id` header, ech
 Creating a deployment returns `202 Accepted` with the deployment in its `starting` state — provisioning continues after the response. Poll [Get a deployment](/products/hosted/api/v1/deployment#getDeployment) until `state` becomes `started`.
 
 [Disabling a deployment](/products/hosted/api/v1/deployment#disableDeployment) works the same way: `202 Accepted` with the deployment in `stopping`, then poll until `state` is `stopped`.
+
+Instance changes are also `202`, but there is no per-instance `state` field to poll, so they are observed through the [instance list](/products/hosted/api/v1/deployment#listDeploymentInstances) instead. After [adding a replica](/products/hosted/api/v1/deployment#addDeploymentInstance), poll until that instance reports a `host` — that is when it is reachable. After [removing one](/products/hosted/api/v1/deployment#deleteDeploymentInstance), poll until it disappears from the list, which only reports instances that aren't stopped.
 
 Deployment names are unique within an owner, which makes creates idempotent by name: retrying after an ambiguous failure returns `409 Conflict` rather than provisioning a second deployment.
 

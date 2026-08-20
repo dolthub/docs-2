@@ -136,6 +136,28 @@ Settings are wrapped in an object rather than returned as a bare list so the res
 
 ---
 
+## AddInstanceRequest {#model-addinstancerequest}
+The instance to add to a deployment.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `instance_type_id` | `string` | yes | The **id** of the instance type, from the deployment options endpoint. Note an instance reports `instance_type_name` on a read — the id and the display name are different values. |
+| `volume_type_id` | `string` | yes | The **id** of the storage type, from the deployment options endpoint. |
+| `volume_size_gb` | `integer` | yes | The size of the instance's storage volume, in gigabytes. Must fall within the selected storage type's supported range. |
+| `backup_id` | `string` | no | A backup of this deployment to restore into the new instance, from the backups list. Only valid when the deployment is disabled and this request is restarting it; supplying it otherwise is a `400`. Without it a restarted deployment comes up empty. |
+
+---
+
+## InstanceDeleteAccepted {#model-instancedeleteaccepted}
+Acknowledges that an instance has been accepted for removal.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The instance that is being removed. |
+| `state` | `string` | yes | Always `stopping`. The instance is being torn down; it leaves the instances list once that finishes. |
+
+---
+
 ## DeploymentInstance {#model-deploymentinstance}
 One instance backing a deployment. A deployment has a primary and, when it has read replicas, one instance per replica.
 
@@ -144,7 +166,7 @@ One instance backing a deployment. A deployment has a primary and, when it has r
 | `id` | `string` | yes | The instance's identifier, unique within the deployment. |
 | `index` | `integer` | yes | The instance's position in the deployment. `0` is the first instance; replicas take the following indices. |
 | `is_primary` | `boolean` | yes | Whether this instance is currently the primary. Exactly one instance of a started deployment is primary, and which one can change over the deployment's life. |
-| `host` | `string` | no | The hostname for this specific instance. Connect to the deployment's own `host` unless you mean to address one instance directly. |
+| `host` | `string` | no | The hostname for this specific instance. Connect to the deployment's own `host` unless you mean to address one instance directly. Absent until the instance has come up and reported its address, so an instance that is still being provisioned has no `host`. There is no per-instance state on this API; `host` appearing is what tells you a newly added instance is reachable. |
 | `instance_type_name` | `string` | no | The display name of this instance's type. |
 | `volume_type_name` | `string` | no | The display name of this instance's storage type. |
 | `volume_size_gb` | `integer` | no | The size of this instance's storage volume, in gigabytes. |
