@@ -247,6 +247,74 @@ or
 dolt clone --aws-creds-profile prod-profile --aws-region us-west-2 origin aws://[dolt_dynamo_table:dolt_remotes_s3_storage]/menus
 ```
 
+If you would rather not run a DynamoDB table, the `s3://` protocol below stores
+the manifest in the bucket itself and works against S3 as well.
+
+### S3-compatible
+
+The `s3://` protocol works against any object store that implements the S3 API
+with conditional writes, including AWS S3 itself, Cloudflare R2, and MinIO. It
+stores the manifest as an ordinary object and uses conditional writes to update
+it atomically, so unlike `aws://` it needs no DynamoDB table.
+
+```bash
+dolt remote add origin s3://BUCKET/path/for/remote
+```
+
+Credentials always come from the standard AWS SDK chain: environment variables,
+the shared credentials file, SSO, or an instance role. They are never accepted
+in the URL, since the URL is stored with the remote in plain text.
+
+Against AWS S3 that is all you need, because the SDK resolves the endpoint from
+your region:
+
+```bash
+export AWS_REGION=us-west-2
+dolt remote add origin s3://my-bucket/menus
+dolt push origin main
+```
+
+#### Addressing another provider
+
+A non-AWS provider is reached by adding query parameters to the URL:
+
+| Parameter    | Meaning                                                                  |
+| ------------ | ------------------------------------------------------------------------ |
+| `endpoint`   | The provider's S3 API host, e.g. an R2 or MinIO endpoint                 |
+| `region`     | The signing region. Some providers want a fixed value; R2 uses `auto`    |
+| `path-style` | `true` to address buckets as a path segment instead of a hostname prefix |
+
+`endpoint` and `region` fall back to the SDK's own resolution when omitted, so
+`AWS_ENDPOINT_URL_S3`, `AWS_REGION`, and the shared config file all work as
+usual. `path-style` has no such fallback and can only be set in the URL. Leave
+it off unless your provider needs it; MinIO generally does, because it has no
+wildcard DNS to serve `bucket.host` addresses, while R2 does not.
+
+Because the parameters travel in the URL, they are stored with the remote and
+survive `clone`, `push`, `pull`, and backups without any extra flags. One
+repository can therefore address several providers at once.
+
+Cloudflare R2, where the endpoint is your account's S3 API host:
+
+```bash
+export AWS_ACCESS_KEY_ID=... AWS_SECRET_ACCESS_KEY=...
+dolt remote add origin 's3://my-bucket/menus?endpoint=https://ACCOUNT_ID.r2.cloudflarestorage.com&region=auto'
+dolt push origin main
+```
+
+MinIO, which needs path-style addressing:
+
+```bash
+dolt clone 's3://my-bucket/menus?endpoint=http://minio.internal:9000&region=us-east-1&path-style=true'
+```
+
+Quote the URL in your shell. An unquoted `&` will otherwise be read as a
+request to run the command in the background.
+
+An unrecognized parameter is an error rather than being ignored, so a typo such
+as `entpoint=` is reported when the remote is added instead of failing later
+with a confusing connection error.
+
 ### GCS
 
 Google Cloud Platform remotes use Google Cloud Storage (GCS). You can create or use an existing GCS bucket to host one or more [Dolt](https://doltdb.com) remotes. To add a GCP remote provide a URL with the `gs://` protocol like so:
