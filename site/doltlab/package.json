@@ -9,7 +9,7 @@
     "preview": "astro preview --port 4322"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.2.2",
+    "@astrojs/markdown-remark": "^7.2.4",
     "@astrojs/react": "^6.0.4",
     "@dolthub/react-components": "^0.4.3",
     "@dolthub/react-hooks": "^0.3.1",
