@@ -15,7 +15,7 @@
     "@astrojs/react": "^6.0.4",
     "@dolthub/react-components": "^0.4.3",
     "@dolthub/react-hooks": "^0.3.1",
-    "astro": "^7.2.0",
+    "astro": "^7.2.9",
     "autoprefixer": "^10.5.4",
     "github-markdown-css": "^5.0.0",
     "pagefind": "^1.5.2",
