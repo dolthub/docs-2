@@ -53,7 +53,7 @@ tags:
   - name: Pull request
     description: >-
       Proposals to merge one branch into another within a deployment's database. Merging
-      itself is done over SQL against the deployment, not through this API.
+      itself is done in the Hosted web UI, not through this API.
 
 paths:
   /api/v1/user:
@@ -1070,8 +1070,8 @@ paths:
         unrelated.
 
 
-        Merging is not part of this API. A pull request is merged by connecting to the
-        deployment and issuing `CALL DOLT_MERGE(...)`; `state` here reports the outcome.
+        Merging is not part of this API. Merge a pull request in the Hosted web UI; `state`
+        here reports the result.
 
 
         Pages hold up to 20 pull requests and the size is not caller-controlled. Do not
@@ -2244,8 +2244,8 @@ components:
       type: string
       title: PullState
       description: >-
-        Where a pull request is in its life. `merged` is terminal and set when the merge
-        lands; `closed` means it was abandoned without merging.
+        Where a pull request is in its life. `merged` is terminal and set once Hosted has
+        recorded the merge; `closed` means it was abandoned without merging.
       enum:
         - open
         - closed

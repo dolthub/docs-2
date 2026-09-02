@@ -5,7 +5,7 @@ description: Reading the pull requests in a deployment database, with their comm
 
 # Pull Request
 
-Proposals to merge one branch into another within a deployment's database. Merging itself is done over SQL against the deployment, not through this API.
+Proposals to merge one branch into another within a deployment's database. Merging itself is done in the Hosted web UI, not through this API.
 
 ## List a database's pull requests {#listDeploymentPulls}
 <span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/pulls</code>
@@ -14,7 +14,7 @@ Returns the pull requests for one database in `{owner}/{deployment}`, newest fir
 
 Pull requests belong to a deployment but are scoped to a database within it, so `database` is required — a deployment can host several, and their pull requests are unrelated.
 
-Merging is not part of this API. A pull request is merged by connecting to the deployment and issuing `CALL DOLT_MERGE(...)`; `state` here reports the outcome.
+Merging is not part of this API. Merge a pull request in the Hosted web UI; `state` here reports the result.
 
 Pages hold up to 20 pull requests and the size is not caller-controlled. Do not infer the end of the list from how many came back — a full page can still be the last one. `meta.next_page_token` is the only signal that there is more, and its absence is the only signal that there is not.
 

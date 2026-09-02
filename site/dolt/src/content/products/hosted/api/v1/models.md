@@ -313,7 +313,7 @@ Confirmation that a deployment's shutdown was accepted. Deliberately minimal: it
 ---
 
 ## PullState {#model-pullstate}
-Where a pull request is in its life. `merged` is terminal and set when the merge lands; `closed` means it was abandoned without merging.
+Where a pull request is in its life. `merged` is terminal and set once Hosted has recorded the merge; `closed` means it was abandoned without merging.
 
 **Enum values**
 
@@ -376,7 +376,7 @@ A proposal to merge one branch into another within a deployment's database.
 | `description` | `string` | no | Absent when the pull request has no description. |
 | `from_branch` | `string` | yes | The branch being merged, as a bare branch name. |
 | `to_branch` | `string` | yes | The branch being merged into, as a bare branch name. |
-| `state` | `string` | yes | Where a pull request is in its life. `merged` is terminal and set when the merge lands; `closed` means it was abandoned without merging. |
+| `state` | `string` | yes | Where a pull request is in its life. `merged` is terminal and set once Hosted has recorded the merge; `closed` means it was abandoned without merging. |
 | `creator` | `string` | yes | The username of the user who opened the pull request. |
 | `created_at` | `string` | yes |  |
 | `comment_count` | `integer` | yes | How many comments the pull request has. |
