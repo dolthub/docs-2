@@ -60,8 +60,6 @@ See [Authentication](/products/hosted/api/v1/authentication) for how to create a
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/pulls/{id}/comments` | [List a pull request's comments](/products/hosted/api/v1/pull-request#listDeploymentPullComments) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/pulls/{id}/logs` | [List a pull request's activity log](/products/hosted/api/v1/pull-request#listDeploymentPullLogs) |
 
-Pull requests are read-only in v1, and merging is not part of this API at all: a pull request is merged by connecting to the deployment and issuing `CALL DOLT_MERGE(...)`. They also hang off a deployment but belong to one database within it, so [the list](/products/hosted/api/v1/pull-request#listDeploymentPulls) requires a `database` — a deployment can host several, and their pull requests are unrelated.
-
 ## Response shape
 
 Every `2xx` response body is an [Envelope](/products/hosted/api/v1/models#model-envelope): the resource, or an array of resources, under `data`, with optional `meta`.
