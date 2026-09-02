@@ -243,15 +243,32 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
   // Endpoint sections
   // -------------------------------------------------------------------------
 
+  // Follows a parameter's own `$ref` without touching its schema, so a schema
+  // declared by `$ref` survives to be named. deref() would flatten it into the
+  // primitive it is built from, which loses the enum an `in: query` filter
+  // accepts.
+  function resolveParam(param, depth = 0) {
+    if (depth > 8 || typeof param !== "object" || param === null) return param;
+    if ("$ref" in param) return resolveParam(resolveRef(param.$ref), depth + 1);
+    return param;
+  }
+
   function parametersSection(params) {
     if (!params?.length) return "";
     const rows = params
       .map((p) => {
-        const resolved = deref(p);
+        const param = resolveParam(p);
+        const resolved = deref(param);
         const location = resolved.in ?? "";
         const name = resolved.name ?? "";
         const required = resolved.required ? "yes" : "no";
-        const type = resolved.schema?.type ?? "";
+        // A schema given as `$ref` is a named model, so link it the way
+        // response and request-body rows do rather than printing the bare
+        // primitive underneath it.
+        const model = param.schema?.$ref ? refName(param.schema.$ref) : "";
+        const type = model
+          ? `[\`${model}\`](${modelsHref}#model-${model.toLowerCase()})`
+          : resolved.schema?.type ?? "";
         const desc = escapeMarkdown(resolved.description ?? "");
         return `| \`${name}\` | ${location} | ${type} | ${required} | ${desc} |`;
       })
@@ -315,11 +332,15 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
   // (OpenAPI 3.1 §4.8.9) — a spec typically hoists them there once a path has
   // more than one method. Operation-level entries override an inherited one
   // with the same name and location.
+  //
+  // Only each parameter's own `$ref` is followed: callers that need values out
+  // of its schema deref it themselves, and flattening it here would erase the
+  // name of a schema declared by `$ref`.
   function effectiveParameters(pathParams, opParams) {
     const merged = [];
     const seen = new Map(); // "in:name" -> index in merged
     for (const raw of [...(pathParams ?? []), ...(opParams ?? [])]) {
-      const p = deref(raw);
+      const p = resolveParam(raw);
       const key = `${p.in}:${p.name}`;
       if (seen.has(key)) merged[seen.get(key)] = p;
       else {

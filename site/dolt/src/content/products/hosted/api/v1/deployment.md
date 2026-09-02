@@ -25,7 +25,7 @@ The `id` of an instance type or storage option is what `POST /api/v1/deployments
 
 | Name | In | Type | Required | Description |
 |------|----|------|----------|-------------|
-| `cloud` | query | string | yes | The cloud to list options for. |
+| `cloud` | query | [`CloudProvider`](/products/hosted/api/v1/models#model-cloudprovider) | yes | The cloud to list options for. |
 | `zone` | query | string | no | A zone from this cloud's `zones`. Supply it to receive `instance_types`. |
 | `instance_type_id` | query | string | no | An instance type `id` from `instance_types`. Supply it, together with `zone`, to receive `storage_options`. |
 
@@ -180,7 +180,7 @@ Pagination is cursor-based: when `meta.next_page_token` is present, pass it back
 |------|----|------|----------|-------------|
 | `owner` | path | string | yes | The user or organization whose deployments to list. 3–32 characters of letters, digits, hyphens, and underscores. |
 | `page_token` | query | string | no | The `meta.next_page_token` from a previous response. Omit for the first page. |
-| `state` | query | string | no | Return only deployments in this state. Omit for all states. |
+| `state` | query | [`DeploymentState`](/products/hosted/api/v1/models#model-deploymentstate) | no | Return only deployments in this state. Omit for all states. |
 
 **Example request**
 

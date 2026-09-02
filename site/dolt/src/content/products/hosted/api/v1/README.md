@@ -52,6 +52,16 @@ See [Authentication](/products/hosted/api/v1/authentication) for how to create a
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/backups` | [List a deployment's backups](/products/hosted/api/v1/deployment#listDeploymentBackups) |
 | **POST** | `/api/v1/deployments/{owner}/{deployment}/disable` | [Disable a deployment](/products/hosted/api/v1/deployment#disableDeployment) |
 
+### Pull request
+
+| Method | Path | What it does |
+|--------|------|--------------|
+| **GET** | `/api/v1/deployments/{owner}/{deployment}/pulls` | [List a database's pull requests](/products/hosted/api/v1/pull-request#listDeploymentPulls) |
+| **GET** | `/api/v1/deployments/{owner}/{deployment}/pulls/{id}/comments` | [List a pull request's comments](/products/hosted/api/v1/pull-request#listDeploymentPullComments) |
+| **GET** | `/api/v1/deployments/{owner}/{deployment}/pulls/{id}/logs` | [List a pull request's activity log](/products/hosted/api/v1/pull-request#listDeploymentPullLogs) |
+
+Pull requests are read-only in v1, and merging is not part of this API at all: a pull request is merged by connecting to the deployment and issuing `CALL DOLT_MERGE(...)`. They also hang off a deployment but belong to one database within it, so [the list](/products/hosted/api/v1/pull-request#listDeploymentPulls) requires a `database` — a deployment can host several, and their pull requests are unrelated.
+
 ## Response shape
 
 Every `2xx` response body is an [Envelope](/products/hosted/api/v1/models#model-envelope): the resource, or an array of resources, under `data`, with optional `meta`.
@@ -71,7 +81,9 @@ List endpoints put the pagination cursor in `meta`:
 }
 ```
 
-When `meta.next_page_token` is present, pass it back as the `page_token` query parameter to fetch the next page. On the last page `meta` is omitted entirely, so checking whether the token is present is all a client needs — it is never returned present but empty.
+When `meta.next_page_token` is present, pass it back as the `page_token` query parameter to fetch the next page. On the last page `meta` is omitted entirely, so checking whether the token is present is all a client needs — it is never returned present but empty. Page size is fixed and not caller-controlled, so a full page is not itself a sign that another one follows.
+
+A few lists are small enough by nature to be returned whole and take no `page_token` at all — a pull request's [comments](/products/hosted/api/v1/pull-request#listDeploymentPullComments) and its [activity log](/products/hosted/api/v1/pull-request#listDeploymentPullLogs). Each endpoint's parameters say which it is.
 
 ## Errors
 
