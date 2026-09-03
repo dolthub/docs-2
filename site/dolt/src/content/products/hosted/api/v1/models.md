@@ -312,6 +312,78 @@ Confirmation that a deployment's shutdown was accepted. Deliberately minimal: it
 
 ---
 
+## PullState {#model-pullstate}
+Where a pull request is in its life. `merged` is terminal and set once Hosted has recorded the merge; `closed` means it was abandoned without merging.
+
+**Enum values**
+
+| Value |
+|-------|
+| `open` |
+| `closed` |
+| `merged` |
+
+---
+
+## PullActivity {#model-pullactivity}
+Something that happened to a pull request. `branch_deleted` is recorded when a branch the pull request uses is deleted, including when a successful merge deletes the source branch. `database_dropped` is recorded when the pull request's database is dropped.
+
+**Enum values**
+
+| Value |
+|-------|
+| `opened` |
+| `merged` |
+| `closed` |
+| `branch_deleted` |
+| `database_dropped` |
+
+---
+
+## PullActivityLogEntry {#model-pullactivitylogentry}
+One entry in a pull request's activity log.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The entry's identifier, unique within the pull request. |
+| `activity` | `string` | yes | Something that happened to a pull request. `branch_deleted` is recorded when a branch the pull request uses is deleted, including when a successful merge deletes the source branch. `database_dropped` is recorded when the pull request's database is dropped. |
+| `user` | `string` | yes | The username the activity is attributed to. Empty when Hosted recorded the activity rather than a person. |
+| `logged_at` | `string` | yes |  |
+
+---
+
+## PullComment {#model-pullcomment}
+A comment on a pull request.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The comment's identifier, unique within the pull request. |
+| `author` | `string` | yes | The username of the user who wrote the comment. |
+| `comment` | `string` | yes | The comment body. |
+| `created_at` | `string` | yes |  |
+| `updated_at` | `string` | yes | Equal to `created_at` until the comment is edited. |
+
+---
+
+## Pull {#model-pull}
+A proposal to merge one branch into another within a deployment's database.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The pull request's identifier, unique within the deployment. |
+| `database` | `string` | yes | The database the pull request belongs to. |
+| `title` | `string` | yes |  |
+| `description` | `string` | no | Absent when the pull request has no description. |
+| `from_branch` | `string` | yes | The branch being merged, as a bare branch name. |
+| `to_branch` | `string` | yes | The branch being merged into, as a bare branch name. |
+| `state` | `string` | yes | Where a pull request is in its life. `merged` is terminal and set once Hosted has recorded the merge; `closed` means it was abandoned without merging. |
+| `creator` | `string` | yes | The username of the user who opened the pull request. |
+| `created_at` | `string` | yes |  |
+| `comment_count` | `integer` | yes | How many comments the pull request has. |
+| `after_merge_commit` | `string` | no | The commit the merge produced. Present only once `state` is `merged`. |
+
+---
+
 ## Deployment {#model-deployment}
 A Hosted Dolt deployment.
 
