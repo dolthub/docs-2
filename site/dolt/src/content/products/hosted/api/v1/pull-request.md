@@ -132,6 +132,66 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/p
 
 ---
 
+## Comment on a pull request {#createDeploymentPullComment}
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/pulls/{id}/comments</code>
+
+Adds a comment to one pull request and returns the comment that was created.
+
+Any token that can read the deployment can comment.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `id` | path | string | yes | The pull request's id, as reported by the pull request list. |
+
+**Request body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `comment` | string | yes | The comment body. |
+
+**Example request**
+
+```sh
+curl -X POST 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/pulls/{id}/comments' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"comment":"Backfill looks right to me."}'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `201` | The comment that was created. | [`PullComment`](/products/hosted/api/v1/models#model-pullcomment) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `201`**
+
+```json
+{
+  "data": {
+    "id": "6f8f57c2-9a1e-4a3b-8f2d-1c4b5a6e7d80",
+    "author": "acme-ops",
+    "comment": "Backfill looks right to me.",
+    "created_at": "2026-08-11T10:02:00Z",
+    "updated_at": "2026-08-11T10:02:00Z"
+  }
+}
+```
+
+---
+
 ## List a pull request's activity log {#listDeploymentPullLogs}
 <span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/pulls/{id}/logs</code>
 

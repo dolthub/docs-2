@@ -45,10 +45,12 @@ See [Authentication](/products/hosted/api/v1/authentication) for how to create a
 | **POST** | `/api/v1/deployments` | [Create a deployment](/products/hosted/api/v1/deployment#createDeployment) |
 | **GET** | `/api/v1/deployments/{owner}` | [List an owner's deployments](/products/hosted/api/v1/deployment#listDeployments) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}` | [Get a deployment](/products/hosted/api/v1/deployment#getDeployment) |
+| **PATCH** | `/api/v1/deployments/{owner}/{deployment}` | [Update a deployment's settings](/products/hosted/api/v1/deployment#updateDeployment) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/instances` | [List a deployment's instances](/products/hosted/api/v1/deployment#listDeploymentInstances) |
 | **POST** | `/api/v1/deployments/{owner}/{deployment}/instances` | [Add a read replica to a deployment](/products/hosted/api/v1/deployment#addDeploymentInstance) |
 | **DELETE** | `/api/v1/deployments/{owner}/{deployment}/instances/{id}` | [Remove an instance from a deployment](/products/hosted/api/v1/deployment#deleteDeploymentInstance) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/config` | [Get a deployment's configuration](/products/hosted/api/v1/deployment#getDeploymentConfig) |
+| **PATCH** | `/api/v1/deployments/{owner}/{deployment}/config` | [Change some of a deployment's configuration overrides](/products/hosted/api/v1/deployment#patchDeploymentConfig) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/backups` | [List a deployment's backups](/products/hosted/api/v1/deployment#listDeploymentBackups) |
 | **POST** | `/api/v1/deployments/{owner}/{deployment}/disable` | [Disable a deployment](/products/hosted/api/v1/deployment#disableDeployment) |
 
@@ -58,6 +60,7 @@ See [Authentication](/products/hosted/api/v1/authentication) for how to create a
 |--------|------|--------------|
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/pulls` | [List a database's pull requests](/products/hosted/api/v1/pull-request#listDeploymentPulls) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/pulls/{id}/comments` | [List a pull request's comments](/products/hosted/api/v1/pull-request#listDeploymentPullComments) |
+| **POST** | `/api/v1/deployments/{owner}/{deployment}/pulls/{id}/comments` | [Comment on a pull request](/products/hosted/api/v1/pull-request#createDeploymentPullComment) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/pulls/{id}/logs` | [List a pull request's activity log](/products/hosted/api/v1/pull-request#listDeploymentPullLogs) |
 
 ## Response shape
