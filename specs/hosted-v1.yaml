@@ -506,6 +506,108 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+    patch:
+      operationId: updateDeployment
+      summary: Update a deployment's settings.
+      description: >-
+        Changes settings on an existing deployment. Only the fields present in the body are
+        changed; anything omitted is left alone.
+
+
+        This endpoint does not resize, move or restart a deployment. Instance type, volume,
+        zone and cloud are fixed once a deployment exists, and replicas are changed through
+        the instances endpoints. What is settable here is deployment-level policy, currently
+        just whether Dolt updates itself.
+
+
+        Only a deployment administrator may change settings.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      requestBody:
+        required: true
+        description: >-
+          The settings to change. At least one must be present; an empty object is
+          rejected rather than treated as a no-op.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDeploymentRequest"
+            examples:
+              default:
+                summary: Pin the Dolt version by turning off automatic updates.
+                value:
+                  disable_automatic_dolt_updates: true
+      responses:
+        "200":
+          description: The deployment after the change.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Deployment"
+              examples:
+                default:
+                  summary: A running deployment with automatic updates disabled.
+                  value:
+                    data:
+                      owner: acme
+                      name: analytics
+                      state: started
+                      cloud: aws
+                      zone: us-east-1
+                      cluster_type: dolt
+                      caller_role: admin
+                      created_at: "2026-08-11T09:14:00Z"
+                      disable_automatic_dolt_updates: true
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/deployments/{owner}/{deployment}/instances:
     parameters:
       - name: owner
@@ -860,6 +962,114 @@ paths:
           $ref: "#/components/responses/NotFound"
         "405":
           $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+    patch:
+      operationId: patchDeploymentConfig
+      summary: Change some of a deployment's configuration overrides.
+      description: >-
+        Changes the overrides named in the body and leaves the rest alone, returning the
+        configuration that results.
+
+
+        A key set to `null` is cleared and reverts to its default. This is the only way to
+        remove a single override; omitting a key leaves it as it was, and an empty
+        `overrides` object changes nothing.
+
+
+        Only a deployment administrator may change configuration. Values are strings
+        whatever the setting's underlying type, and are validated against the same rules
+        `GET` reports, so an unknown key or an out-of-range value is rejected rather than
+        stored.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      requestBody:
+        required: true
+        description: The overrides to change.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchDeploymentConfigRequest"
+            examples:
+              default:
+                summary: Turn off autocommit, leaving every other override as it is.
+                value:
+                  overrides:
+                    behavior_auto_commit: "false"
+              clear:
+                summary: Clear one override without touching the others.
+                value:
+                  overrides:
+                    listener_max_connections: null
+      responses:
+        "200":
+          description: The configuration after the change.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DeploymentConfig"
+              examples:
+                default:
+                  summary: One overridden setting and one back on its default.
+                  value:
+                    data:
+                      settings:
+                        - key: behavior_auto_commit
+                          value: "false"
+                          default: "true"
+                          is_overridden: true
+                        - key: listener_max_connections
+                          value: "100"
+                          default: "100"
+                          is_overridden: false
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
         "503":
@@ -1270,6 +1480,100 @@ paths:
           $ref: "#/components/responses/NotFound"
         "405":
           $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    post:
+      operationId: createDeploymentPullComment
+      summary: Comment on a pull request.
+      description: >-
+        Adds a comment to one pull request and returns the comment that was created.
+
+
+        Any token that can read the deployment can comment.
+      tags:
+        - Pull request
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+        - name: id
+          in: path
+          required: true
+          description: The pull request's id, as reported by the pull request list.
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      requestBody:
+        required: true
+        description: The comment to add.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePullCommentRequest"
+            examples:
+              default:
+                summary: A short review note.
+                value:
+                  comment: Backfill looks right to me.
+      responses:
+        "201":
+          description: The comment that was created.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PullComment"
+              examples:
+                default:
+                  summary: The new comment.
+                  value:
+                    data:
+                      id: 6f8f57c2-9a1e-4a3b-8f2d-1c4b5a6e7d80
+                      author: acme-ops
+                      comment: Backfill looks right to me.
+                      created_at: "2026-08-11T10:02:00Z"
+                      updated_at: "2026-08-11T10:02:00Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
         "503":
@@ -1737,6 +2041,54 @@ components:
             reports them.
           items:
             $ref: "#/components/schemas/ConfigSetting"
+
+    UpdateDeploymentRequest:
+      type: object
+      title: UpdateDeploymentRequest
+      description: >-
+        Settings to change on an existing deployment. Every property is optional, but at
+        least one must be present.
+
+
+        Provider-specific private-networking allowlists are deliberately absent: private
+        networking is not part of the `Deployment` resource in v1.0, and will be settable
+        through its own sub-resource when that lands.
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        disable_automatic_dolt_updates:
+          type: boolean
+          description: >-
+            Whether to stop Dolt updating itself during the deployment's service window.
+            Turn this on to pin the version, then roll it forward deliberately.
+          examples:
+            - true
+
+    PatchDeploymentConfigRequest:
+      type: object
+      title: PatchDeploymentConfigRequest
+      description: >-
+        The overrides to change. Keys the object omits keep whatever value they have; a key
+        set to `null` is cleared and reverts to its default.
+      required:
+        - overrides
+      properties:
+        overrides:
+          type: object
+          description: >-
+            Setting key to value, or to `null` to clear it. Keys are the `key` values `GET`
+            reports; values are strings whatever the setting's underlying type, so a
+            boolean is `"true"` or `"false"` and a number is its decimal digits.
+          propertyNames:
+            pattern: "^[a-z0-9_]{1,128}$"
+          additionalProperties:
+            type:
+              - string
+              - "null"
+            maxLength: 1024
+          examples:
+            - behavior_auto_commit: "false"
+              listener_max_connections: null
 
     AddInstanceRequest:
       type: object
@@ -2301,6 +2653,21 @@ components:
           format: date-time
           examples:
             - "2026-08-11T09:14:00Z"
+
+    CreatePullCommentRequest:
+      type: object
+      title: CreatePullCommentRequest
+      description: A comment to add to a pull request.
+      required:
+        - comment
+      properties:
+        comment:
+          type: string
+          minLength: 1
+          maxLength: 2048
+          description: The comment body.
+          examples:
+            - Backfill looks right to me.
 
     PullComment:
       type: object
