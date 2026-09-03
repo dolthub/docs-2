@@ -50,6 +50,10 @@ tags:
     description: The authenticated user.
   - name: Deployment
     description: Hosted Dolt deployments and their lifecycle.
+  - name: Pull request
+    description: >-
+      Proposals to merge one branch into another within a deployment's database. Merging
+      itself is done in the Hosted web UI, not through this API.
 
 paths:
   /api/v1/user:
@@ -502,6 +506,108 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+    patch:
+      operationId: updateDeployment
+      summary: Update a deployment's settings.
+      description: >-
+        Changes settings on an existing deployment. Only the fields present in the body are
+        changed; anything omitted is left alone.
+
+
+        This endpoint does not resize, move or restart a deployment. Instance type, volume,
+        zone and cloud are fixed once a deployment exists, and replicas are changed through
+        the instances endpoints. What is settable here is deployment-level policy, currently
+        just whether Dolt updates itself.
+
+
+        Only a deployment administrator may change settings.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      requestBody:
+        required: true
+        description: >-
+          The settings to change. At least one must be present; an empty object is
+          rejected rather than treated as a no-op.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDeploymentRequest"
+            examples:
+              default:
+                summary: Pin the Dolt version by turning off automatic updates.
+                value:
+                  disable_automatic_dolt_updates: true
+      responses:
+        "200":
+          description: The deployment after the change.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Deployment"
+              examples:
+                default:
+                  summary: A running deployment with automatic updates disabled.
+                  value:
+                    data:
+                      owner: acme
+                      name: analytics
+                      state: started
+                      cloud: aws
+                      zone: us-east-1
+                      cluster_type: dolt
+                      caller_role: admin
+                      created_at: "2026-08-11T09:14:00Z"
+                      disable_automatic_dolt_updates: true
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/deployments/{owner}/{deployment}/instances:
     parameters:
       - name: owner
@@ -861,6 +967,114 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+    patch:
+      operationId: patchDeploymentConfig
+      summary: Change some of a deployment's configuration overrides.
+      description: >-
+        Changes the overrides named in the body and leaves the rest alone, returning the
+        configuration that results.
+
+
+        A key set to `null` is cleared and reverts to its default. This is the only way to
+        remove a single override; omitting a key leaves it as it was, and an empty
+        `overrides` object changes nothing.
+
+
+        Only a deployment administrator may change configuration. Values are strings
+        whatever the setting's underlying type, and are validated against the same rules
+        `GET` reports, so an unknown key or an out-of-range value is rejected rather than
+        stored.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      requestBody:
+        required: true
+        description: The overrides to change.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchDeploymentConfigRequest"
+            examples:
+              default:
+                summary: Turn off autocommit, leaving every other override as it is.
+                value:
+                  overrides:
+                    behavior_auto_commit: "false"
+              clear:
+                summary: Clear one override without touching the others.
+                value:
+                  overrides:
+                    listener_max_connections: null
+      responses:
+        "200":
+          description: The configuration after the change.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DeploymentConfig"
+              examples:
+                default:
+                  summary: One overridden setting and one back on its default.
+                  value:
+                    data:
+                      settings:
+                        - key: behavior_auto_commit
+                          value: "false"
+                          default: "true"
+                          is_overridden: true
+                        - key: listener_max_connections
+                          value: "100"
+                          default: "100"
+                          is_overridden: false
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/deployments/{owner}/{deployment}/disable:
     post:
       operationId: disableDeployment
@@ -1052,6 +1266,415 @@ paths:
           $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/deployments/{owner}/{deployment}/pulls:
+    get:
+      operationId: listDeploymentPulls
+      summary: List a database's pull requests.
+      description: >-
+        Returns the pull requests for one database in `{owner}/{deployment}`, newest first.
+
+
+        Pull requests belong to a deployment but are scoped to a database within it, so
+        `database` is required — a deployment can host several, and their pull requests are
+        unrelated.
+
+
+        Merging is not part of this API. Merge a pull request in the Hosted web UI; `state`
+        here reports the result.
+
+
+        Pages hold up to 20 pull requests and the size is not caller-controlled. Do not
+        infer the end of the list from how many came back — a full page can still be the
+        last one. `meta.next_page_token` is the only signal that there is more, and its
+        absence is the only signal that there is not.
+      tags:
+        - Pull request
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+        - name: database
+          in: query
+          required: true
+          description: The database within the deployment whose pull requests to list.
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+          example: inventory
+        - name: state
+          in: query
+          required: false
+          description: Return only pull requests in this state. All states when omitted.
+          schema:
+            $ref: "#/components/schemas/PullState"
+        - name: query
+          in: query
+          required: false
+          description: >-
+            Free-text filter matched as a substring against the pull request's title and
+            its creator's username, case-insensitively. Matched literally: it is not a
+            pattern, and characters with meaning in SQL patterns carry none here.
+          schema:
+            type: string
+            minLength: 1
+          example: schema
+        - name: page_token
+          in: query
+          required: false
+          description: >-
+            The `next_page_token` from a previous response. Opaque — do not construct or
+            parse it.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The database's pull requests.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        description: The pull requests, newest first.
+                        items:
+                          $ref: "#/components/schemas/Pull"
+              examples:
+                default:
+                  summary: One open pull request.
+                  value:
+                    data:
+                      - id: "42"
+                        database: inventory
+                        title: Add supplier table
+                        description: Adds the supplier table and backfills it.
+                        from_branch: add-suppliers
+                        to_branch: main
+                        state: open
+                        creator: acme-ops
+                        created_at: "2026-08-11T09:14:00Z"
+                        comment_count: 2
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}/{deployment}/pulls/{id}/comments:
+    get:
+      operationId: listDeploymentPullComments
+      summary: List a pull request's comments.
+      description: >-
+        Returns every comment on one pull request, oldest first.
+
+
+        The list is not paginated: a pull request reports its comments whole.
+      tags:
+        - Pull request
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+        - name: id
+          in: path
+          required: true
+          description: The pull request's id, as reported by the pull request list.
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      responses:
+        "200":
+          description: The pull request's comments.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        description: The comments, oldest first.
+                        items:
+                          $ref: "#/components/schemas/PullComment"
+              examples:
+                default:
+                  summary: Two comments on a pull request.
+                  value:
+                    data:
+                      - id: 6f8f57c2-9a1e-4a3b-8f2d-1c4b5a6e7d80
+                        author: acme-ops
+                        comment: Backfill looks right to me.
+                        created_at: "2026-08-11T10:02:00Z"
+                        updated_at: "2026-08-11T10:02:00Z"
+                      - id: 9d2c1b4a-7e6f-4c5d-9a8b-0f1e2d3c4b5a
+                        author: acme-dev
+                        comment: Can we add an index on supplier_id?
+                        created_at: "2026-08-11T11:20:00Z"
+                        updated_at: "2026-08-11T11:24:00Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    post:
+      operationId: createDeploymentPullComment
+      summary: Comment on a pull request.
+      description: >-
+        Adds a comment to one pull request and returns the comment that was created.
+
+
+        Any token that can read the deployment can comment.
+      tags:
+        - Pull request
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+        - name: id
+          in: path
+          required: true
+          description: The pull request's id, as reported by the pull request list.
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      requestBody:
+        required: true
+        description: The comment to add.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePullCommentRequest"
+            examples:
+              default:
+                summary: A short review note.
+                value:
+                  comment: Backfill looks right to me.
+      responses:
+        "201":
+          description: The comment that was created.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PullComment"
+              examples:
+                default:
+                  summary: The new comment.
+                  value:
+                    data:
+                      id: 6f8f57c2-9a1e-4a3b-8f2d-1c4b5a6e7d80
+                      author: acme-ops
+                      comment: Backfill looks right to me.
+                      created_at: "2026-08-11T10:02:00Z"
+                      updated_at: "2026-08-11T10:02:00Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}/{deployment}/pulls/{id}/logs:
+    get:
+      operationId: listDeploymentPullLogs
+      summary: List a pull request's activity log.
+      description: >-
+        Returns the record of what has happened to one pull request — opened, closed,
+        merged, and the branch or database deletions that closed it — oldest first.
+
+
+        The list is not paginated: a pull request reports its activity whole.
+
+
+        An entry's `user` is empty when the activity was recorded by Hosted rather than by
+        a person.
+      tags:
+        - Pull request
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+        - name: id
+          in: path
+          required: true
+          description: The pull request's id, as reported by the pull request list.
+          schema:
+            type: string
+            pattern: "^[1-9][0-9]*$"
+          example: "42"
+      responses:
+        "200":
+          description: The pull request's activity log.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        description: The activity log entries, oldest first.
+                        items:
+                          $ref: "#/components/schemas/PullActivityLogEntry"
+              examples:
+                default:
+                  summary: A pull request opened and merged, then its source branch deleted.
+                  value:
+                    data:
+                      - id: 4b8a1f2c-3d5e-4a6b-8c9d-0e1f2a3b4c5d
+                        activity: opened
+                        user: acme-ops
+                        logged_at: "2026-08-11T09:14:00Z"
+                      - id: c1d2e3f4-5a6b-4c7d-8e9f-0a1b2c3d4e5f
+                        activity: merged
+                        user: acme-admin
+                        logged_at: "2026-08-12T16:40:00Z"
+                      - id: 7e6d5c4b-3a2f-4e1d-9c8b-7a6f5e4d3c2b
+                        activity: branch_deleted
+                        user: acme-admin
+                        logged_at: "2026-08-12T16:40:01Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
 components:
   headers:
@@ -1418,6 +2041,54 @@ components:
             reports them.
           items:
             $ref: "#/components/schemas/ConfigSetting"
+
+    UpdateDeploymentRequest:
+      type: object
+      title: UpdateDeploymentRequest
+      description: >-
+        Settings to change on an existing deployment. Every property is optional, but at
+        least one must be present.
+
+
+        Provider-specific private-networking allowlists are deliberately absent: private
+        networking is not part of the `Deployment` resource in v1.0, and will be settable
+        through its own sub-resource when that lands.
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        disable_automatic_dolt_updates:
+          type: boolean
+          description: >-
+            Whether to stop Dolt updating itself during the deployment's service window.
+            Turn this on to pin the version, then roll it forward deliberately.
+          examples:
+            - true
+
+    PatchDeploymentConfigRequest:
+      type: object
+      title: PatchDeploymentConfigRequest
+      description: >-
+        The overrides to change. Keys the object omits keep whatever value they have; a key
+        set to `null` is cleared and reverts to its default.
+      required:
+        - overrides
+      properties:
+        overrides:
+          type: object
+          description: >-
+            Setting key to value, or to `null` to clear it. Keys are the `key` values `GET`
+            reports; values are strings whatever the setting's underlying type, so a
+            boolean is `"true"` or `"false"` and a number is its decimal digits.
+          propertyNames:
+            pattern: "^[a-z0-9_]{1,128}$"
+          additionalProperties:
+            type:
+              - string
+              - "null"
+            maxLength: 1024
+          examples:
+            - behavior_auto_commit: "false"
+              listener_max_connections: null
 
     AddInstanceRequest:
       type: object
@@ -1921,6 +2592,194 @@ components:
             - analytics
         state:
           $ref: "#/components/schemas/DeploymentState"
+    PullState:
+      type: string
+      title: PullState
+      description: >-
+        Where a pull request is in its life. `merged` is terminal and set once Hosted has
+        recorded the merge; `closed` means it was abandoned without merging.
+      enum:
+        - open
+        - closed
+        - merged
+      examples:
+        - open
+
+    PullActivity:
+      type: string
+      title: PullActivity
+      description: >-
+        Something that happened to a pull request. `branch_deleted` is recorded when a
+        branch the pull request uses is deleted, including when a successful merge deletes
+        the source branch. `database_dropped` is recorded when the pull request's database
+        is dropped.
+      enum:
+        - opened
+        - merged
+        - closed
+        - branch_deleted
+        - database_dropped
+      examples:
+        - opened
+
+    PullActivityLogEntry:
+      type: object
+      title: PullActivityLogEntry
+      description: >-
+        One entry in a pull request's activity log.
+      required:
+        - id
+        - activity
+        - user
+        - logged_at
+      properties:
+        id:
+          type: string
+          description: The entry's identifier, unique within the pull request.
+          examples:
+            - 4b8a1f2c-3d5e-4a6b-8c9d-0e1f2a3b4c5d
+        activity:
+          $ref: "#/components/schemas/PullActivity"
+        user:
+          type: string
+          description: >-
+            The username the activity is attributed to. Empty when Hosted recorded the
+            activity rather than a person.
+          examples:
+            - acme-ops
+            - ""
+        logged_at:
+          type: string
+          format: date-time
+          examples:
+            - "2026-08-11T09:14:00Z"
+
+    CreatePullCommentRequest:
+      type: object
+      title: CreatePullCommentRequest
+      description: A comment to add to a pull request.
+      required:
+        - comment
+      properties:
+        comment:
+          type: string
+          minLength: 1
+          maxLength: 2048
+          description: The comment body.
+          examples:
+            - Backfill looks right to me.
+
+    PullComment:
+      type: object
+      title: PullComment
+      description: >-
+        A comment on a pull request.
+      required:
+        - id
+        - author
+        - comment
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The comment's identifier, unique within the pull request.
+          examples:
+            - 6f8f57c2-9a1e-4a3b-8f2d-1c4b5a6e7d80
+        author:
+          type: string
+          description: The username of the user who wrote the comment.
+          examples:
+            - acme-ops
+        comment:
+          type: string
+          description: The comment body.
+          examples:
+            - Backfill looks right to me.
+        created_at:
+          type: string
+          format: date-time
+          examples:
+            - "2026-08-11T10:02:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: >-
+            Equal to `created_at` until the comment is edited.
+          examples:
+            - "2026-08-11T10:02:00Z"
+
+    Pull:
+      type: object
+      title: Pull
+      description: >-
+        A proposal to merge one branch into another within a deployment's database.
+      required:
+        - id
+        - database
+        - title
+        - from_branch
+        - to_branch
+        - state
+        - creator
+        - created_at
+        - comment_count
+      properties:
+        id:
+          type: string
+          description: The pull request's identifier, unique within the deployment.
+          examples:
+            - "42"
+        database:
+          type: string
+          description: The database the pull request belongs to.
+          examples:
+            - inventory
+        title:
+          type: string
+          examples:
+            - Add supplier table
+        description:
+          type: string
+          description: Absent when the pull request has no description.
+          examples:
+            - Adds the supplier table and backfills it.
+        from_branch:
+          type: string
+          description: The branch being merged, as a bare branch name.
+          examples:
+            - add-suppliers
+        to_branch:
+          type: string
+          description: The branch being merged into, as a bare branch name.
+          examples:
+            - main
+        state:
+          $ref: "#/components/schemas/PullState"
+        creator:
+          type: string
+          description: The username of the user who opened the pull request.
+          examples:
+            - acme-ops
+        created_at:
+          type: string
+          format: date-time
+          examples:
+            - "2026-08-11T09:14:00Z"
+        comment_count:
+          type: integer
+          format: int32
+          description: How many comments the pull request has.
+          examples:
+            - 2
+        after_merge_commit:
+          type: string
+          description: >-
+            The commit the merge produced. Present only once `state` is `merged`.
+          examples:
+            - qi54ma4nlm0dvvhbrgv2p0lqmgs1kgnd
+
     Deployment:
       type: object
       title: Deployment

@@ -25,7 +25,7 @@ The `id` of an instance type or storage option is what `POST /api/v1/deployments
 
 | Name | In | Type | Required | Description |
 |------|----|------|----------|-------------|
-| `cloud` | query | string | yes | The cloud to list options for. |
+| `cloud` | query | [`CloudProvider`](/products/hosted/api/v1/models#model-cloudprovider) | yes | The cloud to list options for. |
 | `zone` | query | string | no | A zone from this cloud's `zones`. Supply it to receive `instance_types`. |
 | `instance_type_id` | query | string | no | An instance type `id` from `instance_types`. Supply it, together with `zone`, to receive `storage_options`. |
 
@@ -180,7 +180,7 @@ Pagination is cursor-based: when `meta.next_page_token` is present, pass it back
 |------|----|------|----------|-------------|
 | `owner` | path | string | yes | The user or organization whose deployments to list. 3–32 characters of letters, digits, hyphens, and underscores. |
 | `page_token` | query | string | no | The `meta.next_page_token` from a previous response. Omit for the first page. |
-| `state` | query | string | no | Return only deployments in this state. Omit for all states. |
+| `state` | query | [`DeploymentState`](/products/hosted/api/v1/models#model-deploymentstate) | no | Return only deployments in this state. Omit for all states. |
 
 **Example request**
 
@@ -289,6 +289,72 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}' 
     "caller_role": "admin",
     "created_by": "acme-ops",
     "created_at": "2026-07-01T18:22:04Z"
+  }
+}
+```
+
+---
+
+## Update a deployment's settings {#updateDeployment}
+<span class="api-method" style="background:#F0A35C">PATCH</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}</code>
+
+Changes settings on an existing deployment. Only the fields present in the body are changed; anything omitted is left alone.
+
+This endpoint does not resize, move or restart a deployment. Instance type, volume, zone and cloud are fixed once a deployment exists, and replicas are changed through the instances endpoints. What is settable here is deployment-level policy, currently just whether Dolt updates itself.
+
+Only a deployment administrator may change settings.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Request body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `disable_automatic_dolt_updates` | boolean | no | Whether to stop Dolt updating itself during the deployment's service window. Turn this on to pin the version, then roll it forward deliberately. |
+
+**Example request**
+
+```sh
+curl -X PATCH 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"disable_automatic_dolt_updates":true}'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `200` | The deployment after the change. | [`Deployment`](/products/hosted/api/v1/models#model-deployment) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `200`**
+
+```json
+{
+  "data": {
+    "owner": "acme",
+    "name": "analytics",
+    "state": "started",
+    "cloud": "aws",
+    "zone": "us-east-1",
+    "cluster_type": "dolt",
+    "caller_role": "admin",
+    "created_at": "2026-08-11T09:14:00Z",
+    "disable_automatic_dolt_updates": true
   }
 }
 ```
@@ -549,6 +615,77 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/c
         "key": "behavior_read_only",
         "value": "false",
         "default": "false",
+        "is_overridden": false
+      }
+    ]
+  }
+}
+```
+
+---
+
+## Change some of a deployment's configuration overrides {#patchDeploymentConfig}
+<span class="api-method" style="background:#F0A35C">PATCH</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/config</code>
+
+Changes the overrides named in the body and leaves the rest alone, returning the configuration that results.
+
+A key set to `null` is cleared and reverts to its default. This is the only way to remove a single override; omitting a key leaves it as it was, and an empty `overrides` object changes nothing.
+
+Only a deployment administrator may change configuration. Values are strings whatever the setting's underlying type, and are validated against the same rules `GET` reports, so an unknown key or an out-of-range value is rejected rather than stored.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Request body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `overrides` | object | yes | Setting key to value, or to `null` to clear it. Keys are the `key` values `GET` reports; values are strings whatever the setting's underlying type, so a boolean is `"true"` or `"false"` and a number is its decimal digits. |
+
+**Example request**
+
+```sh
+curl -X PATCH 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/config' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"overrides":{"behavior_auto_commit":"false"}}'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `200` | The configuration after the change. | [`DeploymentConfig`](/products/hosted/api/v1/models#model-deploymentconfig) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `200`**
+
+```json
+{
+  "data": {
+    "settings": [
+      {
+        "key": "behavior_auto_commit",
+        "value": "false",
+        "default": "true",
+        "is_overridden": true
+      },
+      {
+        "key": "listener_max_connections",
+        "value": "100",
+        "default": "100",
         "is_overridden": false
       }
     ]

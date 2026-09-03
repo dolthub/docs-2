@@ -38,7 +38,7 @@ jobs:
       - name: Build Astro site
         run: npm run build:dolt
       - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           install: false
           browser: chrome
@@ -68,7 +68,7 @@ jobs:
       - name: Build Astro site
         run: npm run build:doltlab
       - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           install: false
           browser: chrome
@@ -99,7 +99,7 @@ jobs:
       - name: Build Astro site
         run: npm run build:doltgres
       - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           install: false
           browser: chrome

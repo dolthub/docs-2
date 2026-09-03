@@ -23,8 +23,8 @@
     "compile": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^26.2.0",
-    "cypress": "^15.20.1",
+    "@types/node": "^26.4.0",
+    "cypress": "^15.21.1",
     "remark-heading-id": "^1.0.1",
     "typescript": "^5.0.0"
   },

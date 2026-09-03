@@ -6,9 +6,10 @@
  *   node scripts/generate-hosted-api-v1.mjs
  *
  * Output: site/dolt/src/content/products/hosted/api/v1/
- *   user.md       — User-tagged endpoints
- *   deployment.md — Deployment-tagged endpoints
- *   models.md     — all component schemas
+ *   user.md         — User-tagged endpoints
+ *   deployment.md   — Deployment-tagged endpoints
+ *   pull-request.md — Pull request-tagged endpoints
+ *   models.md       — all component schemas
  *
  * authentication.md and README.md are hand-written; this script does not touch
  * them.
@@ -38,6 +39,12 @@ generateApiDocs({
       file: "deployment.md",
       frontmatter:
         '---\ntitle: "Deployment"\ndescription: Creating, listing, and reading Hosted Dolt deployments and their instances.\n---\n\n# Deployment',
+    },
+    {
+      tag: "Pull request",
+      file: "pull-request.md",
+      frontmatter:
+        '---\ntitle: "Pull Request"\ndescription: Reading the pull requests in a deployment database, with their comments and activity.\n---\n\n# Pull Request',
     },
   ],
   models: {
