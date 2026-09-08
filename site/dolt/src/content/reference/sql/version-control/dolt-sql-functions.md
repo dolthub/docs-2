@@ -253,6 +253,15 @@ Note that the `DOLT_DIFF()` table function currently requires that argument valu
 
 `DOLT_DIFF()` table function requires `SELECT` privilege on the specified table.
 
+#### Performance
+
+`DOLT_DIFF()` normally scans the table's primary index at both revisions, which means it always pays for a
+full table scan even if you only care about a few rows. If a secondary index exists that covers every
+non-generated column of the table — at both the `from_revision` and `to_revision` schemas — Dolt will use
+that index instead, which can be significantly faster for large tables. An index that only covers part of
+the table's columns (including one that only covers the primary key) is not eligible, since it can't be used
+to detect every kind of change; add the missing columns to the index if you want `DOLT_DIFF()` to pick it up.
+
 #### Options
 
 ```sql
