@@ -9,6 +9,8 @@ description: The probabilistic B-tree structure that gives Dolt fast diffs and s
 
 A Prolly Tree is a data structure closely related to a [B-tree](https://en.wikipedia.org/wiki/B-tree). Prolly Trees are generally useful but have proven particularly effective as the basis of [the storage engine](/architecture/storage-engine) for [version controlled databases](https://www.dolthub.com/blog/2022-08-04-database-versioning/).
 
+We built a [Prolly Tree Visualizer](https://www.prollytree.com) to help understand the concepts in this documentation. The visualizer is a web application where you can build and query a simple key/value Prolly Tree similar to the one described in this document.
+
 ## Motivation
 
 Let's say you need a data structure with the following properties:
