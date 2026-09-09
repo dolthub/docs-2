@@ -30,11 +30,11 @@ Supply the database explicitly:
 dh db view --db OWNER/people
 ```
 
-Or save it with `dh config set repo OWNER/people`. Remote discovery requires `dolt` and a local repository with a recognized DoltHub remote. Multiple candidates require a choice; scripts should provide `--db`. See [Configuration](/products/dolthub/cli/configuration).
+Or save it with `dh config set db OWNER/people`. Remote discovery requires `dolt` and a local repository with a recognized DoltHub remote. Multiple candidates require a choice; scripts should provide `--db`. See [Configuration](/products/dolthub/cli/configuration).
 
 ## A command is using the wrong database
 
-`DH_REPO` overrides the saved repository, and both override local remote discovery. Explicit `--db` takes precedence over all three. `dh config list` shows environment/config values but does not resolve local remotes.
+`DH_DB` overrides the saved database, and both override local remote discovery. Explicit `--db` takes precedence over all three. `DH_REPO` remains accepted as a compatibility alias for `DH_DB`, but `DH_DB` wins when both are set. `dh config list` shows environment/config values but does not resolve local remotes.
 
 ## SQL flags are rejected
 

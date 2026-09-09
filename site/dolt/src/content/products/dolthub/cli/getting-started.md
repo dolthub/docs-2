@@ -64,6 +64,6 @@ dh sql --db OWNER/people --ref main \
 dh browse --db OWNER/people
 ```
 
-To avoid repeating `--db`, save a default with `dh config set repo OWNER/people`. Explicit `--db` flags override that default; [Configuration](/products/dolthub/cli/configuration) explains the full selection order.
+To avoid repeating `--db`, save a default with `dh config set db OWNER/people`. Explicit `--db` flags override that default; [Configuration](/products/dolthub/cli/configuration) explains the full selection order.
 
 Next, [make a change through a pull request](/products/dolthub/cli/guides/pull-requests), [import a file](/products/dolthub/cli/guides/table-imports), or explore the [command reference](/products/dolthub/cli/commands).

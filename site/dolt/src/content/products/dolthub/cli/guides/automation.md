@@ -3,7 +3,7 @@ title: "Automate with dh"
 description: "Use tokens, structured output, exit codes, and asynchronous operations in scripts."
 ---
 
-For noninteractive use, provide `DH_TOKEN` through your environment or CI secret store, and select a database explicitly with `--db` or `DH_REPO`. See [Authentication](/products/dolthub/cli/authentication#tokens-for-scripts-and-containers).
+For noninteractive use, provide `DH_TOKEN` through your environment or CI secret store, and select a database explicitly with `--db` or `DH_DB`. See [Authentication](/products/dolthub/cli/authentication#tokens-for-scripts-and-containers).
 
 Supply values that interactive commands would otherwise prompt for. For example, `db create` needs a name and `--public` or `--private`, while `pr create` needs a title, head, and base.
 

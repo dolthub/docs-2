@@ -22,7 +22,7 @@ docker run --rm -e DH_TOKEN dolthub/cli:latest db view OWNER/people
 
 Public reads can run anonymously. Use the native CLI for browser login: the container has no browser or system keyring, and its loopback callback is inside the container.
 
-Pass `--db OWNER/DATABASE` explicitly, or forward `DH_REPO`. The image does not include `dolt` for discovering a local repository's remotes. Forward `DH_HOST` with `-e DH_HOST` when using a custom host.
+Pass `--db OWNER/DATABASE` explicitly, or forward `DH_DB`. The image does not include `dolt` for discovering a local repository's remotes. Forward `DH_HOST` with `-e DH_HOST` when using a custom host.
 
 ## Pipe SQL
 
