@@ -18,6 +18,10 @@ DoltHub has many uses. We recommend getting started by [sharing a database](/pro
 
 This documentation will walk you through discovering data on DoltHub, cloning a copy locally, making a change on a fork, and submitting a pull request to the original database.
 
+## DoltHub CLI
+
+Use [the DoltHub CLI (`dh`)](/products/dolthub/cli) to run SQL, import tables, and manage pull requests from your terminal. Start with [installation](/products/dolthub/cli/installation) or the [getting-started walkthrough](/products/dolthub/cli/getting-started).
+
 ## DoltHub API
 
 DoltHub exposes [several independent HTTP APIs](/products/dolthub/api/):
