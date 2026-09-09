@@ -267,6 +267,48 @@ const nav: NavSection[] = [
         children: [
           { title: "Data Sharing", href: "/products/dolthub/data-sharing" },
           {
+            title: "CLI",
+            href: "/products/dolthub/cli",
+            children: [
+              { title: "Installation", href: "/products/dolthub/cli/installation" },
+              { title: "Getting Started", href: "/products/dolthub/cli/getting-started" },
+              { title: "Authentication", href: "/products/dolthub/cli/authentication" },
+              { title: "Configuration", href: "/products/dolthub/cli/configuration" },
+              {
+                title: "Guides",
+                children: [
+                  { title: "Pull Requests", href: "/products/dolthub/cli/guides/pull-requests" },
+                  { title: "SQL", href: "/products/dolthub/cli/guides/sql" },
+                  { title: "Table Imports", href: "/products/dolthub/cli/guides/table-imports" },
+                  { title: "Tags and Releases", href: "/products/dolthub/cli/guides/releases" },
+                  { title: "Automation", href: "/products/dolthub/cli/guides/automation" },
+                  { title: "Docker", href: "/products/dolthub/cli/guides/docker" },
+                ],
+              },
+              {
+                title: "Command Reference",
+                href: "/products/dolthub/cli/commands",
+                children: [
+                  { title: "dh api", href: "/products/dolthub/cli/commands/api" },
+                  { title: "dh auth", href: "/products/dolthub/cli/commands/auth" },
+                  { title: "dh branch", href: "/products/dolthub/cli/commands/branch" },
+                  { title: "dh browse", href: "/products/dolthub/cli/commands/browse" },
+                  { title: "dh completion", href: "/products/dolthub/cli/commands/completion" },
+                  { title: "dh config", href: "/products/dolthub/cli/commands/config" },
+                  { title: "dh db", href: "/products/dolthub/cli/commands/db" },
+                  { title: "dh operation", href: "/products/dolthub/cli/commands/operation" },
+                  { title: "dh pr", href: "/products/dolthub/cli/commands/pr" },
+                  { title: "dh release", href: "/products/dolthub/cli/commands/release" },
+                  { title: "dh sql", href: "/products/dolthub/cli/commands/sql" },
+                  { title: "dh table", href: "/products/dolthub/cli/commands/table" },
+                  { title: "dh tag", href: "/products/dolthub/cli/commands/tag" },
+                  { title: "dh version", href: "/products/dolthub/cli/commands/version" },
+                ],
+              },
+              { title: "Troubleshooting", href: "/products/dolthub/cli/troubleshooting" },
+            ],
+          },
+          {
             title: "API",
             href: "/products/dolthub/api",
             children: [
