@@ -270,8 +270,8 @@ const nav: NavSection[] = [
             title: "CLI",
             href: "/products/dolthub/cli",
             children: [
-              { title: "Getting Started", href: "/products/dolthub/cli/getting-started" },
               { title: "Installation", href: "/products/dolthub/cli/installation" },
+              { title: "Getting Started", href: "/products/dolthub/cli/getting-started" },
               { title: "Authentication", href: "/products/dolthub/cli/authentication" },
               { title: "Configuration", href: "/products/dolthub/cli/configuration" },
               {
