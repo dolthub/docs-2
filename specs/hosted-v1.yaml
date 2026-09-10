@@ -1075,6 +1075,259 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/deployments/{owner}/{deployment}/logs:
+    get:
+      operationId: getDeploymentLogs
+      summary: Read a deployment's logs.
+      description: >-
+        Returns log lines from one of the deployment's instances, newest page first.
+
+
+        Logs come from a single instance. Omit `instance_id` and the deployment's primary is
+        used, which is what you want unless you are chasing something on a specific replica;
+        `GET /api/v1/deployments/{owner}/{deployment}/instances` lists the ids. Only
+        instances that are not stopped can be read.
+
+
+        This endpoint pages in both directions: `meta.next_page_token` walks further back
+        through history, `meta.prev_page_token` walks toward the present, and either goes
+        back as the query parameter of the same name. Both may be present at once, and
+        either can come back on a page with no lines, so stop paging on an empty page rather
+        than on a missing token.
+
+
+        `start_time` and `end_time` bound the window; omit both for the most recent `lines`
+        lines.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+        - name: instance_id
+          in: query
+          required: false
+          description: >-
+            Which instance to read. Defaults to the deployment's primary. `404` if the id
+            names no live instance of this deployment.
+          schema:
+            type: string
+            format: uuid
+          example: 3f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
+        - name: lines
+          in: query
+          required: false
+          description: How many lines to return at most. Defaults to 100.
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 1000
+            default: 100
+          example: 100
+        - name: start_time
+          in: query
+          required: false
+          description: Only return lines logged at or after this time.
+          schema:
+            type: string
+            format: date-time
+          example: "2026-09-03T09:00:00Z"
+        - name: end_time
+          in: query
+          required: false
+          description: Only return lines logged at or before this time.
+          schema:
+            type: string
+            format: date-time
+          example: "2026-09-03T10:00:00Z"
+        - name: page_token
+          in: query
+          required: false
+          description: >-
+            The `meta.next_page_token` from a previous response, to read further back. Omit
+            for the most recent page.
+          schema:
+            type: string
+          example: eyJvZmZzZXQiOjI1fQ
+        - name: prev_page_token
+          in: query
+          required: false
+          description: >-
+            The `meta.prev_page_token` from a previous response, to read toward the present.
+          schema:
+            type: string
+          example: eyJvZmZzZXQiOjB9
+      responses:
+        "200":
+          description: A page of log lines.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        description: The lines, oldest first within the page.
+                        items:
+                          $ref: "#/components/schemas/LogLine"
+              examples:
+                default:
+                  summary: Two lines with more history available.
+                  value:
+                    data:
+                      - time: "2026-09-03T09:14:02.481Z"
+                        text: "2026-09-03T09:14:02Z INFO  server ready on port 3306"
+                      - time: "2026-09-03T09:14:07.902Z"
+                        text: "2026-09-03T09:14:07Z INFO  accepted connection from 10.0.1.7"
+                    meta:
+                      next_page_token: eyJvZmZzZXQiOjI1fQ
+                empty:
+                  summary: A window with nothing in it.
+                  value:
+                    data: []
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}/{deployment}/expose:
+    patch:
+      operationId: exposeDeploymentService
+      summary: Expose or stop exposing a deployment's remotesapi or MCP endpoint.
+      description: >-
+        Turns one of the deployment's optional endpoints on or off. Send exactly one of
+        `remotesapi` or `mcp`.
+
+
+        Returns `202`: the change is queued, not applied. Poll
+        `GET /api/v1/deployments/{owner}/{deployment}` until
+        `expose_remotesapi_endpoint` or `expose_mcp` reports the value you asked for. Those
+        fields are written once the change reaches the deployment's instances, so they are
+        the signal that it took effect — the `202` only confirms the request was accepted.
+
+
+        Exposing the remotesapi endpoint requires a WebPKI certificate; `webpki_cert` on the
+        deployment says whether it has one, and a request without it returns `400`.
+
+
+        Asking for the value a deployment already has is accepted and does nothing.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      requestBody:
+        required: true
+        description: The service to expose or stop exposing.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExposeServiceRequest"
+            examples:
+              mcp:
+                summary: Start serving MCP.
+                value:
+                  mcp: true
+              remotesapi_off:
+                summary: Stop serving the remotesapi endpoint.
+                value:
+                  remotesapi: false
+      responses:
+        "202":
+          description: The change was accepted and queued.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ExposeAccepted"
+              examples:
+                default:
+                  summary: MCP accepted for exposure.
+                  value:
+                    data:
+                      owner: acme
+                      name: analytics
+                      service: mcp
+                      requested: true
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/deployments/{owner}/{deployment}/disable:
     post:
       operationId: disableDeployment
@@ -1801,6 +2054,14 @@ components:
             `page_token` query parameter to fetch the next page.
           examples:
             - eyJvZmZzZXQiOjI1fQ
+        prev_page_token:
+          type: string
+          description: >-
+            Opaque cursor for the previous page. Only log retrieval pages in both
+            directions; every other list endpoint moves forward only and omits this. Pass
+            it back as the `prev_page_token` query parameter.
+          examples:
+            - eyJvZmZzZXQiOjB9
       additionalProperties: true
       examples:
         - next_page_token: eyJvZmZzZXQiOjI1fQ
@@ -2090,6 +2351,69 @@ components:
             - behavior_auto_commit: "false"
               listener_max_connections: null
 
+    ExposeServiceRequest:
+      type: object
+      title: ExposeServiceRequest
+      description: >-
+        Which service to expose or stop exposing. Exactly one property per request: each is
+        applied by its own backend call, so accepting two would risk half-applying a change.
+      minProperties: 1
+      maxProperties: 1
+      additionalProperties: false
+      properties:
+        remotesapi:
+          type: boolean
+          description: >-
+            Whether to serve the remotesapi endpoint, which is what `dolt clone` and
+            `dolt pull` talk to. Requires the deployment to have a WebPKI certificate —
+            `400` otherwise, since a public endpoint with a private CA is unusable.
+          examples:
+            - true
+        mcp:
+          type: boolean
+          description: Whether to serve the MCP endpoint.
+          examples:
+            - true
+
+    ExposeAccepted:
+      type: object
+      title: ExposeAccepted
+      description: >-
+        Confirmation that a change to an exposed service was accepted. Deliberately
+        minimal, like `DisableAccepted`: it echoes what was asked for, which is all that is
+        certain at this point. `GET` the deployment to see whether it has taken effect.
+      required:
+        - owner
+        - name
+        - service
+        - requested
+      properties:
+        owner:
+          type: string
+          description: The user or organization that owns the deployment.
+          examples:
+            - acme
+        name:
+          type: string
+          description: The deployment name.
+          examples:
+            - analytics
+        service:
+          type: string
+          description: Which service the request was about.
+          enum:
+            - remotesapi
+            - mcp
+          examples:
+            - mcp
+        requested:
+          type: boolean
+          description: >-
+            The value that was asked for. Not the deployment's current value — read
+            `expose_remotesapi_endpoint` or `expose_mcp` on the deployment for that.
+          examples:
+            - true
+
     AddInstanceRequest:
       type: object
       title: AddInstanceRequest
@@ -2157,6 +2481,26 @@ components:
             once that finishes.
           enum:
             - stopping
+    LogLine:
+      type: object
+      title: LogLine
+      description: One line of a deployment instance's log output.
+      required:
+        - time
+        - text
+      properties:
+        time:
+          type: string
+          format: date-time
+          description: When the line was logged.
+          examples:
+            - "2026-09-03T09:14:02.481Z"
+        text:
+          type: string
+          description: The line as the instance emitted it, without a trailing newline.
+          examples:
+            - "2026-09-03T09:14:02Z INFO  server ready on port 3306"
+
     DeploymentInstance:
       type: object
       title: DeploymentInstance
