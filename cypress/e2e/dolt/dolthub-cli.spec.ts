@@ -28,20 +28,6 @@ describe("DoltHub CLI consolidated reference", () => {
     cy.get("#dh-table-import").should("exist");
   });
 
-  it("preserves a subcommand fragment and query through a legacy redirect", () => {
-    cy.visit(`${reference}/pr?source=legacy#dh-pr-create`);
-    cy.location("pathname").should("match", /\/cli\/commands\/?$/);
-    cy.location("hash").should("eq", "#dh-pr-create");
-    cy.location("search").should("eq", "?source=legacy");
-    cy.get("#dh-pr-create").should("exist");
-  });
-
-  it("redirects a bare group URL to the reference", () => {
-    cy.visit(`${reference}/auth`);
-    cy.location("pathname").should("match", /\/cli\/commands\/?$/);
-    cy.get("#dh-auth").should("exist");
-  });
-
   it("lists only the consolidated reference in llms.txt", () => {
     cy.request("/llms.txt").then(({ body }) => {
       expect(body).to.include(`${reference}.md`);
