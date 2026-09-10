@@ -49,6 +49,7 @@ Response metadata carried alongside the primary `data` payload. All fields are o
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `next_page_token` | `string` | no | Opaque cursor for the next page of a list response. Absent when there are no further results — never present and empty — otherwise pass it back as the `page_token` query parameter to fetch the next page. |
+| `prev_page_token` | `string` | no | Opaque cursor for the previous page. Only log retrieval pages in both directions; every other list endpoint moves forward only and omits this. Pass it back as the `prev_page_token` query parameter. |
 
 ---
 
@@ -156,6 +157,28 @@ The overrides to change. Keys the object omits keep whatever value they have; a 
 
 ---
 
+## ExposeServiceRequest {#model-exposeservicerequest}
+Which service to expose or stop exposing. Exactly one property per request: each is applied by its own backend call, so accepting two would risk half-applying a change.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `remotesapi` | `boolean` | no | Whether to serve the remotesapi endpoint, which is what `dolt clone` and `dolt pull` talk to. Requires the deployment to have a WebPKI certificate — `400` otherwise, since a public endpoint with a private CA is unusable. |
+| `mcp` | `boolean` | no | Whether to serve the MCP endpoint. |
+
+---
+
+## ExposeAccepted {#model-exposeaccepted}
+Confirmation that a change to an exposed service was accepted. Deliberately minimal, like `DisableAccepted`: it echoes what was asked for, which is all that is certain at this point. `GET` the deployment to see whether it has taken effect.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `owner` | `string` | yes | The user or organization that owns the deployment. |
+| `name` | `string` | yes | The deployment name. |
+| `service` | `string` | yes | Which service the request was about. |
+| `requested` | `boolean` | yes | The value that was asked for. Not the deployment's current value — read `expose_remotesapi_endpoint` or `expose_mcp` on the deployment for that. |
+
+---
+
 ## AddInstanceRequest {#model-addinstancerequest}
 The instance to add to a deployment.
 
@@ -175,6 +198,16 @@ Acknowledges that an instance has been accepted for removal.
 |-------|------|----------|-------------|
 | `id` | `string` | yes | The instance that is being removed. |
 | `state` | `string` | yes | Always `stopping`. The instance is being torn down; it leaves the instances list once that finishes. |
+
+---
+
+## LogLine {#model-logline}
+One line of a deployment instance's log output.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `time` | `string` | yes | When the line was logged. |
+| `text` | `string` | yes | The line as the instance emitted it, without a trailing newline. |
 
 ---
 

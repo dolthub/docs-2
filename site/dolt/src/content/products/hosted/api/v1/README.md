@@ -51,6 +51,8 @@ See [Authentication](/products/hosted/api/v1/authentication) for how to create a
 | **DELETE** | `/api/v1/deployments/{owner}/{deployment}/instances/{id}` | [Remove an instance from a deployment](/products/hosted/api/v1/deployment#deleteDeploymentInstance) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/config` | [Get a deployment's configuration](/products/hosted/api/v1/deployment#getDeploymentConfig) |
 | **PATCH** | `/api/v1/deployments/{owner}/{deployment}/config` | [Change some of a deployment's configuration overrides](/products/hosted/api/v1/deployment#patchDeploymentConfig) |
+| **GET** | `/api/v1/deployments/{owner}/{deployment}/logs` | [Read a deployment's logs](/products/hosted/api/v1/deployment#getDeploymentLogs) |
+| **PATCH** | `/api/v1/deployments/{owner}/{deployment}/expose` | [Expose or stop exposing the remotesapi or MCP endpoint](/products/hosted/api/v1/deployment#exposeDeploymentService) |
 | **GET** | `/api/v1/deployments/{owner}/{deployment}/backups` | [List a deployment's backups](/products/hosted/api/v1/deployment#listDeploymentBackups) |
 | **POST** | `/api/v1/deployments/{owner}/{deployment}/disable` | [Disable a deployment](/products/hosted/api/v1/deployment#disableDeployment) |
 
@@ -84,7 +86,9 @@ List endpoints put the pagination cursor in `meta`:
 
 When `meta.next_page_token` is present, pass it back as the `page_token` query parameter to fetch the next page. On the last page `meta` is omitted entirely, so checking whether the token is present is all a client needs — it is never returned present but empty. Page size is fixed and not caller-controlled, so a full page is not itself a sign that another one follows.
 
-A few lists are small enough by nature to be returned whole and take no `page_token` at all — a pull request's [comments](/products/hosted/api/v1/pull-request#listDeploymentPullComments) and its [activity log](/products/hosted/api/v1/pull-request#listDeploymentPullLogs). Each endpoint's parameters say which it is.
+Two kinds of list depart from that. A pull request's [comments](/products/hosted/api/v1/pull-request#listDeploymentPullComments) and its [activity log](/products/hosted/api/v1/pull-request#listDeploymentPullLogs) are small enough by nature to be returned whole, so they take no `page_token` at all. And [log retrieval](/products/hosted/api/v1/deployment#getDeploymentLogs) walks a window of history rather than a finite list: it is the only endpoint that pages in both directions, and the only one whose page size you set (`lines`). There `meta.next_page_token` reads further back, `meta.prev_page_token` reads toward the present, both can be present at once, and either can come back on a page with no lines — so stop when a page comes back empty, not when a token is missing.
+
+Each endpoint's parameters say which of the three it is.
 
 ## Errors
 
@@ -113,6 +117,8 @@ Creating a deployment returns `202 Accepted` with the deployment in its `startin
 [Disabling a deployment](/products/hosted/api/v1/deployment#disableDeployment) works the same way: `202 Accepted` with the deployment in `stopping`, then poll until `state` is `stopped`.
 
 Instance changes are also `202`, but there is no per-instance `state` field to poll, so they are observed through the [instance list](/products/hosted/api/v1/deployment#listDeploymentInstances) instead. After [adding a replica](/products/hosted/api/v1/deployment#addDeploymentInstance), poll until that instance reports a `host` — that is when it is reachable. After [removing one](/products/hosted/api/v1/deployment#deleteDeploymentInstance), poll until it disappears from the list, which only reports instances that aren't stopped.
+
+[Exposing or unexposing a service](/products/hosted/api/v1/deployment#exposeDeploymentService) is `202` too, and is polled on the deployment itself: read it back until `expose_remotesapi_endpoint` or `expose_mcp` reports the value you asked for, which is written once the change reaches the instances. The `202` body echoes the request rather than the deployment's current state. Exposing the remotesapi endpoint needs a WebPKI certificate — `webpki_cert` on the deployment says whether it has one, and without it the request is a `400` rather than a queued change.
 
 Deployment names are unique within an owner, which makes creates idempotent by name: retrying after an ambiguous failure returns `409 Conflict` rather than provisioning a second deployment.
 

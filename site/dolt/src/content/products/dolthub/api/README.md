@@ -7,7 +7,7 @@ description: Programmatic access to databases hosted on DoltHub.
 
 DoltHub and DoltLab expose HTTP APIs for programmatic access to your hosted databases.
 
-For terminal workflows, [the DoltHub CLI (`dh`)](/products/dolthub/cli) provides commands for SQL, imports, and pull requests, as well as [direct v2 API requests](/products/dolthub/cli/commands/api#dh-api).
+For terminal workflows, [the DoltHub CLI (`dh`)](/products/dolthub/cli) provides commands for SQL, imports, and pull requests, as well as [direct v2 API requests](/products/dolthub/cli/commands#dh-api).
 
 ## REST API
 

@@ -88,4 +88,4 @@ If submission returns an ambiguous error, check existing jobs before retrying:
 dh job list --db OWNER/import-demo
 ```
 
-The server may already have accepted the import. See [dh table import](/products/dolthub/cli/commands/table#dh-table-import) for all flags.
+The server may already have accepted the import. See [dh table import](/products/dolthub/cli/commands#dh-table-import) for all flags.

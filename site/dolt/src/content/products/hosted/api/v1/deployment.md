@@ -695,6 +695,135 @@ curl -X PATCH 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}
 
 ---
 
+## Read a deployment's logs {#getDeploymentLogs}
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/logs</code>
+
+Returns log lines from one of the deployment's instances, newest page first.
+
+Logs come from a single instance. Omit `instance_id` and the deployment's primary is used, which is what you want unless you are chasing something on a specific replica; `GET /api/v1/deployments/{owner}/{deployment}/instances` lists the ids. Only instances that are not stopped can be read.
+
+This endpoint pages in both directions: `meta.next_page_token` walks further back through history, `meta.prev_page_token` walks toward the present, and either goes back as the query parameter of the same name. Both may be present at once, and either can come back on a page with no lines, so stop paging on an empty page rather than on a missing token.
+
+`start_time` and `end_time` bound the window; omit both for the most recent `lines` lines.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `instance_id` | query | string | no | Which instance to read. Defaults to the deployment's primary. `404` if the id names no live instance of this deployment. |
+| `lines` | query | integer | no | How many lines to return at most. Defaults to 100. |
+| `start_time` | query | string | no | Only return lines logged at or after this time. |
+| `end_time` | query | string | no | Only return lines logged at or before this time. |
+| `page_token` | query | string | no | The `meta.next_page_token` from a previous response, to read further back. Omit for the most recent page. |
+| `prev_page_token` | query | string | no | The `meta.prev_page_token` from a previous response, to read toward the present. |
+
+**Example request**
+
+```sh
+curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/logs' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `200` | A page of log lines. | [`LogLine[]`](/products/hosted/api/v1/models#model-logline) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `200`**
+
+```json
+{
+  "data": [
+    {
+      "time": "2026-09-03T09:14:02.481Z",
+      "text": "2026-09-03T09:14:02Z INFO  server ready on port 3306"
+    },
+    {
+      "time": "2026-09-03T09:14:07.902Z",
+      "text": "2026-09-03T09:14:07Z INFO  accepted connection from 10.0.1.7"
+    }
+  ],
+  "meta": {
+    "next_page_token": "eyJvZmZzZXQiOjI1fQ"
+  }
+}
+```
+
+---
+
+## Expose or stop exposing a deployment's remotesapi or MCP endpoint {#exposeDeploymentService}
+<span class="api-method" style="background:#F0A35C">PATCH</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/expose</code>
+
+Turns one of the deployment's optional endpoints on or off. Send exactly one of `remotesapi` or `mcp`.
+
+Returns `202`: the change is queued, not applied. Poll `GET /api/v1/deployments/{owner}/{deployment}` until `expose_remotesapi_endpoint` or `expose_mcp` reports the value you asked for. Those fields are written once the change reaches the deployment's instances, so they are the signal that it took effect — the `202` only confirms the request was accepted.
+
+Exposing the remotesapi endpoint requires a WebPKI certificate; `webpki_cert` on the deployment says whether it has one, and a request without it returns `400`.
+
+Asking for the value a deployment already has is accepted and does nothing.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Request body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `remotesapi` | boolean | no | Whether to serve the remotesapi endpoint, which is what `dolt clone` and `dolt pull` talk to. Requires the deployment to have a WebPKI certificate — `400` otherwise, since a public endpoint with a private CA is unusable. |
+| `mcp` | boolean | no | Whether to serve the MCP endpoint. |
+
+**Example request**
+
+```sh
+curl -X PATCH 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/expose' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"mcp":true}'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `202` | The change was accepted and queued. | [`ExposeAccepted`](/products/hosted/api/v1/models#model-exposeaccepted) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `202`**
+
+```json
+{
+  "data": {
+    "owner": "acme",
+    "name": "analytics",
+    "service": "mcp",
+    "requested": true
+  }
+}
+```
+
+---
+
 ## Disable a deployment {#disableDeployment}
 <span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/disable</code>
 
