@@ -50,4 +50,4 @@ dh release view v2 --db OWNER/people --web
 dh sql --db OWNER/people --ref v2 "SELECT * FROM people ORDER BY id"
 ```
 
-This queries the tagged version even if `main` has changed since the release. See [dh tag](/products/dolthub/cli/commands/tag) and [dh release](/products/dolthub/cli/commands/release) for command details.
+This queries the tagged version even if `main` has changed since the release. See [dh tag](/products/dolthub/cli/commands#dh-tag) and [dh release](/products/dolthub/cli/commands#dh-release) for command details.

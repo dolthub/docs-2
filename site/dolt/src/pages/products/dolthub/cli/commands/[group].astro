@@ -1,0 +1,24 @@
+---
+// Cloudflare serves the matching 301s in _redirects. These stubs also keep
+// old command links working in Astro preview, preserving subcommand anchors.
+export function getStaticPaths() {
+  return ["api", "auth", "branch", "browse", "completion", "config", "db", "job", "pr", "release", "sql", "table", "tag", "version"].map(group => ({ params: { group } }));
+}
+const target = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/products/dolthub/cli/commands`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="canonical" href={target} />
+    <meta name="robots" content="noindex" />
+    <title>Redirecting…</title>
+    <script is:inline define:vars={{ target }}>
+      window.location.replace(target + window.location.search + window.location.hash);
+    </script>
+    <noscript><meta http-equiv="refresh" content={`0; url=${target}`} /></noscript>
+  </head>
+  <body>
+    <p>Redirecting to <a href={target}>DoltHub CLI command reference</a>…</p>
+  </body>
+</html>

@@ -81,7 +81,7 @@ dh api user --jq '.data.username'
 
 Endpoints are relative to `/api/v2/`. The default method is GET, or POST when a nonempty request body is supplied. `--method` overrides it. `--raw-field` sends string JSON values; `--field` recognizes booleans, null, and signed integers. With `--input`, the file becomes the body and additional fields become query parameters.
 
-Unlike structured command output, `dh api --jq` and `--template` operate on the API response without a `--json` flag. See [dh api](/products/dolthub/cli/commands/api#dh-api).
+Unlike structured command output, `dh api --jq` and `--template` operate on the API response without a `--json` flag. See [dh api](/products/dolthub/cli/commands#dh-api).
 
 ## Output and exit codes
 

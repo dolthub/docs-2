@@ -78,4 +78,4 @@ The fork command waits for completion before you use the new database. The PR's 
 
 You can also create and commit changes locally using `dolt`, push the branch with `dolt push`, then use `dh pr create` to request review on DoltHub. See [DoltHub Data Sharing](/products/dolthub/data-sharing) for that workflow. Local Dolt authentication is separate from `dh auth login`.
 
-For editing, closing, or reopening a PR, see [dh pr](/products/dolthub/cli/commands/pr).
+For editing, closing, or reopening a PR, see [dh pr](/products/dolthub/cli/commands#dh-pr).

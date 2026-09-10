@@ -83,7 +83,7 @@ For the current PowerShell session:
 dh completion powershell | Out-String | Invoke-Expression
 ```
 
-For persistent setup, add the appropriate initialization to your shell profile or save the script in your shell's completion directory. See [dh completion](/products/dolthub/cli/commands/completion#dh-completion).
+For persistent setup, add the appropriate initialization to your shell profile or save the script in your shell's completion directory. See [dh completion](/products/dolthub/cli/commands#dh-completion).
 
 ## Build from source
 
