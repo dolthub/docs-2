@@ -67,4 +67,4 @@ dh config get db
 
 `config list` shows the effective `host` and `db` values and their sources. It does not discover local remotes. The supported writable keys are `host` and `db`; `repo` remains accepted as an alias for `db`. There is no `config unset` command. You can select another saved value or use an explicit selector for one invocation.
 
-Settings live in `dh/config.json` beneath the [platform config directory](/products/dolthub/cli/authentication#credential-locations). See [dh config](/products/dolthub/cli/commands/config) for command details.
+Settings live in `dh/config.json` beneath the [platform config directory](/products/dolthub/cli/authentication#credential-locations). See [dh config](/products/dolthub/cli/commands#dh-config) for command details.

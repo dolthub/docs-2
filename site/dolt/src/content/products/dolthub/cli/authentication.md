@@ -74,4 +74,4 @@ Production login includes the public DoltHub CLI OAuth client ID and uses PKCE w
 
 Credentials issued for a different OAuth client require that client's override or a fresh login with the intended client. Keep this setting unset for ordinary production use unless you deliberately use a different registered client.
 
-For exact flags, see [dh auth](/products/dolthub/cli/commands/auth).
+For exact flags, see [dh auth](/products/dolthub/cli/commands#dh-auth).

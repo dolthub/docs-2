@@ -27,7 +27,7 @@ You can use `dh` without a local clone or a running SQL server. If you already h
 
 ## Reference and help
 
-The [command reference](/products/dolthub/cli/commands) groups commands by task, with a section for every subcommand. For help matching your installed binary, run:
+The [command reference](/products/dolthub/cli/commands) contains every command and subcommand on a single page. For help matching your installed binary, run:
 
 ```bash
 dh version
