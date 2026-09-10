@@ -22,7 +22,7 @@ You can use `dh` without a local clone or a running SQL server. If you already h
 - [Import a table](/products/dolthub/cli/guides/table-imports): upload CSV, PSV, XLSX, or JSON data.
 - [Review changes with pull requests](/products/dolthub/cli/guides/pull-requests): make a change on a branch and merge it after review.
 - [Tag data and create releases](/products/dolthub/cli/guides/releases): name a dataset version and describe it for other users.
-- [Automate with dh](/products/dolthub/cli/guides/automation): use tokens, structured output, and asynchronous operations in scripts.
+- [Automate with dh](/products/dolthub/cli/guides/automation): use tokens, structured output, and asynchronous jobs in scripts.
 - [Run in Docker](/products/dolthub/cli/guides/docker): run the CLI in a container with mounted input files.
 
 ## Reference and help

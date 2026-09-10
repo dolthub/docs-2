@@ -39,7 +39,7 @@ dh [command] [flags]
 - [dh completion](/products/dolthub/cli/commands/completion#dh-completion)
 - [dh config](/products/dolthub/cli/commands/config#dh-config)
 - [dh db](/products/dolthub/cli/commands/db#dh-db)
-- [dh operation](/products/dolthub/cli/commands/operation#dh-operation)
+- [dh job](/products/dolthub/cli/commands/job#dh-job)
 - [dh pr](/products/dolthub/cli/commands/pr#dh-pr)
 - [dh release](/products/dolthub/cli/commands/release#dh-release)
 - [dh sql](/products/dolthub/cli/commands/sql#dh-sql)
@@ -68,10 +68,10 @@ dh [command] [flags]
 | [dh db create](/products/dolthub/cli/commands/db#dh-db-create) | Create a database repository |
 | [dh db fork](/products/dolthub/cli/commands/db#dh-db-fork) | Fork a database repository |
 | [dh db view](/products/dolthub/cli/commands/db#dh-db-view) | View a database repository |
-| [dh operation](/products/dolthub/cli/commands/operation#dh-operation) | Work with asynchronous operations |
-| [dh operation list](/products/dolthub/cli/commands/operation#dh-operation-list) | List database operations |
-| [dh operation view](/products/dolthub/cli/commands/operation#dh-operation-view) | View an asynchronous operation |
-| [dh operation watch](/products/dolthub/cli/commands/operation#dh-operation-watch) | Watch an asynchronous operation |
+| [dh job](/products/dolthub/cli/commands/job#dh-job) | Work with asynchronous jobs |
+| [dh job list](/products/dolthub/cli/commands/job#dh-job-list) | List database jobs |
+| [dh job view](/products/dolthub/cli/commands/job#dh-job-view) | View an asynchronous job |
+| [dh job watch](/products/dolthub/cli/commands/job#dh-job-watch) | Watch an asynchronous job |
 | [dh pr](/products/dolthub/cli/commands/pr#dh-pr) | Work with pull requests |
 | [dh pr close](/products/dolthub/cli/commands/pr#dh-pr-close) | Close a pull request |
 | [dh pr comment](/products/dolthub/cli/commands/pr#dh-pr-comment) | Add a pull request comment |

@@ -57,7 +57,7 @@ dh sql --db OWNER/people --ref main \
   "SELECT city FROM people WHERE id = 1"
 ```
 
-Merge waits for its operation to finish. A successful merge makes the query return `Paris`. If the merge fails, inspect its error and the pull request before retrying. See [asynchronous operations](/products/dolthub/cli/guides/automation#asynchronous-operations).
+Merge waits for its job to finish. A successful merge makes the query return `Paris`. If the merge fails, inspect its error and the pull request before retrying. See [asynchronous jobs](/products/dolthub/cli/guides/automation#asynchronous-jobs).
 
 ## Contribute from a fork
 

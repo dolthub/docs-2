@@ -1,6 +1,6 @@
 ---
 title: "Automate with dh"
-description: "Use tokens, structured output, exit codes, and asynchronous operations in scripts."
+description: "Use tokens, structured output, exit codes, and asynchronous jobs in scripts."
 ---
 
 For noninteractive use, provide `DH_TOKEN` through your environment or CI secret store, and select a database explicitly with `--db` or `DH_DB`. See [Authentication](/products/dolthub/cli/authentication#tokens-for-scripts-and-containers).
@@ -31,9 +31,9 @@ dh pr list --db OWNER/people --json pull_number,title \
 
 For these commands, `--jq` and `--template` require `--json`. Available fields are listed in each [command reference](/products/dolthub/cli/commands). SQL read and write modes support different fields. Prefer JSON over parsing human-readable tables.
 
-## Asynchronous operations
+## Asynchronous jobs
 
-SQL writes, table imports, forks, and PR merges normally wait for completion. With `--no-wait`, they return an accepted operation ID and URL. Acceptance does not mean the change succeeded. Imports still finish uploading before returning that reference.
+SQL writes, table imports, forks, and PR merges normally wait for completion. With `--no-wait`, they return an accepted job ID and URL. Acceptance does not mean the change succeeded. Imports still finish uploading before returning that reference.
 
 This Bash script submits an update and waits separately. It assumes the [getting-started database](/products/dolthub/cli/getting-started) and a configured `DH_TOKEN`. Replace `OWNER`:
 
@@ -41,29 +41,29 @@ This Bash script submits an update and waits separately. It assumes the [getting
 #!/usr/bin/env bash
 set -euo pipefail
 
-operation_id=$(dh sql --write --db OWNER/people --branch main \
+job_id=$(dh sql --write --db OWNER/people --branch main \
   "UPDATE people SET city = 'Paris' WHERE id = 1" \
   --no-wait --json id --jq .id)
 
-printf 'Submitted operation %s\n' "$operation_id" >&2
-dh operation watch "$operation_id" --json id,status,result
+printf 'Submitted job %s\n' "$job_id" >&2
+dh job watch "$job_id" --json id,status,result
 ```
 
-The script exits on submission or operation failure. Save the operation ID if you need to resume monitoring in another process:
+The script exits on submission or job failure. Save the job ID if you need to resume monitoring in another process:
 
 ```bash
-dh operation list --db OWNER/people
-dh operation view OPERATION_ID
-dh operation watch OPERATION_ID
+dh job list --db OWNER/people
+dh job view JOB_ID
+dh job watch JOB_ID
 ```
 
-`view` returns a snapshot; `watch` polls until completion. Both use the configured host. If submission used a host-qualified database on another host, set `DH_HOST` to that same host when viewing or watching its operation.
+`view` returns a snapshot; `watch` polls until completion. Both use the configured host. If submission used a host-qualified database on another host, set `DH_HOST` to that same host when viewing or watching its job.
 
-Stopping a local wait does not cancel the remote operation. After a connection error, inspect the operation or database state before submitting the same write again.
+Stopping a local wait does not cancel the remote job. After a connection error, inspect the job or database state before submitting the same write again.
 
 ## Pagination
 
-List commands such as `pr list`, `release list`, and `operation list` fetch API pages until reaching their `--limit` (30 by default). Increase that flag when you need more results.
+List commands such as `pr list`, `release list`, and `job list` fetch API pages until reaching their `--limit` (30 by default). Increase that flag when you need more results.
 
 For direct API requests, `dh api --paginate` follows pagination tokens. Add `--slurp` to collect whole page responses into one JSON array; it does not flatten the records inside those responses.
 
@@ -81,12 +81,12 @@ Unlike structured command output, `dh api --jq` and `--template` operate on the 
 
 ## Output and exit codes
 
-Results go to stdout; diagnostics and operation progress go to stderr. You can redirect stdout to a file while leaving progress visible.
+Results go to stdout; diagnostics and job progress go to stderr. You can redirect stdout to a file while leaving progress visible.
 
 | Code | Meaning |
 | --- | --- |
 | `0` | Success, including commands that return no matching results. |
-| `1` | General failure, including failed asynchronous operations. |
+| `1` | General failure, including failed asynchronous jobs. |
 | `2` | Invalid usage or a CLI cancellation error. |
 | `4` | Authentication error. |
 

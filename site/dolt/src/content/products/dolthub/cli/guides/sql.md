@@ -49,7 +49,7 @@ dh sql --write --db OWNER/people --branch feature/people --from-branch main \
 
 `--write` selects asynchronous write mode. `--branch` is the target, and `--from-branch` supplies the source branch when creating or updating a feature branch. If omitted, the source defaults to the target branch. Use `--file update.sql` for a query stored in a file.
 
-The command waits for the write operation and prints its result. To submit and return immediately after acceptance, add `--no-wait`; then use [dh operation watch](/products/dolthub/cli/commands/operation#dh-operation-watch) with the returned ID.
+The command waits for the write job and prints its result. To submit and return immediately after acceptance, add `--no-wait`; then use [dh job watch](/products/dolthub/cli/commands/job#dh-job-watch) with the returned ID.
 
 ## Read and write options
 
@@ -67,6 +67,6 @@ dh sql --db OWNER/people --ref main "SELECT id, name FROM people ORDER BY id" \
   --json columns,rows,status
 ```
 
-Read output can include `columns`, `rows`, `status`, `message`, and `warnings`. Rows are arrays aligned with the column metadata. Writes return operation fields instead. For acceptance without waiting, use `--no-wait --json id,href`; for completed writes, use fields such as `id,status,result`.
+Read output can include `columns`, `rows`, `status`, `message`, and `warnings`. Rows are arrays aligned with the column metadata. Writes return job fields instead. For acceptance without waiting, use `--no-wait --json id,href`; for completed writes, use fields such as `id,status,result`.
 
-A failed query or failed write operation returns a nonzero exit code, even when output was printed. Read warnings go to stderr in human-readable mode. Scripts should check the exit code as well as any JSON they consume. See [Automate with dh](/products/dolthub/cli/guides/automation) and the complete [dh sql reference](/products/dolthub/cli/commands/sql#dh-sql).
+A failed query or failed write job returns a nonzero exit code, even when output was printed. Read warnings go to stderr in human-readable mode. Scripts should check the exit code as well as any JSON they consume. See [Automate with dh](/products/dolthub/cli/guides/automation) and the complete [dh sql reference](/products/dolthub/cli/commands/sql#dh-sql).

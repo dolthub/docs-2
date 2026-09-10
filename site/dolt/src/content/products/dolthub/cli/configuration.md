@@ -33,7 +33,7 @@ dh config get host
 
 `DH_HOST` overrides the saved host; otherwise the default is `www.dolthub.com`. Commands with `--hostname` let you select the host for that invocation. A host-qualified database selector selects the API host for that database command.
 
-Operation commands that take an ID use the configured host rather than a database selector. When watching work submitted to a custom host, set `DH_HOST` to that host too.
+Job commands that take an ID use the configured host rather than a database selector. When watching work submitted to a custom host, set `DH_HOST` to that host too.
 
 ## Environment variables
 

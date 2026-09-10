@@ -59,7 +59,7 @@ JSON fields: <code>columns</code>, <code>message</code>, <code>rows</code>, <cod
 
 ### Write queries
 
-Requires --write and --branch. --from-branch defaults to --branch and supplies the source branch. --ref, --limit, and --timeout are read-only flags. Acceptance does not imply successful completion; watch the returned operation ID.
+Requires --write and --branch. --from-branch defaults to --branch and supplies the source branch. --ref, --limit, and --timeout are read-only flags. Acceptance does not imply successful completion; watch the returned job ID.
 
 JSON fields: <code>cancelable</code>, <code>created&#95;at</code>, <code>error</code>, <code>href</code>, <code>id</code>, <code>result</code>, <code>status</code>, <code>type</code>.
 
@@ -69,7 +69,7 @@ JSON fields: <code>cancelable</code>, <code>created&#95;at</code>, <code>error</
 
 ### Output
 
-Reads print rows to stdout and warnings to stderr, or selected JSON fields. Unsuccessful query status returns a nonzero exit code. Writes wait for an operation and print its details; --no-wait prints ID/HREF after acceptance. For acceptance JSON use --json id,href.
+Reads print rows to stdout and warnings to stderr, or selected JSON fields. Unsuccessful query status returns a nonzero exit code. Writes wait for a job and print its details; --no-wait prints ID/HREF after acceptance. For acceptance JSON use --json id,href.
 
 ### Examples
 
