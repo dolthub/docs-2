@@ -38,7 +38,7 @@ Or save it with `dh config set db OWNER/people`. Remote discovery requires `dolt
 
 ## SQL flags are rejected
 
-Reads require `--ref`. Writes require `--write --branch`. Do not mix `--ref`, `--limit`, or `--timeout` with write mode. Query arguments and `--file` are mutually exclusive. See [SQL modes](/products/dolthub/cli/guides/sql#read-and-write-options).
+Reads require `--branch` or `--ref`; supplying both is an error. Writes require `--write --branch`. Do not mix `--ref`, `--limit`, or `--timeout` with write mode. Query arguments and `--file` are mutually exclusive. See [SQL modes](/products/dolthub/cli/guides/sql#read-and-write-options).
 
 ## JSON field is unknown or unavailable
 

@@ -8,13 +8,13 @@ These examples use the table from [Getting Started](/products/dolthub/cli/gettin
 ## Read a branch, tag, or commit
 
 ```bash
-dh sql --db OWNER/people --ref main "SELECT * FROM people ORDER BY id"
+dh sql --db OWNER/people --branch main "SELECT * FROM people ORDER BY id"
 ```
 
-Every read requires `--ref`. Use a branch name, tag, or commit SHA to select the version you want to query. `--limit` caps returned rows; `--timeout` sets the server-side read timeout, from `1ms` through `60s` in whole milliseconds.
+Every read requires `--branch` or `--ref`. Use `--branch` for a branch, or `--ref` for a branch, tag, or commit SHA. The two flags are mutually exclusive. `--limit` caps returned rows; `--timeout` sets the server-side read timeout, from `1ms` through `60s` in whole milliseconds.
 
 ```bash
-dh sql --db OWNER/people --ref main --limit 10 --timeout 5s \
+dh sql --db OWNER/people --branch main --limit 10 --timeout 5s \
   "SELECT * FROM people ORDER BY id"
 ```
 
@@ -29,13 +29,13 @@ SELECT id, name, city FROM people ORDER BY id;
 Run it with:
 
 ```bash
-dh sql --db OWNER/people --ref main --file query.sql
+dh sql --db OWNER/people --branch main --file query.sql
 ```
 
 Or pipe SQL into the command:
 
 ```bash
-printf 'SELECT COUNT(*) FROM people;\n' | dh sql --db OWNER/people --ref main
+printf 'SELECT COUNT(*) FROM people;\n' | dh sql --db OWNER/people --branch main
 ```
 
 `--file -` explicitly reads stdin. A query argument and `--file` are mutually exclusive. Without either, `dh` reads piped stdin; an empty query is rejected.
@@ -55,15 +55,15 @@ The command waits for the write job and prints its result. To submit and return 
 
 | Mode | Required | Additional options |
 | --- | --- | --- |
-| Read | `--ref` | `--limit`, `--timeout` |
+| Read | `--branch` or `--ref` | `--limit`, `--timeout` |
 | Write | `--write`, `--branch` | `--from-branch`, `--no-wait` |
 
-Read options cannot be used in write mode, and write options cannot be used in read mode. The branch/reference selection is explicit even when you have configured a default database.
+`--branch` works in both modes. `--ref`, `--limit`, and `--timeout` are read-only; `--from-branch` and `--no-wait` require write mode. The branch/reference selection is explicit even when you have configured a default database.
 
 ## Structured results and failures
 
 ```bash
-dh sql --db OWNER/people --ref main "SELECT id, name FROM people ORDER BY id" \
+dh sql --db OWNER/people --branch main "SELECT id, name FROM people ORDER BY id" \
   --json columns,rows,status
 ```
 

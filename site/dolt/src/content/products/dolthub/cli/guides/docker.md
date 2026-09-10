@@ -31,7 +31,7 @@ Use `-i` to keep stdin open:
 ```bash
 printf 'SELECT COUNT(*) FROM people;\n' | \
   docker run --rm -i -e DH_TOKEN dolthub/cli:latest \
-  sql --db OWNER/people --ref main
+  sql --db OWNER/people --branch main
 ```
 
 ## Mount input files
@@ -41,7 +41,7 @@ From a directory containing `query.sql`, mount that directory read-only:
 ```bash
 docker run --rm -e DH_TOKEN \
   --mount "type=bind,src=$PWD,dst=/work,readonly" \
-  dolthub/cli:latest sql --db OWNER/people --ref main --file /work/query.sql
+  dolthub/cli:latest sql --db OWNER/people --branch main --file /work/query.sql
 ```
 
 The same approach works for [table imports](/products/dolthub/cli/guides/table-imports):

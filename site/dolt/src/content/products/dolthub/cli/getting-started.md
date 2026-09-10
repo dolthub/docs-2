@@ -45,16 +45,16 @@ Each write runs as a DoltHub job. By default, `dh` waits for it to finish and pr
 ## Query the data
 
 ```bash
-dh sql --db OWNER/people --ref main \
+dh sql --db OWNER/people --branch main \
   "SELECT id, name, city FROM people ORDER BY id"
 ```
 
-You should see Ada and Grace with their cities. A read query uses `--ref` to select a branch, tag, or commit; a write uses `--write` and `--branch` to select its target.
+You should see Ada and Grace with their cities. Use `--branch` for both reads and writes against a branch. Reads also accept `--ref` for a branch, tag, or commit; supply only one selector. Writes require `--write` and `--branch`.
 
 For structured results:
 
 ```bash
-dh sql --db OWNER/people --ref main \
+dh sql --db OWNER/people --branch main \
   "SELECT id, name FROM people ORDER BY id" --json columns,rows,status
 ```
 

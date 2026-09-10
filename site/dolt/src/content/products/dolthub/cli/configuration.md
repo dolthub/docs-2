@@ -47,7 +47,7 @@ Job commands that take an ID use the configured host rather than a database sele
 For one Bash command:
 
 ```bash
-DH_DB=OWNER/people dh sql --ref main "SELECT COUNT(*) FROM people"
+DH_DB=OWNER/people dh sql --branch main "SELECT COUNT(*) FROM people"
 ```
 
 `DH_REPO` remains accepted as a compatibility alias for `DH_DB`. When both are set, `DH_DB` takes precedence.
