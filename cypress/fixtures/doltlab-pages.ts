@@ -53,6 +53,10 @@ export const referencePages: DocPage[] = [
 // Release note pages — kept separate so they can be excluded from slower
 // content checks while still being covered by the URL existence tests.
 export const releaseNotePages: DocPage[] = [
+  { path: "/reference/release-notes/v2.6.2", title: "v2.6.2" },
+  { path: "/reference/release-notes/v2.6.1", title: "v2.6.1" },
+  { path: "/reference/release-notes/v2.6.0", title: "v2.6.0" },
+  { path: "/reference/release-notes/v2.5.5", title: "v2.5.5" },
   { path: "/reference/release-notes/v2.5.4", title: "v2.5.4" },
   { path: "/reference/release-notes/v2.5.3", title: "v2.5.3" },
   { path: "/reference/release-notes/v2.5.2", title: "v2.5.2" },
