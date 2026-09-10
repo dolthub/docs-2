@@ -296,7 +296,7 @@ const nav: NavSection[] = [
                   { title: "dh completion", href: "/products/dolthub/cli/commands/completion" },
                   { title: "dh config", href: "/products/dolthub/cli/commands/config" },
                   { title: "dh db", href: "/products/dolthub/cli/commands/db" },
-                  { title: "dh operation", href: "/products/dolthub/cli/commands/operation" },
+                  { title: "dh job", href: "/products/dolthub/cli/commands/job" },
                   { title: "dh pr", href: "/products/dolthub/cli/commands/pr" },
                   { title: "dh release", href: "/products/dolthub/cli/commands/release" },
                   { title: "dh sql", href: "/products/dolthub/cli/commands/sql" },

@@ -40,7 +40,7 @@ dh sql --write --db OWNER/people --branch main \
   "INSERT INTO people VALUES (1, 'Ada', 'London'), (2, 'Grace', 'New York')"
 ```
 
-Each write runs as a DoltHub operation. By default, `dh` waits for it to finish and prints its status. Wait for a successful result before running the next command. These remote SQL writes commit their changes on DoltHub; you do not need to run a local `dolt commit` or `dolt push`.
+Each write runs as a DoltHub job. By default, `dh` waits for it to finish and prints its status. Wait for a successful result before running the next command. These remote SQL writes commit their changes on DoltHub; you do not need to run a local `dolt commit` or `dolt push`.
 
 ## Query the data
 

@@ -42,18 +42,18 @@ Reads require `--ref`. Writes require `--write --branch`. Do not mix `--ref`, `-
 
 ## JSON field is unknown or unavailable
 
-Use a field listed in the command reference. SQL reads return query fields such as `columns,rows,status`; writes return operation fields such as `id,status,result`. For acceptance without waiting, use `--no-wait --json id,href`. Most `--jq` and `--template` flags require `--json`; `dh api` is the exception.
+Use a field listed in the command reference. SQL reads return query fields such as `columns,rows,status`; writes return job fields such as `id,status,result`. For acceptance without waiting, use `--no-wait --json id,href`. Most `--jq` and `--template` flags require `--json`; `dh api` is the exception.
 
 ## An import fails
 
 Check the target branch, input format, regular-file requirement, and 1 GiB size limit. The default mode creates a table; use an existing-table mode when the table already exists. JSON requires `--update` or `--replace`. In Docker, use the file's mounted container path and ensure UID 1001 can read it.
 
-Expired or failed uploads cannot resume. After an ambiguous submission failure, use `dh operation list --db OWNER/DATABASE` before retrying. See [import recovery](/products/dolthub/cli/guides/table-imports#completion-and-recovery).
+Expired or failed uploads cannot resume. After an ambiguous submission failure, use `dh job list --db OWNER/DATABASE` before retrying. See [import recovery](/products/dolthub/cli/guides/table-imports#completion-and-recovery).
 
 ## A wait was interrupted
 
-The remote operation may still be running. Find it with `dh operation list`, inspect it with `dh operation view OPERATION_ID`, or resume waiting with `dh operation watch OPERATION_ID`. Use the host where the operation was submitted. A successful submission is not the same as a successful operation.
+The remote job may still be running. Find it with `dh job list`, inspect it with `dh job view JOB_ID`, or resume waiting with `dh job watch JOB_ID`. Use the host where the job was submitted. A successful submission is not the same as a successful job.
 
 ## Report a problem
 
-Include `dh version`, your operating system, the command with credentials removed, and the error message when opening an issue in [dolthub/cli](https://github.com/dolthub/cli/issues). Include an operation ID when relevant, but do not include tokens or credential files.
+Include `dh version`, your operating system, the command with credentials removed, and the error message when opening an issue in [dolthub/cli](https://github.com/dolthub/cli/issues). Include a job ID when relevant, but do not include tokens or credential files.

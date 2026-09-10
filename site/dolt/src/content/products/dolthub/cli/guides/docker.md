@@ -55,4 +55,4 @@ docker run --rm -e DH_TOKEN \
 
 The image runs as UID/GID 1001 with home directory `/home/dh`. Mounted files must be readable by that user. Local shell paths and container paths differ; `--file` and import arguments must name the mounted path inside the container.
 
-For structured output and operation watching, see [Automate with dh](/products/dolthub/cli/guides/automation).
+For structured output and job watching, see [Automate with dh](/products/dolthub/cli/guides/automation).

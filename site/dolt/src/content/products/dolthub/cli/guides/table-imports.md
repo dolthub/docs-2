@@ -78,14 +78,14 @@ dh table import people changes.json --db OWNER/import-demo --branch main --updat
   --json id,status,result
 ```
 
-`--no-wait --json id,href` returns an operation reference after the file upload and submission. It does **not** skip waiting for the upload. Use [operation watching](/products/dolthub/cli/guides/automation#asynchronous-operations) to wait for the import later.
+`--no-wait --json id,href` returns a job reference after the file upload and submission. It does **not** skip waiting for the upload. Use [job watching](/products/dolthub/cli/guides/automation#asynchronous-jobs) to wait for the import later.
 
 Storage URLs expire after ten minutes. Failed or expired uploads must restart; the CLI does not resume them or refresh the URLs. Ctrl+C stops local transfers or waiting, but does not abort the storage session or cancel a submitted import.
 
-If submission returns an ambiguous error, check existing operations before retrying:
+If submission returns an ambiguous error, check existing jobs before retrying:
 
 ```bash
-dh operation list --db OWNER/import-demo
+dh job list --db OWNER/import-demo
 ```
 
 The server may already have accepted the import. See [dh table import](/products/dolthub/cli/commands/table#dh-table-import) for all flags.

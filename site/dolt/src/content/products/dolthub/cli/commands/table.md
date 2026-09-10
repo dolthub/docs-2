@@ -84,7 +84,7 @@ dh table import <table> <file> [flags]
 
 ### Output
 
-Waits for completion and prints operation details by default. Progress goes to stderr. --json selects operation fields. With --no-wait, prints the accepted ID and HREF instead; use --json id,href for structured acceptance. Acceptance is not completion. A failed operation returns a nonzero exit status. Interrupting the local wait does not cancel the remote operation. --no-wait still waits for the entire upload. On an ambiguous submission error, check dh operation list before retrying.
+Waits for completion and prints job details by default. Progress goes to stderr. --json selects job fields. With --no-wait, prints the accepted ID and HREF instead; use --json id,href for structured acceptance. Acceptance is not completion. A failed job returns a nonzero exit status. Interrupting the local wait does not cancel the remote job. --no-wait still waits for the entire upload. On an ambiguous submission error, check dh job list before retrying.
 
 ### Examples
 
