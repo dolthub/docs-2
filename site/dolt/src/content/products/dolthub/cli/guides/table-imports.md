@@ -31,7 +31,7 @@ dh table import people people.csv --db OWNER/import-demo --branch main \
 The default mode creates a table, so use it when `people` does not already exist. The command waits for upload and import completion. Verify the rows:
 
 ```bash
-dh sql --db OWNER/import-demo --ref main "SELECT * FROM people ORDER BY id"
+dh sql --db OWNER/import-demo --branch main "SELECT * FROM people ORDER BY id"
 ```
 
 Primary keys can be repeated or comma-separated, for example `--primary-key account_id,person_id`.

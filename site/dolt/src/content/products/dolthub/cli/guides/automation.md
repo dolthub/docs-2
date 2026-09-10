@@ -35,6 +35,10 @@ For these commands, `--jq` and `--template` require `--json`. Available fields a
 
 SQL writes, table imports, forks, and PR merges normally wait for completion. With `--no-wait`, they return an accepted job ID and URL. Acceptance does not mean the change succeeded. Imports still finish uploading before returning that reference.
 
+Job IDs in tables, progress messages, and JSON output use the UUID rather than
+the fully qualified resource name. Pass that UUID to `dh job view` or
+`dh job watch`. The `href` field remains the full polling URL.
+
 This Bash script submits an update and waits separately. It assumes the [getting-started database](/products/dolthub/cli/getting-started) and a configured `DH_TOKEN`. Replace `OWNER`:
 
 ```bash

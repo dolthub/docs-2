@@ -18,7 +18,7 @@ Branches can start from another branch or an exact commit. Supply exactly one of
 ```bash
 dh sql --write --db OWNER/people --branch feature/people \
   "UPDATE people SET city = 'Paris' WHERE id = 1"
-dh sql --db OWNER/people --ref feature/people \
+dh sql --db OWNER/people --branch feature/people \
   "SELECT * FROM people ORDER BY id"
 ```
 
@@ -53,7 +53,7 @@ After review:
 
 ```bash
 dh pr merge NUMBER --db OWNER/people
-dh sql --db OWNER/people --ref main \
+dh sql --db OWNER/people --branch main \
   "SELECT city FROM people WHERE id = 1"
 ```
 
