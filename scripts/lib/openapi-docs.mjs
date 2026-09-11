@@ -115,6 +115,33 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
     return mediaType.example;
   }
 
+  // Which of the named examples the curl command shows — `default` when the
+  // spec names one, else the first. The rest are rendered under the request,
+  // since a spec that bothers to author a second example is usually showing
+  // an idiom the first one cannot: clearing a value, or the off switch.
+  function primaryExampleKey(named) {
+    if (!named || typeof named !== "object") return undefined;
+    return "default" in named ? "default" : Object.keys(named)[0];
+  }
+
+  function extraRequestExamples(operation) {
+    const named = jsonBody(operation.requestBody)?.examples;
+    if (!named || typeof named !== "object") return "";
+    const primary = primaryExampleKey(named);
+    const rest = Object.entries(named).filter(
+      ([key, entry]) => key !== primary && entry && "value" in entry
+    );
+    if (!rest.length) return "";
+    const blocks = rest
+      .map(([key, entry]) => {
+        const label = escapeMarkdown(entry.summary ?? key);
+        const body = JSON.stringify(entry.value, null, 2);
+        return `_${label}_\n\n\`\`\`json\n${body}\n\`\`\``;
+      })
+      .join("\n\n");
+    return `\n**Other request bodies**\n\n${blocks}\n`;
+  }
+
   function requestExample(operation) {
     const media = jsonBody(operation.requestBody);
     const authored = mediaTypeExample(media);
@@ -240,35 +267,110 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
   }
 
   // -------------------------------------------------------------------------
+  // Types and constraints
+  // -------------------------------------------------------------------------
+
+  function modelLink(name) {
+    return `[\`${name}\`](${modelsHref}#model-${name.replace("[]", "").toLowerCase()})`;
+  }
+
+  // A JSON Schema `type`, which 3.1 allows to be a union: ["number", "null"].
+  function typeName(schema) {
+    const t = schema?.type;
+    // The pipe has to be escaped: every caller renders into a table cell.
+    return Array.isArray(t) ? t.join(" \\| ") : t;
+  }
+
+  // The Type cell for one property or parameter. A `$ref` — including one
+  // behind `items` — names a model, so it is linked rather than flattened to
+  // the primitive underneath it; an array keeps its element type, since
+  // `array` alone says nothing about what is in it.
+  //
+  // `code` backticks a plain type, which the model tables do and the
+  // parameter and request-body tables don't. A link carries its own
+  // backticks either way.
+  function typeCell(schema, { code = false } = {}) {
+    if (!schema) return "";
+    const plain = (t) => (code ? `\`${t}\`` : t);
+
+    if (schema.$ref) return modelLink(refName(schema.$ref));
+
+    const t = typeName(schema);
+    if (t === "array") {
+      const items = schema.items;
+      if (items?.$ref) return modelLink(`${refName(items.$ref)}[]`);
+      const itemType = typeName(items);
+      if (!itemType) return plain("array");
+      // A union element type needs the parens to read as one element type.
+      return plain(itemType.includes("|") ? `(${itemType})[]` : `${itemType}[]`);
+    }
+
+    if (t) return plain(t);
+
+    // A union of alternatives: name the ones that are models, and collapse
+    // the anonymous members to the type they are built from — which for a
+    // discriminated union of inline objects is just `object`.
+    const variants = schema.oneOf ?? schema.anyOf;
+    if (variants?.length) {
+      const names = [
+        ...new Set(
+          variants.map((v) =>
+            v.$ref ? modelLink(refName(v.$ref)) : plain(typeName(v) ?? "object")
+          )
+        ),
+      ];
+      return names.join(" \\| ");
+    }
+
+    // allOf, bare `properties`, or nothing recognisable: all objects.
+    return plain("object");
+  }
+
+  // `minProperties`/`maxProperties` constrain the object as a whole, so no
+  // per-field Required cell can carry them. Rendered as a line under the
+  // table instead, where "exactly one of" is the case that actually matters.
+  function objectConstraintNote(schema) {
+    const min = schema?.minProperties;
+    const max = schema?.maxProperties;
+    if (min === undefined && max === undefined) return "";
+    const count = (n) => (n === 1 ? "one" : String(n));
+    if (min === 1 && max === 1) return "Send exactly one of these fields.";
+    if (min !== undefined && max === undefined)
+      return `Send at least ${count(min)} of these fields.`;
+    if (min === undefined) return `Send at most ${count(max)} of these fields.`;
+    if (min === max) return `Send exactly ${count(min)} of these fields.`;
+    return `Send between ${count(min)} and ${count(max)} of these fields.`;
+  }
+
+  // -------------------------------------------------------------------------
   // Endpoint sections
   // -------------------------------------------------------------------------
 
-  // Follows a parameter's own `$ref` without touching its schema, so a schema
-  // declared by `$ref` survives to be named. deref() would flatten it into the
-  // primitive it is built from, which loses the enum an `in: query` filter
-  // accepts.
-  function resolveParam(param, depth = 0) {
-    if (depth > 8 || typeof param !== "object" || param === null) return param;
-    if ("$ref" in param) return resolveParam(resolveRef(param.$ref), depth + 1);
-    return param;
+  // Follows an object's own `$ref` without touching what is inside it, so
+  // `$ref`s nested under it survive to be named. deref() would flatten those
+  // into the primitives underneath, which loses the enum an `in: query`
+  // filter accepts and the item type of an array of models.
+  function shallowResolve(obj, depth = 0) {
+    if (depth > 8 || typeof obj !== "object" || obj === null) return obj;
+    if ("$ref" in obj) return shallowResolve(resolveRef(obj.$ref), depth + 1);
+    return obj;
   }
 
   function parametersSection(params) {
     if (!params?.length) return "";
     const rows = params
       .map((p) => {
-        const param = resolveParam(p);
+        const param = shallowResolve(p);
         const resolved = deref(param);
         const location = resolved.in ?? "";
         const name = resolved.name ?? "";
         const required = resolved.required ? "yes" : "no";
-        // A schema given as `$ref` is a named model, so link it the way
-        // response and request-body rows do rather than printing the bare
-        // primitive underneath it.
-        const model = param.schema?.$ref ? refName(param.schema.$ref) : "";
-        const type = model
-          ? `[\`${model}\`](${modelsHref}#model-${model.toLowerCase()})`
-          : resolved.schema?.type ?? "";
+        // param.schema keeps any `$ref` intact (effectiveParameters resolves
+        // only the parameter itself), so a named schema is still linkable
+        // here; resolved.schema is the flattened one everything else reads.
+        const type = param.schema?.$ref
+          ? typeCell(param.schema)
+          : typeCell(resolved.schema);
         const desc = escapeMarkdown(resolved.description ?? "");
         return `| \`${name}\` | ${location} | ${type} | ${required} | ${desc} |`;
       })
@@ -276,23 +378,27 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
     return `\n**Parameters**\n\n| Name | In | Type | Required | Description |\n|------|----|------|----------|-------------|\n${rows}\n`;
   }
 
-  function requestBodySection(requestBody) {
-    if (!requestBody) return "";
-    const schema = jsonBody(requestBody)?.schema;
-    if (!schema) return "";
-    const resolved = deref(schema);
+  // Takes the request body as written, not a deref'd copy: the Type cells
+  // need the property `$ref`s, which only the raw schema still has.
+  function requestBodySection(rawRequestBody) {
+    if (!rawRequestBody) return "";
+    const rawSchema = shallowResolve(jsonBody(rawRequestBody)?.schema);
+    if (!rawSchema) return "";
+    const resolved = deref(rawSchema);
     const required = resolved.required ?? [];
     const props = resolved.properties ?? {};
+    const rawProps = rawSchema.properties ?? {};
     if (!Object.keys(props).length) return "";
     const rows = Object.entries(props)
       .map(([k, v]) => {
         const req = required.includes(k) ? "yes" : "no";
-        const type = v.type ?? (v.$ref ? refName(v.$ref) : "object");
         const desc = escapeMarkdown(v.description ?? "");
-        return `| \`${k}\` | ${type} | ${req} | ${desc} |`;
+        return `| \`${k}\` | ${typeCell(rawProps[k] ?? v)} | ${req} | ${desc} |`;
       })
       .join("\n");
-    return `\n**Request body**\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n${rows}\n`;
+    const note = objectConstraintNote(resolved);
+    const noteLine = note ? `\n_${note}_\n` : "";
+    return `\n**Request body**\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n${rows}\n${noteLine}`;
   }
 
   function responseSchemaName(schema) {
@@ -340,7 +446,7 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
     const merged = [];
     const seen = new Map(); // "in:name" -> index in merged
     for (const raw of [...(pathParams ?? []), ...(opParams ?? [])]) {
-      const p = resolveParam(raw);
+      const p = shallowResolve(raw);
       const key = `${p.in}:${p.name}`;
       if (seen.has(key)) merged[seen.get(key)] = p;
       else {
@@ -365,10 +471,11 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
         : "";
     const allParams = effectiveParameters(pathParams, operation.parameters);
     const params = parametersSection(allParams);
-    const body = requestBodySection(deref(operation.requestBody ?? {}));
+    const body = requestBodySection(operation.requestBody);
     const responses = responsesSection(operation.responses);
     const successExample = successExampleBlock(operation.responses);
     const curl = `\n**Example request**\n\n\`\`\`sh\n${curlExample(method, path, operation, allParams)}\n\`\`\`\n`;
+    const extraExamples = extraRequestExamples(operation);
     return [
       heading,
       methodPath,
@@ -376,6 +483,7 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
       params,
       body,
       curl,
+      extraExamples,
       responses,
       successExample,
     ]
@@ -387,7 +495,10 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
   // Models
   // -------------------------------------------------------------------------
 
-  function schemaBlock(name, schema) {
+  // `schema` is deref'd, which every description and `required` list needs;
+  // `rawSchema` is the same schema as written, kept so a property that is a
+  // `$ref` — or an array of one — can still be named in the Type cell.
+  function schemaBlock(name, schema, rawSchema = schema) {
     const anchor = `{#model-${name.toLowerCase()}}`;
     const heading = `## ${name} ${anchor}\n`;
     const desc = schema.description ? `${schema.description.trim()}\n\n` : "";
@@ -417,17 +528,23 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
 
     const required =
       schema.required ?? schema.allOf?.find((s) => s.required)?.required ?? [];
+    const rawProps =
+      rawSchema.properties ??
+      rawSchema.allOf?.map(shallowResolve).find((s) => s.properties)
+        ?.properties ??
+      {};
     const rows = Object.entries(props)
       .map(([k, v]) => {
         const req = required.includes(k) ? "yes" : "no";
-        const type =
-          v.type ?? (v.$ref ? refName(v.$ref) : v.allOf ? "object" : "object");
         const d = escapeMarkdown(v.description ?? "");
-        return `| \`${k}\` | \`${type}\` | ${req} | ${d} |`;
+        const cell = typeCell(rawProps[k] ?? v, { code: true });
+        return `| \`${k}\` | ${cell} | ${req} | ${d} |`;
       })
       .join("\n");
+    const note = objectConstraintNote(schema);
+    const noteLine = note ? `\n_${note}_\n` : "";
 
-    return `${heading}${desc}| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n${rows}\n`;
+    return `${heading}${desc}| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n${rows}\n${noteLine}`;
   }
 
   return { deref, endpointBlock, schemaBlock };
@@ -538,7 +655,7 @@ export function generateApiDocs(config) {
 
   const schemas = Object.entries(spec.components?.schemas ?? {});
   const blocks = schemas
-    .map(([name, schema]) => schemaBlock(name, deref(schema)))
+    .map(([name, schema]) => schemaBlock(name, deref(schema), schema))
     .join("\n---\n\n");
   writeFileSync(
     join(outDir, models.file),

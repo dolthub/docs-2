@@ -38,7 +38,7 @@ A structured error body returned for every non-2xx response, following RFC 9457 
 | `status` | `integer` | yes | The HTTP status code, repeated in the body for convenience. |
 | `detail` | `string` | no | A human-readable explanation specific to this occurrence of the problem. |
 | `instance` | `string` | no | A URI reference identifying the specific occurrence (typically the request path). |
-| `code` | `string` | yes | A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on this value, never on the human-readable `title`/`detail` prose. The baseline codes below cover the standard HTTP failure categories; endpoint-specific codes (e.g. `BRANCH_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them, which is an additive, non-breaking change under the v2 stability policy. |
+| `code` | [`ErrorCode`](/products/dolthub/api/v2/models#model-errorcode) | yes | A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on this value, never on the human-readable `title`/`detail` prose. The baseline codes below cover the standard HTTP failure categories; endpoint-specific codes (e.g. `BRANCH_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them, which is an additive, non-breaking change under the v2 stability policy. |
 | `request_id` | `string` | yes | The request identifier, echoed on every response. Include it when contacting support so a request can be traced end-to-end. |
 
 ---
@@ -57,8 +57,8 @@ The success envelope wrapping every 2xx response body: the resource or list of r
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `data` | `object,array` | yes | The primary response payload — a resource, or an array of resources for list endpoints. |
-| `meta` | `object` | no | Response metadata carried alongside the primary `data` payload. All fields are optional; list endpoints populate `next_page_token` for cursor pagination. |
+| `data` | `object \| array` | yes | The primary response payload — a resource, or an array of resources for list endpoints. |
+| `meta` | [`Meta`](/products/dolthub/api/v2/models#model-meta) | no | Response metadata carried alongside the primary `data` payload. All fields are optional; list endpoints populate `next_page_token` for cursor pagination. |
 
 ---
 
@@ -91,8 +91,8 @@ Body for `POST /api/v2/databases/{owner}/{database}/pulls`. `to_branch.database`
 |-------|------|----------|-------------|
 | `title` | `string` | yes | The pull request's title. |
 | `description` | `string` | no | Optional pull-request body (markdown). |
-| `from_branch` | `object` | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
-| `to_branch` | `object` | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
+| `from_branch` | [`BranchRef`](/products/dolthub/api/v2/models#model-branchref) | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
+| `to_branch` | [`BranchRef`](/products/dolthub/api/v2/models#model-branchref) | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
 
 ---
 
@@ -130,6 +130,8 @@ Body for `PATCH /api/v2/databases/{owner}/{database}/pulls/{pull_number}`. Every
 | `title` | `string` | no | New title; omit to leave unchanged. |
 | `description` | `string` | no | New description body (markdown); omit to leave unchanged. |
 | `state` | `string` | no | New state. Merging is a separate operation; this field can't transition to `merged`. |
+
+_Send at least one of these fields._
 
 ---
 
@@ -224,7 +226,7 @@ A multipart upload session. The client PUTs each file chunk to the matching `par
 |-------|------|----------|-------------|
 | `token` | `string` | yes | Opaque upload-session token. Pass verbatim to `createImport`. |
 | `contents_key` | `string` | yes | Storage key the assembled file will live at. Pass verbatim to `createImport`. |
-| `parts` | `array` | yes | One entry per part, in part-number order. |
+| `parts` | [`ImportUploadPart[]`](/products/dolthub/api/v2/models#model-importuploadpart) | yes | One entry per part, in part-number order. |
 | `http_method` | `string` | yes | HTTP method to use when uploading each part. Currently always `PUT`. |
 | `headers` | `object` | yes | Headers the client must include on each part upload (e.g. proxy-auth, signed-headers added by the storage backend). Usually empty; clients should iterate every entry and add each name with all of its values to the part-upload request. Each header may have multiple values. |
 
@@ -237,7 +239,7 @@ Body for `POST /api/v2/databases/{owner}/{database}/imports/uploads`. Asks the s
 |-------|------|----------|-------------|
 | `content_length` | `integer` | yes | Total size of the file being uploaded, in bytes. |
 | `num_parts` | `integer` | yes | Number of parts the client will split the upload into. |
-| `file_type` | `string` | yes | Source file format for an import. |
+| `file_type` | [`ImportFileType`](/products/dolthub/api/v2/models#model-importfiletype) | yes | Source file format for an import. |
 
 ---
 
@@ -250,13 +252,13 @@ Body for `POST /api/v2/databases/{owner}/{database}/imports`. Wraps a completed 
 | `table_name` | `string` | yes | The destination table. |
 | `file_name` | `string` | yes | The original file name (used for the commit message and import description). |
 | `file_size` | `integer` | yes | Size of the uploaded file in bytes; must match the `content_length` from `createImportUpload`. |
-| `file_type` | `string` | yes | Source file format for an import. |
-| `import_operation` | `string` | yes | How the imported rows are applied to the target table. `create` requires the table not to exist; `overwrite` replaces it; `update` upserts into an existing table; `replace` truncates then inserts. |
+| `file_type` | [`ImportFileType`](/products/dolthub/api/v2/models#model-importfiletype) | yes | Source file format for an import. |
+| `import_operation` | [`ImportOperation`](/products/dolthub/api/v2/models#model-importoperation) | yes | How the imported rows are applied to the target table. `create` requires the table not to exist; `overwrite` replaces it; `update` upserts into an existing table; `replace` truncates then inserts. |
 | `token` | `string` | yes | Upload-session token from `createImportUpload`. |
 | `contents_key` | `string` | yes | Contents key from `createImportUpload`. |
-| `completed_parts` | `array` | yes | One entry per uploaded part, in any order. |
+| `completed_parts` | [`CompletedPart[]`](/products/dolthub/api/v2/models#model-completedpart) | yes | One entry per uploaded part, in any order. |
 | `file_parts_md5` | `string` | yes | MD5 of the concatenated per-part MD5s, base64-encoded. Some backends require this for integrity verification of the assembled file. |
-| `primary_keys` | `array` | yes | Primary-key column names. May be empty when the destination table already exists (its existing primary keys are used). Required (possibly empty) so a missing field fails fast rather than mis-importing as no-primary-key. |
+| `primary_keys` | `string[]` | yes | Primary-key column names. May be empty when the destination table already exists (its existing primary keys are used). Required (possibly empty) so a missing field fails fast rather than mis-importing as no-primary-key. |
 | `commit_message` | `string` | no | Override the default commit message the import produces. |
 | `pull_request_branch_name` | `string` | no | When set, the import lands on this branch (created from `branch_name`) and a pull request is opened against `branch_name`. When unset, the import lands directly on `branch_name`. |
 | `column_map` | `object` | no | Optional mapping from source column names to destination column names. Useful when the file's columns don't match the target table's columns. |
@@ -298,7 +300,7 @@ Error details recorded when an operation reaches the `failed` status.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `status` | `integer` | yes | HTTP-equivalent status code for the failure. |
-| `code` | `string` | yes | A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on this value, never on the human-readable `title`/`detail` prose. The baseline codes below cover the standard HTTP failure categories; endpoint-specific codes (e.g. `BRANCH_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them, which is an additive, non-breaking change under the v2 stability policy. |
+| `code` | [`ErrorCode`](/products/dolthub/api/v2/models#model-errorcode) | yes | A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on this value, never on the human-readable `title`/`detail` prose. The baseline codes below cover the standard HTTP failure categories; endpoint-specific codes (e.g. `BRANCH_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them, which is an additive, non-breaking change under the v2 stability policy. |
 | `title` | `string` | yes | A short, human-readable summary of the failure. |
 | `detail` | `string` | no | A human-readable explanation of the failure, sourced from the underlying operation error message when available. |
 
@@ -310,11 +312,11 @@ A long-running async operation. Every async mutation returns an `OperationRef`; 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `id` | `string` | yes | Opaque operation identifier. Pass verbatim to `GET /api/v2/operations/{id}`. |
-| `type` | `string` | yes | The kind of work this operation performs. |
-| `status` | `string` | yes | The lifecycle state of an async operation. |
+| `type` | [`OperationType`](/products/dolthub/api/v2/models#model-operationtype) | yes | The kind of work this operation performs. |
+| `status` | [`OperationStatus`](/products/dolthub/api/v2/models#model-operationstatus) | yes | The lifecycle state of an async operation. |
 | `created_at` | `string` | yes | When the operation was enqueued. |
 | `cancelable` | `boolean` | yes | Reserved for a future cancel endpoint. Always `false` today — no `POST /api/v2/operations/{id}/cancel` exists yet. |
-| `error` | `object` | no | Error details recorded when an operation reaches the `failed` status. |
+| `error` | [`OperationError`](/products/dolthub/api/v2/models#model-operationerror) | no | Error details recorded when an operation reaches the `failed` status. |
 | `result` | `object` | no | Present when `status` is `succeeded`. Shape depends on `type`: `import`/`merge` → `{ pull_id }`; `sql_write` → `{ commit_sha }`; `fork` → `{ database: { owner, name } }`. |
 
 ---
@@ -403,7 +405,7 @@ A reference to a branch within a specific database. Carries the database so call
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `database` | `object` | yes | A minimal reference to a database — owner and name only. Used wherever the API points at another database (a fork's parent, a network's root, an item in the forks list) without re-embedding the full Database resource. |
+| `database` | [`DatabaseRef`](/products/dolthub/api/v2/models#model-databaseref) | yes | A minimal reference to a database — owner and name only. Used wherever the API points at another database (a fork's parent, a network's root, an item in the forks list) without re-embedding the full Database resource. |
 | `branch_name` | `string` | yes | The branch name within the referenced database. |
 
 ---
@@ -417,8 +419,8 @@ The canonical pull-request resource. Same public fields as the list `PullSummary
 | `title` | `string` | yes | The pull request's human-readable title. |
 | `description` | `string` | no | The pull request description (markdown). Omitted when the pull has none. |
 | `state` | `string` | yes | The pull request's lifecycle state. |
-| `from_branch` | `object` | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
-| `to_branch` | `object` | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
+| `from_branch` | [`BranchRef`](/products/dolthub/api/v2/models#model-branchref) | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
+| `to_branch` | [`BranchRef`](/products/dolthub/api/v2/models#model-branchref) | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
 | `created_at` | `string` | yes | When the pull request was created. |
 | `creator` | `string` | yes | The username of the user who created the pull request. |
 
@@ -477,11 +479,11 @@ The result of a `runSqlReadQuery` call. SQL-level conditions (success, error, ti
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `columns` | `array` | yes | The result schema — one entry per column, in the row's cell order. |
-| `rows` | `array` | yes | The result rows. Each row is an array of cell values, ordered to match the `columns` schema. Non-NULL cells are serialized as strings regardless of the underlying SQL type; clients can parse per `columns[i].type` to coerce typed values. NULL cells are serialized as JSON `null`. BLOB-typed cells are returned as the placeholder string `"<binary>"` (the backend does not stream binary bytes over this endpoint); clients can detect blob columns via `columns[i].type`. |
+| `columns` | [`QueryColumn[]`](/products/dolthub/api/v2/models#model-querycolumn) | yes | The result schema — one entry per column, in the row's cell order. |
+| `rows` | `array[]` | yes | The result rows. Each row is an array of cell values, ordered to match the `columns` schema. Non-NULL cells are serialized as strings regardless of the underlying SQL type; clients can parse per `columns[i].type` to coerce typed values. NULL cells are serialized as JSON `null`. BLOB-typed cells are returned as the placeholder string `"<binary>"` (the backend does not stream binary bytes over this endpoint); clients can detect blob columns via `columns[i].type`. |
 | `status` | `string` | yes | The query's execution status. `success` is the only status that guarantees `rows` and `columns` are fully populated. |
 | `message` | `string` | no | Server-supplied message describing the status. Always populated for non-`success` statuses; usually empty on success. |
-| `warnings` | `array` | no | SQL-level warnings emitted by the query engine (e.g. truncated values). |
+| `warnings` | `string[]` | no | SQL-level warnings emitted by the query engine (e.g. truncated values). |
 
 ---
 
@@ -507,5 +509,5 @@ A DoltHub user. `GET /api/v2/user` returns the authenticated user's profile. v2 
 | `location` | `string` | no | The user's stated location. May be empty. |
 | `website_url` | `string` | no | The user's website URL. May be empty. |
 | `profile_pic_url` | `string` | no | URL of the user's profile picture. May be empty. |
-| `email_addresses` | `array` | yes | The user's registered email addresses. |
+| `email_addresses` | [`EmailAddress[]`](/products/dolthub/api/v2/models#model-emailaddress) | yes | The user's registered email addresses. |
 
