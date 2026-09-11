@@ -38,7 +38,7 @@ A structured error body returned for every non-2xx response, following RFC 9457 
 | `status` | `integer` | yes | The HTTP status code, repeated in the body for convenience. |
 | `detail` | `string` | no | A human-readable explanation specific to this occurrence of the problem. |
 | `instance` | `string` | no | A URI reference identifying the specific occurrence (typically the request path). |
-| `code` | `string` | yes | A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on this value, never on the human-readable `title`/`detail` prose. The baseline codes below cover the standard HTTP failure categories; endpoint-specific codes (e.g. `DEPLOYMENT_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them, which is an additive, non-breaking change under the v1 stability policy. |
+| `code` | [`ErrorCode`](/products/hosted/api/v1/models#model-errorcode) | yes | A stable, machine-readable error code in SCREAMING_SNAKE_CASE. Clients branch on this value, never on the human-readable `title`/`detail` prose. The baseline codes below cover the standard HTTP failure categories; endpoint-specific codes (e.g. `DEPLOYMENT_NOT_FOUND`) are appended to this enum alongside the endpoints that emit them, which is an additive, non-breaking change under the v1 stability policy. |
 | `request_id` | `string` | yes | The request identifier, echoed on every response. Include it when contacting support so a request can be traced end-to-end. |
 
 ---
@@ -58,8 +58,8 @@ The success envelope wrapping every 2xx response body: the resource or list of r
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `data` | `object,array` | yes | The primary response payload — a resource, or an array of resources for list endpoints. |
-| `meta` | `object` | no | Response metadata carried alongside the primary `data` payload. All fields are optional; list endpoints populate `next_page_token` for cursor pagination. |
+| `data` | `object \| array` | yes | The primary response payload — a resource, or an array of resources for list endpoints. |
+| `meta` | [`Meta`](/products/hosted/api/v1/models#model-meta) | no | Response metadata carried alongside the primary `data` payload. All fields are optional; list endpoints populate `next_page_token` for cursor pagination. |
 
 ---
 
@@ -82,7 +82,7 @@ A Hosted user. `GET /api/v1/user` returns the authenticated user's profile. v1 r
 | `username` | `string` | yes | The user's Hosted username (unique handle). |
 | `display_name` | `string` | no | The user's display name. May be empty. |
 | `company` | `string` | no | The user's stated company. May be empty. |
-| `email_addresses` | `array` | yes | The user's email addresses. Returned only for the authenticated user themselves; empty for any other caller. |
+| `email_addresses` | [`UserEmailAddress[]`](/products/hosted/api/v1/models#model-useremailaddress) | yes | The user's email addresses. Returned only for the authenticated user themselves; empty for any other caller. |
 
 ---
 
@@ -133,7 +133,7 @@ Settings are wrapped in an object rather than returned as a bare list so the res
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `settings` | `array` | yes | Every setting Hosted supports for this deployment, in the order the catalogue reports them. |
+| `settings` | [`ConfigSetting[]`](/products/hosted/api/v1/models#model-configsetting) | yes | Every setting Hosted supports for this deployment, in the order the catalogue reports them. |
 
 ---
 
@@ -145,6 +145,8 @@ Provider-specific private-networking allowlists are deliberately absent: private
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `disable_automatic_dolt_updates` | `boolean` | no | Whether to stop Dolt updating itself during the deployment's service window. Turn this on to pin the version, then roll it forward deliberately. |
+
+_Send at least one of these fields._
 
 ---
 
@@ -164,6 +166,8 @@ Which service to expose or stop exposing. Exactly one property per request: each
 |-------|------|----------|-------------|
 | `remotesapi` | `boolean` | no | Whether to serve the remotesapi endpoint, which is what `dolt clone` and `dolt pull` talk to. Requires the deployment to have a WebPKI certificate — `400` otherwise, since a public endpoint with a private CA is unusable. |
 | `mcp` | `boolean` | no | Whether to serve the MCP endpoint. |
+
+_Send exactly one of these fields._
 
 ---
 
@@ -211,6 +215,42 @@ One line of a deployment instance's log output.
 
 ---
 
+## MetricSeries {#model-metricseries}
+One series of a metric. `values` has one entry per entry in the enclosing `timestamps`, in the same order.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | `string` | yes | The series' name for display, unique within the metric. |
+| `unit` | `string` | no | The unit the values are in. Absent when Hosted does not record one for the series. |
+| `values` | `(number \| null)[]` | yes | One value per timestamp, `null` where the metric had no datapoint at that moment. A series Hosted collects but has never recorded is all `null` rather than a shorter array. |
+
+---
+
+## MetricData {#model-metricdata}
+One metric's series over a window, sharing a single time axis.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `metric` | `string` | yes | The metric that was read. |
+| `instance_id` | `string` | no | The instance the metric was read from, echoed from `instance_id`. Absent when the request named none, in which case the deployment's primary answered. |
+| `start_time` | `string` | yes | The start of the window, as asked for. |
+| `end_time` | `string` | yes | The end of the window, as asked for. |
+| `period_seconds` | `integer` | yes | The seconds between datapoints, chosen from the width of the window. Not the same as the spacing of `timestamps`, which skips any moment no series had a datapoint for. |
+| `timestamps` | `string[]` | yes | The time axis every series is laid against, oldest first. A moment no series had a datapoint for is absent from it. |
+| `series` | [`MetricSeries[]`](/products/hosted/api/v1/models#model-metricseries) | yes | The metric's series. A metric can carry more than one, and they can be in different units. |
+
+---
+
+## Metric {#model-metric}
+One metric a deployment collects. Read it with `GET /api/v1/deployments/{owner}/{deployment}/metrics/{metric}`, passing `id`. `display_name` is for display, and can change.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The metric's identifier. Today's values are `connections`, `queries`, `query_latency`, `cpu`, `mem`, `disk`, `diskio`, `network`, and `replication_lag`, but this is a string rather than an enum because Hosted adds metrics without a new API version. |
+| `display_name` | `string` | yes | The metric's name for display. |
+
+---
+
 ## DeploymentInstance {#model-deploymentinstance}
 One instance backing a deployment. A deployment has a primary and, when it has read replicas, one instance per replica.
 
@@ -232,10 +272,10 @@ The options available for creating a deployment, narrowed by the query parameter
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `cloud` | `string` | yes | The cloud the deployment runs in. |
-| `zones` | `array` | yes | The zones this cloud supports. |
-| `instance_types` | `array` | no | Instance types available in the requested `zone`. Absent when `zone` wasn't supplied. |
-| `storage_options` | `array` | no | Storage types compatible with the requested `instance_type_id`. Absent when `zone` and `instance_type_id` weren't both supplied. |
+| `cloud` | [`CloudProvider`](/products/hosted/api/v1/models#model-cloudprovider) | yes | The cloud the deployment runs in. |
+| `zones` | `string[]` | yes | The zones this cloud supports. |
+| `instance_types` | [`InstanceType[]`](/products/hosted/api/v1/models#model-instancetype) | no | Instance types available in the requested `zone`. Absent when `zone` wasn't supplied. |
+| `storage_options` | [`StorageOption[]`](/products/hosted/api/v1/models#model-storageoption) | no | Storage types compatible with the requested `instance_type_id`. Absent when `zone` and `instance_type_id` weren't both supplied. |
 
 ---
 
@@ -248,9 +288,9 @@ v1.0 exposes the core parameters only. Restoring from a backup, cloning an exist
 |-------|------|----------|-------------|
 | `owner` | `string` | yes | The user or organization that will own the deployment. The caller must have permission to create deployments for it. 3–32 characters of letters, digits, hyphens, and underscores. |
 | `name` | `string` | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
-| `cloud` | `string` | yes | The cloud the deployment runs in. |
+| `cloud` | [`CloudProvider`](/products/hosted/api/v1/models#model-cloudprovider) | yes | The cloud the deployment runs in. |
 | `zone` | `string` | yes | The cloud region to provision in, as listed by the deployment options. |
-| `cluster_type` | `string` | no | The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL primary with Dolt read replicas. |
+| `cluster_type` | [`ClusterType`](/products/hosted/api/v1/models#model-clustertype) | no | The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL primary with Dolt read replicas. |
 | `instance_type_id` | `string` | yes | The **id** of the instance type, from the deployment options endpoint. Note a deployment reports `instance_type_name` on a read — the id and the display name are different values. |
 | `volume_type_id` | `string` | yes | The **id** of the storage type, from the deployment options endpoint. As with `instance_type_id`, this is the id rather than the display name. |
 | `volume_size_gb` | `integer` | yes | The size of the storage volume, in gigabytes. Must fall within the selected storage type's supported range. |
@@ -282,7 +322,7 @@ A stored backup of a deployment's databases.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `id` | `string` | yes | The backup's identifier, unique within the deployment. Derived from the time it was taken. |
-| `databases` | `array` | yes | The databases captured in this backup. Empty if the deployment had none at the time. |
+| `databases` | `string[]` | yes | The databases captured in this backup. Empty if the deployment had none at the time. |
 | `size_bytes` | `integer` | no | The backup's size in bytes. Absent until it has been measured, which happens asynchronously after the backup is taken — so a recent backup legitimately has no size yet. |
 | `instance_index` | `integer` | yes | The index of the deployment instance the backup was taken from. |
 | `created_at` | `string` | yes | When the backup was taken. |
@@ -338,10 +378,10 @@ This is deliberately not the same shape as `Deployment`. The list RPC returns a 
 |-------|------|----------|-------------|
 | `owner` | `string` | yes | The user or organization that owns the deployment. |
 | `name` | `string` | yes | The deployment name, unique within the owner. |
-| `state` | `string` | yes | The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`. |
-| `cloud` | `string` | yes | The cloud the deployment runs in. |
+| `state` | [`DeploymentState`](/products/hosted/api/v1/models#model-deploymentstate) | yes | The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`. |
+| `cloud` | [`CloudProvider`](/products/hosted/api/v1/models#model-cloudprovider) | yes | The cloud the deployment runs in. |
 | `zone` | `string` | yes | The cloud region the deployment runs in. |
-| `cluster_type` | `string` | yes | The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL primary with Dolt read replicas. |
+| `cluster_type` | [`ClusterType`](/products/hosted/api/v1/models#model-clustertype) | yes | The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL primary with Dolt read replicas. |
 | `instance_type_name` | `string` | no | The display name of the deployment's instance type. |
 | `volume_type_name` | `string` | no | The display name of the deployment's storage type. |
 | `volume_size_gb` | `integer` | no | The size of the deployment's storage volume, in gigabytes. |
@@ -361,7 +401,7 @@ Confirmation that a deployment's shutdown was accepted. Deliberately minimal: it
 |-------|------|----------|-------------|
 | `owner` | `string` | yes | The user or organization that owns the deployment. |
 | `name` | `string` | yes | The deployment name. |
-| `state` | `string` | yes | The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`. |
+| `state` | [`DeploymentState`](/products/hosted/api/v1/models#model-deploymentstate) | yes | The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`. |
 
 ---
 
@@ -399,7 +439,7 @@ One entry in a pull request's activity log.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `id` | `string` | yes | The entry's identifier, unique within the pull request. |
-| `activity` | `string` | yes | Something that happened to a pull request. `branch_deleted` is recorded when a branch the pull request uses is deleted, including when a successful merge deletes the source branch. `database_dropped` is recorded when the pull request's database is dropped. |
+| `activity` | [`PullActivity`](/products/hosted/api/v1/models#model-pullactivity) | yes | Something that happened to a pull request. `branch_deleted` is recorded when a branch the pull request uses is deleted, including when a successful merge deletes the source branch. `database_dropped` is recorded when the pull request's database is dropped. |
 | `user` | `string` | yes | The username the activity is attributed to. Empty when Hosted recorded the activity rather than a person. |
 | `logged_at` | `string` | yes |  |
 
@@ -438,7 +478,7 @@ A proposal to merge one branch into another within a deployment's database.
 | `description` | `string` | no | Absent when the pull request has no description. |
 | `from_branch` | `string` | yes | The branch being merged, as a bare branch name. |
 | `to_branch` | `string` | yes | The branch being merged into, as a bare branch name. |
-| `state` | `string` | yes | Where a pull request is in its life. `merged` is terminal and set once Hosted has recorded the merge; `closed` means it was abandoned without merging. |
+| `state` | [`PullState`](/products/hosted/api/v1/models#model-pullstate) | yes | Where a pull request is in its life. `merged` is terminal and set once Hosted has recorded the merge; `closed` means it was abandoned without merging. |
 | `creator` | `string` | yes | The username of the user who opened the pull request. |
 | `created_at` | `string` | yes |  |
 | `comment_count` | `integer` | yes | How many comments the pull request has. |
@@ -457,10 +497,10 @@ Provider-specific private-networking configuration (AWS PrivateLink, GCP Private
 |-------|------|----------|-------------|
 | `owner` | `string` | yes | The user or organization that owns the deployment. |
 | `name` | `string` | yes | The deployment name, unique within the owner. |
-| `state` | `string` | yes | The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`. |
-| `cloud` | `string` | yes | The cloud the deployment runs in. |
+| `state` | [`DeploymentState`](/products/hosted/api/v1/models#model-deploymentstate) | yes | The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`. |
+| `cloud` | [`CloudProvider`](/products/hosted/api/v1/models#model-cloudprovider) | yes | The cloud the deployment runs in. |
 | `zone` | `string` | yes | The cloud region the deployment runs in. |
-| `cluster_type` | `string` | yes | The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL primary with Dolt read replicas. |
+| `cluster_type` | [`ClusterType`](/products/hosted/api/v1/models#model-clustertype) | yes | The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL primary with Dolt read replicas. |
 | `instance_type_name` | `string` | no | The display name of the deployment's instance type. Note this is the *name*, not the id that `POST /api/v1/deployments` accepts; both are listed by the deployment options endpoint. |
 | `volume_type_name` | `string` | no | The display name of the deployment's storage type. As with `instance_type_name`, this is the name rather than the id used to create a deployment. |
 | `volume_size_gb` | `integer` | no | The size of the deployment's storage volume, in gigabytes. |
@@ -474,7 +514,7 @@ Provider-specific private-networking configuration (AWS PrivateLink, GCP Private
 | `expose_mcp` | `boolean` | no | Whether the deployment exposes an MCP endpoint. |
 | `expose_stats` | `boolean` | no | Whether the deployment exposes a statistics endpoint. |
 | `disable_automatic_dolt_updates` | `boolean` | no | Whether automatic Dolt version updates are disabled for this deployment. |
-| `caller_role` | `string` | yes | The authenticated caller's role on this deployment. Always present on a read, since a caller without at least read access cannot retrieve the deployment at all. |
+| `caller_role` | [`DeploymentRole`](/products/hosted/api/v1/models#model-deploymentrole) | yes | The authenticated caller's role on this deployment. Always present on a read, since a caller without at least read access cannot retrieve the deployment at all. |
 | `created_by` | `string` | no | The username of the user who created the deployment. |
 | `created_at` | `string` | yes | When the deployment was created. |
 | `disabled_at` | `string` | no | When the deployment is scheduled to shut down. Absent unless it has been disabled. |

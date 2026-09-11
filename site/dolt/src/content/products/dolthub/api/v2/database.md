@@ -823,8 +823,8 @@ Opens a new pull request in `{owner}/{database}`. `to_branch.database` must equa
 |-------|------|----------|-------------|
 | `title` | string | yes | The pull request's title. |
 | `description` | string | no | Optional pull-request body (markdown). |
-| `from_branch` | object | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
-| `to_branch` | object | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
+| `from_branch` | [`BranchRef`](/products/dolthub/api/v2/models#model-branchref) | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
+| `to_branch` | [`BranchRef`](/products/dolthub/api/v2/models#model-branchref) | yes | A reference to a branch within a specific database. Carries the database so callers can disambiguate cross-fork pull requests, where `from_branch` and `to_branch` may live in different repositories. |
 
 **Example request**
 
@@ -963,6 +963,8 @@ Partially updates the pull request `{pull_number}` in `{owner}/{database}`. The 
 | `title` | string | no | New title; omit to leave unchanged. |
 | `description` | string | no | New description body (markdown); omit to leave unchanged. |
 | `state` | string | no | New state. Merging is a separate operation; this field can't transition to `merged`. |
+
+_Send at least one of these fields._
 
 **Example request**
 
@@ -1182,7 +1184,7 @@ Starts a multipart upload session and returns the pre-signed part URLs the clien
 |-------|------|----------|-------------|
 | `content_length` | integer | yes | Total size of the file being uploaded, in bytes. |
 | `num_parts` | integer | yes | Number of parts the client will split the upload into. |
-| `file_type` | string | yes | Source file format for an import. |
+| `file_type` | [`ImportFileType`](/products/dolthub/api/v2/models#model-importfiletype) | yes | Source file format for an import. |
 
 **Example request**
 
@@ -1228,13 +1230,13 @@ Imports the previously-uploaded file into `{owner}/{database}` as the table name
 | `table_name` | string | yes | The destination table. |
 | `file_name` | string | yes | The original file name (used for the commit message and import description). |
 | `file_size` | integer | yes | Size of the uploaded file in bytes; must match the `content_length` from `createImportUpload`. |
-| `file_type` | string | yes | Source file format for an import. |
-| `import_operation` | string | yes | How the imported rows are applied to the target table. `create` requires the table not to exist; `overwrite` replaces it; `update` upserts into an existing table; `replace` truncates then inserts. |
+| `file_type` | [`ImportFileType`](/products/dolthub/api/v2/models#model-importfiletype) | yes | Source file format for an import. |
+| `import_operation` | [`ImportOperation`](/products/dolthub/api/v2/models#model-importoperation) | yes | How the imported rows are applied to the target table. `create` requires the table not to exist; `overwrite` replaces it; `update` upserts into an existing table; `replace` truncates then inserts. |
 | `token` | string | yes | Upload-session token from `createImportUpload`. |
 | `contents_key` | string | yes | Contents key from `createImportUpload`. |
-| `completed_parts` | array | yes | One entry per uploaded part, in any order. |
+| `completed_parts` | [`CompletedPart[]`](/products/dolthub/api/v2/models#model-completedpart) | yes | One entry per uploaded part, in any order. |
 | `file_parts_md5` | string | yes | MD5 of the concatenated per-part MD5s, base64-encoded. Some backends require this for integrity verification of the assembled file. |
-| `primary_keys` | array | yes | Primary-key column names. May be empty when the destination table already exists (its existing primary keys are used). Required (possibly empty) so a missing field fails fast rather than mis-importing as no-primary-key. |
+| `primary_keys` | string[] | yes | Primary-key column names. May be empty when the destination table already exists (its existing primary keys are used). Required (possibly empty) so a missing field fails fast rather than mis-importing as no-primary-key. |
 | `commit_message` | string | no | Override the default commit message the import produces. |
 | `pull_request_branch_name` | string | no | When set, the import lands on this branch (created from `branch_name`) and a pull request is opened against `branch_name`. When unset, the import lands directly on `branch_name`. |
 | `column_map` | object | no | Optional mapping from source column names to destination column names. Useful when the file's columns don't match the target table's columns. |
