@@ -103,9 +103,9 @@ As with any create, a `5xx` or a dropped connection does not tell you whether th
 |-------|------|----------|-------------|
 | `owner` | string | yes | The user or organization that will own the deployment. The caller must have permission to create deployments for it. 3–32 characters of letters, digits, hyphens, and underscores. |
 | `name` | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
-| `cloud` | string | yes | The cloud the deployment runs in. |
+| `cloud` | [`CloudProvider`](/products/hosted/api/v1/models#model-cloudprovider) | yes | The cloud the deployment runs in. |
 | `zone` | string | yes | The cloud region to provision in, as listed by the deployment options. |
-| `cluster_type` | string | no | The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL primary with Dolt read replicas. |
+| `cluster_type` | [`ClusterType`](/products/hosted/api/v1/models#model-clustertype) | no | The database engine the deployment runs. `mysql_with_dolt_replicas` is a MySQL primary with Dolt read replicas. |
 | `instance_type_id` | string | yes | The **id** of the instance type, from the deployment options endpoint. Note a deployment reports `instance_type_name` on a read — the id and the display name are different values. |
 | `volume_type_id` | string | yes | The **id** of the storage type, from the deployment options endpoint. As with `instance_type_id`, this is the id rather than the display name. |
 | `volume_size_gb` | integer | yes | The size of the storage volume, in gigabytes. Must fall within the selected storage type's supported range. |
@@ -317,6 +317,8 @@ Only a deployment administrator may change settings.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `disable_automatic_dolt_updates` | boolean | no | Whether to stop Dolt updating itself during the deployment's service window. Turn this on to pin the version, then roll it forward deliberately. |
+
+_Send at least one of these fields._
 
 **Example request**
 
@@ -656,6 +658,18 @@ curl -X PATCH 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}
   -d '{"overrides":{"behavior_auto_commit":"false"}}'
 ```
 
+**Other request bodies**
+
+_Clear one override without touching the others._
+
+```json
+{
+  "overrides": {
+    "listener_max_connections": null
+  }
+}
+```
+
 **Responses**
 
 | Status | Description | Schema |
@@ -787,6 +801,8 @@ Asking for the value a deployment already has is accepted and does nothing.
 | `remotesapi` | boolean | no | Whether to serve the remotesapi endpoint, which is what `dolt clone` and `dolt pull` talk to. Requires the deployment to have a WebPKI certificate — `400` otherwise, since a public endpoint with a private CA is unusable. |
 | `mcp` | boolean | no | Whether to serve the MCP endpoint. |
 
+_Send exactly one of these fields._
+
 **Example request**
 
 ```sh
@@ -794,6 +810,16 @@ curl -X PATCH 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
   -d '{"mcp":true}'
+```
+
+**Other request bodies**
+
+_Stop serving the remotesapi endpoint._
+
+```json
+{
+  "remotesapi": false
+}
 ```
 
 **Responses**
