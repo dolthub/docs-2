@@ -211,6 +211,42 @@ One line of a deployment instance's log output.
 
 ---
 
+## MetricSeries {#model-metricseries}
+One series of a metric. `values` has one entry per entry in the enclosing `timestamps`, in the same order.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | `string` | yes | The series' name for display, unique within the metric. |
+| `unit` | `string` | no | The unit the values are in. Absent when Hosted does not record one for the series. |
+| `values` | `array` | yes | One value per timestamp, `null` where the metric had no datapoint at that moment. A series Hosted collects but has never recorded is all `null` rather than a shorter array. |
+
+---
+
+## MetricData {#model-metricdata}
+One metric's series over a window, sharing a single time axis.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `metric` | `string` | yes | The metric that was read. |
+| `instance_id` | `string` | no | The instance the metric was read from, echoed from `instance_id`. Absent when the request named none, in which case the deployment's primary answered. |
+| `start_time` | `string` | yes | The start of the window, as asked for. |
+| `end_time` | `string` | yes | The end of the window, as asked for. |
+| `period_seconds` | `integer` | yes | The seconds between datapoints, chosen from the width of the window. Not the same as the spacing of `timestamps`, which skips any moment no series had a datapoint for. |
+| `timestamps` | `array` | yes | The time axis every series is laid against, oldest first. A moment no series had a datapoint for is absent from it. |
+| `series` | `array` | yes | The metric's series. A metric can carry more than one, and they can be in different units. |
+
+---
+
+## Metric {#model-metric}
+One metric a deployment collects. Read it with `GET /api/v1/deployments/{owner}/{deployment}/metrics/{metric}`, passing `id`. `display_name` is for display, and can change.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The metric's identifier. Today's values are `connections`, `queries`, `query_latency`, `cpu`, `mem`, `disk`, `diskio`, `network`, and `replication_lag`, but this is a string rather than an enum because Hosted adds metrics without a new API version. |
+| `display_name` | `string` | yes | The metric's name for display. |
+
+---
+
 ## DeploymentInstance {#model-deploymentinstance}
 One instance backing a deployment. A deployment has a primary and, when it has read replicas, one instance per replica.
 
