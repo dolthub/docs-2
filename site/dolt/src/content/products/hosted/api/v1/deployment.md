@@ -753,7 +753,9 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/l
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 
-**Example response `200`**
+**Example responses `200`**
+
+_Two lines with more history available._
 
 ```json
 {
@@ -770,6 +772,14 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/l
   "meta": {
     "next_page_token": "eyJvZmZzZXQiOjI1fQ"
   }
+}
+```
+
+_A window with nothing in it._
+
+```json
+{
+  "data": []
 }
 ```
 
@@ -845,6 +855,80 @@ _Stop serving the remotesapi endpoint._
     "service": "mcp",
     "requested": true
   }
+}
+```
+
+---
+
+## List a deployment's service windows {#listDeploymentServiceWindows}
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/service-windows</code>
+
+Returns the weekly windows in which Hosted may restart the deployment's instances to apply maintenance.
+
+A window covers whole hours in UTC on one day of the week. `start_hour_utc` is inclusive and `end_hour_utc` is exclusive, so 7 and 8 mean the hour beginning 07:00 UTC.
+
+Every deployment has at least one. Until one is set, the list holds a single window with `is_default` set: Sunday 07:00 to 08:00 UTC.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Example request**
+
+```sh
+curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/service-windows' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `200` | The deployment's service windows. | [`ServiceWindow[]`](/products/hosted/api/v1/models#model-servicewindow) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example responses `200`**
+
+_A window set for early Tuesday morning UTC._
+
+```json
+{
+  "data": [
+    {
+      "id": "7c1e9a3b-2d4f-4a6c-8b0d-1e2f3a4b5c6d",
+      "day_of_week": "tuesday",
+      "start_hour_utc": 3,
+      "end_hour_utc": 5,
+      "is_default": false
+    }
+  ]
+}
+```
+
+_A deployment with no window configured._
+
+```json
+{
+  "data": [
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "day_of_week": "sunday",
+      "start_hour_utc": 7,
+      "end_hour_utc": 8,
+      "is_default": true
+    }
+  ]
 }
 ```
 
