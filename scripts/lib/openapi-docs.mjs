@@ -221,8 +221,22 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
     const resp = rawResp.$ref ? resolveRef(rawResp.$ref) : rawResp;
     const media = jsonBody(resp);
 
-    // An example authored on the response wins outright — it shows the whole
-    // envelope, including any `meta`, exactly as the API returns it.
+    // Examples authored on the response win outright — they show the whole
+    // envelope, including any `meta`, exactly as the API returns it. Where a
+    // spec authors several, each is one the others cannot stand in for: a
+    // configured resource beside its unset default, a full page beside an
+    // empty one. They render in spec order, since `default` is only a key
+    // here and does not mean "the representative one".
+    const named = media?.examples;
+    if (named && typeof named === "object") {
+      const authoredAll = Object.entries(named).filter(
+        ([, entry]) => entry && "value" in entry
+      );
+      if (authoredAll.length > 1) {
+        return exampleBlocks(successCode, authoredAll);
+      }
+    }
+
     const authored = mediaTypeExample(media);
     if (authored !== undefined) {
       return exampleBlock(successCode, authored);
@@ -264,6 +278,19 @@ function createRenderer(spec, { baseUrl, tokenPlaceholder, modelsHref }) {
 
   function exampleBlock(code, body) {
     return `\n**Example response \`${code}\`**\n\n\`\`\`json\n${JSON.stringify(body, null, 2)}\n\`\`\`\n`;
+  }
+
+  // Several authored examples under one heading, each captioned with its
+  // summary so the reader can see which case it is.
+  function exampleBlocks(code, entries) {
+    const blocks = entries
+      .map(([key, entry]) => {
+        const label = escapeMarkdown(entry.summary ?? key);
+        const body = JSON.stringify(entry.value, null, 2);
+        return `\n_${label}_\n\n\`\`\`json\n${body}\n\`\`\`\n`;
+      })
+      .join("");
+    return `\n**Example responses \`${code}\`**\n${blocks}`;
   }
 
   // -------------------------------------------------------------------------

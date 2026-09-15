@@ -1328,6 +1328,103 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/deployments/{owner}/{deployment}/service-windows:
+    get:
+      operationId: listDeploymentServiceWindows
+      summary: List a deployment's service windows.
+      description: >-
+        Returns the weekly windows in which Hosted may restart the deployment's instances to
+        apply maintenance.
+
+
+        A window covers whole hours in UTC on one day of the week. `start_hour_utc` is
+        inclusive and `end_hour_utc` is exclusive, so 7 and 8 mean the hour beginning
+        07:00 UTC.
+
+
+        Every deployment has at least one. Until one is set, the list holds a single window
+        with `is_default` set: Sunday 07:00 to 08:00 UTC.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      responses:
+        "200":
+          description: The deployment's service windows.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        type: array
+                        description: The deployment's service windows.
+                        items:
+                          $ref: "#/components/schemas/ServiceWindow"
+              examples:
+                configured:
+                  summary: A window set for early Tuesday morning UTC.
+                  value:
+                    data:
+                      - id: 7c1e9a3b-2d4f-4a6c-8b0d-1e2f3a4b5c6d
+                        day_of_week: tuesday
+                        start_hour_utc: 3
+                        end_hour_utc: 5
+                        is_default: false
+                default:
+                  summary: A deployment with no window configured.
+                  value:
+                    data:
+                      - id: 00000000-0000-0000-0000-000000000000
+                        day_of_week: sunday
+                        start_hour_utc: 7
+                        end_hour_utc: 8
+                        is_default: true
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/deployments/{owner}/{deployment}/disable:
     post:
       operationId: disableDeployment
@@ -2881,6 +2978,77 @@ components:
       examples:
         - id: cpu
           display_name: CPU Utilization
+
+    DayOfWeek:
+      type: string
+      title: DayOfWeek
+      description: The day of the week a service window falls on, in UTC.
+      enum:
+        - sunday
+        - monday
+        - tuesday
+        - wednesday
+        - thursday
+        - friday
+        - saturday
+      examples:
+        - tuesday
+
+    ServiceWindow:
+      type: object
+      title: ServiceWindow
+      description: >-
+        One weekly window in which Hosted may restart the deployment's instances for
+        maintenance.
+      required:
+        - id
+        - day_of_week
+        - start_hour_utc
+        - end_hour_utc
+        - is_default
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: >-
+            The window's identifier, unique within the deployment. A default window has no
+            identifier of its own and reports the nil UUID,
+            `00000000-0000-0000-0000-000000000000`.
+          examples:
+            - 7c1e9a3b-2d4f-4a6c-8b0d-1e2f3a4b5c6d
+        day_of_week:
+          $ref: "#/components/schemas/DayOfWeek"
+        start_hour_utc:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 23
+          description: The first hour of the window, in UTC. Inclusive.
+          examples:
+            - 3
+        end_hour_utc:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 23
+          description: >-
+            The hour the window ends, in UTC. Exclusive, so a window of 3 to 5 covers
+            03:00 until 05:00.
+          examples:
+            - 5
+        is_default:
+          type: boolean
+          description: >-
+            Whether this is the default window Hosted falls back to rather than one that was
+            configured. `true` means no maintenance window has been set for this deployment.
+          examples:
+            - false
+      examples:
+        - id: 7c1e9a3b-2d4f-4a6c-8b0d-1e2f3a4b5c6d
+          day_of_week: tuesday
+          start_hour_utc: 3
+          end_hour_utc: 5
+          is_default: false
 
     DeploymentInstance:
       type: object
