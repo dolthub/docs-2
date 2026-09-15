@@ -251,6 +251,36 @@ One metric a deployment collects. Read it with `GET /api/v1/deployments/{owner}/
 
 ---
 
+## DayOfWeek {#model-dayofweek}
+The day of the week a service window falls on, in UTC.
+
+**Enum values**
+
+| Value |
+|-------|
+| `sunday` |
+| `monday` |
+| `tuesday` |
+| `wednesday` |
+| `thursday` |
+| `friday` |
+| `saturday` |
+
+---
+
+## ServiceWindow {#model-servicewindow}
+One weekly window in which Hosted may restart the deployment's instances for maintenance.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The window's identifier, unique within the deployment. A default window has no identifier of its own and reports the nil UUID, `00000000-0000-0000-0000-000000000000`. |
+| `day_of_week` | [`DayOfWeek`](/products/hosted/api/v1/models#model-dayofweek) | yes | The day of the week a service window falls on, in UTC. |
+| `start_hour_utc` | `integer` | yes | The first hour of the window, in UTC. Inclusive. |
+| `end_hour_utc` | `integer` | yes | The hour the window ends, in UTC. Exclusive, so a window of 3 to 5 covers 03:00 until 05:00. |
+| `is_default` | `boolean` | yes | Whether this is the default window Hosted falls back to rather than one that was configured. `true` means no maintenance window has been set for this deployment. |
+
+---
+
 ## DeploymentInstance {#model-deploymentinstance}
 One instance backing a deployment. A deployment has a primary and, when it has read replicas, one instance per replica.
 
