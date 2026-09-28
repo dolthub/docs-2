@@ -256,6 +256,7 @@ const nav: NavSection[] = [
               { title: "User", href: "/products/hosted/api/v1/user" },
               { title: "Deployment", href: "/products/hosted/api/v1/deployment" },
               { title: "Pull Request", href: "/products/hosted/api/v1/pull-request" },
+              { title: "Operation", href: "/products/hosted/api/v1/operation" },
               { title: "Models", href: "/products/hosted/api/v1/models" },
             ],
           },
