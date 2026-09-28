@@ -332,6 +332,95 @@ v1.0 exposes the core parameters only. Restoring from a backup, cloning an exist
 
 ---
 
+## OperationType {#model-operationtype}
+What the operation was asked to do. A kind of work this API version has no name for is reported as `unknown`.
+
+**Enum values**
+
+| Value |
+|-------|
+| `reboot_instance` |
+| `restart_dolt` |
+| `create_backup` |
+| `update_dolt` |
+| `update_config` |
+| `update_dolt_creds` |
+| `change_primary` |
+| `unknown` |
+
+---
+
+## OperationRef {#model-operationref}
+A handle on work that was queued, returned in `202` responses. Pass `id` to `GET /api/v1/operations/{id}`, or follow `href`, to find out what became of it.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The operation's identifier. |
+| `href` | `string` | yes | Absolute URL of the endpoint that reports this operation. |
+
+---
+
+## DatabaseVersions {#model-databaseversions}
+What a deployment's database engine is running and the versions it can be upgraded or downgraded to.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `current` | `string` | yes | The version the deployment records, as `database_version` on the deployment. |
+| `available` | `string[]` | yes | The latest versions for the deployment's `cluster_type`, followed by versions previously installed on this deployment that are no longer in the latest list. `POST` on this path accepts these versions, newest first within each source list. |
+
+---
+
+## UpdateDatabaseVersionRequest {#model-updatedatabaseversionrequest}
+The version to roll the deployment's database engine to.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `version` | `string` | yes | A version the deployment's `cluster_type` supports, without a leading `v`. A version this API does not recognize is rejected rather than queued. |
+
+---
+
+## OperationErrorCode {#model-operationerrorcode}
+Which way an operation failed. Separate from `ErrorCode`, which classifies HTTP failures: an operation that failed is reported in a `200`, and the request to read it succeeded.
+
+**Enum values**
+
+| Value |
+|-------|
+| `EXPIRED` |
+| `FAILED` |
+| `INTERNAL` |
+
+---
+
+## OperationStatus {#model-operationstatus}
+Where the operation has got to. `succeeded` and `failed` are final; the others mean the answer is not in yet.
+
+**Enum values**
+
+| Value |
+|-------|
+| `queued` |
+| `running` |
+| `succeeded` |
+| `failed` |
+
+---
+
+## Operation {#model-operation}
+Work Hosted carries out in the background, and what became of it.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | `string` | yes | The operation's identifier, as returned by the endpoint that queued the work. |
+| `type` | [`OperationType`](/products/hosted/api/v1/models#model-operationtype) | yes | What the operation was asked to do. A kind of work this API version has no name for is reported as `unknown`. |
+| `status` | [`OperationStatus`](/products/hosted/api/v1/models#model-operationstatus) | yes | Where the operation has got to. `succeeded` and `failed` are final; the others mean the answer is not in yet. |
+| `cancelable` | `boolean` | yes | Whether the operation can be canceled. Always `false`: Hosted cannot recall work it has queued. |
+| `error` | `object` | no | Why the operation failed. Present only when `status` is `failed`, and reported as a code rather than a message. |
+| `created_at` | `string` | yes | When the work was queued. |
+| `updated_at` | `string` | no | When the status last changed. Absent on an operation that is still queued, which has not changed since it was created. |
+
+---
+
 ## DeploymentState {#model-deploymentstate}
 The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`.
 

@@ -9,6 +9,7 @@
  *   user.md         — User-tagged endpoints
  *   deployment.md   — Deployment-tagged endpoints
  *   pull-request.md — Pull request-tagged endpoints
+ *   operation.md    — Operation-tagged endpoints
  *   models.md       — all component schemas
  *
  * authentication.md and README.md are hand-written; this script does not touch
@@ -39,6 +40,12 @@ generateApiDocs({
       file: "deployment.md",
       frontmatter:
         '---\ntitle: "Deployment"\ndescription: Creating, listing, and reading Hosted Dolt deployments and their instances.\n---\n\n# Deployment',
+    },
+    {
+      tag: "Operation",
+      file: "operation.md",
+      frontmatter:
+        '---\ntitle: "Operation"\ndescription: Polling background work in the Hosted v1 API.\n---\n\n# Operation',
     },
     {
       tag: "Pull request",
