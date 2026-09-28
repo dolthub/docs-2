@@ -54,6 +54,10 @@ tags:
     description: >-
       Proposals to merge one branch into another within a deployment's database. Merging
       itself is done in the Hosted web UI, not through this API.
+  - name: Operation
+    description: >-
+      Work Hosted carries out in the background. Endpoints that queue it return an operation
+      id you can poll here.
 
 paths:
   /api/v1/user:
@@ -880,6 +884,99 @@ paths:
           $ref: "#/components/responses/InternalServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
+    post:
+      operationId: createDeploymentBackup
+      summary: Take a backup of a deployment.
+      description: >-
+        Queues a backup of every database on the deployment. Scheduled backups keep running
+        alongside it; this is the on-demand one, for taking a snapshot before a migration or
+        a version roll.
+
+
+        The backup is queued rather than taken inline, so this returns `202` with an
+        operation to poll. It reaches each instance separately, and the operation reports
+        `succeeded` once every current instance reports a completed backup started after
+        the operation was queued. This is inferred from timestamps: a scheduled backup can
+        satisfy the check, so success does not identify a particular on-demand backup.
+
+
+        If an instance rejects the backup request, the operation is `failed`. After the request
+        is accepted, Hosted may not see later failures because instances report only their
+        newest successful backup. If Hosted cannot confirm completion, timeout finalization
+        reports `FAILED` when dispatch was confirmed, or `EXPIRED` when it was not. Either
+        status means completion is unknown; a backup may still exist.
+
+
+        The operation does not name the backup it produced. Read
+        `GET /api/v1/deployments/{owner}/{deployment}/backups` to inspect the available
+        backups. Scheduled and other on-demand backups can overlap, so the newest backup
+        cannot be reliably attributed to this operation.
+
+
+        Requires admin on the deployment.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      responses:
+        "202":
+          description: The backup was queued.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+              examples:
+                default:
+                  summary: Poll the operation to find out what became of the backup.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      href: https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
   /api/v1/deployments/{owner}/{deployment}/config:
     get:
@@ -1070,6 +1167,191 @@ paths:
           $ref: "#/components/responses/MethodNotAllowed"
         "422":
           $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}/{deployment}/database-version:
+    get:
+      operationId: listDeploymentDatabaseVersions
+      summary: List the versions a deployment can run.
+      description: >-
+        Returns the deployment's current database engine version and the versions it can be
+        upgraded or downgraded to. The list combines the latest releases with versions
+        previously installed on this deployment, which is what `POST` on this path accepts.
+
+
+        Hosted offers the most recent releases rather than every one ever published, and that
+        list moves as new versions ship, so read it before each roll rather than keeping a
+        copy. Versions previously installed on this deployment remain available even after
+        they leave the latest release list. Which releases appear depends on the deployment's `cluster_type`: a `dolt`
+        cluster is offered Dolt versions and a `doltgres` one Doltgres versions.
+
+
+        `current` is the version the deployment records. During a roll it is still the old
+        one until every instance reports the new version, so poll the operation rather than
+        this list to find out when a roll is done.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      responses:
+        "200":
+          description: The deployment's current version and the ones it can be rolled to.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DatabaseVersions"
+              examples:
+                default:
+                  summary: A Dolt deployment one release behind.
+                  value:
+                    data:
+                      current: 1.59.2
+                      available:
+                        - 1.60.0
+                        - 1.59.2
+                        - 1.59.1
+                        - 1.58.4
+                        - 1.58.3
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    post:
+      operationId: updateDeploymentDatabaseVersion
+      summary: Roll a deployment's database engine to another version.
+      description: >-
+        Sets the version of the database engine the deployment runs: a Dolt version on a
+        `dolt` cluster, a Doltgres version on a `doltgres` one. Which versions are accepted
+        depends on the deployment's `cluster_type`, and a version that is valid for one is
+        not necessarily valid for the other.
+
+
+        Call `GET /api/v1/deployments/{owner}/{deployment}/database-version` first to see
+        the deployment's current version and the versions available for its database engine.
+
+
+        The current version is `database_version` on the deployment. Downgrades are allowed,
+        so this can be used to roll back as well as forward.
+
+
+        The roll is queued rather than applied inline, so this returns `202` with an
+        operation to poll. On a deployment with replicas it reaches each instance
+        separately, and the operation reports `succeeded` only once every instance reports
+        the version asked for. Instances restart as they take the new version, so expect a
+        brief interruption.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: >-
+            The user or organization that owns the deployment. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: acme
+        - name: deployment
+          in: path
+          required: true
+          description: >-
+            The deployment name, unique within the owner. 3–32 characters of letters,
+            digits, hyphens, and underscores.
+          schema:
+            type: string
+            pattern: "^[-a-zA-Z0-9_]{3,32}$"
+          example: analytics
+      requestBody:
+        required: true
+        description: The version to roll to.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDatabaseVersionRequest"
+            examples:
+              default:
+                summary: Roll to a specific Dolt version.
+                value:
+                  version: 1.60.0
+      responses:
+        "202":
+          description: The roll was queued.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+              examples:
+                default:
+                  summary: Poll the operation to find out what became of the roll.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      href: https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
         "500":
           $ref: "#/components/responses/InternalServerError"
         "503":
@@ -1863,6 +2145,101 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /api/v1/deployments/{owner}/{deployment}/instances/{id}/reboot:
+    parameters:
+      - name: owner
+        in: path
+        required: true
+        description: >-
+          The user or organization that owns the deployment. 3–32 characters of letters,
+          digits, hyphens, and underscores.
+        schema:
+          type: string
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+        example: acme
+      - name: deployment
+        in: path
+        required: true
+        description: >-
+          The deployment name, unique within the owner. 3–32 characters of letters,
+          digits, hyphens, and underscores.
+        schema:
+          type: string
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+        example: analytics
+      - name: id
+        in: path
+        required: true
+        description: The instance's id, as reported by the instances list.
+        schema:
+          type: string
+          format: uuid
+        example: 2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e
+    post:
+      operationId: rebootDeploymentInstance
+      summary: Reboot one of a deployment's instances.
+      description: >-
+        Restarts the machine the instance runs on. Its data volume survives, so this is a
+        reboot rather than a replacement, but the database on it is unreachable until the
+        machine is back.
+
+
+        The reboot is queued rather than performed inline, so this returns `202` with an
+        operation to poll. It reports `succeeded` once the reboot has been requested from the
+        instance's platform, which is the last thing this system observes. A `succeeded`
+        operation means the reboot was issued, not that the database is serving again. The
+        instances endpoint can confirm that the instance is still part of the deployment, but
+        it does not expose reboot or readiness state. Check the database connection separately.
+
+
+        Rebooting the primary interrupts writes for as long as the machine takes to come
+        back, so check `is_primary` on the instances list before picking an id.
+
+
+        Requires admin on the deployment.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      responses:
+        "202":
+          description: The reboot was queued.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+              examples:
+                default:
+                  summary: Poll the operation to find out what became of the reboot.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      href: https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/deployments/{owner}/{deployment}/pulls:
     get:
       operationId: listDeploymentPulls
@@ -2259,6 +2636,119 @@ paths:
                         activity: branch_deleted
                         user: acme-admin
                         logged_at: "2026-08-12T16:40:01Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/operations/{id}:
+    get:
+      operationId: getOperation
+      summary: Get the status of queued work.
+      description: >-
+        Returns the status of a single operation, such as a Dolt version roll or a backup.
+        The id comes from whichever endpoint queued the work.
+
+
+        An operation is `queued` until Hosted picks it up, `running` once it is under way,
+        and then `succeeded` or `failed`. Only those last two are final, so poll until you
+        see one. Completion depends on the action: a version roll waits for instance
+        observations, while a reboot succeeds when its platform accepts the request, before
+        the database is necessarily available. Some actions have no completion signal and
+        remain running until timeout finalization.
+
+
+        A `failed` operation carries an `error.code`. `EXPIRED` means the dispatch window
+        elapsed without confirmation. `FAILED` means execution reported an error or its
+        outcome could not be confirmed before timeout finalization. Neither proves the work
+        had no effects: status reports can be lost and some instances may have applied the
+        request. Check the deployment's state before resubmitting, especially for reboots
+        and credential changes.
+
+
+        Polling reports persisted states. Overdue work remains queued or running until a
+        report or the timeout sweeper records a terminal outcome. Timeout finalization does
+        not cancel work, and a failed operation does not imply rollback.
+
+
+        Poll with a delay and backoff on transient HTTP errors. An HTTP error reading this
+        resource is not an operation failure and is not a reason to submit the action again.
+
+
+        An operation is readable by anyone who can read the deployment it was submitted
+        against. One belonging to a deployment you cannot read is a `404`, not a `403`, so a
+        `404` here does not prove the operation does not exist.
+      tags:
+        - Operation
+      security:
+        - apiToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The operation's identifier, as returned by the endpoint that queued it.
+          schema:
+            type: string
+            format: uuid
+          example: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+      responses:
+        "200":
+          description: The operation.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Operation"
+              examples:
+                running:
+                  summary: A Dolt version roll still running.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      type: update_dolt
+                      status: running
+                      cancelable: false
+                      created_at: "2026-09-16T14:02:11Z"
+                      updated_at: "2026-09-16T14:02:19Z"
+                succeeded:
+                  summary: The same roll, once every instance reported the new version.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      type: update_dolt
+                      status: succeeded
+                      cancelable: false
+                      created_at: "2026-09-16T14:02:11Z"
+                      updated_at: "2026-09-16T14:03:47Z"
+                failed:
+                  summary: A backup that was never picked up.
+                  value:
+                    data:
+                      id: 91b7d0e5-3c62-4f88-a1de-27b940fa6c39
+                      type: create_backup
+                      status: failed
+                      cancelable: false
+                      error:
+                        code: EXPIRED
+                      created_at: "2026-09-16T09:15:00Z"
+                      updated_at: "2026-09-16T09:15:00Z"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -3261,6 +3751,172 @@ components:
           description: Expose a statistics endpoint. Defaults to `false` when omitted.
           examples:
             - false
+
+    OperationType:
+      type: string
+      title: OperationType
+      description: >-
+        What the operation was asked to do. A kind of work this API version has no name for
+        is reported as `unknown`.
+      enum:
+        - reboot_instance
+        - restart_dolt
+        - create_backup
+        - update_dolt
+        - update_config
+        - update_dolt_creds
+        - change_primary
+        - unknown
+      examples:
+        - update_dolt
+
+    OperationRef:
+      type: object
+      title: OperationRef
+      description: >-
+        A handle on work that was queued, returned in `202` responses. Pass `id` to
+        `GET /api/v1/operations/{id}`, or follow `href`, to find out what became of it.
+      required:
+        - id
+        - href
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The operation's identifier.
+          examples:
+            - 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        href:
+          type: string
+          format: uri
+          description: Absolute URL of the endpoint that reports this operation.
+          examples:
+            - https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+
+    DatabaseVersions:
+      type: object
+      title: DatabaseVersions
+      description: >-
+        What a deployment's database engine is running and the versions it can be upgraded or
+        downgraded to.
+      required:
+        - current
+        - available
+      properties:
+        current:
+          type: string
+          description: The version the deployment records, as `database_version` on the deployment.
+          examples:
+            - 1.59.2
+        available:
+          type: array
+          description: >-
+            The latest versions for the deployment's `cluster_type`, followed by versions
+            previously installed on this deployment that are no longer in the latest list.
+            `POST` on this path accepts these versions, newest first within each source list.
+          items:
+            type: string
+          examples:
+            - [1.60.0, 1.59.2, 1.59.1, 1.58.4, 1.58.3]
+
+    UpdateDatabaseVersionRequest:
+      type: object
+      title: UpdateDatabaseVersionRequest
+      description: The version to roll the deployment's database engine to.
+      required:
+        - version
+      additionalProperties: false
+      properties:
+        version:
+          type: string
+          pattern: "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
+          description: >-
+            A version the deployment's `cluster_type` supports, without a leading `v`. A
+            version this API does not recognize is rejected rather than queued.
+          examples:
+            - 1.60.0
+
+    OperationErrorCode:
+      type: string
+      title: OperationErrorCode
+      description: >-
+        Which way an operation failed. Separate from `ErrorCode`, which classifies HTTP
+        failures: an operation that failed is reported in a `200`, and the request to read it
+        succeeded.
+      enum:
+        - EXPIRED # dispatch window elapsed without confirmation
+        - FAILED # execution error or outcome not confirmed before timeout
+        - INTERNAL # Hosted could not carry the work out
+      examples:
+        - EXPIRED
+
+    OperationStatus:
+      type: string
+      title: OperationStatus
+      description: >-
+        Where the operation has got to. `succeeded` and `failed` are final; the others mean
+        the answer is not in yet.
+      enum:
+        - queued
+        - running
+        - succeeded
+        - failed
+      examples:
+        - running
+
+    Operation:
+      type: object
+      title: Operation
+      description: >-
+        Work Hosted carries out in the background, and what became of it.
+      required:
+        - id
+        - type
+        - status
+        - cancelable
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The operation's identifier, as returned by the endpoint that queued the work.
+          examples:
+            - 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        type:
+          $ref: "#/components/schemas/OperationType"
+        status:
+          $ref: "#/components/schemas/OperationStatus"
+        cancelable:
+          type: boolean
+          description: >-
+            Whether the operation can be canceled. Always `false`: Hosted cannot recall work
+            it has queued.
+          examples:
+            - false
+        error:
+          type: object
+          description: >-
+            Why the operation failed. Present only when `status` is `failed`, and reported
+            as a code rather than a message.
+          required:
+            - code
+          properties:
+            code:
+              $ref: "#/components/schemas/OperationErrorCode"
+        created_at:
+          type: string
+          format: date-time
+          description: When the work was queued.
+          examples:
+            - "2026-09-16T14:02:11Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: >-
+            When the status last changed. Absent on an operation that is still queued, which
+            has not changed since it was created.
+          examples:
+            - "2026-09-16T14:03:47Z"
 
     DeploymentState:
       type: string
