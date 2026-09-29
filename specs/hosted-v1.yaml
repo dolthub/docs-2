@@ -1357,6 +1357,302 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/deployments/{owner}/{deployment}/dolt-credentials:
+    parameters:
+      - name: owner
+        in: path
+        required: true
+        description: >-
+          The user or organization that owns the deployment. 3–32 characters of letters,
+          digits, hyphens, and underscores.
+        schema:
+          type: string
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+        example: acme
+      - name: deployment
+        in: path
+        required: true
+        description: >-
+          The deployment name, unique within the owner. 3–32 characters of letters,
+          digits, hyphens, and underscores.
+        schema:
+          type: string
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+        example: analytics
+    get:
+      operationId: getDeploymentDoltCredentials
+      summary: Read a deployment's Dolt credentials.
+      description: >-
+        Returns the public half of the Dolt credentials the deployment uses to authenticate
+        to DoltHub, so it can clone from and push to private databases. The private key is
+        held by the deployment's instances and is never returned here.
+
+
+        These are not the deployment's SQL username and password, and not a way to connect
+        to the deployment. They are a `dolt creds` key pair belonging to the deployment
+        itself, and the public key is what you add to a DoltHub account to let the
+        deployment in.
+
+
+        `404` when the deployment has no credentials, which is the state it starts in.
+
+
+        Requires admin on the deployment.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      responses:
+        "200":
+          description: The deployment's Dolt credentials.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DoltCredentials"
+              examples:
+                default:
+                  summary: A deployment with credentials.
+                  value:
+                    data:
+                      key_id: qi54ma4nlm0dvvhbrgv2p0lqmgs1kgnd
+                      public_key: 7pnjqfqgqgqfhs5rgkcbhjqgxzqfnkqfhs5rgkcbhjqgxzqfnkqa
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    post:
+      operationId: createDeploymentDoltCredentials
+      summary: Issue Dolt credentials for a deployment.
+      description: >-
+        Generates a `dolt creds` key pair, hands the private half to the deployment's
+        instances, and records the public half. Use it once; to replace an existing key
+        pair use `POST .../dolt-credentials/reroll`, which removes the old key in the same
+        pass.
+
+
+        The work is queued, so this returns `202` with an operation to poll. The operation
+        does not carry the key: read `GET .../dolt-credentials` once it succeeds.
+
+
+
+        Requires admin on the deployment, which must be `started`.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      responses:
+        "202":
+          description: The request to issue credentials was accepted and queued.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+              examples:
+                default:
+                  summary: Poll the operation, then retrieve the credentials.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      href: https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    delete:
+      operationId: deleteDeploymentDoltCredentials
+      summary: Remove a deployment's Dolt credentials.
+      description: >-
+        Removes the key pair from the deployment's instances and clears the recorded public
+        key. Anything on DoltHub that trusted that public key stops letting the deployment
+        in.
+
+
+        The work is queued, so this returns `202` with an operation to poll rather than
+        `204`. `GET .../dolt-credentials` answers `404` once it succeeds.
+
+
+
+        `404` when the deployment has no credentials to remove. Requires admin on the
+        deployment.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      responses:
+        "202":
+          description: The removal was queued.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+              examples:
+                default:
+                  summary: Poll the operation to confirm removal.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      href: https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/deployments/{owner}/{deployment}/dolt-credentials/reroll:
+    parameters:
+      - name: owner
+        in: path
+        required: true
+        description: >-
+          The user or organization that owns the deployment. 3–32 characters of letters,
+          digits, hyphens, and underscores.
+        schema:
+          type: string
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+        example: acme
+      - name: deployment
+        in: path
+        required: true
+        description: >-
+          The deployment name, unique within the owner. 3–32 characters of letters,
+          digits, hyphens, and underscores.
+        schema:
+          type: string
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+        example: analytics
+    post:
+      operationId: rerollDeploymentDoltCredentials
+      summary: Replace a deployment's Dolt credentials.
+      description: >-
+        Issues a new `dolt creds` key pair and requests removal of the old one in the same
+        per-instance update. This is not an atomic change across the deployment: instances
+        can temporarily disagree, and a failed operation does not roll back changes.
+
+
+        The new public key has to be added to DoltHub before the deployment can reach
+        private databases again, so expect a gap between this succeeding and access being
+        restored.
+
+
+        The work is queued, so this returns `202` with an operation to poll. Read
+        `GET .../dolt-credentials` once it succeeds for the new public key.
+
+
+
+        `404` when the deployment has no credentials to replace; use `POST` to issue the
+        first pair. Requires admin on the deployment.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      responses:
+        "202":
+          description: The replacement was queued.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+              examples:
+                default:
+                  summary: Poll the operation, then retrieve the new credentials.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      href: https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/deployments/{owner}/{deployment}/logs:
     get:
       operationId: getDeploymentLogs
@@ -3818,6 +4114,29 @@ components:
             type: string
           examples:
             - [1.60.0, 1.59.2, 1.59.1, 1.58.4, 1.58.3]
+    DoltCredentials:
+      type: object
+      title: DoltCredentials
+      description: >-
+        The public half of the `dolt creds` key pair a deployment authenticates to DoltHub
+        with. The private half lives on the deployment's instances and is never returned.
+      required:
+        - key_id
+        - public_key
+      properties:
+        key_id:
+          type: string
+          description: >-
+            The key pair's identifier, which is what DoltHub lists the credential under.
+          examples:
+            - qi54ma4nlm0dvvhbrgv2p0lqmgs1kgnd
+        public_key:
+          type: string
+          description: >-
+            The public key, to be added to the DoltHub account whose private databases the
+            deployment should reach.
+          examples:
+            - 7pnjqfqgqgqfhs5rgkcbhjqgxzqfnkqfhs5rgkcbhjqgxzqfnkqa
 
     UpdateDatabaseVersionRequest:
       type: object
