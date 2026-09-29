@@ -879,6 +879,220 @@ curl -X POST 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/
 
 ---
 
+## Read a deployment's Dolt credentials {#getDeploymentDoltCredentials}
+<span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/dolt-credentials</code>
+
+Returns the public half of the Dolt credentials the deployment uses to authenticate to DoltHub, so it can clone from and push to private databases. The private key is held by the deployment's instances and is never returned here.
+
+These are not the deployment's SQL username and password, and not a way to connect to the deployment. They are a `dolt creds` key pair belonging to the deployment itself, and the public key is what you add to a DoltHub account to let the deployment in.
+
+`404` when the deployment has no credentials, which is the state it starts in.
+
+Requires admin on the deployment.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Example request**
+
+```sh
+curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/dolt-credentials' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `200` | The deployment's Dolt credentials. | [`DoltCredentials`](/products/hosted/api/v1/models#model-doltcredentials) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `200`**
+
+```json
+{
+  "data": {
+    "key_id": "qi54ma4nlm0dvvhbrgv2p0lqmgs1kgnd",
+    "public_key": "7pnjqfqgqgqfhs5rgkcbhjqgxzqfnkqfhs5rgkcbhjqgxzqfnkqa"
+  }
+}
+```
+
+---
+
+## Issue Dolt credentials for a deployment {#createDeploymentDoltCredentials}
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/dolt-credentials</code>
+
+Generates a `dolt creds` key pair, hands the private half to the deployment's instances, and records the public half. Use it once; to replace an existing key pair use `POST .../dolt-credentials/reroll`, which removes the old key in the same pass.
+
+The work is queued, so this returns `202` with an operation to poll. The operation does not carry the key: read `GET .../dolt-credentials` once it succeeds.
+
+
+Requires admin on the deployment, which must be `started`.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Example request**
+
+```sh
+curl -X POST 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/dolt-credentials' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `202` | The request to issue credentials was accepted and queued. | [`OperationRef`](/products/hosted/api/v1/models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `202`**
+
+```json
+{
+  "data": {
+    "id": "3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72",
+    "href": "https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72"
+  }
+}
+```
+
+---
+
+## Remove a deployment's Dolt credentials {#deleteDeploymentDoltCredentials}
+<span class="api-method" style="background:#EF5350">DELETE</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/dolt-credentials</code>
+
+Removes the key pair from the deployment's instances and clears the recorded public key. Anything on DoltHub that trusted that public key stops letting the deployment in.
+
+The work is queued, so this returns `202` with an operation to poll rather than `204`. `GET .../dolt-credentials` answers `404` once it succeeds.
+
+
+`404` when the deployment has no credentials to remove. Requires admin on the deployment.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Example request**
+
+```sh
+curl -X DELETE 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/dolt-credentials' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `202` | The removal was queued. | [`OperationRef`](/products/hosted/api/v1/models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `202`**
+
+```json
+{
+  "data": {
+    "id": "3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72",
+    "href": "https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72"
+  }
+}
+```
+
+---
+
+## Replace a deployment's Dolt credentials {#rerollDeploymentDoltCredentials}
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/dolt-credentials/reroll</code>
+
+Issues a new `dolt creds` key pair and requests removal of the old one in the same per-instance update. This is not an atomic change across the deployment: instances can temporarily disagree, and a failed operation does not roll back changes.
+
+The new public key has to be added to DoltHub before the deployment can reach private databases again, so expect a gap between this succeeding and access being restored.
+
+The work is queued, so this returns `202` with an operation to poll. Read `GET .../dolt-credentials` once it succeeds for the new public key.
+
+
+`404` when the deployment has no credentials to replace; use `POST` to issue the first pair. Requires admin on the deployment.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Example request**
+
+```sh
+curl -X POST 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/dolt-credentials/reroll' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `202` | The replacement was queued. | [`OperationRef`](/products/hosted/api/v1/models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `202`**
+
+```json
+{
+  "data": {
+    "id": "3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72",
+    "href": "https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72"
+  }
+}
+```
+
+---
+
 ## Read a deployment's logs {#getDeploymentLogs}
 <span class="api-method" style="background:#29E3C1">GET</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/logs</code>
 
