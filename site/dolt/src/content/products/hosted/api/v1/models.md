@@ -370,6 +370,16 @@ What a deployment's database engine is running and the versions it can be upgrad
 
 ---
 
+## DoltCredentials {#model-doltcredentials}
+The public half of the `dolt creds` key pair a deployment authenticates to DoltHub with. The private half lives on the deployment's instances and is never returned.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `key_id` | `string` | yes | The key pair's identifier, which is what DoltHub lists the credential under. |
+| `public_key` | `string` | yes | The public key, to be added to the DoltHub account whose private databases the deployment should reach. |
+
+---
+
 ## UpdateDatabaseVersionRequest {#model-updatedatabaseversionrequest}
 The version to roll the deployment's database engine to.
 
