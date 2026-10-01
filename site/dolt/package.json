@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.1",
-    "@astrojs/react": "^6.0.4",
+    "@astrojs/react": "^7.0.0",
     "@dolthub/react-components": "^0.4.3",
     "@dolthub/react-hooks": "^0.3.1",
     "astro": "^7.2.9",
