@@ -204,6 +204,56 @@ dolt clone ../remote.git
 dolt clone --ref refs/dolt/custom git@github.com:org/repo.git repo2
 ```
 
+#### History configuration
+
+Git remotes retain earlier Git data commits to help Git compute incremental transfers. Longer histories can improve transfer performance but keep obsolete storage objects reachable for longer. These settings control the history of the backing Git data ref (by default `refs/dolt/data`), not the database's Dolt commit history.
+
+| Setting | Default | Accepted values and behavior |
+| --- | --- | --- |
+| `git-remote.max-history-commits` | `64` | A non-negative integer. When the existing history reaches this limit, the next write starts a new parentless Git commit. This resets the chain rather than keeping a sliding window. `0` disables the length limit. |
+| `git-remote.reset-history-on-prune` | `true` | Exactly `true` or `false`. When `true`, removing obsolete storage entries also starts a parentless Git commit. When `false`, the parent history is retained subject to the length limit. |
+
+Resetting Git history allows Git garbage collection to reclaim objects that are no longer reachable. It does not guarantee immediate disk reclamation. Disabling prune-triggered resets still removes obsolete entries from the current Git tree, but earlier commits keep their objects reachable.
+
+Configure these settings with [`dolt config`](/cli-reference/cli#dolt-config). For example, increase the default history limit for all local repositories:
+
+```bash
+dolt config --global --set git-remote.max-history-commits 256
+```
+
+For unlimited retention, set **both** options in the local Dolt repository:
+
+```bash
+dolt config --local --set git-remote.max-history-commits 0
+dolt config --local --set git-remote.reset-history-on-prune false
+```
+
+Setting only the length limit to `0` still allows history resets when pruning is enabled.
+
+Settings are resolved in this order, from highest to lowest priority:
+
+1. Environment variables.
+2. The initiating Dolt repository's local configuration.
+3. Global configuration.
+4. Built-in defaults.
+
+| Environment variable | Overrides |
+| --- | --- |
+| `DOLT_GIT_REMOTE_MAX_HISTORY_COMMITS` | `git-remote.max-history-commits` |
+| `DOLT_GIT_REMOTE_RESET_HISTORY_ON_PRUNE` | `git-remote.reset-history-on-prune` |
+
+For example, override both settings for one push:
+
+```bash
+DOLT_GIT_REMOTE_MAX_HISTORY_COMMITS=256 \
+DOLT_GIT_REMOTE_RESET_HISTORY_ON_PRUNE=false \
+  dolt push origin main
+```
+
+Invalid values, including negative history limits and boolean values other than `true` or `false`, return an error when opening the Git remote. Empty environment values are invalid; unset an override to use configuration-file values again.
+
+These settings are supplied by the process accessing the remote. Since writes update the shared Git data-ref history, coordinate settings among writers to the same remote. For SQL operations, configure the server's environment or the relevant Dolt repository/global config; these are not SQL system variables or `config.yaml` fields. An already-open remote store retains its settings, so restart a running SQL server after changing them.
+
 #### SQL examples
 
 From SQL (e.g. `dolt sql` / `sql-server`), pass `--ref` as an argument to `dolt_remote()` / `dolt_clone()` when needed:
