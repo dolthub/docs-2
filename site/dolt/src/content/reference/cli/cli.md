@@ -773,6 +773,10 @@ Valid configuration variables:
 
 	- push.autoSetupRemote - if set to "true" assume --set-upstream on default push when no upstream tracking exists for the current branch.
 
+	- git-remote.max-history-commits - maximum reachable Git data commits (default 64). Accepts a non-negative integer; 0 means unlimited.
+
+	- git-remote.reset-history-on-prune - reset Git history when obsolete storage entries are removed (default true). Accepts exactly "true" or "false".
+
 Credential helpers use the Bazel credential helper protocol. Dolt invokes the configured executable with the `get` argument and sends the canonical remotesapi origin on stdin:
 
 	{"uri":"https://example.com:443"}
