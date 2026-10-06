@@ -3,11 +3,12 @@ title: Roadmap
 description: What's shipped, in progress, and planned.
 ---
 
-Full details on [supported SQL features](/reference/sql-support/) are available on the docs site.
+Full details on [supported SQL features](/reference/sql-support/) are available on the docs
+site.
 
 This is a selection of unimplemented features we're working on. Don't see what you need on here?
-[Let us know!](https://github.com/dolthub/doltgresql/issues) Paying customers get their feature
-requests implemented first.
+[Let us know!](https://github.com/dolthub/doltgresql/issues) Paying customers get their feature requests
+implemented first.
 
 Roadmap last updated Oct 2026, next update Jan 2027.
 
@@ -59,6 +60,7 @@ Dolt and Doltgres share an engine, so most features on the Dolt roadmap also app
 | [pgcrypto extension](https://github.com/dolthub/doltgresql/issues/3472)                               | Q4 2026     |
 | [`inet` network address type](https://github.com/dolthub/doltgresql/issues/3512)                      | Q4 2026     |
 | [Asynchronous notifications (`LISTEN` / `NOTIFY`)](https://github.com/dolthub/doltgresql/issues/3236) | Q1 2027     |
+| Supabase support                                                                                      | Q1 2027     |
 | Collation support                                                                                     | 2027        |
 | Custom indexing (anything not built in)                                                               | 2027        |
 | Custom aggregate functions                                                                            | 2027        |

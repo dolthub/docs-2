@@ -60,6 +60,7 @@ Dolt and Doltgres share an engine, so most features on the Dolt roadmap also app
 | [pgcrypto extension](https://github.com/dolthub/doltgresql/issues/3472)                               | Q4 2026     |
 | [`inet` network address type](https://github.com/dolthub/doltgresql/issues/3512)                      | Q4 2026     |
 | [Asynchronous notifications (`LISTEN` / `NOTIFY`)](https://github.com/dolthub/doltgresql/issues/3236) | Q1 2027     |
+| Supabase support                                                                                      | Q1 2027     |
 | Collation support                                                                                     | 2027        |
 | Custom indexing (anything not built in)                                                               | 2027        |
 | Custom aggregate functions                                                                            | 2027        |
