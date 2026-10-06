@@ -10,7 +10,7 @@ This is a selection of unimplemented features we're working on. Don't see what y
 [Let us know!](https://github.com/dolthub/dolt/issues) Paying customers get their feature requests
 implemented first.
 
-Roadmap last updated Aug 2026, next update Oct 2026.
+Roadmap last updated Oct 2026, next update Jan 2027.
 
 ## Major releases in 2026
 
@@ -26,11 +26,12 @@ cases. Try it and let us know what you think.
 ## Upcoming features
 
 Work to improve the performance and availability of Dolt and Doltgres is a constant theme and not
-called out explicitly unless it's a major separable effort.
+called out explicitly unless it's a major separable effort. New feature requests without a
+committed delivery date are listed as unscheduled.
 
 ### Dolt
 
-| Feature                                                                                  | Estimate    |
+| Feature                                                          | Estimate |
 |------------------------------------------------------------------------------------------|-------------|
 | [User-defined functions](https://github.com/dolthub/dolt/issues/6193)                    | Q4 2026     |
 | Update multiple branches in a transaction                                                | Q4 2026     |
@@ -47,6 +48,12 @@ called out explicitly unless it's a major separable effort.
 | Updateable views                                                                         | Unscheduled |
 | Encryption at rest                                                                       | Unscheduled |
 | Pipeline query processing                                                                | Unscheduled |
+| [Queries against remote MySQL data sources](https://github.com/dolthub/dolt/issues/10285) | Unscheduled |
+| [Clone or fetch a specific revision or tag](https://github.com/dolthub/dolt/issues/11898) | Unscheduled |
+| [SQL server readiness signal](https://github.com/dolthub/dolt/issues/11261)               | Unscheduled |
+| [Resolve individual conflicts by ID](https://github.com/dolthub/dolt/issues/8357)         | Unscheduled |
+| [Per-row column diff metadata](https://github.com/dolthub/dolt/issues/6126)               | Unscheduled |
+| [Dolt bundles for sharing database history](https://github.com/dolthub/dolt/issues/6841)  | Unscheduled |
 
 ### Doltgres
 
@@ -54,20 +61,39 @@ Dolt and Doltgres share an engine, so most features on the Dolt roadmap also app
 
 | Feature                                                          | Estimate |
 |------------------------------------------------------------------|----------|
-| PostGIS support                                                  | Q4 2026  |
-| pgvector support                                                 | Q4 2026  |
+| [PostGIS support](https://github.com/dolthub/doltgresql/issues/1452)                                  | Q4 2026     |
 | Collation support                                                | 2027     |
 | Custom indexing (anything not built in)                          | 2027     |
 | Custom aggregate functions                                       | 2027     |
 | More built-in function support                                   | Ongoing  |
 | Additional DDL statements (e.g. `ALTER SEQUENCE`, `COMMENT ON`)  | Ongoing  |
 | Better pg_catalog support                                        | Ongoing  |
+| [Asynchronous notifications (`LISTEN` / `NOTIFY`)](https://github.com/dolthub/doltgresql/issues/3236) | Unscheduled |
+| [Server-side cursors](https://github.com/dolthub/doltgresql/issues/3124)                              | Unscheduled |
+| [Full-text search](https://github.com/dolthub/doltgresql/issues/3335)                                 | Unscheduled |
+| [GIN indexes](https://github.com/dolthub/doltgresql/issues/3329)                                      | Unscheduled |
+| [`ALTER TYPE ... ADD VALUE` for enums](https://github.com/dolthub/doltgresql/issues/3528)             | Unscheduled |
+| [pgcrypto extension](https://github.com/dolthub/doltgresql/issues/3472)                               | Unscheduled |
+| [`inet` network address type](https://github.com/dolthub/doltgresql/issues/3512)                      | Unscheduled |
 
 ## Selection of recent feature launches
 
 | Feature                                                                                                                            | Launch Date |
 |------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| [DumboDB merge modes](https://www.dolthub.com/blog/2026-09-29-dumbodb-merge-modes/)                                                   | Sep 2026    |
+| [Multi-dimensional arrays in Doltgres](https://www.dolthub.com/blog/2026-09-24-postgres-multi-dimensional-arrays/)                    | Sep 2026    |
+| [Wildcard table filters for binlog replication](https://www.dolthub.com/blog/2026-09-23-wildcard-binlog-filters/)                     | Sep 2026    |
+| [MongoDB replication into DumboDB](https://www.dolthub.com/blog/2026-09-22-dumbodb-replication/)                                      | Sep 2026    |
+| [dh, the DoltHub CLI](https://www.dolthub.com/blog/2026-09-10-announcing-dolthub-cli/)                                                | Sep 2026    |
+| [Emulated extensions and pgvector in Doltgres](https://www.dolthub.com/blog/2026-09-03-doltgres-extensions-update/)                   | Sep 2026    |
+| [Clone, push, and pull in DumboDB](https://www.dolthub.com/blog/2026-09-01-dumbodb-pushpull/)                                         | Sep 2026    |
+| [DoltLite Beta](https://www.dolthub.com/blog/2026-08-31-doltlite-beta/)                                                               | Aug 2026    |
+| [DoltLite support in Dolt Workbench](https://www.dolthub.com/blog/2026-08-21-dolt-workbench-supports-doltlite/)                       | Aug 2026    |
+| [Hosted Dolt REST API](https://www.dolthub.com/blog/2026-08-20-hosted-rest-api/)                                                      | Aug 2026    |
+| [DoltLite and Doltgres databases on DoltHub](https://www.dolthub.com/blog/2026-08-07-dolthub-supports-doltlite-and-doltgres/)         | Aug 2026    |
+| [Doltgres 1.0](https://www.dolthub.com/blog/2026-08-06-doltgres-1-0/)                                                                 | Aug 2026    |
 | [dolt_squash_history() procedure](https://www.dolthub.com/blog/2026-07-31-squash-history/)                                         | Jul 2026    |
+| [Doltgres remotes, replication, and automatic garbage collection](https://www.dolthub.com/blog/2026-07-30-doltgres-1-0-one-week-out/) | Jul 2026    |
 | [DoltHub API v2](https://www.dolthub.com/blog/2026-07-09-dolthub-api-v2/)                                                          | Jul 2026    |
 | [Functional indexes in Doltgres](https://www.dolthub.com/blog/2026-06-01-announcing-functional-index-support-in-doltgres/)         | Jun 2026    |
 | [Dolt 2.0](https://www.dolthub.com/blog/2026-05-11-dolt-2-dot-0/)                                                                  | May 2026    |
@@ -90,14 +116,3 @@ Dolt and Doltgres share an engine, so most features on the Dolt roadmap also app
 | [Edit commits during interactive rebase](https://www.dolthub.com/blog/2026-02-04-sql-rebase-edit/)                                 | Feb 2026    |
 | [MCP support for Hosted Dolt](https://www.dolthub.com/blog/2026-02-03-hosted-dolt-mcp/)                                            | Feb 2026    |
 | [Prometheus metrics for Hosted Dolt](https://www.dolthub.com/blog/2026-01-21-hosted-dolt-metrics/)                                 | Jan 2026    |
-| [Doltgres Docker images](https://www.dolthub.com/blog/2025-12-05-announcing-doltgres-docker-image/)                                | Dec 2025    |
-| [DoltLab on Kubernetes](https://www.dolthub.com/blog/2025-12-02-announcing-doltlab-on-kubernetes/)                                 | Dec 2025    |
-| [Require client certificates](https://www.dolthub.com/blog/2025-12-01-require-client-cert/)                                        | Dec 2025    |
-| [DOLT_JSON_DIFF() for diffing documents](https://www.dolthub.com/blog/2025-11-24-announcing-dolt-json-diff/)                       | Nov 2025    |
-| [Mutual TLS authentication](https://www.dolthub.com/blog/2025-11-20-client-cert-auth/)                                             | Nov 2025    |
-| [DoltLab on Podman](https://www.dolthub.com/blog/2025-11-05-announcing-doltlab-on-podman/)                                         | Nov 2025    |
-| [dolt_branch_activity system table](https://www.dolthub.com/blog/2025-10-27-branch-activity/)                                      | Oct 2025    |
-| [AutoGC and archival storage on by default (Dolt 1.75)](https://www.dolthub.com/blog/2025-10-20-dolt-1-75/)                        | Oct 2025    |
-| [MariaDB client support](https://www.dolthub.com/blog/2025-10-14-mariadb-client-support/)                                          | Oct 2025    |
-| [Faster CLI access to large databases with mmap](https://www.dolthub.com/blog/2025-10-13-faster-large-db-access-with-mmap/)        | Oct 2025    |
-| [Non-local tables](https://www.dolthub.com/blog/2025-10-06-nonlocal-tables/)                                                       | Oct 2025    |
