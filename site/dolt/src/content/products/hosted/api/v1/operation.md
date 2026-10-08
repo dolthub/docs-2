@@ -43,6 +43,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/operations/{id}' \
 | `200` | The operation. | [`Operation`](/products/hosted/api/v1/models#model-operation) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
