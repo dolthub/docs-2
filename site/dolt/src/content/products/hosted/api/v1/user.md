@@ -26,6 +26,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/user' \
 |--------|-------------|--------|
 | `200` | The authenticated user's profile. | [`User`](/products/hosted/api/v1/models#model-user) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 
