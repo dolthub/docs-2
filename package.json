@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
-    "cypress": "^15.21.1",
+    "cypress": "^16.1.0",
     "remark-heading-id": "^1.0.1",
     "typescript": "^5.0.0"
   },
