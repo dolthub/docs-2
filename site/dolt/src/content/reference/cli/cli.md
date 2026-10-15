@@ -1658,16 +1658,21 @@ Find the common ancestor of two commits.
 **Synopsis**
 
 ```bash
-dolt merge-base <commit spec> <commit spec>
+dolt merge-base [--all] <commit spec> <commit spec>
 ```
 
 **Description**
 
-Find the common ancestor of two commits, and return the ancestor's commit hash.'
+Find the common ancestor of two commits, and return the ancestor's commit hash.
+
+When the commits have more than one best common ancestor, one of them is returned. Use `--all` to print every best common ancestor, one per line, newest first.
 
 **Arguments and options**
 
-No options for this command.
+`--all`:
+Print every best common ancestor instead of one.
+
+
 
 ## `dolt profile`
 
