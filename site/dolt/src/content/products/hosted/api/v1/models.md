@@ -289,7 +289,8 @@ One instance backing a deployment. A deployment has a primary and, when it has r
 | `id` | `string` | yes | The instance's identifier, unique within the deployment. |
 | `index` | `integer` | yes | The instance's position in the deployment. `0` is the first instance; replicas take the following indices. |
 | `is_primary` | `boolean` | yes | Whether this instance is currently the primary. Exactly one instance of a started deployment is primary, and which one can change over the deployment's life. |
-| `host` | `string` | no | The hostname for this specific instance. Connect to the deployment's own `host` unless you mean to address one instance directly. Absent until the instance has come up and reported its address, so an instance that is still being provisioned has no `host`. There is no per-instance state on this API; `host` appearing is what tells you a newly added instance is reachable. |
+| `state` | [`DeploymentInstanceState`](/products/hosted/api/v1/models#model-deploymentinstancestate) | yes | The lifecycle state of an instance backing a deployment. |
+| `host` | `string` | no | The hostname for this specific instance. Connect to the deployment's own `host` unless you mean to address one instance directly. Absent until the instance has come up and reported its address, so an instance that is still being provisioned has no `host`. Use `state` to follow its lifecycle; a `started` instance with a host is reachable. |
 | `instance_type_name` | `string` | no | The display name of this instance's type. |
 | `volume_type_name` | `string` | no | The display name of this instance's storage type. |
 | `volume_size_gb` | `integer` | no | The size of this instance's storage volume, in gigabytes. |
@@ -389,6 +390,15 @@ The version to roll the deployment's database engine to.
 
 ---
 
+## ChangePrimaryRequest {#model-changeprimaryrequest}
+The instance currently serving as the deployment's primary.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `current_primary_id` | `string` | yes | The id of the instance that is currently primary. The request is rejected if it is stale or does not belong to this deployment. |
+
+---
+
 ## OperationErrorCode {#model-operationerrorcode}
 Which way an operation failed. Separate from `ErrorCode`, which classifies HTTP failures: an operation that failed is reported in a `200`, and the request to read it succeeded.
 
@@ -433,6 +443,20 @@ Work Hosted carries out in the background, and what became of it.
 
 ## DeploymentState {#model-deploymentstate}
 The deployment's lifecycle state. `starting` covers both initial provisioning and a restart; poll this field to observe a create or a resize reaching `started`.
+
+**Enum values**
+
+| Value |
+|-------|
+| `starting` |
+| `started` |
+| `stopping` |
+| `stopped` |
+
+---
+
+## DeploymentInstanceState {#model-deploymentinstancestate}
+The lifecycle state of an instance backing a deployment.
 
 **Enum values**
 

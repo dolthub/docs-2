@@ -43,6 +43,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployment-options?cloud=aws' \
 | `200` | The available options, narrowed by the supplied parameters. | [`DeploymentOptions`](/products/hosted/api/v1/models#model-deploymentoptions) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
@@ -257,6 +258,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}' 
 | `200` | The deployment. | [`Deployment`](/products/hosted/api/v1/models#model-deployment) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
@@ -368,7 +370,7 @@ curl -X PATCH 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}
 
 Returns the instances backing `{owner}/{deployment}` — one for a single-instance deployment, or a primary plus its read replicas.
 
-Stopped instances are not listed; starting, started, and stopping ones all are. So an instance appearing here is part of the deployment but not necessarily serving traffic, and an empty array means it has none outside the stopped state — normal while a deployment is itself `starting`.
+Stopped instances are not listed; starting, started, and stopping ones all are. The `state` field tells you where each listed instance is in its lifecycle, and an empty array means the deployment has none outside the stopped state — normal while a deployment is itself `starting`.
 
 The list is not paginated: a deployment has a primary and its replicas, a set small enough to return whole.
 
@@ -394,6 +396,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/i
 | `200` | The deployment's non-stopped instances. | [`DeploymentInstance[]`](/products/hosted/api/v1/models#model-deploymentinstance) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
@@ -408,6 +411,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/i
       "id": "9b1f5c2e-4d3a-4f8b-9c0d-1e2f3a4b5c6d",
       "index": 0,
       "is_primary": true,
+      "state": "started",
       "host": "analytics-0.dbs.hosted.doltdb.com",
       "instance_type_name": "t2.medium",
       "volume_type_name": "Trial 50GB EBS",
@@ -418,6 +422,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/i
       "id": "2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e",
       "index": 1,
       "is_primary": false,
+      "state": "started",
       "host": "analytics-1.dbs.hosted.doltdb.com",
       "instance_type_name": "t2.medium",
       "volume_type_name": "Trial 50GB EBS",
@@ -433,7 +438,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/i
 ## Add a read replica to a deployment {#addDeploymentInstance}
 <span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/instances</code>
 
-Adds an instance to `{owner}/{deployment}` and returns `202` with the new instance, which is still being provisioned and so has no `host` yet. Poll `GET /api/v1/deployments/{owner}/{deployment}/instances` until that instance reports a `host`; that is when it is reachable. There is no per-instance state field to watch.
+Adds an instance to `{owner}/{deployment}` and returns `202` with the new instance, which is still being provisioned and so reports `state: starting`. Poll `GET /api/v1/deployments/{owner}/{deployment}/instances` until that instance reports `state: started` and a `host`; that is when it is reachable.
 
 This is also how a disabled deployment is started again: adding an instance clears the shutdown and brings it back to `starting`. Pass `backup_id` to restore a backup into it, or it comes back empty.
 
@@ -492,6 +497,7 @@ curl -X POST 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/
     "id": "2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e",
     "index": 1,
     "is_primary": false,
+    "state": "starting",
     "instance_type_name": "t2.medium",
     "volume_type_name": "Trial 50GB EBS",
     "volume_size_gb": 50
@@ -530,6 +536,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/b
 | `200` | The deployment's backups. | [`Backup[]`](/products/hosted/api/v1/models#model-backup) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
@@ -651,6 +658,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/c
 | `200` | The deployment's effective configuration — every supported setting, at the value it is running. | [`DeploymentConfig`](/products/hosted/api/v1/models#model-deploymentconfig) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
@@ -795,6 +803,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/d
 | `200` | The deployment's current version and the ones it can be rolled to. | [`DatabaseVersions`](/products/hosted/api/v1/models#model-databaseversions) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
@@ -1132,6 +1141,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/l
 | `200` | A page of log lines. | [`LogLine[]`](/products/hosted/api/v1/models#model-logline) |
 | `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
@@ -1544,7 +1554,7 @@ curl -X GET 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/m
 
 Removes an instance from `{owner}/{deployment}` and returns `202`. The instance is marked stopping and torn down in the background.
 
-There is no per-instance state on this API, so completion is observed by the instance leaving `GET /api/v1/deployments/{owner}/{deployment}/instances` — that list reports only instances that have not stopped. An instance that is still present is either running or still stopping.
+Poll `GET /api/v1/deployments/{owner}/{deployment}/instances` until the instance leaves the list. The list reports only instances that have not stopped; while it is present, its `state` distinguishes running from stopping.
 
 Instances can only be removed when the deployment is settled. If it is stopping, or any instance is still starting or stopping, the request conflicts with the deployment's current state and is rejected with `409`. Retry once it settles. Removing an instance that has already stopped is `422`.
 
@@ -1631,6 +1641,63 @@ curl -X POST 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/
 | `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+
+**Example response `202`**
+
+```json
+{
+  "data": {
+    "id": "3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72",
+    "href": "https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72"
+  }
+}
+```
+
+---
+
+## Change the primary instance of a deployment {#changePrimary}
+<span class="api-method" style="background:#6DB0FC">POST</span> <code class="api-path">/api/v1/deployments/{owner}/{deployment}/change-primary</code>
+
+Starts an asynchronous primary switch for a deployment with at least one replica. Provide the id of the instance currently listed as primary; Hosted chooses the replacement from the replicas. Hosted verifies that the supplied id is still the deployment's primary before accepting the request. This prevents a stale request from overriding a newer primary change.
+The `202` response means the request was queued, not that the primary has changed yet. Poll the returned operation until it reports `SUCCEEDED`, `FAILED`, or `EXPIRED`. When it reports `SUCCEEDED`, the primary change has completed; use the instances endpoint to see which instance is now primary. Requires admin on the deployment.
+
+
+**Parameters**
+
+| Name | In | Type | Required | Description |
+|------|----|------|----------|-------------|
+| `owner` | path | string | yes | The user or organization that owns the deployment. 3–32 characters of letters, digits, hyphens, and underscores. |
+| `deployment` | path | string | yes | The deployment name, unique within the owner. 3–32 characters of letters, digits, hyphens, and underscores. |
+
+**Request body**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `current_primary_id` | string | yes | The id of the instance that is currently primary. The request is rejected if it is stale or does not belong to this deployment. |
+
+**Example request**
+
+```sh
+curl -X POST 'https://hosted.doltdb.com/api/v1/deployments/{owner}/{deployment}/change-primary' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"current_primary_id":"2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e"}'
+```
+
+**Responses**
+
+| Status | Description | Schema |
+|--------|-------------|--------|
+| `202` | The primary change was accepted and queued for processing. | [`OperationRef`](/products/hosted/api/v1/models#model-operationref) |
+| `400` | The request was malformed or failed input validation. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `401` | Authentication credentials were missing or invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `403` | Authenticated, but not permitted to perform this action. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `404` | The requested resource does not exist. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `405` | The HTTP method is not supported for this resource. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `409` | The request conflicts with the current state of the resource (e.g. it already exists). | [`Problem`](/products/hosted/api/v1/models#model-problem) |
+| `422` | The request was well-formed but semantically invalid. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `500` | An unexpected server error occurred. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 | `503` | The service is temporarily unavailable. | [`Problem`](/products/hosted/api/v1/models#model-problem) |
 

@@ -103,6 +103,8 @@ paths:
                           is_primary: true
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "405":
           $ref: "#/components/responses/MethodNotAllowed"
         "500":
@@ -209,6 +211,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "405":
           $ref: "#/components/responses/MethodNotAllowed"
         "422":
@@ -501,6 +505,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -642,10 +648,10 @@ paths:
         deployment, or a primary plus its read replicas.
 
 
-        Stopped instances are not listed; starting, started, and stopping ones all are. So
-        an instance appearing here is part of the deployment but not necessarily serving
-        traffic, and an empty array means it has none outside the stopped state — normal
-        while a deployment is itself `starting`.
+        Stopped instances are not listed; starting, started, and stopping ones all are. The
+        `state` field tells you where each listed instance is in its lifecycle, and an empty
+        array means the deployment has none outside the stopped state — normal while a
+        deployment is itself `starting`.
 
 
         The list is not paginated: a deployment has a primary and its replicas, a set small
@@ -682,6 +688,7 @@ paths:
                       - id: 9b1f5c2e-4d3a-4f8b-9c0d-1e2f3a4b5c6d
                         index: 0
                         is_primary: true
+                        state: started
                         host: analytics-0.dbs.hosted.doltdb.com
                         instance_type_name: t2.medium
                         volume_type_name: Trial 50GB EBS
@@ -690,6 +697,7 @@ paths:
                       - id: 2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e
                         index: 1
                         is_primary: false
+                        state: started
                         host: analytics-1.dbs.hosted.doltdb.com
                         instance_type_name: t2.medium
                         volume_type_name: Trial 50GB EBS
@@ -699,6 +707,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -713,10 +723,9 @@ paths:
       summary: Add a read replica to a deployment.
       description: >-
         Adds an instance to `{owner}/{deployment}` and returns `202` with the new instance,
-        which is still being provisioned and so has no `host` yet. Poll
+        which is still being provisioned and so reports `state: starting`. Poll
         `GET /api/v1/deployments/{owner}/{deployment}/instances` until that instance reports
-        a `host`; that is when it is reachable. There is no per-instance state field to
-        watch.
+        `state: started` and a `host`; that is when it is reachable.
 
 
         This is also how a disabled deployment is started again: adding an instance clears
@@ -782,6 +791,7 @@ paths:
                       id: 2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e
                       index: 1
                       is_primary: false
+                      state: starting
                       instance_type_name: t2.medium
                       volume_type_name: Trial 50GB EBS
                       volume_size_gb: 50
@@ -876,6 +886,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -1055,6 +1067,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -1250,6 +1264,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -1794,6 +1810,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -2378,10 +2396,9 @@ paths:
         marked stopping and torn down in the background.
 
 
-        There is no per-instance state on this API, so completion is observed by the
-        instance leaving `GET /api/v1/deployments/{owner}/{deployment}/instances` — that
-        list reports only instances that have not stopped. An instance that is still present
-        is either running or still stopping.
+        Poll `GET /api/v1/deployments/{owner}/{deployment}/instances` until the instance
+        leaves the list. The list reports only instances that have not stopped; while it is
+        present, its `state` distinguishes running from stopping.
 
 
         Instances can only be removed when the deployment is settled. If it is stopping, or
@@ -2536,6 +2553,99 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/deployments/{owner}/{deployment}/change-primary:
+    parameters:
+      - name: owner
+        in: path
+        required: true
+        description: >-
+          The user or organization that owns the deployment. 3–32 characters of letters,
+          digits, hyphens, and underscores.
+        schema:
+          type: string
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+        example: acme
+      - name: deployment
+        in: path
+        required: true
+        description: >-
+          The deployment name, unique within the owner. 3–32 characters of letters,
+          digits, hyphens, and underscores.
+        schema:
+          type: string
+          pattern: "^[-a-zA-Z0-9_]{3,32}$"
+        example: analytics
+    post:
+      operationId: changePrimary
+      summary: Change the primary instance of a deployment.
+      description: >-
+        Starts an asynchronous primary switch for a deployment with at least one replica. Provide
+        the id of the instance currently listed as primary; Hosted chooses the replacement from
+        the replicas. Hosted verifies that the supplied id is still the deployment's primary
+        before accepting the request. This prevents a stale request from overriding a newer
+        primary change.
+
+        The `202` response means the request was queued, not that the primary has changed yet.
+        Poll the returned operation until it reports `SUCCEEDED`, `FAILED`, or `EXPIRED`. When it
+        reports `SUCCEEDED`, the primary change has completed; use the instances endpoint to see
+        which instance is now primary. Requires admin on the deployment.
+      tags:
+        - Deployment
+      security:
+        - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePrimaryRequest"
+            examples:
+              default:
+                value:
+                  current_primary_id: 2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e
+      responses:
+        "202":
+          description: The primary change was accepted and queued for processing.
+          headers:
+            x-request-id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    required:
+                      - data
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/OperationRef"
+              examples:
+                default:
+                  summary: Poll the operation to find out what became of the primary change.
+                  value:
+                    data:
+                      id: 3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+                      href: https://hosted.doltdb.com/api/v1/operations/3f2a9c14-8e7b-4d21-9a05-6c3e1b8f4d72
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/deployments/{owner}/{deployment}/pulls:
     get:
       operationId: listDeploymentPulls
@@ -2655,6 +2765,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -2745,6 +2857,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -2837,6 +2951,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -2936,6 +3052,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -3049,6 +3167,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "405":
@@ -3062,11 +3182,13 @@ components:
   headers:
     RequestId:
       description: >-
-        The request identifier — echoed on every response (including 2xx). Reuse
-        the inbound `x-request-id` from the caller / edge proxy when present;
-        otherwise the server mints a `req_<UUID>` value.
+        The request identifier, echoed on every response (including 2xx). A valid inbound
+        `x-request-id` is reused when it is 1–128 characters and contains only ASCII letters,
+        digits, `.`, `_`, `:`, or `-`; otherwise the server mints a `req_<UUID>` value.
       schema:
         type: string
+        maxLength: 128
+        pattern: "^[A-Za-z0-9._:-]+$"
         examples:
           - req_2f1c9e7a-3b6d-4c5e-8a9f-0d1e2f3a4b5c
 
@@ -3846,6 +3968,7 @@ components:
         - id
         - index
         - is_primary
+        - state
       properties:
         id:
           type: string
@@ -3869,6 +3992,8 @@ components:
             life.
           examples:
             - true
+        state:
+          $ref: "#/components/schemas/DeploymentInstanceState"
         host:
           type: string
           description: >-
@@ -3877,9 +4002,8 @@ components:
 
 
             Absent until the instance has come up and reported its address, so an instance
-            that is still being provisioned has no `host`. There is no per-instance state on
-            this API; `host` appearing is what tells you a newly added instance is
-            reachable.
+            that is still being provisioned has no `host`. Use `state` to follow its lifecycle;
+            a `started` instance with a host is reachable.
           examples:
             - analytics-0.dbs.hosted.doltdb.com
         instance_type_name:
@@ -4155,6 +4279,23 @@ components:
           examples:
             - 1.60.0
 
+    ChangePrimaryRequest:
+      type: object
+      title: ChangePrimaryRequest
+      description: The instance currently serving as the deployment's primary.
+      required:
+        - current_primary_id
+      additionalProperties: false
+      properties:
+        current_primary_id:
+          type: string
+          format: uuid
+          description: >-
+            The id of the instance that is currently primary. The request is rejected if it is
+            stale or does not belong to this deployment.
+          examples:
+            - 2c4e6a8b-1d3f-4a5c-8e9b-0f1a2b3c4d5e
+
     OperationErrorCode:
       type: string
       title: OperationErrorCode
@@ -4250,6 +4391,18 @@ components:
         - stopped
       examples:
         - started
+
+    DeploymentInstanceState:
+      type: string
+      title: DeploymentInstanceState
+      description: The lifecycle state of an instance backing a deployment.
+      enum:
+        - starting
+        - started
+        - stopping
+        - stopped
+      examples:
+        - starting
 
     Backup:
       type: object
