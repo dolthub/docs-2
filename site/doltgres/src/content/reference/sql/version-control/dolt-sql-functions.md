@@ -50,6 +50,7 @@ title: Dolt SQL Functions
   - [dolt_diff_stat()](#dolt_diff_stat)
   - [dolt_diff_summary()](#dolt_diff_summary)
   - [dolt_log()](#dolt_log)
+  - [dolt_merge_bases()](#dolt_merge_bases)
   - [dolt_patch()](#dolt_patch)
   - [dolt_preview_merge_conflicts_summary()](#dolt_preview_merge_conflicts_summary)
   - [dolt_preview_merge_conflicts()](#dolt_preview_merge_conflicts)
@@ -1758,6 +1759,10 @@ The following would return the hash of commit `E`:
 
 [https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+DOLT_MERGE_BASE%28%27feature%27%2C+%27main%27%29%3B](https://www.dolthub.com/repositories/dolthub/docs_examples/embed/main?q=SELECT+DOLT_MERGE_BASE%28%27feature%27%2C+%27main%27%29%3B)
 
+When the two commits have more than one common ancestor that is not an ancestor of another, for example after two
+branches merge each other, `DOLT_MERGE_BASE()` returns one of them. Use the
+[`DOLT_MERGE_BASES()`](#dolt_merge_bases) table function to list them all.
+
 ### `DOLT_HASHOF()`
 
 The `DOLT_HASHOF()` function returns the commit hash of a branch or other commit spec.
@@ -2378,6 +2383,71 @@ returns just `D`. `DOLT_LOG('main...feature')` and `DOLT_LOG('feature...main')`
 both return `F`, `E`, and `D`.
 
 Learn more about two vs three dot log [here](https://www.dolthub.com/blog/2022-11-11-two-and-three-dot-diff-and-log).
+
+### `DOLT_MERGE_BASES()`
+
+The `DOLT_MERGE_BASES()` table function returns every best common ancestor of two commits: each common ancestor
+that is not an ancestor of another common ancestor. It works like `git merge-base --all`.
+
+Most pairs of commits have one merge base, which is also what [`DOLT_MERGE_BASE()`](#dolt_merge_base) returns. Two
+commits have more than one when their histories have merged each other, for example when two branches each merge the
+other, or when two branches both merge a third branch after they forked from each other.
+
+#### Privileges
+
+`DOLT_MERGE_BASES()` table function requires `SELECT` privilege for all tables.
+
+#### Options
+
+```sql
+DOLT_MERGE_BASES(<revision1>, <revision2>)
+```
+
+- `revision1`, `revision2`: a branch name, tag, or commit hash, with or without an ancestor spec such as `HEAD~1`.
+  Arguments can be any expression that evaluates to a string. If either argument is `NULL`, the result is empty.
+
+In a shallow clone, if the merge bases cannot be determined because part of the history is missing, the query fails
+and the error names the missing commit.
+
+#### Schema
+
+```sql
+ field      | type
+------------+------
+ merge_base | text
+```
+
+Rows are ordered by commit date, newest first, as in `git merge-base --all`.
+
+#### Example
+
+In this history, `main` and `feature` each merged the other's first commit, so they have two merge bases, `B` and
+`C`:
+
+```text
+      B---D main
+     / \ /
+    A   X
+     \ / \
+      C---E feature
+```
+
+```sql
+SELECT * FROM dolt_merge_bases('main', 'feature');
+            merge_base
+----------------------------------
+ ae54t842sai5t7u2d6q917a381v74ih5
+ 588k5rhs1tv1k2blu1bvad9srnaa0169
+(2 rows)
+
+SELECT b.merge_base, l.message
+FROM dolt_merge_bases('main', 'feature') b JOIN dolt_log('main') l ON l.commit_hash = b.merge_base;
+            merge_base            | message
+----------------------------------+---------
+ ae54t842sai5t7u2d6q917a381v74ih5 | C
+ 588k5rhs1tv1k2blu1bvad9srnaa0169 | B
+(2 rows)
+```
 
 ### `DOLT_PATCH()`
 
