@@ -14,6 +14,11 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
+      # Update Astro and its integrations together across all sites.
+      astro:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
     schedule:
       interval: monthly
       time: "08:30"
