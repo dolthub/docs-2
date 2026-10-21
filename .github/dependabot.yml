@@ -19,6 +19,10 @@ updates:
         patterns:
           - "astro"
           - "@astrojs/*"
+      # Keep DoltHub components, hooks, and shared utilities together.
+      dolthub-ui:
+        patterns:
+          - "@dolthub/*"
     schedule:
       interval: monthly
       time: "08:30"
