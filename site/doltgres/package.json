@@ -23,7 +23,7 @@
     "react-icons": "^5.7.0",
     "react-markdown": "^10.0.0",
     "react-select": "^5.10.2",
-    "react-tooltip": "^6.0.8",
+    "react-tooltip": "^6.0.9",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.0",
