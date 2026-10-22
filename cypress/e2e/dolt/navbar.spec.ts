@@ -1,4 +1,4 @@
-// Tests for the shared site navbar: links, the Documentation dropdown, the
+// Tests for the shared site navbar: links, the Docs dropdown, the
 // cookie-driven Sign In / Profile button, and the mobile menu. The navbar is a
 // client-only React island, so the first assertion in each test uses `timeout`
 // to allow for hydration. Cypress's default viewport (1000px) is below the
@@ -10,6 +10,11 @@ const page = "/introduction/what-is-dolt";
 const dolthubTokenKey = "dolthubToken";
 
 describe("Dolt docs — navbar", () => {
+  beforeEach(() => {
+    cy.intercept("https://api.github.com/repos/dolthub/dolt", {
+      stargazers_count: 16000,
+    });
+  });
   context("desktop", () => {
     beforeEach(() => {
       cy.viewport(1280, 800);
@@ -23,12 +28,40 @@ describe("Dolt docs — navbar", () => {
         .and("have.attr", "href");
     });
 
+    it("matches DoltHub's desktop navbar dimensions", () => {
+      cy.get("[data-cy=navbar-logo]", { timeout })
+        .filter(":visible")
+        .find("img")
+        .should(($logo) => {
+          const rect = $logo[0].getBoundingClientRect();
+          expect(rect.width).to.eq(112);
+          expect(rect.height).to.eq(21);
+        });
+      cy.get(".navbar-slot header")
+        .filter(":visible")
+        .should("have.css", "height", "48px");
+      cy.get(".navbar-right > a").each(($link) => {
+        expect(getComputedStyle($link[0]).marginLeft).to.eq("8px");
+        expect(getComputedStyle($link[0]).marginRight).to.eq("8px");
+      });
+      cy.get("[data-cy=navbar-products]").should(
+        "have.css",
+        "font-size",
+        "14px",
+      );
+      if (Cypress.expose("navbarScreenshots")) {
+        cy.screenshot("dolthub-navbar-spacing", { capture: "viewport" });
+      }
+      cy.get("[data-cy=navbar-products]").click();
+      cy.get(".docs-navbar-products").should("have.css", "column-gap", "80px");
+      cy.get("[data-cy=nav-product-dolt]").should("have.css", "width", "327px");
+      if (Cypress.expose("navbarScreenshots")) {
+        cy.screenshot("dolthub-products-spacing", { capture: "viewport" });
+      }
+    });
+
     it("left links point to DoltHub", () => {
-      cy.get("[data-cy=navbar-databases]", { timeout })
-        .should("be.visible")
-        .and("contain.text", "DoltHub")
-        .and("have.attr", "href")
-        .and("include", "/discover");
+      cy.get("[data-cy=navbar-products]", { timeout }).should("be.visible");
       cy.get("[data-cy=navbar-pricing]")
         .should("have.attr", "href")
         .and("include", "/pricing");
@@ -37,14 +70,57 @@ describe("Dolt docs — navbar", () => {
         .and("include", "/blog");
     });
 
-    it("Documentation dropdown opens the three product docs links", () => {
-      cy.get("[data-cy=navbar-documentation]", { timeout }).click();
-      cy.get(".docs-dropdown-menu").should("be.visible");
-      ["Dolt", "DoltLab", "Doltgres"].forEach(name => {
-        cy.get(".docs-dropdown-menu")
+    it("Docs dropdown opens the three product docs links", () => {
+      cy.get("[data-cy=navbar-docs-menu]", { timeout }).click();
+      cy.get(".docs-navbar-docs-links").should("be.visible");
+      ["Dolt", "DoltLab", "DoltgreSQL"].forEach((name) => {
+        cy.get(".docs-navbar-docs-links")
           .contains("a", name)
           .should("have.attr", "href");
       });
+    });
+
+    it("Products opens the product cards and hosting links", () => {
+      cy.get("[data-cy=navbar-products]", { timeout }).click();
+      [
+        "dolt",
+        "doltgresql",
+        "doltlite",
+        "dolthub",
+        "doltlab",
+        "dolt-workbench",
+        "hosted-dolt",
+      ].forEach((name) => {
+        cy.get(`[data-cy=nav-product-${name}]`).should("be.visible");
+      });
+      cy.get("[data-cy=nav-product-dolthub]").should(
+        "have.attr",
+        "href",
+        "https://www.dolthub.com/signin",
+      );
+      cy.contains("a", "Launch instance").should(
+        "have.attr",
+        "href",
+        "https://hosted.doltdb.com/create-deployment",
+      );
+      cy.get("[data-cy=navbar-products]").click();
+      cy.get(".docs-navbar-products").should("not.exist");
+    });
+
+    it("keeps the dark navbar and carries the docs theme between products", () => {
+      cy.get("[aria-label='Switch to dark mode']", { timeout })
+        .filter(":visible")
+        .click();
+      cy.get("html").should("have.class", "dark");
+      cy.get("[data-cy=navbar-docs-menu]").click();
+      cy.get("[data-cy=nav-docs-doltlab]").should(
+        "have.attr",
+        "href",
+        "http://localhost:4322/docs?theme=dark",
+      );
+      cy.get("[data-cy=navbar-docs-menu]").click();
+      cy.get("[aria-label='Switch to light mode']").filter(":visible").click();
+      cy.get("html").should("not.have.class", "dark");
     });
 
     it("has Discord and GitHub external links", () => {
@@ -89,13 +165,24 @@ describe("Dolt docs — navbar", () => {
     it("hamburger opens the nav menu with links, and closes it", () => {
       cy.get("[aria-label='open mobile navbar menu']", { timeout }).click();
       cy.get(menu).within(() => {
-        cy.contains("a", "DoltHub").should("be.visible");
+        cy.get("[data-cy=mobile-navbar-products]").should("be.visible");
         cy.contains("a", "Pricing").should("be.visible");
         cy.contains("a", "Blog").should("be.visible");
-        cy.contains("a", "Sign In").should("be.visible");
+        cy.contains("a", "Sign in").should("be.visible");
       });
       cy.get("[aria-label='close mobile navbar menu']").click();
       cy.get(menu).should("not.exist");
+    });
+
+    it("expands Products and Docs in the mobile menu", () => {
+      cy.get("[aria-label='open mobile navbar menu']", { timeout }).click();
+      cy.get(menu).within(() => {
+        cy.get("[data-cy=mobile-navbar-products]").click();
+        cy.get("[data-cy=nav-product-doltlite]").should("be.visible");
+        cy.get("[data-cy=mobile-navbar-products]").click();
+        cy.get("[data-cy=mobile-navbar-docs]").click();
+        cy.get("[data-cy=nav-docs-doltlab]").should("be.visible");
+      });
     });
 
     it("mobile menu shows Profile with the dolthubToken cookie", () => {
