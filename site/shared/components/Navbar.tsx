@@ -11,11 +11,11 @@ import {
   FaDiscord,
   FaGithub,
   FaLinkedin,
-  FaTwitter,
   FaYoutube,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import React, { useState, useEffect } from "react";
 
 import images from "./navbar/images";
@@ -96,7 +96,7 @@ function useThemeLink() {
 const doltGithub = "https://github.com/dolthub/dolt";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
-const dolthubTwitter = "https://www.twitter.com/dolthub";
+const dolthubX = "https://x.com/dolthub";
 const dolthubYoutube =
   "https://www.youtube.com/channel/UCDPjHnjeQV0_knGaksmKTZw";
 
@@ -328,8 +328,8 @@ function MobileSocialLinks() {
       <ExternalLink href={dolthubYoutube} aria-label="youtube">
         <FaYoutube />
       </ExternalLink>
-      <ExternalLink href={dolthubTwitter} aria-label="twitter">
-        <FaTwitter />
+      <ExternalLink href={dolthubX} aria-label="X">
+        <FaXTwitter />
       </ExternalLink>
     </>
   );
