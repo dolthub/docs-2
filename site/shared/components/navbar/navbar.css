@@ -1,0 +1,154 @@
+/* Match ld/web's shared navbar; docs retain their color-theme control. */
+.navbar-logo-link {
+  display: flex;
+  align-items: center;
+}
+.navbar-logo-img {
+  height: auto;
+  width: auto;
+}
+/* Match the roughly 20px letter height of DoltHub. Doltgres needs extra
+   image height for the descender on its g. */
+.navbar-logo-doltgres {
+  height: 27px;
+}
+.navbar-logo-doltlab {
+  height: 20px;
+}
+/* ld/web/packages/shared-components/style/main.css overrides the library's
+   40px left margins. Keep this scoped rule above the library's specificity. */
+.navbar-slot .navbar-right > a {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.navbar-slot .navbar-right > .navbar-theme-toggle {
+  align-self: center;
+  margin-right: 8px;
+}
+.navbar-slot .navbar-auth-btn {
+  white-space: nowrap;
+}
+
+.docs-navbar-products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 80px;
+  padding: 32px;
+}
+.docs-navbar-docs-panel {
+  width: 233px;
+}
+.docs-navbar-docs-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 12px;
+}
+.docs-navbar-docs-links a {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px;
+  border-radius: 6px;
+}
+.docs-navbar-docs-links a:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+.docs-navbar-docs-links img {
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
+}
+.docs-navbar-docs-links span {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.navbar-theme-toggle {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 2px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 4px;
+  padding: 2px;
+}
+.navbar-slot .navbar-theme-toggle .navbar-theme-toggle-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 2px;
+  padding: 5px;
+  margin: 0;
+  height: auto;
+  color: white;
+  background: transparent;
+  opacity: 0.5;
+}
+.navbar-theme-toggle-seg svg {
+  width: 16px;
+  height: 16px;
+}
+.navbar-slot .navbar-theme-toggle .navbar-theme-toggle-seg-active {
+  opacity: 1;
+  background: rgb(255 255 255 / 0.12);
+}
+.navbar-slot .navbar-theme-toggle .navbar-theme-toggle-seg:hover {
+  opacity: 1;
+}
+.navbar-slot a:focus-visible,
+.navbar-slot button:focus-visible {
+  outline: 2px solid #6db0fc;
+  outline-offset: 3px;
+}
+.docs-navbar-mobile-theme {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .navbar-slot [aria-label="mobile navbar top"] > div {
+    position: relative;
+  }
+  .navbar-slot [aria-label="mobile nav menu"] .docs-navbar-mobile-theme {
+    display: flex;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .navbar-slot .docs-navbar-mobile-theme-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+  }
+  .docs-navbar-products {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 24px;
+  }
+  .docs-navbar-docs-links {
+    gap: 20px;
+    padding: 20px;
+  }
+}
+/* Fit the three columns on smaller desktops without changing DoltHub's
+   fixed 327px cards and 80px gaps at its full panel width (1205px). */
+@media (min-width: 1024px) and (max-width: 1204px) {
+  .docs-navbar-products {
+    flex-wrap: nowrap;
+    gap: 32px;
+  }
+  .docs-navbar-products > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .docs-navbar-products [data-cy^="nav-product-"] {
+    width: 100%;
+  }
+}
