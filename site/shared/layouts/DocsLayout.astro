@@ -1046,10 +1046,13 @@ const markdownAlternate =
   /* Inline code: the light #f1f3f8 swatch would show light text on a light
      background on the dark card, so swap it for a translucent blue that
      stands out against #151d2b (text stays the inherited light body color).
-     Fenced blocks keep their Shiki github-dark colors — reset pre code back
-     to transparent so this background doesn't sit behind the code block. */
+     Fenced blocks keep Shiki's syntax colors with a muted blue surface. */
   html.dark .docs-main code {
     background: rgba(69, 85, 110, 0.3);
+  }
+  html.dark .docs-main pre {
+    /* Override the background Shiki writes as an inline style. */
+    background-color: #1b273b !important;
   }
   html.dark .docs-main pre code {
     background: transparent;
