@@ -114,22 +114,27 @@ type NavbarProps = {
 function Logo({ siteName = "dolt" }: Pick<NavbarProps, "siteName">) {
   const config = siteConfig[siteName] || siteConfig.dolt;
   return (
-    <a
-      href={`${BASE}/`}
-      aria-label="logo home link"
-      data-cy="navbar-logo"
-      className="navbar-logo-link"
-    >
-      <img
-        src={
-          siteName === "dolt"
-            ? images.logos.dolthubGreen
-            : `${BASE}/images/logo.png`
-        }
-        alt={config.alt}
-        className={`navbar-logo-img navbar-logo-${siteName}`}
-      />
-    </a>
+    <>
+      <a
+        href={`${BASE}/`}
+        aria-label="logo home link"
+        data-cy="navbar-logo"
+        className="navbar-logo-link"
+      >
+        <img
+          src={
+            siteName === "dolt"
+              ? images.logos.dolthubGreen
+              : `${BASE}/images/logo.png`
+          }
+          alt={config.alt}
+          className={`navbar-logo-img navbar-logo-${siteName}`}
+        />
+      </a>
+      <div className="docs-navbar-mobile-theme">
+        <DarkModeToggle mobile />
+      </div>
+    </>
   );
 }
 
@@ -213,7 +218,7 @@ function setDarkMode(dark: boolean) {
   );
 }
 
-function DarkModeToggle() {
+function DarkModeToggle({ mobile = false }: { mobile?: boolean }) {
   const [dark, setDark] = useState(false);
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
@@ -223,6 +228,20 @@ function DarkModeToggle() {
     window.addEventListener("docs-themechange", onChange);
     return () => window.removeEventListener("docs-themechange", onChange);
   }, []);
+  if (mobile) {
+    return (
+      <button
+        type="button"
+        className="docs-navbar-mobile-theme-button"
+        data-cy="navbar-theme-toggle"
+        onClick={() => setDarkMode(!dark)}
+        aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+        title={dark ? "Switch to light mode" : "Switch to dark mode"}
+      >
+        {dark ? <FaSun /> : <FaMoon />}
+      </button>
+    );
+  }
   const seg = "navbar-theme-toggle-seg";
   const active = `${seg} navbar-theme-toggle-seg-active`;
   return (
@@ -340,11 +359,7 @@ export default function DocsNavbar({
       leftLinks={<LeftLinks />}
       leftLinksMobile={<LeftLinks mobile />}
       rightLinks={<RightLinks githubStarCount={githubStarCount} />}
-      rightLinksMobile={
-        <div className="docs-navbar-mobile-theme">
-          <DarkModeToggle />
-        </div>
-      }
+      rightLinksMobile={<></>}
       mobileActions={<MobileActions />}
       mobileBottomLinks={<MobileSocialLinks />}
       bgColor="bg-space-900"

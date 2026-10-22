@@ -105,13 +105,28 @@
   outline-offset: 3px;
 }
 .docs-navbar-mobile-theme {
-  padding: 20px 24px;
-}
-.docs-navbar-mobile-theme .navbar-theme-toggle {
-  width: fit-content;
+  display: none;
 }
 
 @media (max-width: 1023px) {
+  .navbar-slot [aria-label="mobile navbar top"] > div {
+    position: relative;
+  }
+  .docs-navbar-mobile-theme {
+    display: flex;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .navbar-slot .docs-navbar-mobile-theme-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+  }
   .docs-navbar-products {
     flex-direction: column;
     gap: 16px;

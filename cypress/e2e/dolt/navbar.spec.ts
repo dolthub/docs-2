@@ -174,6 +174,37 @@ describe("Dolt docs — navbar", () => {
       cy.get(menu).should("not.exist");
     });
 
+    it("keeps the theme control in the mobile header", () => {
+      cy.get("[aria-label='open mobile navbar menu']", { timeout }).click();
+      cy.get(menu).within(() => {
+        cy.get(
+          "[data-cy=mobile-navbar-links] [data-cy=navbar-theme-toggle]",
+        ).should("not.exist");
+        cy.get("[aria-label='mobile navbar top'] [data-cy=navbar-theme-toggle]")
+          .should("be.visible")
+          .then(($toggle) => {
+            const rect = $toggle[0].getBoundingClientRect();
+            expect(rect.top).to.be.at.least(0);
+            expect(rect.bottom).to.be.at.most(62);
+            expect(rect.right).to.be.at.most(390);
+          });
+        cy.get("[data-cy=navbar-theme-toggle]").click();
+        cy.get("[data-cy=navbar-theme-toggle]").then(($toggle) => {
+          const switchedToDark =
+            $toggle.attr("aria-label") === "Switch to light mode";
+          cy.document().should((doc) => {
+            expect(doc.documentElement.classList.contains("dark")).to.eq(
+              switchedToDark,
+            );
+          });
+        });
+      });
+      cy.get("[aria-label='close mobile navbar menu']").click();
+      cy.get("[data-cy=navbar-theme-toggle]")
+        .filter(":visible")
+        .should("have.length", 1);
+    });
+
     it("expands Products and Docs in the mobile menu", () => {
       cy.get("[aria-label='open mobile navbar menu']", { timeout }).click();
       cy.get(menu).within(() => {
