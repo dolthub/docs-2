@@ -3,9 +3,9 @@ import {
   FaDiscord,
   FaGithub,
   FaLinkedin,
-  FaTwitter,
   FaYoutube,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import React from "react";
 
 // "" (no base) or e.g. "/docs" — docs are served under this base path.
@@ -16,7 +16,7 @@ const blogUrl = `${dolthubUrl}/blog`;
 const doltGithub = "https://github.com/dolthub/dolt";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
-const dolthubTwitter = "https://www.twitter.com/dolthub";
+const dolthubX = "https://x.com/dolthub";
 const dolthubYoutube =
   "https://www.youtube.com/channel/UCDPjHnjeQV0_knGaksmKTZw";
 
@@ -47,7 +47,7 @@ export default function DocsFooter() {
         { icon: <FaGithub />, href: doltGithub, label: "GitHub" },
         { icon: <FaDiscord />, href: doltDiscord, label: "Discord" },
         { icon: <FaLinkedin />, href: dolthubLinkedin, label: "Linkedin" },
-        { icon: <FaTwitter />, href: dolthubTwitter, label: "Twitter" },
+        { icon: <FaXTwitter />, href: dolthubX, label: "X" },
         { icon: <FaYoutube />, href: dolthubYoutube, label: "Youtube" },
       ]}
     />
