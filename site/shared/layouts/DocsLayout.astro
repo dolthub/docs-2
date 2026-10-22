@@ -1003,7 +1003,7 @@ const markdownAlternate =
      so it inherits the light body color above — no per-element override
      needed. (Callouts still use light values and are a later pass.) */
   html.dark .docs-main {
-    background: #0c1a32;
+    background: #151d2b;
   }
 
   html.dark .docs-main a {
@@ -1014,19 +1014,19 @@ const markdownAlternate =
   }
 
   /* Tables: the light header fill and grey cell borders don't read on the
-     dark card. Give the header a slightly-raised fill (#183362 over the
-     #0c1a32 card) and switch all cell borders to #284571; cell text keeps
+     dark card. Give the header a slightly-raised fill (#212d40 over the
+     #151d2b card) and switch all cell borders to #303e54; cell text keeps
      the inherited light body color. */
   html.dark .docs-main thead tr {
-    background: #183362;
+    background: #212d40;
   }
   html.dark .docs-main th,
   html.dark .docs-main td {
-    border-bottom-color: #284571;
+    border-bottom-color: #303e54;
   }
   html.dark .docs-main th + th,
   html.dark .docs-main td + td {
-    border-left-color: #284571;
+    border-left-color: #303e54;
   }
 
   /* DoltHub API endpoint blocks: the method badges (.api-method) and
@@ -1041,11 +1041,11 @@ const markdownAlternate =
 
   /* Inline code: the light #f1f3f8 swatch would show light text on a light
      background on the dark card, so swap it for a translucent blue that
-     stands out against #0c1a32 (text stays the inherited light body color).
+     stands out against #151d2b (text stays the inherited light body color).
      Fenced blocks keep their Shiki github-dark colors — reset pre code back
      to transparent so this background doesn't sit behind the code block. */
   html.dark .docs-main code {
-    background: rgba(59, 91, 133, 0.3);
+    background: rgba(69, 85, 110, 0.3);
   }
   html.dark .docs-main pre code {
     background: transparent;
@@ -1064,16 +1064,16 @@ const markdownAlternate =
     --color-primary: 230, 237, 243;
   }
   html.dark .sidebar-row-active {
-    background: rgba(56, 139, 253, 0.15);
+    background: rgba(110, 145, 185, 0.15);
   }
   html.dark .sidebar-desktop {
-    scrollbar-color: #284571 transparent;
+    scrollbar-color: #303e54 transparent;
   }
   html.dark .sidebar-desktop::-webkit-scrollbar-thumb {
-    background: #284571;
+    background: #303e54;
   }
   html.dark .sidebar-desktop::-webkit-scrollbar-thumb:hover {
-    background: #3b5b85;
+    background: #45556e;
   }
 
   /* Mobile docs nav — the "Table of contents" toggle bar and the slide-out
@@ -1083,12 +1083,12 @@ const markdownAlternate =
      desktop sidebar. (.sidebar-row-active and .sidebar-mobile-search already
      have global dark rules that apply here too.) */
   html.dark .sidebar-mobile-toggle {
-    background: #0c1a32;
-    border-bottom-color: #284571;
+    background: #151d2b;
+    border-bottom-color: #303e54;
     --color-primary: 230, 237, 243;
   }
   html.dark .sidebar-mobile-toggle:hover {
-    background: #183362;
+    background: #212d40;
   }
   html.dark .sidebar-mobile {
     background: #070f25;
@@ -1113,18 +1113,18 @@ const markdownAlternate =
      they sit on the dark sidebar. */
   html.dark .search-trigger,
   html.dark .sidebar-mobile-search {
-    background: #0c1a32;
-    border-color: #284571;
+    background: #151d2b;
+    border-color: #303e54;
     color: #8b949e;
   }
   html.dark .search-trigger:hover,
   html.dark .sidebar-mobile-search:hover {
-    background: #183362;
-    border-color: #3b5b85;
+    background: #212d40;
+    border-color: #45556e;
   }
   html.dark .search-trigger-kbd {
-    background: #0c1a32;
-    border-color: #284571;
+    background: #151d2b;
+    border-color: #303e54;
     color: #8b949e;
   }
 
@@ -1138,17 +1138,17 @@ const markdownAlternate =
      stylesheet plus the vars. We use bare selectors so the dark overrides
      actually apply.) */
   html.dark .search-modal {
-    background: #0c1a32;
+    background: #151d2b;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(230, 237, 243, 0.1);
   }
   html.dark .search-container {
     --pagefind-ui-primary: #8fc1fa;
     --pagefind-ui-text: #e6edf3;
-    --pagefind-ui-background: #0c1a32;
-    --pagefind-ui-border: #284571;
+    --pagefind-ui-background: #151d2b;
+    --pagefind-ui-border: #303e54;
   }
   html.dark .search-container .pagefind-ui__search-input {
-    border-color: #284571;
+    border-color: #303e54;
     background: #070f25;
     color: #e6edf3;
   }
@@ -1158,7 +1158,7 @@ const markdownAlternate =
     box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
   }
   html.dark .search-container .pagefind-ui__result {
-    border-color: #284571;
+    border-color: #303e54;
   }
   html.dark .search-container .pagefind-ui__result-link {
     color: #8fc1fa;
@@ -1171,16 +1171,16 @@ const markdownAlternate =
   }
   html.dark .search-container .pagefind-ui__message {
     color: #8b949e;
-    border-bottom-color: #284571;
+    border-bottom-color: #303e54;
   }
   html.dark .search-container .pagefind-ui__button {
-    border-color: #284571;
-    background: #183362;
+    border-color: #303e54;
+    background: #212d40;
     color: #c9d1d9;
   }
   html.dark .search-container .pagefind-ui__button:hover {
-    background: #284571;
-    border-color: #3b5b85;
+    background: #303e54;
+    border-color: #45556e;
     color: #e6edf3;
   }
   html.dark .search-container .pagefind-ui__search-clear {
@@ -1191,7 +1191,7 @@ const markdownAlternate =
      light text, so use a translucent blue that reads on the dark modal. */
   html.dark .pagefind-ui--reset mark,
   html.dark .pagefind-ui mark {
-    background: rgba(88, 166, 255, 0.35);
+    background: rgba(110, 145, 185, 0.35);
     color: #e6edf3;
   }
 </style>
