@@ -112,7 +112,7 @@
   .navbar-slot [aria-label="mobile navbar top"] > div {
     position: relative;
   }
-  .docs-navbar-mobile-theme {
+  .navbar-slot [aria-label="mobile nav menu"] .docs-navbar-mobile-theme {
     display: flex;
     position: absolute;
     right: 0;

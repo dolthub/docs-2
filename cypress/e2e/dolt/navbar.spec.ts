@@ -174,7 +174,10 @@ describe("Dolt docs — navbar", () => {
       cy.get(menu).should("not.exist");
     });
 
-    it("keeps the theme control in the mobile header", () => {
+    it("shows the theme control only in the open mobile menu header", () => {
+      cy.get("[data-cy=navbar-theme-toggle]", { timeout })
+        .filter(":visible")
+        .should("have.length", 0);
       cy.get("[aria-label='open mobile navbar menu']", { timeout }).click();
       cy.get(menu).within(() => {
         cy.get(
@@ -202,7 +205,7 @@ describe("Dolt docs — navbar", () => {
       cy.get("[aria-label='close mobile navbar menu']").click();
       cy.get("[data-cy=navbar-theme-toggle]")
         .filter(":visible")
-        .should("have.length", 1);
+        .should("have.length", 0);
     });
 
     it("expands Products and Docs in the mobile menu", () => {
