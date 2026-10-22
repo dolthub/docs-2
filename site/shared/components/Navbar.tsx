@@ -107,10 +107,11 @@ const siteConfig: Record<string, { alt: string }> = {
 };
 
 type NavbarProps = {
+  githubStarCount: number;
   siteName?: "dolt" | "doltlab" | "doltgres";
 };
 
-function Logo({ siteName = "dolt" }: NavbarProps) {
+function Logo({ siteName = "dolt" }: Pick<NavbarProps, "siteName">) {
   const config = siteConfig[siteName] || siteConfig.dolt;
   return (
     <a
@@ -284,27 +285,12 @@ function ProfileOrSignIn() {
   );
 }
 
-function RightLinks() {
-  // Match the app's fallback while GitHub's public count loads.
-  const [stars, setStars] = useState(16000);
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("https://api.github.com/repos/dolthub/dolt", {
-      signal: controller.signal,
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (Number.isFinite(data?.stargazers_count))
-          setStars(data.stargazers_count);
-      })
-      .catch(() => {});
-    return () => controller.abort();
-  }, []);
+function RightLinks({ githubStarCount }: Pick<NavbarProps, "githubStarCount">) {
   return (
     <div className="flex navbar-right">
       <DarkModeToggle />
       <DiscordButton href={doltDiscord} />
-      <GithubButton href={doltGithub} githubStarCount={stars} />
+      <GithubButton href={doltGithub} githubStarCount={githubStarCount} />
       <ProfileOrSignIn />
     </div>
   );
@@ -346,13 +332,16 @@ function MobileActions() {
   );
 }
 
-export default function DocsNavbar({ siteName = "dolt" }: NavbarProps) {
+export default function DocsNavbar({
+  siteName = "dolt",
+  githubStarCount,
+}: NavbarProps) {
   return (
     <Nav
       logo={<Logo siteName={siteName} />}
       leftLinks={<LeftLinks />}
       leftLinksMobile={<LeftLinks mobile />}
-      rightLinks={<RightLinks />}
+      rightLinks={<RightLinks githubStarCount={githubStarCount} />}
       rightLinksMobile={
         <div className="docs-navbar-mobile-theme">
           <DarkModeToggle />

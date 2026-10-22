@@ -3,8 +3,8 @@ export function navbarBranding(product: string, page: string) {
   describe(`${product} navbar branding and layout`, () => {
     [1280, 1024, 768, 390, 320].forEach((width) => {
       it(`uses the ${product} logo and fits at ${width}px`, () => {
-        cy.intercept("https://api.github.com/repos/dolthub/dolt", {
-          stargazers_count: 16000,
+        cy.intercept(/api\.github\.com|www\.dolthub\.com\/graphql/, () => {
+          throw new Error("Navbar must use the build-time star count");
         });
         cy.viewport(width, 900);
         cy.visit(page);

@@ -11,8 +11,8 @@ const dolthubTokenKey = "dolthubToken";
 
 describe("Dolt docs — navbar", () => {
   beforeEach(() => {
-    cy.intercept("https://api.github.com/repos/dolthub/dolt", {
-      stargazers_count: 16000,
+    cy.intercept(/api\.github\.com|www\.dolthub\.com\/graphql/, () => {
+      throw new Error("Navbar must use the build-time star count");
     });
   });
   context("desktop", () => {
