@@ -202,7 +202,7 @@ function setDarkMode(dark: boolean) {
   // a later page load (or this toggle) never shows the wrong root canvas.
   // Keep these colors in sync with that script and the body background CSS.
   de.style.colorScheme = dark ? "dark" : "light";
-  de.style.backgroundColor = dark ? "#070f25" : "#f1f3f8";
+  de.style.backgroundColor = dark ? "#0e141f" : "#f1f3f8";
   try {
     localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
   } catch {

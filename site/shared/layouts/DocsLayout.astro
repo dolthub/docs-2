@@ -97,7 +97,7 @@ const markdownAlternate =
           var de = document.documentElement;
           if (dark) de.classList.add("dark");
           de.style.colorScheme = dark ? "dark" : "light";
-          de.style.backgroundColor = dark ? "#070f25" : "#f1f3f8";
+          de.style.backgroundColor = dark ? "#0e141f" : "#f1f3f8";
         } catch (e) {
           /* localStorage/matchMedia/URL unavailable — stay light */
         }
@@ -992,12 +992,16 @@ const markdownAlternate =
   html.dark {
     color-scheme: dark;
   }
+  html.dark .navbar-slot,
+  html.dark .navbar-slot .bg-space-900 {
+    background: #0e141f;
+  }
   html.dark body {
-    background: #070f25;
+    background: #0e141f;
     color: #e6edf3;
   }
 
-  /* The main content card is a lighter dark than the #070f25 backdrop/navs,
+  /* The main content card is a lighter dark than the #0e141f backdrop/navs,
      so the document reads as a raised surface. Its text has no explicit
      color (the markdown headings/paragraphs only @apply layout utilities),
      so it inherits the light body color above — no per-element override
@@ -1036,7 +1040,7 @@ const markdownAlternate =
     color: rgba(230, 237, 243, 0.7);
   }
   html.dark .docs-main .api-response-example {
-    background: #070f25;
+    background: #0e141f;
   }
 
   /* Inline code: the light #f1f3f8 swatch would show light text on a light
@@ -1060,7 +1064,7 @@ const markdownAlternate =
      these containers wins for their descendants by proximity.) */
   html.dark .sidebar-slot,
   html.dark .toc-slot {
-    background: #070f25;
+    background: #0e141f;
     --color-primary: 230, 237, 243;
   }
   html.dark .sidebar-row-active {
@@ -1091,7 +1095,7 @@ const markdownAlternate =
     background: #212d40;
   }
   html.dark .sidebar-mobile {
-    background: #070f25;
+    background: #0e141f;
     --color-primary: 230, 237, 243;
   }
   html.dark .sidebar-mobile-close:hover {
@@ -1101,11 +1105,11 @@ const markdownAlternate =
   /* Footer: the footer area (.bottomOuter) is already a dark navy in light
      mode (bg-space-500 = #202F57) with light text — version/links use the
      brand --color-link-light var and copyright is a muted blue-grey. So
-     matching dark mode only means dropping the background to the #070f25
+     matching dark mode only means dropping the background to the #0e141f
      backdrop, so the footer reads as part of the chrome rather than a
      separate navy block. The light text needs no override. */
   html.dark .bottomOuter {
-    background: #070f25;
+    background: #0e141f;
   }
 
   /* Search trigger (the "box" in the sidebar) and its mobile twin: light
@@ -1149,12 +1153,12 @@ const markdownAlternate =
   }
   html.dark .search-container .pagefind-ui__search-input {
     border-color: #303e54;
-    background: #070f25;
+    background: #0e141f;
     color: #e6edf3;
   }
   html.dark .search-container .pagefind-ui__search-input:focus {
     border-color: #58a6ff;
-    background: #070f25;
+    background: #0e141f;
     box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
   }
   html.dark .search-container .pagefind-ui__result {
