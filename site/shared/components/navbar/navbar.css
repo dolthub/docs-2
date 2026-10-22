@@ -7,6 +7,14 @@
   height: auto;
   width: auto;
 }
+/* Match the roughly 20px letter height of DoltHub. Doltgres needs extra
+   image height for the descender on its g. */
+.navbar-logo-doltgres {
+  height: 27px;
+}
+.navbar-logo-doltlab {
+  height: 20px;
+}
 /* ld/web/packages/shared-components/style/main.css overrides the library's
    40px left margins. Keep this scoped rule above the library's specificity. */
 .navbar-slot .navbar-right > a {

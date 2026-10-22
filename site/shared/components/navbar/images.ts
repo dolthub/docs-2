@@ -1,6 +1,5 @@
 // Artwork from ld/web/packages/shared-components/src/images.ts.
 import logos_dolthubGreen from "../../assets/navbar/logos_dolthubGreen.svg?url";
-import logos_doltlabGreen from "../../assets/navbar/logos_doltlabGreen.svg?url";
 import logos_hostedDolt from "../../assets/navbar/logos_hostedDolt.png?url";
 import products_dolt from "../../assets/navbar/products_dolt.svg?url";
 import products_doltgresql from "../../assets/navbar/products_doltgresql.svg?url";
@@ -13,7 +12,6 @@ import backgrounds_hostedCloud from "../../assets/navbar/backgrounds_hostedCloud
 export default {
   logos: {
     dolthubGreen: logos_dolthubGreen,
-    doltlabGreen: logos_doltlabGreen,
     hostedDolt: logos_hostedDolt,
   },
   products: {

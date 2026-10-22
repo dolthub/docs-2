@@ -124,12 +124,10 @@ function Logo({ siteName = "dolt" }: Pick<NavbarProps, "siteName">) {
         src={
           siteName === "dolt"
             ? images.logos.dolthubGreen
-            : siteName === "doltlab"
-              ? images.logos.doltlabGreen
-              : `${BASE}/images/logo.png`
+            : `${BASE}/images/logo.png`
         }
         alt={config.alt}
-        className="navbar-logo-img"
+        className={`navbar-logo-img navbar-logo-${siteName}`}
       />
     </a>
   );
