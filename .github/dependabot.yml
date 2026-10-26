@@ -6,6 +6,23 @@ updates:
   # but declares no dependencies, so there is nothing there to update.)
   - package-ecosystem: npm
     directory: "/"
+    groups:
+      # React and React DOM must resolve to the same runtime version.
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      # Update Astro and its integrations together across all sites.
+      astro:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
+      # Keep DoltHub components, hooks, and shared utilities together.
+      dolthub-ui:
+        patterns:
+          - "@dolthub/*"
     schedule:
       interval: monthly
       time: "08:30"
