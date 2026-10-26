@@ -1,15 +1,26 @@
-import { Navbar as Nav, DiscordButton, ExternalLink } from "@dolthub/react-components";
+import {
+  Navbar as Nav,
+  DiscordButton,
+  ExternalLink,
+  GithubButton,
+  DesktopNavDropdown,
+  MobileNavDropdown,
+} from "@dolthub/react-components";
 import { useIsSignedIn } from "@dolthub/react-hooks";
 import {
   FaDiscord,
   FaGithub,
   FaLinkedin,
-  FaTwitter,
   FaYoutube,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
-import React, { useState, useRef, useEffect } from "react";
+import { FaXTwitter } from "react-icons/fa6";
+import React, { useState, useEffect } from "react";
+
+import images from "./navbar/images";
+import ProductsMenu from "./navbar/ProductsMenu";
+import "./navbar/navbar.css";
 
 // The (non-HttpOnly) cookie the DoltHub app sets on login, so client JS can
 // tell whether the visitor is signed in. Only readable on dolthub.com, so the
@@ -24,27 +35,28 @@ const blogUrl = `${dolthubUrl}/blog`;
 
 const prodDocsLinks = [
   { name: "Dolt", href: `https://dolthub.com${BASE}` },
-  { name: "DoltLab", href: `https://doltlab.com${BASE}` },
   { name: "Doltgres", href: `https://doltgres.com${BASE}` },
+  { name: "DoltLab", href: `https://doltlab.com${BASE}` },
 ];
 
 // awsdev deploy: each product's docs live on its own *.awsdev.ld-corp.com host.
 const devDocsLinks = [
   { name: "Dolt", href: `https://dolthub.awsdev.ld-corp.com${BASE}` },
-  { name: "DoltLab", href: `https://doltlab.awsdev.ld-corp.com${BASE}` },
   { name: "Doltgres", href: `https://doltgres.awsdev.ld-corp.com${BASE}` },
+  { name: "DoltLab", href: `https://doltlab.awsdev.ld-corp.com${BASE}` },
 ];
 
 const localDocsLinks = [
   { name: "Dolt", href: `http://localhost:4321${BASE}` },
-  { name: "DoltLab", href: `http://localhost:4322${BASE}` },
   { name: "Doltgres", href: `http://localhost:4323${BASE}` },
+  { name: "DoltLab", href: `http://localhost:4322${BASE}` },
 ];
 
 // One static build deploys to prod, awsdev, and local alike, so the matching
 // docs links can only be chosen at runtime — by hostname.
 function docsLinksForHost(hostname: string) {
-  if (hostname === "localhost" || hostname === "127.0.0.1") return localDocsLinks;
+  if (hostname === "localhost" || hostname === "127.0.0.1")
+    return localDocsLinks;
   if (hostname.endsWith(".awsdev.ld-corp.com")) return devDocsLinks;
   return prodDocsLinks;
 }
@@ -67,9 +79,13 @@ function useThemeLink() {
   const [theme, setTheme] = useState<"dark" | "light" | null>(null);
   useEffect(() => {
     const read = () =>
-      setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+      setTheme(
+        document.documentElement.classList.contains("dark") ? "dark" : "light",
+      );
     read();
-    function onChange() { read(); }
+    function onChange() {
+      read();
+    }
     window.addEventListener("docs-themechange", onChange);
     return () => window.removeEventListener("docs-themechange", onChange);
   }, []);
@@ -78,86 +94,100 @@ function useThemeLink() {
 }
 
 const doltGithub = "https://github.com/dolthub/dolt";
+const doltgresGithub = "https://github.com/dolthub/doltgresql";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
-const dolthubTwitter = "https://www.twitter.com/dolthub";
+const dolthubX = "https://x.com/dolthub";
 const dolthubYoutube =
   "https://www.youtube.com/channel/UCDPjHnjeQV0_knGaksmKTZw";
 
 const siteConfig: Record<string, { alt: string }> = {
-  dolt: { alt: "Dolt" },
+  dolt: { alt: "DoltHub" },
   doltlab: { alt: "DoltLab" },
   doltgres: { alt: "Doltgres" },
 };
 
 type NavbarProps = {
+  githubStarCount: number;
   siteName?: "dolt" | "doltlab" | "doltgres";
 };
 
-function Logo({ siteName = "dolt" }: NavbarProps) {
+function Logo({ siteName = "dolt" }: Pick<NavbarProps, "siteName">) {
   const config = siteConfig[siteName] || siteConfig.dolt;
   return (
-    <a href={`${BASE}/`} aria-label="logo home link" data-cy="navbar-logo" className="navbar-logo-link">
-      <img src={`${BASE}/images/logo.png`} alt={config.alt} className="navbar-logo-img" />
-      <span className="navbar-logo-docs">Docs</span>
-    </a>
+    <>
+      <a
+        href={`${BASE}/`}
+        aria-label="logo home link"
+        data-cy="navbar-logo"
+        className="navbar-logo-link"
+      >
+        <img
+          src={
+            siteName === "dolt"
+              ? images.logos.dolthubGreen
+              : `${BASE}/images/logo.png`
+          }
+          alt={config.alt}
+          className={`navbar-logo-img navbar-logo-${siteName}`}
+        />
+      </a>
+      <div className="docs-navbar-mobile-theme">
+        <DarkModeToggle mobile />
+      </div>
+    </>
   );
 }
 
-function DocsDropdown() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+function DocsDropdown({ mobile = false }: { mobile?: boolean }) {
   const links = useDocsLinks();
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const withTheme = useThemeLink();
-
-  return (
-    <div ref={ref} className="docs-dropdown relative inline-block">
-      <button
-        onClick={() => setOpen(!open)}
-        data-cy="navbar-documentation"
-        className="docs-dropdown-trigger"
-      >
-        Documentation
-        <svg width="10" height="6" viewBox="0 0 10 6" className="ml-1 inline">
-          <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        </svg>
-      </button>
-      {open && (
-        <div className="docs-dropdown-menu">
-          {links.map(l => (
-            <a key={l.name} href={withTheme(l.href)} className="docs-dropdown-item m-0 block">
-              {l.name}
-            </a>
-          ))}
-        </div>
-      )}
+  const icons = {
+    Dolt: images.products.dolt,
+    DoltLab: images.products.doltlab,
+    Doltgres: images.products.doltgresql,
+  };
+  const content = (
+    <div className="docs-navbar-docs-links">
+      {links.map((l) => (
+        <a
+          key={l.name}
+          href={withTheme(l.href)}
+          data-cy={`nav-docs-${l.name.toLowerCase()}`}
+        >
+          <img src={icons[l.name as keyof typeof icons]} alt="" />
+          <span>{l.name === "Doltgres" ? "DoltgreSQL" : l.name}</span>
+        </a>
+      ))}
     </div>
   );
+  return mobile ? (
+    <MobileNavDropdown label="Docs" data-cy="mobile-navbar-docs">
+      {content}
+    </MobileNavDropdown>
+  ) : (
+    <DesktopNavDropdown
+      label="Docs"
+      align="left"
+      hideCaret
+      underlineOnOpen
+      openOnHover
+      panelClassName="docs-navbar-docs-panel bg-space-900"
+      data-cy="navbar-docs-menu"
+    >
+      {content}
+    </DesktopNavDropdown>
+  );
 }
 
-function LeftLinks() {
+function LeftLinks({ mobile = false }: { mobile?: boolean }) {
   return (
     <>
-      <a href={`${dolthubUrl}/discover`} data-cy="navbar-databases">
-        DoltHub
-      </a>
+      <ProductsMenu mobile={mobile} />
       <a href={`${dolthubUrl}/pricing`} data-cy="navbar-pricing">
         Pricing
       </a>
-      <span className="docs-dropdown-desktop-only">
-        <DocsDropdown />
-      </span>
+      <DocsDropdown mobile={mobile} />
       <a href={blogUrl} data-cy="navbar-blog">
         Blog
       </a>
@@ -178,16 +208,18 @@ function setDarkMode(dark: boolean) {
   // a later page load (or this toggle) never shows the wrong root canvas.
   // Keep these colors in sync with that script and the body background CSS.
   de.style.colorScheme = dark ? "dark" : "light";
-  de.style.backgroundColor = dark ? "#0d1117" : "#f1f3f8";
+  de.style.backgroundColor = dark ? "#0e141f" : "#f1f3f8";
   try {
     localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
   } catch {
     /* localStorage unavailable (private mode, etc.) — ignore */
   }
-  window.dispatchEvent(new CustomEvent("docs-themechange", { detail: { dark } }));
+  window.dispatchEvent(
+    new CustomEvent("docs-themechange", { detail: { dark } }),
+  );
 }
 
-function DarkModeToggle() {
+function DarkModeToggle({ mobile = false }: { mobile?: boolean }) {
   const [dark, setDark] = useState(false);
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
@@ -197,6 +229,20 @@ function DarkModeToggle() {
     window.addEventListener("docs-themechange", onChange);
     return () => window.removeEventListener("docs-themechange", onChange);
   }, []);
+  if (mobile) {
+    return (
+      <button
+        type="button"
+        className="docs-navbar-mobile-theme-button"
+        data-cy="navbar-theme-toggle"
+        onClick={() => setDarkMode(!dark)}
+        aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+        title={dark ? "Switch to light mode" : "Switch to dark mode"}
+      >
+        {dark ? <FaSun /> : <FaMoon />}
+      </button>
+    );
+  }
   const seg = "navbar-theme-toggle-seg";
   const active = `${seg} navbar-theme-toggle-seg-active`;
   return (
@@ -234,10 +280,8 @@ function DarkModeToggle() {
 // the DoltHub app navbar's own Sign In / Profile logic.
 function ProfileOrSignIn() {
   const isSignedIn = useIsSignedIn(dolthubTokenKey);
-  // .navbar-auth-btn (in DocsLayout) sets line-height: 1.5rem so this matches
-  // the Discord/GitHub button height.
   const className =
-    "navbar-auth-btn flex items-center border rounded px-3 py-[0.2rem] border-[#333C50]/20";
+    "navbar-auth-btn flex items-center border border-white/10 rounded-[0.25rem] px-8 py-[0.2rem]";
   return isSignedIn ? (
     <a
       href={`${dolthubUrl}/profile`}
@@ -259,29 +303,30 @@ function ProfileOrSignIn() {
   );
 }
 
-function RightLinks() {
+function RightLinks({
+  githubStarCount,
+  githubUrl,
+}: {
+  githubStarCount: number;
+  githubUrl: string;
+}) {
   return (
     <div className="flex navbar-right">
       <DarkModeToggle />
-      <DiscordButton href={doltDiscord} dark />
-      <ExternalLink href={doltGithub} data-cy="github-link" aria-label="GitHub">
-        <span className="navbar-icon-btn">
-          <FaGithub />
-          <span className="navbar-icon-btn-label">GitHub</span>
-        </span>
-      </ExternalLink>
+      <DiscordButton href={doltDiscord} />
+      <GithubButton href={githubUrl} githubStarCount={githubStarCount} />
       <ProfileOrSignIn />
     </div>
   );
 }
 
-function MobileSocialLinks() {
+function MobileSocialLinks({ githubUrl }: { githubUrl: string }) {
   return (
     <>
       <ExternalLink href={dolthubLinkedin} aria-label="linkedin">
         <FaLinkedin />
       </ExternalLink>
-      <ExternalLink href={doltGithub} aria-label="github">
+      <ExternalLink href={githubUrl} aria-label="github">
         <FaGithub />
       </ExternalLink>
       <ExternalLink href={doltDiscord} aria-label="discord">
@@ -290,46 +335,44 @@ function MobileSocialLinks() {
       <ExternalLink href={dolthubYoutube} aria-label="youtube">
         <FaYoutube />
       </ExternalLink>
-      <ExternalLink href={dolthubTwitter} aria-label="twitter">
-        <FaTwitter />
+      <ExternalLink href={dolthubX} aria-label="X">
+        <FaXTwitter />
       </ExternalLink>
     </>
   );
 }
 
-function MobileRightLinks() {
-  const links = useDocsLinks();
+function MobileActions() {
   const isSignedIn = useIsSignedIn(dolthubTokenKey);
-  const withTheme = useThemeLink();
   return (
-    <>
-      {links.map(l => (
-        <a key={l.name} href={withTheme(l.href)}>
-          {l.name} Docs
-        </a>
-      ))}
-      <DarkModeToggle />
-      {isSignedIn ? (
-        <a href={`${dolthubUrl}/profile`} data-cy="navbar-mobile-profile-link">
-          Profile
-        </a>
-      ) : (
-        <a href={`${dolthubUrl}/signin`}>Sign In</a>
-      )}
-    </>
+    <a
+      href={`${dolthubUrl}/${isSignedIn ? "profile" : "signin"}`}
+      data-cy={
+        isSignedIn ? "navbar-mobile-profile-link" : "mobile-navbar-signin"
+      }
+    >
+      {isSignedIn ? "Profile" : "Sign in"}
+    </a>
   );
 }
 
-export default function DocsNavbar({ siteName = "dolt" }: NavbarProps) {
+export default function DocsNavbar({
+  siteName = "dolt",
+  githubStarCount,
+}: NavbarProps) {
+  const githubUrl = siteName === "doltgres" ? doltgresGithub : doltGithub;
   return (
     <Nav
       logo={<Logo siteName={siteName} />}
       leftLinks={<LeftLinks />}
-      rightLinks={<RightLinks />}
-      rightLinksMobile={<MobileRightLinks />}
-      mobileBottomLinks={<MobileSocialLinks />}
-      bgColor="bg-transparent"
-      dark
+      leftLinksMobile={<LeftLinks mobile />}
+      rightLinks={
+        <RightLinks githubStarCount={githubStarCount} githubUrl={githubUrl} />
+      }
+      rightLinksMobile={<></>}
+      mobileActions={<MobileActions />}
+      mobileBottomLinks={<MobileSocialLinks githubUrl={githubUrl} />}
+      bgColor="bg-space-900"
       logoLeft
     />
   );

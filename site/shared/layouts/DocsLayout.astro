@@ -2,6 +2,7 @@
 // Tailwind's base/components/utilities layers. @astrojs/tailwind used to inject
 // these; it was dropped in the Astro 7 migration, so they're imported here.
 import "../styles/global.css";
+import { getGithubStarCount } from "../server/github-stars";
 // Components that use react-icons (CJS) must stay client:only
 import { Navbar, Footer, ThemeInit } from "../components";
 // Components safe for SSR — import directly to avoid pulling in react-icons via barrel
@@ -30,6 +31,7 @@ const appNames: Record<string, string> = {
 };
 
 const { title, nav, siteName } = Astro.props;
+const githubStarCount = await getGithubStarCount(siteName);
 const siteLabel = siteLabels[siteName] || "Docs";
 const appName = appNames[siteName] || "Docs";
 const currentPath = Astro.url.pathname;
@@ -95,7 +97,7 @@ const markdownAlternate =
           var de = document.documentElement;
           if (dark) de.classList.add("dark");
           de.style.colorScheme = dark ? "dark" : "light";
-          de.style.backgroundColor = dark ? "#0d1117" : "#f1f3f8";
+          de.style.backgroundColor = dark ? "#0e141f" : "#f1f3f8";
         } catch (e) {
           /* localStorage/matchMedia/URL unavailable — stay light */
         }
@@ -130,7 +132,7 @@ const markdownAlternate =
     <ThemeInit client:only="react" />
     <div>
       <div class="navbar-slot">
-        <Navbar client:only="react" siteName={siteName} />
+        <Navbar client:only="react" siteName={siteName} githubStarCount={githubStarCount} />
       </div>
 
       <MobileSidebar client:only="react" nav={nav} currentPath={currentPath} />
@@ -173,9 +175,14 @@ const markdownAlternate =
 
   /* Reserve space for client-only components to prevent layout shift */
   .navbar-slot {
-    min-height: 48px;
-    @apply bg-stone-50;
-    padding-bottom: 0.5rem;
+    min-height: 62px;
+    background: #070f25;
+  }
+
+  @media (min-width: 1024px) {
+    .navbar-slot {
+      min-height: 48px;
+    }
   }
 
   .sidebar-slot {
@@ -534,279 +541,6 @@ const markdownAlternate =
 </style>
 
 <style is:global>
-  /* Navbar logo */
-  .navbar-logo-link {
-    display: flex !important;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none !important;
-  }
-
-  .navbar-logo-img {
-    height: 22px;
-    width: auto;
-    max-width: none;
-  }
-
-  .navbar-logo-docs {
-    display: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    opacity: 0.6;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-  }
-
-  @media (min-width: 1024px) {
-    .navbar-logo-docs {
-      display: inline;
-    }
-  }
-
-  /* Icon button — matches TransparentButtonWithIcon dark variant */
-  .navbar-icon-btn {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    border: 1px solid rgba(51, 60, 80, 0.2);
-    border-radius: 0.25rem;
-    padding: 0.2rem 0.375rem;
-  }
-
-  .navbar-icon-btn svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-right: 0.375rem;
-    color: rgba(var(--color-background-acc-1), 1);
-  }
-
-  .navbar-icon-btn-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(51, 60, 80, 0.1);
-    font-size: 0.75rem;
-    padding: 0 0.5rem;
-    border-radius: 0.125rem;
-    text-align: center;
-    line-height: 1.5rem;
-    font-weight: 600;
-    color: rgba(var(--color-background-acc-1), 1);
-  }
-
-  /* Theme toggle — a two-segment switch (sun | moon) that shares the
-     icon-button outline. Both icons always show; the active mode's segment
-     gets a highlight pill and full opacity while the other is dimmed. The
-     dimming uses opacity (not color) so it survives the dark-mode rule that
-     forces navbar text/icons light with !important. */
-  .navbar-theme-toggle {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    gap: 0.125rem;
-    border: 1px solid rgba(51, 60, 80, 0.2);
-    border-radius: 0.25rem;
-    padding: 0.15rem;
-  }
-
-  .navbar-theme-toggle-seg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.2rem 0.35rem;
-    border-radius: 0.15rem;
-    opacity: 0.4;
-    color: rgba(var(--color-background-acc-1), 1);
-  }
-
-  .navbar-theme-toggle-seg svg {
-    width: 1.1rem;
-    height: 1.1rem;
-  }
-
-  .navbar-theme-toggle-seg:not(.navbar-theme-toggle-seg-active):hover {
-    opacity: 0.7;
-  }
-
-  .navbar-theme-toggle-seg-active {
-    opacity: 1;
-    background: rgba(51, 60, 80, 0.1);
-  }
-
-  /* Tighten the navbar's library-default spacing. @dolthub/react-components'
-     `<Navbar>` applies margin-right: 2.5rem to every left link and
-     margin-left: 2.5rem to every right link, which overflows / overlaps at
-     mid-size widths. CSS-module class hashes are version-dependent, so use
-     [class*=…] to be stable across upgrades. .navbar-slot scopes us to our
-     wrapped Navbar and gives enough specificity to win without !important. */
-  .navbar-slot [class*="ForDesktop_left"] > * {
-    margin-left: 0.5rem;
-    margin-right: 1.5rem;
-  }
-  .navbar-slot [class*="ForDesktop_right"] > * {
-    margin-left: 0.5rem;
-    margin-right: 0.25rem;
-  }
-
-  .navbar-slot .navbar-right > * {
-    margin: 0;
-  }
-
-  /* Mobile nav menu: the open menu is a full-screen overlay (ForMobile_openMenu)
-     whose links and bottom social icons are hard-coded white — the library
-     assumes you pass a dark bgColor, but we pass bg-transparent so the desktop
-     bar can show the .navbar-slot color, which also left this overlay
-     see-through. Make the menu follow the theme: the light navbar-bar color
-     (#f1f3f8) with dark links in light mode, and #0d1117 in dark mode. The
-     dark-mode link/icon colors are handled by the navbar light-text rule
-     further down (color: #e6edf3 !important); here we only darken them for
-     light mode. (The close/hamburger button uses the library's darkTop variant
-     and is already themed.) [class*=…] keeps us stable across library hash
-     changes. */
-  .navbar-slot [class*="ForMobile_openMenu"] {
-    background: #f1f3f8;
-  }
-  html.dark .navbar-slot [class*="ForMobile_openMenu"] {
-    background: #0d1117;
-  }
-  .navbar-slot [class*="ForMobile_links"] a,
-  .navbar-slot [class*="ForMobile_links"] button,
-  .navbar-slot [class*="ForMobile_bottomLinks"] svg {
-    color: rgba(var(--color-background-acc-1), 1);
-  }
-  .navbar-slot [class*="ForMobile_links"] a:hover,
-  .navbar-slot [class*="ForMobile_links"] button:hover {
-    color: rgba(var(--color-primary), 0.8);
-  }
-
-  /* The open menu's close (X) button is also hard-coded white: unlike the
-     closed hamburger bar, the open menu's top bar isn't given the library's
-     darkTop variant, so it falls back to .ForMobile_top button { color:#fff }.
-     Darken it for light mode (scoped inside the open menu so the hamburger bar
-     is untouched); dark mode is handled by the navbar light-text rule below. */
-  .navbar-slot [class*="ForMobile_openMenu"] [class*="ForMobile_top"] button {
-    color: rgba(var(--color-background-acc-1), 1);
-  }
-
-  /* The theme toggle is one of these mobile menu children, so the library's
-     button styling above (font-size:1.25rem, letter-spacing, margin:1rem 0)
-     bleeds onto its two segment <button>s — the letter-spacing skews each
-     icon within its pill and the per-button margins distort the control. Reset
-     those on the segments and scale the toggle up to match the menu's size. */
-  .navbar-slot [class*="ForMobile_links"] .navbar-theme-toggle {
-    margin: 1rem 0;
-    padding: 0.25rem;
-    gap: 0.2rem;
-  }
-  .navbar-slot [class*="ForMobile_links"] .navbar-theme-toggle-seg {
-    margin: 0;
-    font-size: inherit;
-    letter-spacing: normal;
-    padding: 0.4rem 0.65rem;
-  }
-  .navbar-slot [class*="ForMobile_links"] .navbar-theme-toggle-seg svg {
-    width: 1.35rem;
-    height: 1.35rem;
-  }
-
-  /* The right links (Discord, GitHub, Sign In/Profile) are wrapped in one
-     .navbar-right flex group, so the rule above only spaces the whole group.
-     The library spaces the buttons within it via margin-left: 2.5rem on every
-     <a> (.ForDesktop_right a) — too wide. Zero those out and set an even, tight
-     gap on the group instead. */
-  .navbar-right {
-    align-items: center;
-    gap: 1rem;
-  }
-
-  /* Match the Sign In / Profile button to the Discord/GitHub icon buttons:
-     same 0.75rem label text and 1.5rem line-height. The library pins nav links
-     to font-size 0.875rem / line-height 1.25rem via `.ForDesktop_inner a`
-     (which outranks Tailwind utilities like text-xs/leading-6 on the element),
-     so set both here — the two-class .navbar-slot .navbar-auth-btn selector
-     wins. The 1.5rem line-height keeps the button the same height even though
-     the text is smaller. */
-  .navbar-slot .navbar-auth-btn {
-    font-size: 0.75rem;
-    line-height: 1.5rem;
-  }
-
-  /* Mobile nav menu. The open menu is a full-screen overlay (ForMobile_openMenu)
-     that the library leaves transparent because we pass bgColor="bg-transparent"
-     (so the desktop bar shows the .navbar-slot color) — so the open menu shows
-     the page through it. Give it the navbar-bar background, and recolor the
-     library's hard-coded white menu links, social icons, and close (X) button
-     to the dark nav text color so they read on it. [class*=…] keeps us stable
-     across library version hash changes. */
-  .navbar-slot [class*="ForMobile_openMenu"] {
-    @apply bg-stone-50;
-  }
-  .navbar-slot [class*="ForMobile_links"] a,
-  .navbar-slot [class*="ForMobile_links"] button,
-  .navbar-slot [class*="ForMobile_bottomLinks"] svg,
-  .navbar-slot [class*="ForMobile_openMenu"] [class*="ForMobile_top"] button {
-    color: rgba(var(--color-background-acc-1), 1);
-  }
-  .navbar-slot [class*="ForMobile_links"] a:hover,
-  .navbar-slot [class*="ForMobile_links"] button:hover {
-    color: rgba(var(--color-primary), 0.8);
-  }
-  .navbar-slot [class*="ForDesktop_right"] a {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .docs-dropdown-desktop-only {
-    display: none;
-  }
-
-  @media (min-width: 1024px) {
-    .docs-dropdown-desktop-only {
-      display: inline-block;
-    }
-  }
-
-  .docs-dropdown-trigger {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font: inherit;
-    color: inherit;
-    padding: 0;
-  }
-
-  .docs-dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    margin-top: 0.5rem;
-    @apply bg-white;
-    @apply border;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    min-width: 150px;
-    z-index: 100;
-    padding: 0.25rem 0.2rem;
-  }
-
-  .docs-dropdown-item {
-    display: block;
-    padding: 0.4rem 0.6rem;
-    margin: 0;
-    font-size: 0.875rem;
-    color: #333 !important;
-    text-decoration: none !important;
-    white-space: nowrap;
-    border-radius: 4px;
-  }
-
-  .docs-dropdown-item:hover {
-    @apply bg-stone-50;
-  }
-
   /* Shared sidebar nav styles */
   .sidebar-section {
     @apply mb-4;
@@ -1258,34 +992,45 @@ const markdownAlternate =
   html.dark {
     color-scheme: dark;
   }
+  html.dark .navbar-slot,
+  html.dark .navbar-slot .bg-space-900 {
+    background: #0e141f;
+  }
   html.dark body {
-    background: #0d1117;
+    background: #0e141f;
     color: #e6edf3;
   }
 
-  /* The main content card is a lighter dark than the #0d1117 backdrop/navs,
+  /* The main content card is a lighter dark than the #0e141f backdrop/navs,
      so the document reads as a raised surface. Its text has no explicit
      color (the markdown headings/paragraphs only @apply layout utilities),
      so it inherits the light body color above — no per-element override
      needed. (Callouts still use light values and are a later pass.) */
   html.dark .docs-main {
-    background: #161b22;
+    background: #151d2b;
+  }
+
+  html.dark .docs-main a {
+    color: #8fc1fa;
+  }
+  html.dark .docs-main a:hover {
+    color: #c5dffc;
   }
 
   /* Tables: the light header fill and grey cell borders don't read on the
-     dark card. Give the header a slightly-raised fill (#21262d over the
-     #161b22 card) and switch all cell borders to #30363d; cell text keeps
+     dark card. Give the header a slightly-raised fill (#212d40 over the
+     #151d2b card) and switch all cell borders to #303e54; cell text keeps
      the inherited light body color. */
   html.dark .docs-main thead tr {
-    background: #21262d;
+    background: #212d40;
   }
   html.dark .docs-main th,
   html.dark .docs-main td {
-    border-bottom-color: #30363d;
+    border-bottom-color: #303e54;
   }
   html.dark .docs-main th + th,
   html.dark .docs-main td + td {
-    border-left-color: #30363d;
+    border-left-color: #303e54;
   }
 
   /* DoltHub API endpoint blocks: the method badges (.api-method) and
@@ -1295,16 +1040,19 @@ const markdownAlternate =
     color: rgba(230, 237, 243, 0.7);
   }
   html.dark .docs-main .api-response-example {
-    background: #0d1117;
+    background: #0e141f;
   }
 
   /* Inline code: the light #f1f3f8 swatch would show light text on a light
-     background on the dark card, so swap it for a translucent grey that
-     stands out against #161b22 (text stays the inherited light body color).
-     Fenced blocks keep their Shiki github-dark colors — reset pre code back
-     to transparent so this background doesn't sit behind the code block. */
+     background on the dark card, so swap it for a translucent blue that
+     stands out against #151d2b (text stays the inherited light body color).
+     Fenced blocks keep Shiki's syntax colors with a muted blue surface. */
   html.dark .docs-main code {
-    background: rgba(110, 118, 129, 0.3);
+    background: rgba(69, 85, 110, 0.3);
+  }
+  html.dark .docs-main pre {
+    /* Override the background Shiki writes as an inline style. */
+    background-color: #1b273b !important;
   }
   html.dark .docs-main pre code {
     background: transparent;
@@ -1319,20 +1067,20 @@ const markdownAlternate =
      these containers wins for their descendants by proximity.) */
   html.dark .sidebar-slot,
   html.dark .toc-slot {
-    background: #0d1117;
+    background: #0e141f;
     --color-primary: 230, 237, 243;
   }
   html.dark .sidebar-row-active {
-    background: rgba(56, 139, 253, 0.15);
+    background: rgba(110, 145, 185, 0.15);
   }
   html.dark .sidebar-desktop {
-    scrollbar-color: #30363d transparent;
+    scrollbar-color: #303e54 transparent;
   }
   html.dark .sidebar-desktop::-webkit-scrollbar-thumb {
-    background: #30363d;
+    background: #303e54;
   }
   html.dark .sidebar-desktop::-webkit-scrollbar-thumb:hover {
-    background: #484f58;
+    background: #45556e;
   }
 
   /* Mobile docs nav — the "Table of contents" toggle bar and the slide-out
@@ -1342,81 +1090,29 @@ const markdownAlternate =
      desktop sidebar. (.sidebar-row-active and .sidebar-mobile-search already
      have global dark rules that apply here too.) */
   html.dark .sidebar-mobile-toggle {
-    background: #161b22;
-    border-bottom-color: #30363d;
+    background: #151d2b;
+    border-bottom-color: #303e54;
     --color-primary: 230, 237, 243;
   }
   html.dark .sidebar-mobile-toggle:hover {
-    background: #21262d;
+    background: #212d40;
   }
   html.dark .sidebar-mobile {
-    background: #0d1117;
+    background: #0e141f;
     --color-primary: 230, 237, 243;
   }
   html.dark .sidebar-mobile-close:hover {
     background: rgba(230, 237, 243, 0.08);
   }
 
-  /* Navbar: dark gutter + light text/icons. The link/icon colors come from
-     the fixed brand vars (--color-primary / --color-background-acc-1) — set
-     inline by ThemeProvider — and from @dolthub/react-components' own styles
-     (e.g. the Discord button) and an inline `color: inherit` on the theme
-     toggle. To win over all of those, force the navbar's text and icons
-     (svg uses fill=currentColor) light with !important, scoped to .navbar-slot. */
-  html.dark .navbar-slot {
-    background: #0d1117;
-  }
-  html.dark .navbar-slot,
-  html.dark .navbar-slot a,
-  html.dark .navbar-slot button,
-  html.dark .navbar-slot span,
-  html.dark .navbar-slot svg {
-    color: #e6edf3 !important;
-  }
-  html.dark .navbar-slot a:hover {
-    color: #ffffff !important;
-  }
-  /* All three right-side button styles use a dark-navy border at 20% (set by
-     .navbar-icon-btn for GitHub, the library's .TransparentButtonWithIcon_
-     darkButton for Discord, and border-[#333C50]/20 on .navbar-auth-btn for
-     Sign In/Profile) — invisible on the dark backdrop. Lift them to a light
-     translucent border, and do the same for Discord's inner label pill so it
-     matches the GitHub label treatment. */
-  html.dark .navbar-slot .navbar-icon-btn,
-  html.dark .navbar-slot [class*="TransparentButtonWithIcon_"],
-  html.dark .navbar-slot .navbar-auth-btn {
-    border-color: rgba(230, 237, 243, 0.25);
-  }
-  html.dark .navbar-slot .navbar-icon-btn-label,
-  html.dark .navbar-slot [class*="TransparentButtonWithIcon_inner"] {
-    background: rgba(230, 237, 243, 0.12);
-  }
-  html.dark .navbar-slot .navbar-theme-toggle {
-    border-color: rgba(230, 237, 243, 0.25);
-  }
-  html.dark .navbar-slot .navbar-theme-toggle-seg-active {
-    background: rgba(230, 237, 243, 0.12);
-  }
-
-  /* The "Documentation" dropdown popover lives inside .navbar-slot, so the
-     light-text rule above would make its items unreadable on the default
-     white popover — darken the popover to match. */
-  html.dark .docs-dropdown-menu {
-    background: #161b22;
-    border-color: rgba(230, 237, 243, 0.15);
-  }
-  html.dark .docs-dropdown-item:hover {
-    background: rgba(230, 237, 243, 0.08);
-  }
-
   /* Footer: the footer area (.bottomOuter) is already a dark navy in light
      mode (bg-space-500 = #202F57) with light text — version/links use the
      brand --color-link-light var and copyright is a muted blue-grey. So
-     matching dark mode only means dropping the background to the #0d1117
+     matching dark mode only means dropping the background to the #0e141f
      backdrop, so the footer reads as part of the chrome rather than a
      separate navy block. The light text needs no override. */
   html.dark .bottomOuter {
-    background: #0d1117;
+    background: #0e141f;
   }
 
   /* Search trigger (the "box" in the sidebar) and its mobile twin: light
@@ -1424,18 +1120,18 @@ const markdownAlternate =
      they sit on the dark sidebar. */
   html.dark .search-trigger,
   html.dark .sidebar-mobile-search {
-    background: #161b22;
-    border-color: #30363d;
+    background: #151d2b;
+    border-color: #303e54;
     color: #8b949e;
   }
   html.dark .search-trigger:hover,
   html.dark .sidebar-mobile-search:hover {
-    background: #21262d;
-    border-color: #484f58;
+    background: #212d40;
+    border-color: #45556e;
   }
   html.dark .search-trigger-kbd {
-    background: #161b22;
-    border-color: #30363d;
+    background: #151d2b;
+    border-color: #303e54;
     color: #8b949e;
   }
 
@@ -1449,46 +1145,49 @@ const markdownAlternate =
      stylesheet plus the vars. We use bare selectors so the dark overrides
      actually apply.) */
   html.dark .search-modal {
-    background: #161b22;
+    background: #151d2b;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(230, 237, 243, 0.1);
   }
   html.dark .search-container {
-    --pagefind-ui-primary: #58a6ff;
+    --pagefind-ui-primary: #8fc1fa;
     --pagefind-ui-text: #e6edf3;
-    --pagefind-ui-background: #161b22;
-    --pagefind-ui-border: #30363d;
+    --pagefind-ui-background: #151d2b;
+    --pagefind-ui-border: #303e54;
   }
   html.dark .search-container .pagefind-ui__search-input {
-    border-color: #30363d;
-    background: #0d1117;
+    border-color: #303e54;
+    background: #0e141f;
     color: #e6edf3;
   }
   html.dark .search-container .pagefind-ui__search-input:focus {
     border-color: #58a6ff;
-    background: #0d1117;
+    background: #0e141f;
     box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
   }
   html.dark .search-container .pagefind-ui__result {
-    border-color: #30363d;
+    border-color: #303e54;
   }
   html.dark .search-container .pagefind-ui__result-link {
-    color: #58a6ff;
+    color: #8fc1fa;
+  }
+  html.dark .search-container .pagefind-ui__result-link:hover {
+    color: #c5dffc;
   }
   html.dark .search-container .pagefind-ui__result-excerpt {
     color: #8b949e;
   }
   html.dark .search-container .pagefind-ui__message {
     color: #8b949e;
-    border-bottom-color: #30363d;
+    border-bottom-color: #303e54;
   }
   html.dark .search-container .pagefind-ui__button {
-    border-color: #30363d;
-    background: #21262d;
+    border-color: #303e54;
+    background: #212d40;
     color: #c9d1d9;
   }
   html.dark .search-container .pagefind-ui__button:hover {
-    background: #30363d;
-    border-color: #484f58;
+    background: #303e54;
+    border-color: #45556e;
     color: #e6edf3;
   }
   html.dark .search-container .pagefind-ui__search-clear {
@@ -1499,7 +1198,7 @@ const markdownAlternate =
      light text, so use a translucent blue that reads on the dark modal. */
   html.dark .pagefind-ui--reset mark,
   html.dark .pagefind-ui mark {
-    background: rgba(88, 166, 255, 0.35);
+    background: rgba(110, 145, 185, 0.35);
     color: #e6edf3;
   }
 </style>
