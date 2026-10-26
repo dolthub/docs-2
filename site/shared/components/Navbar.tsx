@@ -94,6 +94,7 @@ function useThemeLink() {
 }
 
 const doltGithub = "https://github.com/dolthub/dolt";
+const doltgresGithub = "https://github.com/dolthub/doltgresql";
 const doltDiscord = "https://discord.gg/gqr7K4VNKe";
 const dolthubLinkedin = "https://www.linkedin.com/company/dolthubinc/";
 const dolthubX = "https://x.com/dolthub";
@@ -359,10 +360,7 @@ export default function DocsNavbar({
   siteName = "dolt",
   githubStarCount,
 }: NavbarProps) {
-  const githubUrl =
-    siteName === "doltgres"
-      ? "https://github.com/dolthub/doltgresql"
-      : doltGithub;
+  const githubUrl = siteName === "doltgres" ? doltgresGithub : doltGithub;
   return (
     <Nav
       logo={<Logo siteName={siteName} />}
