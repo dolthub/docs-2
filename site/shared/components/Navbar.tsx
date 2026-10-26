@@ -302,24 +302,30 @@ function ProfileOrSignIn() {
   );
 }
 
-function RightLinks({ githubStarCount }: Pick<NavbarProps, "githubStarCount">) {
+function RightLinks({
+  githubStarCount,
+  githubUrl,
+}: {
+  githubStarCount: number;
+  githubUrl: string;
+}) {
   return (
     <div className="flex navbar-right">
       <DarkModeToggle />
       <DiscordButton href={doltDiscord} />
-      <GithubButton href={doltGithub} githubStarCount={githubStarCount} />
+      <GithubButton href={githubUrl} githubStarCount={githubStarCount} />
       <ProfileOrSignIn />
     </div>
   );
 }
 
-function MobileSocialLinks() {
+function MobileSocialLinks({ githubUrl }: { githubUrl: string }) {
   return (
     <>
       <ExternalLink href={dolthubLinkedin} aria-label="linkedin">
         <FaLinkedin />
       </ExternalLink>
-      <ExternalLink href={doltGithub} aria-label="github">
+      <ExternalLink href={githubUrl} aria-label="github">
         <FaGithub />
       </ExternalLink>
       <ExternalLink href={doltDiscord} aria-label="discord">
@@ -353,15 +359,21 @@ export default function DocsNavbar({
   siteName = "dolt",
   githubStarCount,
 }: NavbarProps) {
+  const githubUrl =
+    siteName === "doltgres"
+      ? "https://github.com/dolthub/doltgresql"
+      : doltGithub;
   return (
     <Nav
       logo={<Logo siteName={siteName} />}
       leftLinks={<LeftLinks />}
       leftLinksMobile={<LeftLinks mobile />}
-      rightLinks={<RightLinks githubStarCount={githubStarCount} />}
+      rightLinks={
+        <RightLinks githubStarCount={githubStarCount} githubUrl={githubUrl} />
+      }
       rightLinksMobile={<></>}
       mobileActions={<MobileActions />}
-      mobileBottomLinks={<MobileSocialLinks />}
+      mobileBottomLinks={<MobileSocialLinks githubUrl={githubUrl} />}
       bgColor="bg-space-900"
       logoLeft
     />

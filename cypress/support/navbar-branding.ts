@@ -21,7 +21,15 @@ export function navbarBranding(product: string, page: string) {
         cy.get(".navbar-slot").should(($nav) => {
           expect($nav[0].scrollWidth).to.be.at.most(width);
         });
+        const githubUrl =
+          product === "Doltgres"
+            ? "https://github.com/dolthub/doltgresql"
+            : "https://github.com/dolthub/dolt";
         if (width >= 1024) {
+          cy.get(`.navbar-right a[href="${githubUrl}"]`)
+            .should("be.visible")
+            .invoke("text")
+            .should("match", /\d/);
           cy.get("[data-cy=navbar-signin-button]")
             .should("be.visible")
             .should(($link) => {
@@ -37,6 +45,11 @@ export function navbarBranding(product: string, page: string) {
             });
         } else {
           cy.get("[aria-label='open mobile navbar menu']").click();
+          cy.get("[aria-label='mobile nav menu'] a[aria-label=github]").should(
+            "have.attr",
+            "href",
+            githubUrl,
+          );
           cy.get("[data-cy=mobile-navbar-products]").click();
           cy.get("[aria-label='mobile nav menu']").should(($menu) => {
             expect($menu[0].scrollWidth).to.be.at.most(width);

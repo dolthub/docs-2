@@ -31,7 +31,7 @@ const appNames: Record<string, string> = {
 };
 
 const { title, nav, siteName } = Astro.props;
-const githubStarCount = await getGithubStarCount();
+const githubStarCount = await getGithubStarCount(siteName);
 const siteLabel = siteLabels[siteName] || "Docs";
 const appName = appNames[siteName] || "Docs";
 const currentPath = Astro.url.pathname;
