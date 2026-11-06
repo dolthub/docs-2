@@ -576,7 +576,7 @@ Alternatively, if you want to use command line flags instead, rerun the [install
 
 Restart your DoltLab instance with `./start.sh`.
 
-In the event you are configuring your domain name with an Elastic Load Balancer, ensure that it specifies Target Groups for each of the ports required to operate DoltLab, `80`, `100`, `4321`, and `50051`.
+In the event you are configuring your domain name with an Elastic Load Balancer, ensure that it specifies Target Groups for each of the ports required to operate DoltLab, `80`, `100`, `4321`, `50051`, and `50052`.
 
 ## Run DoltLab on Hosted Dolt
 
@@ -708,12 +708,12 @@ First, setup DoltLab on an [AWS EC2 host](https://aws.amazon.com/pm/ec2) in the 
 
 If this instance should _only_ be accessible by the NLB, ensure that the DoltLab host is created in a private subnet and does not have public IP address.
 
-After setting up your DoltLab host, edit the host's inbound security group rules to allow all traffic on ports: `80`, `100`, `4321`, `50051`, and `2001`.
+After setting up your DoltLab host, edit the host's inbound security group rules to allow all traffic on ports: `80`, `100`, `4321`, `50051`, `50052`, and `2001`.
 
 Because the host is in a private subnet with no public IP though, only the NLB will be able to connect to the host on these ports.
 
 Next, in AWS, create [target groups](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-target-group.html) for each DoltLab port that the NLB will forward requests to. These ports are:
-`80`, `100`, `4321`, and `50051`.
+`80`, `100`, `4321`, `50051`, and `50052`.
 
 ![](../.gitbook/assets/doltlab_target_group_type.png)
 
