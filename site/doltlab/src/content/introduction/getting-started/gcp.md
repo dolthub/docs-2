@@ -69,7 +69,7 @@ Scroll down to Protocols and Ports, enable TCP on port 100.
 
 Click "CREATE".
 
-Rinse and repeat for ports 4321 and 50051. After your done, you're firewall rules should look like this.
+Rinse and repeat for ports 4321, 50051, and 50052. After your done, you're firewall rules should look like this.
 
 ![Proper Firewall Rules](../../.gitbook/assets/doltlab-gcp-proper-firewall-rules.png)
 

@@ -950,6 +950,7 @@ you will need SSH access, and must have the following ports open on every host i
 - `80` TCP, for DoltLab Enterprise services (if serving over HTTP).
 - `443` TCP, for DoltLab Enterprise services (if serving over HTTPS).
 - `50051` TCP, for DoltLab Enterprise services.
+- `50052` TCP, for DoltLab Enterprise services.
 - `4321` TCP, for DoltLab Enterprise servicess (if not using cloud-backed storage).
 
 In the images below you can see that for an example multihost deployment on AWS EC2, we've created two security groups to attach to all hosts we provision. The first group allows 
@@ -1423,7 +1424,7 @@ Running the newly generated `./start.sh` will start DoltLab connected to Gmail.
 
 ## Serve DoltLab over HTTPS natively
 
-First, make sure that port `443` is open on the host running DoltLab (as well as the other required ports `100`, `4321`, and `50051`) and that you have a valid TLS certificate configured for your DoltLab host. We recommend creating a TLS certificate using [certbot](https://certbot.eff.org/).
+First, make sure that port `443` is open on the host running DoltLab (as well as the other required ports `100`, `4321`, `50051`, and `50052`) and that you have a valid TLS certificate configured for your DoltLab host. We recommend creating a TLS certificate using [certbot](https://certbot.eff.org/).
 
 Next, edit `installer_config.yaml` to contain the following:
 

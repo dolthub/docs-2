@@ -82,7 +82,7 @@ From the menu on the left, under the "Networking" section, choose "Network setti
 
 ![Network settings](../../.gitbook/assets/doltlab_azure_network_settings.png)
 
-We can see that our ssh inbound rule is already configured. Now we need open ports `80`, `100`, `4321`, and `50051` [which are required for DoltLab](/guides/installation#networking-requirements).
+We can see that our ssh inbound rule is already configured. Now we need open ports `80`, `100`, `4321`, `50051`, and `50052` [which are required for DoltLab](/guides/installation#networking-requirements).
 
 Click "Create port rule".
 
@@ -94,7 +94,7 @@ Be sure to select "Inbound port rule". Following this you'll see the form you us
 
 Creating a rule for port `80` can be done by selecting "HTTP" from the "Service" dropdown menu. Make sure "Action" is "Allow" and click "Add".
 
-For the remaining ports, click "Create port rule" for each one, then fill in the form to create the new port rules. Each port rule should have a "Source" of "Any", an "*" for "Source port ranges", "Any" for "Destination", nothing for "Service", and the port number you're adding in "Destination port ranges", one of `100`, `4321`, and `50051`.
+For the remaining ports, click "Create port rule" for each one, then fill in the form to create the new port rules. Each port rule should have a "Source" of "Any", an "*" for "Source port ranges", "Any" for "Destination", nothing for "Service", and the port number you're adding in "Destination port ranges", one of `100`, `4321`, `50051`, and `50052`.
 
 All port-rule "Protocols" should be "TCP", with "Action" "Allow". None of the other settings need to be modified from their default values here. Click "Add" to create each new port rule.
 
